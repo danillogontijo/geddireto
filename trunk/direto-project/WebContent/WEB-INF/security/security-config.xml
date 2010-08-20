@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		- Application context containing authentication, channel - security
+		and web URI beans. - - Only used by "filter" artifact. -
+	-->
+
+<b:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:b="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+
+	<global-method-security pre-post-annotations="enabled"></global-method-security>
+
+	<http auto-config="true">
+		<intercept-url pattern="/css/**" filters="none" />
+		<intercept-url pattern="/dwr/**" filters="none" />
+		<intercept-url pattern="/dwr/interface/**" filters="none" />
+		<intercept-url pattern="/imagens/**" filters="none" />
+		<intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<!--<intercept-url pattern="/css/**" filters="none" />  -->
+		<!-- <intercept-url pattern="/secure/**" access="ROLE_USER"	requires-channel="https" /> -->
+		<intercept-url pattern="/login.html*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+				
+		<intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN" />
+		<intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+		
+		<!-- <logout logout-url="/logout.jsp" invalidate-session="true" logout-success-url="login.jsp"/> -->
+		
+		<port-mappings>
+			<port-mapping http="8080" https="8443" />
+		</port-mappings>
+
+		<!-- <session-management invalid-session-url="/error.htm" /> -->
+		<x509 subject-principal-regex="CN=(.*?),"/>
+		
+		<session-management>
+			<concurrency-control max-sessions="1" />
+		</session-management>
+
+		<form-login login-page="/login.html" authentication-failure-url="/login.html?login_error=1" />
+		<logout logout-success-url="/index.jsp" />
+		<remember-me use-secure-cookie="true"/>
+
+		
+	</http>
+	
+	<authentication-manager>
+		<authentication-provider user-service-ref="userDetailsService">
+			<password-encoder hash="md5" />
+		</authentication-provider>
+	</authentication-manager>
+	
+	<!--<b:bean id="userDetailsService" class="br.org.ged.direto.model.service.security.HibernateUserDetailsService">
+		<b:property name="hibernateTemplate" ref="hibernateTemplate" />
+	</b:bean>
+	
+	<authentication-manager>
+		<authentication-provider user-service-ref="userDetailsService">
+			<password-encoder hash="md5" />
+		</authentication-provider>
+	</authentication-manager>
+	
+	--><!--<authentication-manager>
+		<authentication-provider>
+			<password-encoder hash="md5" />
+			<jdbc-user-service data-source-ref="dataSource" 
+			authorities-by-username-query="SELECT UsuLogin AS 'username', concat('ROLE_',upper(replace(UsuPapel, ' ', '_'))) AS 'authority' FROM usuario WHERE UsuLogin=?" 
+			users-by-username-query="SELECT UsuLogin AS 'username', UsuSenha AS 'password', 'true' AS 'enabled' FROM usuario WHERE UsuLogin = ?"/>
+		</authentication-provider>
+	</authentication-manager>-->
+
+</b:beans>

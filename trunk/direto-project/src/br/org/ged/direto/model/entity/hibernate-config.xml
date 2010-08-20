@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	">
+	
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		   <property name="annotatedClasses">
+            <list>
+                <value>br.org.ged.direto.model.entity.Usuario</value>
+                <value>br.org.ged.direto.model.entity.PstGrad</value>
+                <value>br.org.ged.direto.model.entity.Conta</value>
+                <value>br.org.ged.direto.model.entity.Carteira</value>
+                <value>br.org.ged.direto.model.entity.OM</value>
+                <value>br.org.ged.direto.model.entity.Secao</value>
+                <value>br.org.ged.direto.model.entity.Funcao</value>
+            </list>
+        </property>
+        
+		<property name="packagesToScan" value="br.org.ged.direto.entity.domain" /> 
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${jdbc.hibernate.dialect}</prop>
+				<prop key="hibernate.hbm2ddl.auto">validate</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="openSessionInViewInterceptor"
+		class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	
+    <!--<bean id="hibernateInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor">  
+        <property name="sessionFactory">  
+            <ref bean="sessionFactory"/>  
+         </property>  
+     </bean> -->
+	<tx:annotation-driven />
+	
+</beans>

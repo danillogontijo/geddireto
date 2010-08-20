@@ -1,0 +1,50 @@
+body {margin: 0px 0px 0px 0px; font: 12px verdana, arial, helvetica, sans-serif; font-weight: normal;}
+a {text-decoration:none;}
+
+/**
+ *	ERROS CAMPOS
+ */
+.error { color: red; }
+.error_field { background-color:yellow }
+
+/**
+ * DIV PARA CRIAR TABELAS
+ */
+#table {margin: 0 auto;	left: 501px; top: 50%;}
+#line {vertical-align: middle; overflow:hidden;}
+#column{float: left; height: 100%;}
+
+/**
+ * CONFIGURACOES DAS DIV E COMPONENTES DO LOGIN
+ */
+.conteudo #line #column #j_username {width: 180px;position: relative; left: 20px;}
+.conteudo #line #column input {width: 180px;position: relative; left: 30px;}
+.conteudo #line #column select {width: 180px;position: relative; left: 25px;}
+.conteudo #line #column {width: 300px;line-height:50px;text-align: left;font-weight: bold;margin-left: 20px;}
+
+/**
+ * DIV PARA LOGIN - BORDAS COM CANTOS ARREDONDADOS
+ */
+.bordaBox {background: transparent; width:100%; height: 100%;}
+.bordaBox .b1, .bordaBox .b2, .bordaBox .b3, .bordaBox .b4 {display:block; overflow:hidden; font-size:1px;}
+.bordaBox .b1, .bordaBox .b2, .bordaBox .b3 {height:1px;}
+.bordaBox .b2, .bordaBox .b3, .bordaBox .b4 {background: #93D4FF; border-left:1px solid black; border-right:1px solid black; }
+.bordaBox .b1 {margin:0 5px; background: black;}
+.bordaBox .b2 {margin:0 3px; border-width:0 2px;}
+.bordaBox .b3 {margin:0 2px;}
+.bordaBox .b4 {height:2px; margin:0 1px;}
+.bordaBox .conteudo {padding:5px;display:block; background: #47B5FF; background-image: url('../imagens/fundo_login2.jpg'); border-left:1px solid black; border-right:1px solid black;}
+
+/**
+ * DIV PARA TITULO LOGIN
+ */
+#login {background: transparent;position: absolute;	margin-left: -45px;	margin-top: -95px;	left: 501px; top: 50%;	z-index: 1000;	width: 90px;}
+#login .bordaBox .bordaBox .b2, #login .bordaBox .b3, #login .bordaBox .b4 {background: #FFFFFF;}
+#login .bordaBox div {display: block; background: #FFFFFF; border-left:1px solid black; border-right:1px solid black; text-align: center;font-weight: bold;}
+
+/**
+ * CLASSES PARA OS TEXTOS
+ */
+.menu_titulo {color: #333333; font: bold 12px verdana, arial, helvetica, sans-serif;}
+.menu_titulo a:hover {text-decoration: underline;}
+.rodape {color: #666666; font-size: 10px;}
