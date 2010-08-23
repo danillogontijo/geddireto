@@ -16,6 +16,7 @@
 <a href="debug.jsp" >debug</a><br>
 <a href="logout.jsp" >logout</a><br>
 <a href="login.jsp" >login</a><br>
+<a href="changePwd.html" >Change Pwd</a><br>
 
 <p>nome: ${login.usuLogin}</p>
 
