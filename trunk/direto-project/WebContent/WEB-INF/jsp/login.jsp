@@ -7,7 +7,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 
 <html>
 <head>
@@ -170,7 +170,7 @@ function montaContas(listBeans){
 				</div>
 				
 				<div id="line" style="height: 20px; text-align: center; margin-top: 0px;">
-					<input type="checkbox" name="_spring_security_remember_me">Lembrar-me
+					<input type="checkbox" name="_spring_security_remember_me" id="_spring_security_remember_me">Lembrar-me
 				</div>
 				
 			</div>

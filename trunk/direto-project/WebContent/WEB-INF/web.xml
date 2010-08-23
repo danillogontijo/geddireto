@@ -16,7 +16,7 @@
 			/WEB-INF/applicationContext.xml
 			/WEB-INF/security/security-config.xml
             /WEB-INF/security/business-config.xml
-            <!-- /WEB-INF/security/authorization-config.xml -->
+            /WEB-INF/security/authorization-config.xml 
             </param-value>
 	</context-param>
 

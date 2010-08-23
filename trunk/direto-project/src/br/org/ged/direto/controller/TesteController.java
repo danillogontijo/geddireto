@@ -7,18 +7,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
-
 import br.org.ged.direto.model.entity.PstGrad;
-import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.service.PstGradService;
 import br.org.ged.direto.model.service.UsuarioService;
+;
 
 @Controller
 @RequestMapping("/teste.html")
@@ -53,13 +52,10 @@ public class TesteController {
 			return "teste";
 		}
 
-		@RequestMapping(method = RequestMethod.POST)
-		public String processSubmit(@ModelAttribute("usuario")Usuario usuario, BindingResult result,
-				SessionStatus status) {
-
-		    System.out.println(usuario);
-
-	        return "usuarios-index";
+		@RequestMapping(method=RequestMethod.POST)
+		public String submitChangePasswordPage(@RequestParam("password") String newPassword) {
+						
+			return "redirect:principal.html";
 		}
 
 

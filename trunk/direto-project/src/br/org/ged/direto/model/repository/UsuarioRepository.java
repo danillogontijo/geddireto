@@ -12,6 +12,7 @@ public interface UsuarioRepository {
 	public Usuario selectById(Integer idUsuario);
 	public Usuario selectByLogin(String login);
 	public List<DataUtils> listActivedContas (String usuLogin);
+	public void changePassword(String usuLogin, String usuSenha);
 	
 	//public Usuario doLogin(String login, String senha) throws Exception;
 

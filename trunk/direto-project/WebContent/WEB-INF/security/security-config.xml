@@ -39,7 +39,7 @@
 
 		<form-login login-page="/login.html" authentication-failure-url="/login.html?login_error=1" />
 		<logout logout-success-url="/index.jsp" />
-		<remember-me use-secure-cookie="true"/>
+		<remember-me use-secure-cookie="true" key="geddireto" token-validity-seconds="-1"/>
 
 		
 	</http>
@@ -47,6 +47,7 @@
 	<authentication-manager>
 		<authentication-provider user-service-ref="userDetailsService">
 			<password-encoder hash="md5" />
+			<!--<jdbc-user-service data-source-ref="dataSource"/>-->
 		</authentication-provider>
 	</authentication-manager>
 	

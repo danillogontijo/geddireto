@@ -120,4 +120,9 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
 		return list;//(List<Conta>)hibernateTemplate.find("from Usuario u, Conta c where u.usuLogin = ? and c.ativado = 1", usuLogin);
 	}
 
+	@Override
+	public void changePassword(String usuLogin, String usuSenha) {
+				
+	}
+
 }
