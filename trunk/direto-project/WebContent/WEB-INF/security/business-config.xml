@@ -30,6 +30,8 @@
 		</property>
 	</bean>
 	
+	
+	
 	<import resource="classpath:/br/org/ged/direto/model/entity/hibernate-config.xml" />
 	
 	<!--<bean id="openSessionInViewInterceptor"

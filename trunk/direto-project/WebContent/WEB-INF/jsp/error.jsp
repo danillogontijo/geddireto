@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Success Page</title>
+<title>Error Page</title>
 </head>
 <body>
-User Details
+Acesso negado
 <hr>
-User Name   : ${login.usuLogin} <br/>
+ <br/>
 </body>
 </html>

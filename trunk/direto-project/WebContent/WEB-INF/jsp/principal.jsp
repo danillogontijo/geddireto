@@ -7,9 +7,10 @@
 </head>
 
 <body>
-  
 
-<div id="table" style="position: absolute; width: 1002px; top: 0; left: 0;">
+<div id="table" style="position: absolute; width: 1002px; top: 0; left: 0;">  
+
+<div id="table" style="position: relative; width: 1002px; top: 0; left: 0;">
 
 	<div id="line" style="width: 1002px;float: left; height: 43px;">
 		<div style="float: left;"><img name="direto_r1_c1" src="imagens/direto_r1_c1.jpg" width="189" height="43" border="0" id="direto_r1_c1" usemap="#m_direto_r1_c1" alt="" /></div>
@@ -46,7 +47,7 @@
 </div>
 
     
-<div id="table" style="position: absolute; width: 189px; text-align: center; margin-left: -165px; left: 501px; margin-top: -160px;">
+<div id="table" style="position: relative; width: 189px; text-align: center; left: 100px; top: 300px; height: 1000px;">
 ${usuario.usuLogin}<br>
 
 
@@ -70,13 +71,15 @@ ${usuario.usuLogin}<br>
 
 
 	
-<div id="table" style="position: absolute; width: 1002px; top: 50%; left: 0; margin-top: 160px; text-align: center;">
+<div id="table" style="position: relative; width: 1002px; top: 400px; left: 0; margin-top: 0px; text-align: center;">
 	<font class="rodape">
 		© 2010 - Direto - Gerenciador Eletrônico de Documentos<br>
 					Ver. 3.0
 	</font>
 </div>
 
+
+</div>
   </body>
 </html>
     

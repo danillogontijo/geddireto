@@ -8,17 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import br.org.ged.direto.model.service.security.CustomerUserDetailsService;
-
-
+import br.org.ged.direto.model.service.UsuarioService;
 
 @Controller
 @RequestMapping("/changePwd.html")
 public class ChangePwdController {
 	
 	@Autowired
-	private CustomerUserDetailsService userDetailsService;
-	
+	private UsuarioService usuarioService;	
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public String showChangePasswordPage() {		
@@ -34,8 +31,12 @@ public class ChangePwdController {
 		  username = ((UserDetails)principal).getUsername();
 		}
 		
-		userDetailsService.changePassword(username, newPassword);
-		//SecurityContextHolder.clearContext(); //Efetua logout apos mudanca de senha
+		try{
+			usuarioService.changePassword(username, newPassword);
+			//SecurityContextHolder.clearContext(); //Efetua logout apos mudanca de senha
+		}catch(Exception e){
+			return "redirect:error.html";
+		}
 		
 		return "redirect:principal.html";
 	}

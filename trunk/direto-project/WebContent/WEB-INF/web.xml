@@ -13,12 +13,22 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/applicationContext.xml
+			/WEB-INF/applicationContext.xml  
 			/WEB-INF/security/security-config.xml
             /WEB-INF/security/business-config.xml
             /WEB-INF/security/authorization-config.xml 
             </param-value>
 	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- LISTENER QUE PERMITE APENAS UMA SESSÃO POR USUARIO -->
+	<!-- LISTENER QUE EXPIRA O USUARIO DEVIDO AO NR DE TENTATIVAS -->
+	<listener>
+		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
 
 	<servlet>
 		<servlet-name>direto</servlet-name>
@@ -29,24 +39,14 @@
 	<servlet-mapping>
 		<servlet-name>direto</servlet-name>
 		<url-pattern>*.html</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>direto</servlet-name>
 		<url-pattern>/dwr/*</url-pattern>
 	</servlet-mapping>
 
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-
-	<!-- LISTENER QUE PERMITE APENAS UMA SESSÃO POR USUARIO -->
-	<!-- LISTENER QUE EXPIRA O USUARIO DEVIDO AO NR DE TENTATIVAS -->
-	<listener>
-		<listener-class>
-			org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
-	</listener>
-
+	<!--<servlet-mapping>
+		<servlet-name>direto</servlet-name>
+		<url-pattern>/dwr/*</url-pattern>
+	</servlet-mapping>-->
+	
 	<!-- FILTRO NECESSARIO PARA O SPRING-SECURITY -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
@@ -63,16 +63,17 @@
 		<filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
 	</filter>
 	
-	<!--<filter>
-        <filter-name>HibernateFilter</filter-name>
-        <filter-class>my.package.HibernateThreadFilter</filter-class>
-    </filter>-->
-    
-    <filter-mapping>
-        <filter-name>Spring OpenSessionInViewFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+	<!--
+		<filter> <filter-name>HibernateFilter</filter-name>
+		<filter-class>my.package.HibernateThreadFilter</filter-class>
+		</filter>
+	-->
 	
+	<filter-mapping>
+		<filter-name>Spring OpenSessionInViewFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 
 	<!-- PAGINA DE ERRO DE PERMISSAO -->
 	<error-page>

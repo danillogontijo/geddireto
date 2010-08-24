@@ -7,6 +7,7 @@ import br.org.direto.util.DataUtils;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.UsuarioRepository;
 import br.org.ged.direto.model.service.UsuarioService;
+import br.org.ged.direto.model.service.security.IChangePassword;
 
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
@@ -22,19 +23,25 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	private UsuarioRepository usuarioRepository;
 	private MessageSource messageSource;
+	private IChangePassword changePasswordSecurity;
+
+	@Autowired
+	public void setChangePasswordDao(IChangePassword changePasswordSecurity) {
+		this.changePasswordSecurity = changePasswordSecurity;
+	}
 
 	@Autowired
 	public void setUsuarioRepository(UsuarioRepository usuarioRepository) {
 		this.usuarioRepository = usuarioRepository;
 	}
 
-	public MessageSource getMessageSource() {
-		return messageSource;
-	}
-
 	@Autowired
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
+	}
+	
+	public MessageSource getMessageSource() {
+		return messageSource;
 	}
 
 	@Override
@@ -81,6 +88,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public List<DataUtils> listActivedContas(String usuLogin) {
 		return (this.usuarioRepository.listActivedContas(usuLogin));
+	}
+
+	@Override
+	public void changePassword(String usuLogin, String usuSenha) {
+		changePasswordSecurity.changePassword(usuLogin, usuSenha);
+		
 	}
 
 	/*public String getValidationMessage(Errors errors, String fieldName) {
