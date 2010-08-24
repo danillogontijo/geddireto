@@ -24,7 +24,7 @@
             </list>
         </property>
         
-		<property name="packagesToScan" value="br.org.ged.direto.entity.domain" /> 
+		<property name="packagesToScan" value="br.org.ged.direto.model.entity" /> 
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">${jdbc.hibernate.dialect}</prop>
@@ -34,12 +34,12 @@
 		</property>
 	</bean>
 	
-	<bean id="openSessionInViewInterceptor"
+	<!--<bean id="openSessionInViewInterceptor"
 		class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
-	<bean id="transactionManager"
+	--><bean id="transactionManager"
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />

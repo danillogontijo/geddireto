@@ -11,63 +11,78 @@
 
 	<global-method-security pre-post-annotations="enabled"></global-method-security>
 
-	<http auto-config="true">
-		<intercept-url pattern="/css/**" filters="none" />
-		<intercept-url pattern="/dwr/**" filters="none" />
-		<intercept-url pattern="/dwr/interface/**" filters="none" />
-		<intercept-url pattern="/imagens/**" filters="none" />
-		<intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-		<!--<intercept-url pattern="/css/**" filters="none" />  -->
-		<!-- <intercept-url pattern="/secure/**" access="ROLE_USER"	requires-channel="https" /> -->
-		<intercept-url pattern="/login.html*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-				
-		<intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN" />
-		<intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+	<http auto-config="true" use-expressions="true">
+		<!--
+			<intercept-url pattern="/css/**" filters="none" /> <intercept-url
+			pattern="/dwr/**" filters="none" /> <intercept-url
+			pattern="/dwr/interface/**" filters="none" /> <intercept-url
+			pattern="/imagens/**" filters="none" /> <intercept-url pattern="/"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" /> <intercept-url
+			pattern="/css/**" filters="none" /> <intercept-url
+			pattern="/secure/**" access="ROLE_USER" requires-channel="https" />
+			<intercept-url pattern="/login.html*"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" /> <intercept-url pattern="/**"
+			access="ROLE_USER" /> <intercept-url pattern="/admin/**"
+			access="ROLE_ADMIN" />
+		-->
+		<access-denied-handler error-page="/error.html"/>
 		
-		<!-- <logout logout-url="/logout.jsp" invalidate-session="true" logout-success-url="login.jsp"/> -->
-		
+		<intercept-url pattern="/login.html" access="permitAll" />
+		<intercept-url pattern="/dwr/**" access="permitAll" />
+		<intercept-url pattern="/dwr/interface/**" access="permitAll" />
+		<intercept-url pattern="/imagens/**" access="permitAll" />
+		<intercept-url pattern="/css/**" access="permitAll" />
+		<intercept-url pattern="/secure/**"
+			access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" requires-channel="https" />
+		<intercept-url pattern="/**"
+			access="hasAnyRole ('ROLE_USER','ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/**"
+			access="hasRole('ROLE_ADMIN') and fullyAuthenticated" />
+
+
 		<port-mappings>
 			<port-mapping http="8080" https="8443" />
 		</port-mappings>
 
 		<!-- <session-management invalid-session-url="/error.htm" /> -->
-		<x509 subject-principal-regex="CN=(.*?),"/>
-		
+		<!--<x509 subject-principal-regex="CN=(.*?)," />-->
+
 		<session-management>
-			<concurrency-control max-sessions="1" />
+			<concurrency-control max-sessions="1" expired-url="/login.html?login_error=1" />
 		</session-management>
 
-		<form-login login-page="/login.html" authentication-failure-url="/login.html?login_error=1" />
-		<logout logout-success-url="/index.jsp" />
-		<remember-me use-secure-cookie="true" key="geddireto" token-validity-seconds="-1"/>
-
 		
+		<form-login login-page="/login.html" authentication-failure-url="/login.html?login_error=1" />
+		<logout logout-success-url="/index.jsp" invalidate-session="true" />
+		<remember-me use-secure-cookie="true" token-validity-seconds="3600" />
+
+
 	</http>
-	
+
 	<authentication-manager>
 		<authentication-provider user-service-ref="userDetailsService">
 			<password-encoder hash="md5" />
 			<!--<jdbc-user-service data-source-ref="dataSource"/>-->
 		</authentication-provider>
 	</authentication-manager>
-	
-	<!--<b:bean id="userDetailsService" class="br.org.ged.direto.model.service.security.HibernateUserDetailsService">
+
+	<!--
+		<b:bean id="userDetailsService"
+		class="br.org.ged.direto.model.service.security.HibernateUserDetailsService">
 		<b:property name="hibernateTemplate" ref="hibernateTemplate" />
-	</b:bean>
-	
-	<authentication-manager>
-		<authentication-provider user-service-ref="userDetailsService">
-			<password-encoder hash="md5" />
-		</authentication-provider>
-	</authentication-manager>
-	
-	--><!--<authentication-manager>
-		<authentication-provider>
-			<password-encoder hash="md5" />
-			<jdbc-user-service data-source-ref="dataSource" 
-			authorities-by-username-query="SELECT UsuLogin AS 'username', concat('ROLE_',upper(replace(UsuPapel, ' ', '_'))) AS 'authority' FROM usuario WHERE UsuLogin=?" 
-			users-by-username-query="SELECT UsuLogin AS 'username', UsuSenha AS 'password', 'true' AS 'enabled' FROM usuario WHERE UsuLogin = ?"/>
-		</authentication-provider>
-	</authentication-manager>-->
+		</b:bean> <authentication-manager> <authentication-provider
+		user-service-ref="userDetailsService"> <password-encoder hash="md5" />
+		</authentication-provider> </authentication-manager>
+	-->
+	<!--
+		<authentication-manager> <authentication-provider> <password-encoder
+		hash="md5" /> <jdbc-user-service data-source-ref="dataSource"
+		authorities-by-username-query="SELECT UsuLogin AS 'username',
+		concat('ROLE_',upper(replace(UsuPapel, ' ', '_'))) AS 'authority' FROM
+		usuario WHERE UsuLogin=?" users-by-username-query="SELECT UsuLogin AS
+		'username', UsuSenha AS 'password', 'true' AS 'enabled' FROM usuario
+		WHERE UsuLogin = ?"/> </authentication-provider>
+		</authentication-manager>
+	-->
 
 </b:beans>

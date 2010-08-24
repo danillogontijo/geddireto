@@ -9,6 +9,11 @@
 	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 	   http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd">
 
+	<!--<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:viewClass="org.springframework.web.servlet.view.JstlView" p:prefix="/WEB-INF/jsp/"
+		p:suffix=".jsp" />
+
 	<context:annotation-config />
 
 	<dwr:configuration>
@@ -29,12 +34,7 @@
 		class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
 		<property name="order" value="2" />
 	</bean>
-
-	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-		p:viewClass="org.springframework.web.servlet.view.JstlView" p:prefix="/WEB-INF/jsp/"
-		p:suffix=".jsp" />
-
+	
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
@@ -44,5 +44,5 @@
 		</property>
 	</bean>
 
-</beans>
+--></beans>
 
