@@ -72,8 +72,8 @@ function setInputFieldStatus(elementId, message)
 
 function montaContas(listBeans){
 	if (listBeans != null){
-		dwr.util.removeAllOptions('contas');
-		dwr.util.addOptions('contas', listBeans, "id", "texto");
+		dwr.util.removeAllOptions('j_usuario_conta');
+		dwr.util.addOptions('j_usuario_conta', listBeans, "id", "texto");
 	}
 	
 }
@@ -162,7 +162,7 @@ function montaContas(listBeans){
 				
 				<div id="line" style="height: 45px; line-height: 50px;">
 					<div id="column">
-					Contas <select id="contas"><option>Selecione sua conta</option></select></div>
+					Contas <select id="j_usuario_conta" name="j_usuario_conta"><option>Selecione sua conta</option></select></div>
 				</div>
 				
 				<div id="line" style="height: 30px; text-align: center; margin-top: 10px;">

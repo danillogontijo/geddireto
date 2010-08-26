@@ -4,6 +4,7 @@
 <%@ page import="org.springframework.security.core.Authentication" %>
 <%@ page import="org.springframework.security.core.GrantedAuthority" %>
 <%@ page import="br.org.ged.direto.model.entity.*" %>
+<%@ page import="br.org.ged.direto.model.service.security.*" %>
 
 <a href="user/add.htm" >Add</a> <br>
 <a href="user/remove.htm" >Remove</a>
@@ -11,23 +12,26 @@
 <br>
 <br>
 <a href="usuarioTeste.html?id=1" >usuarioTeste.html?id=1</a><br>
-<a href="loginSucesso.html" >LoginSucesso.html</a><br>
+<a href="login.html" >Login.html</a><br>
 <a href="exitUser.jsp" >exit</a><br>
-<a href="debug.jsp" >debug</a><br>
+<a href="principal.html" >principal</a><br>
 <a href="logout.jsp" >logout</a><br>
 <a href="login.jsp" >login</a><br>
 <a href="changePwd.html" >Change Pwd</a><br>
 
-<p>nome: ${login.usuLogin}</p>
 
 
 <%
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) { 
-        Usuario o = (Usuario) auth.getPrincipal();
+        //Usuario o = (Usuario) auth.getPrincipal();
         //auth.
         
-        out.println(o.getUsername());
+        	//UsuarioContaAuthenticationToken contaUsuarioToken =	(UsuarioContaAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        
+       // out.println(o.getUsername());
+        
+        //out.println(auth.);
         
         %>
 <p>

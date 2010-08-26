@@ -1,8 +1,6 @@
 package br.org.ged.direto.model.service.impl;
 
 import java.util.List;
-import java.util.Locale;
-
 import br.org.direto.util.DataUtils;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.UsuarioRepository;

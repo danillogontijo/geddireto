@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 
-	<display-name>direto</display-name>
+	<display-name>GED Direto</display-name>
 
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
@@ -13,11 +13,9 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/applicationContext.xml  
 			/WEB-INF/security/security-config.xml
-            /WEB-INF/security/business-config.xml
-            /WEB-INF/security/authorization-config.xml 
-            </param-value>
+            /WEB-INF/security/base-config.xml
+        </param-value>
 	</context-param>
 
 	<listener>
@@ -76,9 +74,9 @@
 
 
 	<!-- PAGINA DE ERRO DE PERMISSAO -->
-	<error-page>
+	<!--<error-page>
 		<error-code>403</error-code>
 		<location>/error.html</location>
 	</error-page>
 
-</web-app>
+--></web-app>

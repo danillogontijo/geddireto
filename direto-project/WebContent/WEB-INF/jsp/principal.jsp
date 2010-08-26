@@ -61,7 +61,8 @@ ${usuario.usuLogin}<br>
     
  
   
-       
+    <br>${numUsers} user(s) are logged in!
+   
  
     
     
