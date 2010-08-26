@@ -7,8 +7,15 @@
 <title>Error Page</title>
 </head>
 <body>
-Acesso negado
-<hr>
- <br/>
+
+<h1>Access Denied</h1>
+<p>
+	Access to the specified resource has been denied for the following reason: <strong>${errorDetails}</strong>.
+</p>
+<em>Error Details (for Support Purposes only):</em><br />
+<blockquote>
+	<pre>${errorTrace}</pre>
+</blockquote>
+
 </body>
 </html>

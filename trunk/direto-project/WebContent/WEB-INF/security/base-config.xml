@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+	">
+	
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/config/configuration.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>${jdbc.driver.className}</value>
+		</property>
+		<property name="url">
+			<value>${jdbc.url}</value>
+		</property>
+		<property name="username">
+			<value>${jdbc.username}</value>
+		</property>
+		<property name="password">
+			<value>${jdbc.password}</value>
+		</property>
+	</bean>
+		
+	<import resource="classpath:/br/org/ged/direto/model/entity/hibernate-config.xml" />
+	
+	
+	<!--<bean id="openSessionInViewInterceptor"
+		class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+         <property name="dataSource" ref="dataSource"/> 
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+      	
+	<tx:annotation-driven transaction-manager="transactionManager" />-->
+	
+	<bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
+	 	<property name="authenticationManager" ref="authenticationManager"/>
+	 </bean>
+	
+	<bean class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" id="passwordEncoder" />
+	
+	<bean id="customerUserDetailsService" class="br.org.ged.direto.model.service.security.CustomerUserDetailsService">
+			<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="usuarioContaRequestAuthenticationProvider" class="br.org.ged.direto.model.service.security.UsuarioContaAuthenticationProvider">
+		<property name="passwordEncoder" ref="passwordEncoder"/>
+		<property name="userDetailsService" ref="customerUserDetailsService"/>
+	</bean>
+	
+	<context:annotation-config />
+
+	<dwr:configuration>
+		<dwr:convert type="bean" class="br.org.direto.util.DataUtils" />
+	</dwr:configuration>
+
+	<dwr:annotation-config />
+	<dwr:url-mapping />
+	<dwr:controller id="dwrController" debug="true" />
+
+	<context:component-scan base-package="br.org.ged.direto" />
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="order" value="1" />
+	</bean>
+	
+	
+	
+</beans>

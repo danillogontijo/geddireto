@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,12 +28,15 @@ import br.org.ged.direto.model.service.UsuarioService;
 @SessionAttributes({"usuario", "mt"})
 public class PrincipalController {
 	
-	
+	@Autowired
 	private UsuarioService usuarioService;
 	
 	@Autowired
-	public void setUsuarioService(UsuarioService usuarioService) {
-		this.usuarioService = usuarioService;
+	SessionRegistry sessionRegistry;
+	
+	@ModelAttribute("numUsers")
+	public int getNumberOfUsers() {
+		return sessionRegistry.getAllPrincipals().size();
 	}
 	
 	/*@ModelAttribute("menuTopo")
