@@ -6,6 +6,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import br.org.ged.direto.model.entity.Usuario;
+
 public class UsuarioContaAuthenticationProvider extends DaoAuthenticationProvider {
 	
 	@Override
@@ -18,11 +20,12 @@ public class UsuarioContaAuthenticationProvider extends DaoAuthenticationProvide
 			UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
 		
-		
-		super.additionalAuthenticationChecks(userDetails, authentication);
+		Usuario usuarioDetails = (Usuario)userDetails;
 		
 		UsuarioContaAuthenticationToken contaUsuarioToken = 
 			(UsuarioContaAuthenticationToken) authentication;
+		
+		super.additionalAuthenticationChecks(usuarioDetails, contaUsuarioToken);
 		
 		System.out.println("Autenticando usuario conta:" + contaUsuarioToken.getRequestUsuarioConta());
 		
@@ -41,8 +44,8 @@ public class UsuarioContaAuthenticationProvider extends DaoAuthenticationProvide
 	}
 
 	private String calculateExpectedContaUsuario(UsuarioContaAuthenticationToken contaUsuarioToken) {
-		return contaUsuarioToken.getPrincipal() + "|+|" + contaUsuarioToken.getCredentials();
-		//return contaUsuarioToken.getRequestUsuarioConta();
+		//return contaUsuarioToken.getPrincipal() + "|+|" + contaUsuarioToken.getCredentials();
+		return contaUsuarioToken.getRequestUsuarioConta();
 	}
 
 }

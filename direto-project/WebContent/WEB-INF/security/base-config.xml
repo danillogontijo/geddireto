@@ -40,24 +40,11 @@
 		
 	<import resource="classpath:/br/org/ged/direto/model/entity/hibernate-config.xml" />
 	
-	
-	<!--<bean id="openSessionInViewInterceptor"
-		class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
-		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-	
-	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-         <property name="dataSource" ref="dataSource"/> 
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-      	
-	<tx:annotation-driven transaction-manager="transactionManager" />-->
-	
-	<bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
+	<!--<bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
 	 	<property name="authenticationManager" ref="authenticationManager"/>
 	 </bean>
 	
-	<bean class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" id="passwordEncoder" />
+	--><bean class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" id="passwordEncoder" />
 	
 	<bean id="customerUserDetailsService" class="br.org.ged.direto.model.service.security.CustomerUserDetailsService">
 			<property name="dataSource" ref="dataSource"/>
@@ -65,6 +52,18 @@
 	
 	<bean id="usuarioContaRequestAuthenticationProvider" class="br.org.ged.direto.model.service.security.UsuarioContaAuthenticationProvider">
 		<property name="passwordEncoder" ref="passwordEncoder"/>
+		<property name="userDetailsService" ref="customerUserDetailsService"/>
+	</bean>
+	
+	<!-- X509 -->
+	<bean id="x509Filter" class="org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter">
+		<property name="authenticationManager" ref="authenticationManager"/>
+	</bean>
+	<bean id="preauthAuthenticationProvider" class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+		<property name="preAuthenticatedUserDetailsService" ref="authenticationUserDetailsService"/>
+	</bean>	
+	<bean id="forbiddenAuthEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>	
+	<bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
 		<property name="userDetailsService" ref="customerUserDetailsService"/>
 	</bean>
 	
