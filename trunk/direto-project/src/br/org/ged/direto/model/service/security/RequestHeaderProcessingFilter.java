@@ -28,9 +28,11 @@ public class RequestHeaderProcessingFilter extends AbstractAuthenticationProcess
 			HttpServletResponse response) throws AuthenticationException,
 			IOException, ServletException {
        
-		String username = request.getHeader(usernameHeader);
-        String password = request.getHeader(passwordHeader);
-        String usuarioConta = request.getHeader(usuarioContaHeader);
+		String username = request.getParameter(usernameHeader);
+        String password = request.getParameter(passwordHeader);
+        String usuarioConta = request.getParameter(usuarioContaHeader);
+        
+        System.out.println("Autenticando RequestHeaderProcessingFilter:" + usuarioConta);
 
         UsuarioContaAuthenticationToken authRequest = 
         	new UsuarioContaAuthenticationToken(username, password, usuarioConta);

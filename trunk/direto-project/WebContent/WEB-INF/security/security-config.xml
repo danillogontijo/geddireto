@@ -11,7 +11,7 @@
 
 	<global-method-security pre-post-annotations="enabled"></global-method-security>
 
-	<http auto-config="true" use-expressions="true">
+	<http auto-config="true" use-expressions="true" entry-point-ref="forbiddenAuthEntryPoint">
 
 		<access-denied-handler error-page="/accessDenied.html" />
 
@@ -26,17 +26,16 @@
 			access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"
 			requires-channel="https" />
 		-->
-		<intercept-url pattern="/*"
-			access="hasAnyRole ('ROLE_USER','ROLE_ADMIN')" />
-		<intercept-url pattern="/admin/**"
-			access="hasRole('ROLE_ADMIN') and fullyAuthenticated" />
+		<intercept-url pattern="/*"	access="hasAnyRole ('ROLE_USER','ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN') and fullyAuthenticated" />
+		<form-login login-page="/login.html" authentication-failure-url="/login.html?login_error=1" />
+			
+		<x509 user-service-ref="customerUserDetailsService" subject-principal-regex="CN=(.*?),"/>
 
 		<remember-me key="geddireto" token-validity-seconds="3600" />
 
 		<logout invalidate-session="true" logout-success-url="/index.jsp" />
-		<form-login login-page="/login.html"
-			authentication-failure-url="/login.html?login_error=1" />
-
+		
 		<custom-filter ref="requestHeaderFilter" before="FORM_LOGIN_FILTER" />
 
 		<session-management session-fixation-protection="none">
@@ -44,11 +43,10 @@
 				expired-url="/login.html?login_error=1" error-if-maximum-exceeded="true" />
 		</session-management>
 		
-		<!--
-			<port-mappings> <port-mapping http="8080" https="8443" />
-			</port-mappings>
-		--><!--<x509 subject-principal-regex="CN=(.*?)," />-->
-
+		<port-mappings> 
+			<port-mapping http="8080" https="8443" />
+		</port-mappings>
+		
 	</http>
 
 	<authentication-manager alias="authenticationManager">
@@ -56,8 +54,13 @@
 		<authentication-provider user-service-ref="customerUserDetailsService">
 			<password-encoder ref="passwordEncoder"></password-encoder>
 		</authentication-provider>
+		 <!-- X509 -->
+		 <authentication-provider ref="preauthAuthenticationProvider"/>
 	</authentication-manager>
 
+	 <beans:bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
+	 	<beans:property name="authenticationManager" ref="authenticationManager"/>
+	 </beans:bean>
 
 	<!--
 		<authentication-manager> <authentication-provider

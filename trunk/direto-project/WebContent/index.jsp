@@ -22,14 +22,15 @@
 
 
 <%
+		//UsuarioContaAuthenticationToken auth = SecurityContextHolder.getContext().getAuthentication();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) { 
         //Usuario o = (Usuario) auth.getPrincipal();
-        //auth.
+        //(UsuarioContaAuthenticationToken) auth.
         
-        	//UsuarioContaAuthenticationToken contaUsuarioToken =	(UsuarioContaAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+       // UsuarioContaAuthenticationToken contaUsuarioToken =	(UsuarioContaAuthenticationToken) auth.getPrincipal();
         
-       // out.println(o.getUsername());
+        //out.println(o.getUsername());
         
         //out.println(auth.);
         
