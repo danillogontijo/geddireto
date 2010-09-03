@@ -79,7 +79,7 @@
 		    </c:forEach>
 		    
 		    <br>
-		    Conta Atual: <c:out value="${usuario.contaAtual}"></c:out>
+		    Conta Atual: <c:out value="${contaAtual}"></c:out>
 		    
 		 
 		  

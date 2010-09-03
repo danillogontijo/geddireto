@@ -40,14 +40,46 @@
 		
 	<import resource="classpath:/br/org/ged/direto/model/entity/hibernate-config.xml" />
 	
+	<bean id="jdbcUserServiceCustom" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+		<property name="dataSource" ref="dataSource"/>
+		<!-- Ch 4 Enable Groups Exercise -->
+		<property name="enableGroups" value="false"/>
+		<property name="enableAuthorities" value="true"/>
+		
+		 
+		<property name="usersByUsernameQuery">
+			<value>SELECT UsuLogin, UsuSenha, 'true' AS 'enabled' FROM usuario
+		WHERE UsuLogin = ?</value>
+		</property>
+		<property name="authoritiesByUsernameQuery">
+			<value>SELECT UsuLogin,	'ROLE_ADMIN' AS 'authority' FROM
+		usuario WHERE UsuLogin=?</value>
+		</property>
+		 
+	</bean>	
+	
 	<!--<bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
 	 	<property name="authenticationManager" ref="authenticationManager"/>
 	 </bean>
 	
-	--><bean class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" id="passwordEncoder" />
+	-->
+	
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages</value>
+				<value>org/springframework/security/messages_pt_BR</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" id="passwordEncoder" />
 	
 	<bean id="customerUserDetailsService" class="br.org.ged.direto.model.service.security.CustomerUserDetailsService">
 			<property name="dataSource" ref="dataSource"/>
+			<property name="enableGroups" value="false"/>
+			<property name="enableAuthorities" value="true"/>
 	</bean>
 	
 	<bean id="usuarioContaRequestAuthenticationProvider" class="br.org.ged.direto.model.service.security.UsuarioContaAuthenticationProvider">

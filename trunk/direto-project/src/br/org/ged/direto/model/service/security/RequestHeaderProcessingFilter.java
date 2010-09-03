@@ -74,6 +74,7 @@ public class RequestHeaderProcessingFilter extends AbstractAuthenticationProcess
 
 	        if (session != null || getAllowSessionCreation()) {
 	            request.getSession().setAttribute(SPRING_SECURITY_LAST_USERNAME_KEY, TextEscapeUtils.escapeEntities(username));
+	            request.getSession().setAttribute(SPRING_SECURITY_FORM_USUARIO_CONTA_KEY, TextEscapeUtils.escapeEntities(usuarioConta));
 	        }
 	        
 	        System.out.println(session.getAttribute(SPRING_SECURITY_LAST_USERNAME_KEY));
