@@ -21,7 +21,7 @@ public class CustomerUserDetailsService extends JdbcDaoImpl implements
 	public UserDetails loadUserByUsername(String usuLogin)
 			throws UsernameNotFoundException, DataAccessException {
 
-		System.out.println("Logando...");
+		System.out.println(usuLogin + ": Logando...");
 
 		Usuario usuario = this.usuarioService.selectByLogin(usuLogin);
 

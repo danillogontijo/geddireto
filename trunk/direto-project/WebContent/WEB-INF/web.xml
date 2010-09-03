@@ -18,14 +18,8 @@
         </param-value>
 	</context-param>
 
-	<listener>
+	<!--<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-
-	<!-- LISTENER QUE PERMITE APENAS UMA SESSÃO POR USUARIO -->
-	<!-- LISTENER QUE EXPIRA O USUARIO DEVIDO AO NR DE TENTATIVAS -->
-	<listener>
-		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
 	</listener>
 
 	<servlet>
@@ -40,17 +34,7 @@
 		<url-pattern>/dwr/*</url-pattern>
 	</servlet-mapping>
 
-	<!-- FILTRO NECESSARIO PARA O SPRING-SECURITY -->
-	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-	<!-- FILTRO PARA UTILIZAR O LAZY NA VIEW -->
+	 FILTRO PARA UTILIZAR O LAZY NA VIEW 
 	<filter>
 		<filter-name>Spring OpenSessionInViewFilter</filter-name>
 		<filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
@@ -61,11 +45,77 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-
-	<!-- PAGINA DE ERRO DE PERMISSAO -->
-	<!--<error-page>
+	 FILTRO NECESSARIO PARA O SPRING-SECURITY 
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	 LISTENER QUE PERMITE APENAS UMA SESSÃO POR USUARIO 
+	<listener>
+		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
+	
+	 PAGINA DE ERRO DE PERMISSAO 
+	<error-page>
 		<error-code>403</error-code>
 		<location>/error.html</location>
 	</error-page>
 
---></web-app>
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- FILTRO NECESSARIO PARA O SPRING-SECURITY -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- LISTENER QUE PERMITE APENAS UMA SESSÃO POR USUARIO -->
+	<listener>
+		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
+
+	
+	<servlet>
+		<servlet-name>direto</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>direto</servlet-name>
+		<url-pattern>*.html</url-pattern>
+		<url-pattern>/dwr/*</url-pattern>
+	</servlet-mapping>
+
+
+</web-app>

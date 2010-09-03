@@ -2,7 +2,7 @@ package br.org.ged.direto.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import br.org.ged.direto.controller.utils.MenuTopo;
-import br.org.ged.direto.model.entity.Conta;
-import br.org.ged.direto.model.entity.PstGrad;
+
+
+import br.org.ged.direto.model.entity.Pastas;
+
 import br.org.ged.direto.model.entity.Usuario;
+import br.org.ged.direto.model.service.PastasService;
 import br.org.ged.direto.model.service.UsuarioService;
 
 @Controller
@@ -32,6 +34,9 @@ public class PrincipalController {
 	private UsuarioService usuarioService;
 	
 	@Autowired
+	private PastasService pastasService;
+	
+	@Autowired
 	SessionRegistry sessionRegistry;
 	
 	@ModelAttribute("numUsers")
@@ -39,30 +44,24 @@ public class PrincipalController {
 		return sessionRegistry.getAllPrincipals().size();
 	}
 	
-	/*@ModelAttribute("menuTopo")
-	public Collection<String> menuTopo() {
-		List<String> menuList = new ArrayList<String>();
-		MenuTopo menu = new MenuTopo();
+	@ModelAttribute("pastas")
+	public Collection<Pastas> todasPastas() {
 		
-		menuList.add(menu.getAdmin());
-		menuList.add(menu.getAlterarSenha());
-		menuList.add(menu.getSugestoes());
-		return menuList;
-	}*/
-	
-	@ModelAttribute("types")
-	public Collection<PstGrad> populateProductTypes() {
-	List<PstGrad> types = new ArrayList<PstGrad>();
-	types.add(new PstGrad(50,"teste","teste"));
-	//types.add("CDs");
-	//types.add("MP3 Players");
-	return types;
+		List<Pastas> pastas = new ArrayList<Pastas>();
+		
+		pastas = pastasService.getAll(); 
+		
+		return pastas;
 	}
 
 
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String showUserDetails(ModelMap model) {
+	public String showUserDetails(@RequestParam("box") int box, ModelMap model) {
+		
+		if (box == 0)
+			box = 1;
+		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		Usuario usuario = usuarioService.selectByLogin(auth.getName());
@@ -73,6 +72,7 @@ public class PrincipalController {
 		//Iterator<PstGrad> ite_pstgrad = usuario.getPstGrad().iterator();
 		
 		model.addAttribute("usuario",usuario);
+		model.addAttribute("box",box);
 		//model.addAttribute("menuTopo",menuTopo());
 		//model.addAttribute(pstgrad);
 		//model.addAttribute(usuarioService.listActivedContas(auth.getName()));

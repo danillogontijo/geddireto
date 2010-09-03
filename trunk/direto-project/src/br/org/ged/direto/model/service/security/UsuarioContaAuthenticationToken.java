@@ -14,7 +14,7 @@ public class UsuarioContaAuthenticationToken extends UsernamePasswordAuthenticat
 			String credentials, String usuarioConta) {
 		super(principal, credentials);
 		this.requestUsuarioConta = usuarioConta;
-		System.out.println("Autenticando UsuarioContaAuthenticationToken:" + usuarioConta);
+		System.out.println("Autenticando UsuarioContaAuthenticationToken:" + requestUsuarioConta);
 	}
 
 	public String getRequestUsuarioConta() {

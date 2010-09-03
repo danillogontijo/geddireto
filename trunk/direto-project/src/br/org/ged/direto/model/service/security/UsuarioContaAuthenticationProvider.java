@@ -1,5 +1,7 @@
 package br.org.ged.direto.model.service.security;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -25,9 +27,11 @@ public class UsuarioContaAuthenticationProvider extends DaoAuthenticationProvide
 		UsuarioContaAuthenticationToken contaUsuarioToken = 
 			(UsuarioContaAuthenticationToken) authentication;
 		
+		usuarioDetails.setContaAtual(contaUsuarioToken.getRequestUsuarioConta());
+		
 		super.additionalAuthenticationChecks(usuarioDetails, contaUsuarioToken);
 		
-		System.out.println("Autenticando usuario conta:" + contaUsuarioToken.getRequestUsuarioConta());
+		System.out.println("UsuarioContaAuthenticationProvider:" + contaUsuarioToken.getRequestUsuarioConta());
 		
 		if(contaUsuarioToken.getRequestUsuarioConta() == null) {
 			throw new BadCredentialsException(messages.getMessage(
@@ -36,16 +40,17 @@ public class UsuarioContaAuthenticationProvider extends DaoAuthenticationProvide
 		}
 		
 		// verifique se a conta esta ativa
-		if(!contaUsuarioToken.getRequestUsuarioConta().equals(calculateExpectedContaUsuario(contaUsuarioToken))) {
+		/*if(!contaUsuarioToken.getRequestUsuarioConta().equals(calculateExpectedContaUsuario(contaUsuarioToken))) {
 			throw new BadCredentialsException(messages.getMessage(
                     "UsuarioContaAuthenticationProvider.badUsuarioConta", "Conta Usuario Invalida."),
                     isIncludeDetailsObject() ? userDetails : null);			
-		}
+		}*/
 	}
 
-	private String calculateExpectedContaUsuario(UsuarioContaAuthenticationToken contaUsuarioToken) {
+	/*private String calculateExpectedContaUsuario(UsuarioContaAuthenticationToken contaUsuarioToken) {
 		//return contaUsuarioToken.getPrincipal() + "|+|" + contaUsuarioToken.getCredentials();
 		return contaUsuarioToken.getRequestUsuarioConta();
-	}
-
+	}*/
+	
+	
 }
