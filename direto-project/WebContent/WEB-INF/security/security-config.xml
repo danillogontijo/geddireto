@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -8,11 +9,10 @@
 		http://www.springframework.org/schema/security/spring-security-3.0.xsd
 	">
 
-
 	<global-method-security pre-post-annotations="enabled"></global-method-security>
 
-	<http auto-config="true" use-expressions="true" entry-point-ref="forbiddenAuthEntryPoint">
-
+	<!--<http auto-config="true" use-expressions="true" entry-point-ref="forbiddenAuthEntryPoint">-->
+	<http auto-config="true" use-expressions="true">
 		<access-denied-handler error-page="/accessDenied.html" />
 
 		<intercept-url pattern="/index.jsp" access="permitAll" />
@@ -30,20 +30,22 @@
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN') and fullyAuthenticated" />
 		<form-login login-page="/login.html" authentication-failure-url="/login.html?login_error=1" />
 			
-		<x509 user-service-ref="customerUserDetailsService" subject-principal-regex="CN=(.*?),"/>
+		<!--<x509 user-service-ref="customerUserDetailsService" subject-principal-regex="CN=(.*?),"/>
 
-		<remember-me key="geddireto" token-validity-seconds="3600" />
+		--><!--<remember-me key="geddireto" token-validity-seconds="3600" />
 
-		<logout invalidate-session="true" logout-success-url="/index.jsp" />
+		--><logout invalidate-session="true" logout-success-url="/index.jsp" />
 		
 		<custom-filter ref="requestHeaderFilter" before="FORM_LOGIN_FILTER" />
+		
+		<custom-filter ref="custumSessionManagerFilter" before="SESSION_MANAGEMENT_FILTER" />
 
-		<session-management session-fixation-protection="none">
+		<!--<session-management session-fixation-protection="migrateSession" invalid-session-url="/login.html">
 			<concurrency-control max-sessions="1"
 				expired-url="/login.html?login_error=1" error-if-maximum-exceeded="true" />
 		</session-management>
 		
-		<port-mappings> 
+		--><port-mappings> 
 			<port-mapping http="8080" https="8443" />
 		</port-mappings>
 		
@@ -51,15 +53,38 @@
 
 	<authentication-manager alias="authenticationManager">
 		<authentication-provider ref="usuarioContaRequestAuthenticationProvider" />
-		<authentication-provider user-service-ref="customerUserDetailsService">
+		<!--<authentication-provider user-service-ref="customerUserDetailsService">
 			<password-encoder ref="passwordEncoder"></password-encoder>
 		</authentication-provider>
-		 <!-- X509 -->
+		 --><!-- X509 -->
 		 <authentication-provider ref="preauthAuthenticationProvider"/>
 	</authentication-manager>
 
+	<beans:bean id="sessionRegistry"
+		class="org.springframework.security.core.session.SessionRegistryImpl" />
+		
+	<beans:bean id="securityContextRepository"
+		class="org.springframework.security.web.context.HttpSessionSecurityContextRepository" >
+		<beans:property name="allowSessionCreation" value="false" />
+	</beans:bean>		
+		
+	<beans:bean id="defaultConcurrentSessionController"
+		class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+		<beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
+		<beans:property name="exceptionIfMaximumExceeded" value="true" />
+		<beans:property name="maximumSessions" value="1" />
+		<beans:property name="migrateSessionAttributes" value="true" />
+	</beans:bean>
+
 	 <beans:bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
 	 	<beans:property name="authenticationManager" ref="authenticationManager"/>
+	 	<beans:property name="sessionAuthenticationStrategy" ref="defaultConcurrentSessionController" />
+	 </beans:bean>
+	 
+	 <beans:bean id="custumSessionManagerFilter" class="org.springframework.security.web.session.SessionManagementFilter">
+	 	<beans:constructor-arg name="securityContextRepository" ref="securityContextRepository" />
+	 	<beans:property name="invalidSessionUrl" value="/login.html" />
+	 	<beans:property name="sessionAuthenticationStrategy" ref="defaultConcurrentSessionController" />
 	 </beans:bean>
 
 	<!--

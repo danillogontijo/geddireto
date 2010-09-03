@@ -133,7 +133,7 @@ function montaContas(listBeans){
 	</div>
 </div>
 
-<form name="f" action="<c:url value='j_spring_security_check'/>" id="form_login" method="POST">
+<form name="f" action="<c:url value='j_spring_security_filter'/>" id="form_login" method="POST">
 <div id="table" style="position: absolute; width: 330px; margin-left: -165px; left: 501px; margin-top: -83px;">
 	<div class="bordaBox">
 		<b class="b1"></b><b class="b2"></b><b class="b3"></b><b class="b4"></b>

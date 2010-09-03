@@ -1,5 +1,5 @@
 body {margin: 0px 0px 0px 0px; font: 12px verdana, arial, helvetica, sans-serif; font-weight: normal;}
-a {text-decoration:none;}
+a {text-decoration:none; color: black;}
 
 /**
  *	ERROS CAMPOS
@@ -47,4 +47,21 @@ a {text-decoration:none;}
  */
 .menu_titulo {color: #333333; font: bold 12px verdana, arial, helvetica, sans-serif;}
 .menu_titulo a:hover {text-decoration: underline;}
+
+.menuLado {font-weight: normal; margin-top: 5px; margin-bottom: 5px;}
+.menuLado a:hover {text-decoration: underline;}
+.menuLadoSel {font-weight: bold; margin-top: 10px; margin-bottom: 10px;}
+
+.menu1 {color: #ffffff;	font-weight: bold; text-decoration: none;}
+.menu1 a:hover {text-decoration: underline;}
+
+.menu2 {font-weight: normal; text-decoration: none;}
+
 .rodape {color: #666666; font-size: 10px;}
+
+/**
+ * DIVS DO MENU LATERAL
+ */
+ #divMenuLateral {margin-bottom: 10px;}
+ #divMenuLateralSel {margin-top: 10px; margin-bottom 10px; font-weight: bold;}
+ 

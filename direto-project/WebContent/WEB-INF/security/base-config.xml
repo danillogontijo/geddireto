@@ -59,10 +59,13 @@
 	<bean id="x509Filter" class="org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager"/>
 	</bean>
+	
 	<bean id="preauthAuthenticationProvider" class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
 		<property name="preAuthenticatedUserDetailsService" ref="authenticationUserDetailsService"/>
-	</bean>	
-	<bean id="forbiddenAuthEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>	
+	</bean>	 
+	
+	<!--<bean id="forbiddenAuthEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>	-->
+	
 	<bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
 		<property name="userDetailsService" ref="customerUserDetailsService"/>
 	</bean>
