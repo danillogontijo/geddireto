@@ -27,7 +27,7 @@ public class UsuarioContaAuthenticationProvider extends DaoAuthenticationProvide
 		UsuarioContaAuthenticationToken contaUsuarioToken = 
 			(UsuarioContaAuthenticationToken) authentication;
 		
-		usuarioDetails.setContaAtual(contaUsuarioToken.getRequestUsuarioConta());
+		//usuarioDetails.setContaAtual(contaUsuarioToken.getRequestUsuarioConta());
 		
 		super.additionalAuthenticationChecks(usuarioDetails, contaUsuarioToken);
 		

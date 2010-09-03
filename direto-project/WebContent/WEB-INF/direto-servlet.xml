@@ -13,14 +13,7 @@
 		p:viewClass="org.springframework.web.servlet.view.JstlView" p:prefix="/WEB-INF/jsp/"
 		p:suffix=".jsp" />
 
-	<bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basenames">
-			<list>
-				<value>messages</value>
-			</list>
-		</property>
-	</bean>
+	
 
 
 </beans>

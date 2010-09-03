@@ -5,6 +5,9 @@ import java.util.Collection;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,12 +60,13 @@ public class PrincipalController {
 
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String showUserDetails(@RequestParam("box") int box, ModelMap model) {
+	public String showUserDetails(@RequestParam("box") int box, ModelMap model, HttpServletRequest request) {
 		
 		if (box == 0)
 			box = 1;
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		HttpSession session = request.getSession(true);
 		
 		Usuario usuario = usuarioService.selectByLogin(auth.getName());
 		//Usuario usuario = this.usuarioService.selectById(usuarioTemp.getIdUsuario());
@@ -73,7 +77,7 @@ public class PrincipalController {
 		
 		model.addAttribute("usuario",usuario);
 		model.addAttribute("box",box);
-		//model.addAttribute("menuTopo",menuTopo());
+		model.addAttribute("contaAtual", session.getAttribute("j_usuario_conta"));
 		//model.addAttribute(pstgrad);
 		//model.addAttribute(usuarioService.listActivedContas(auth.getName()));
 		

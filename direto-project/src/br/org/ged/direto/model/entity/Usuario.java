@@ -27,8 +27,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.org.ged.direto.model.entity.security.Authority;
-
  
 @Entity
 @Table(name="usuario", uniqueConstraints = {
@@ -77,15 +75,13 @@ public class Usuario implements Serializable,UserDetails
 	@OrderBy("contaPrincipal desc,idConta asc")  
 	private Set<Conta> contas = new HashSet<Conta>(0);
 	
-	private static String contaAtual;
 	
-	public Usuario(){
-		//this.contaAtual = "";
-	}
+	
+	public Usuario(){}
 	
 	public Usuario(Integer idUsuario, PstGrad pstGrad, String usuNome,
 			String usuLogin, Integer usuIdt, String usuNGuerra,
-			String usuPapel, String usuSenha, Date usuUltimoLogin, String contaAtual) {
+			String usuPapel, String usuSenha, Date usuUltimoLogin) {
 		this.idUsuario = idUsuario;
 		this.pstGrad = pstGrad;
 		this.usuNome = usuNome;
@@ -95,7 +91,6 @@ public class Usuario implements Serializable,UserDetails
 		this.usuPapel = usuPapel;
 		this.usuSenha = usuSenha;
 		this.usuUltimoLogin = usuUltimoLogin;
-		//this.contaAtual = contaAtual;
 	}
 	
 	public Integer getIdUsuario() {
@@ -169,14 +164,6 @@ public class Usuario implements Serializable,UserDetails
 		this.contas = contas;
 	}
 	
-	public String getContaAtual() {
-		return contaAtual;
-	}
-
-	public void setContaAtual(String contaAtual) {
-		this.contaAtual = contaAtual;
-	}
-
 	@Override
 	public Collection<GrantedAuthority> getAuthorities() {
 		 List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();

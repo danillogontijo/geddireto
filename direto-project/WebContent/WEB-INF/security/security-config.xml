@@ -13,10 +13,11 @@
 
 	<!--<http auto-config="true" use-expressions="true" entry-point-ref="forbiddenAuthEntryPoint">-->
 	<http auto-config="true" use-expressions="true">
-		<access-denied-handler error-page="/accessDenied.html" />
+		<!--<access-denied-handler error-page="/accessDenied.html" />
 
-		<intercept-url pattern="/index.jsp" access="permitAll" />
+		--><intercept-url pattern="/index.jsp" access="permitAll" />
 		<intercept-url pattern="/login.html" access="permitAll" />
+		<intercept-url pattern="/error.html" access="permitAll" />
 		<intercept-url pattern="/dwr/*" access="permitAll" />
 		<intercept-url pattern="/dwr/interface/*" access="permitAll" />
 		<intercept-url pattern="/imagens/*" access="permitAll" />
@@ -26,7 +27,7 @@
 			access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"
 			requires-channel="https" />
 		-->
-		<intercept-url pattern="/*"	access="hasAnyRole ('ROLE_USER','ROLE_ADMIN')" />
+		<intercept-url pattern="/*"	access="hasAnyRole ('ROLE_USER','ROLE_ADMIN') and fullyAuthenticated" />
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN') and fullyAuthenticated" />
 		<form-login login-page="/login.html" authentication-failure-url="/login.html?login_error=1" />
 			
@@ -57,15 +58,22 @@
 			<password-encoder ref="passwordEncoder"></password-encoder>
 		</authentication-provider>
 		 --><!-- X509 -->
-		 <authentication-provider ref="preauthAuthenticationProvider"/>
-	</authentication-manager>
+		 <!--<authentication-provider ref="preauthAuthenticationProvider"/>
+	--></authentication-manager>
 
+	
 	<beans:bean id="sessionRegistry"
 		class="org.springframework.security.core.session.SessionRegistryImpl" />
+	
+	<beans:bean id="authenticationFailureHandler"
+		class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+		<beans:property name="defaultFailureUrl" value="/login.html?login_error=1" />
 		
+	</beans:bean>	
+	
 	<beans:bean id="securityContextRepository"
 		class="org.springframework.security.web.context.HttpSessionSecurityContextRepository" >
-		<beans:property name="allowSessionCreation" value="false" />
+		<beans:property name="allowSessionCreation" value="true" />
 	</beans:bean>		
 		
 	<beans:bean id="defaultConcurrentSessionController"
@@ -79,7 +87,9 @@
 	 <beans:bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
 	 	<beans:property name="authenticationManager" ref="authenticationManager"/>
 	 	<beans:property name="sessionAuthenticationStrategy" ref="defaultConcurrentSessionController" />
-	 </beans:bean>
+	 	<beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler" />
+	 	<!--<beans:property name="messageSource" ref="messageSource" />
+	 --></beans:bean>
 	 
 	 <beans:bean id="custumSessionManagerFilter" class="org.springframework.security.web.session.SessionManagementFilter">
 	 	<beans:constructor-arg name="securityContextRepository" ref="securityContextRepository" />

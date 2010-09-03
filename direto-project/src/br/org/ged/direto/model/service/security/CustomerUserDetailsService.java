@@ -1,8 +1,11 @@
 package br.org.ged.direto.model.service.security;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
@@ -29,7 +32,19 @@ public class CustomerUserDetailsService extends JdbcDaoImpl implements
 			throw new UsernameNotFoundException(usuLogin + "not found");
 		}
 
-		return usuario;
+		List<GrantedAuthority> dbAuths = (List<GrantedAuthority>) usuario.getAuthorities();
+
+        addCustomAuthorities(usuario.getUsername(), dbAuths);
+
+        if (dbAuths.size() == 0) {
+            throw new UsernameNotFoundException(
+                    messages.getMessage("JdbcDaoImpl.noAuthority",
+                            new Object[] {usuLogin}, "User {0} has no GrantedAuthority"), usuLogin);
+        }
+
+        return createUserDetails(usuLogin, usuario, dbAuths);
+        
+        //return usuario;
 	}
 
 	public void changePassword(String usuLogin, String usuSenha) {
