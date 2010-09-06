@@ -1,5 +1,6 @@
 package br.org.ged.direto.model.service.security;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class CustomerUserDetailsService extends JdbcDaoImpl implements
 	public UserDetails loadUserByUsername(String usuLogin)
 			throws UsernameNotFoundException, DataAccessException {
 
-		System.out.println(usuLogin + ": Logando...");
+		/*System.out.println(usuLogin + ": Logando...");
 
 		Usuario usuario = this.usuarioService.selectByLogin(usuLogin);
 
@@ -32,9 +33,27 @@ public class CustomerUserDetailsService extends JdbcDaoImpl implements
 			throw new UsernameNotFoundException(usuLogin + "not found");
 		}
 
-		List<GrantedAuthority> dbAuths = (List<GrantedAuthority>) usuario.getAuthorities();
+		return usuario;*/
+		
+		Usuario user = this.usuarioService.selectByLogin(usuLogin);
+		
+		if (user == null) {
+			throw new UsernameNotFoundException(usuLogin + "not found");
+		}
+		
+		//UserDetails user = users.get(0); // contains no GrantedAuthority[]
 
-        addCustomAuthorities(usuario.getUsername(), dbAuths);
+        /*Set<GrantedAuthority> dbAuthsSet = new HashSet<GrantedAuthority>();
+
+        if (super.getEnableAuthorities()) {
+            dbAuthsSet.addAll(loadUserAuthorities(user.getAuthorities()));
+        }
+*/  
+        /*List<GrantedAuthority> dbAuths = new ArrayList<GrantedAuthority>(dbAuthsSet);*/
+		
+		List<GrantedAuthority> dbAuths = (List<GrantedAuthority>) user.getAuthorities();
+
+        addCustomAuthorities(user.getUsername(), dbAuths);
 
         if (dbAuths.size() == 0) {
             throw new UsernameNotFoundException(
@@ -42,8 +61,10 @@ public class CustomerUserDetailsService extends JdbcDaoImpl implements
                             new Object[] {usuLogin}, "User {0} has no GrantedAuthority"), usuLogin);
         }
 
-        return createUserDetails(usuLogin, usuario, dbAuths);
+        //return user;
         
+        return createUserDetails(usuLogin, user, dbAuths);
+
         //return usuario;
 	}
 
