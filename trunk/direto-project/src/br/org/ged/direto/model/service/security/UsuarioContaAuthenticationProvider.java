@@ -22,14 +22,14 @@ public class UsuarioContaAuthenticationProvider extends DaoAuthenticationProvide
 			UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
 		
-		Usuario usuarioDetails = (Usuario)userDetails;
+		//Usuario usuarioDetails = (Usuario)userDetails;
 		
 		UsuarioContaAuthenticationToken contaUsuarioToken = 
 			(UsuarioContaAuthenticationToken) authentication;
 		
 		//usuarioDetails.setContaAtual(contaUsuarioToken.getRequestUsuarioConta());
 		
-		super.additionalAuthenticationChecks(usuarioDetails, contaUsuarioToken);
+		super.additionalAuthenticationChecks(userDetails, contaUsuarioToken);
 		
 		System.out.println("UsuarioContaAuthenticationProvider:" + contaUsuarioToken.getRequestUsuarioConta());
 		
