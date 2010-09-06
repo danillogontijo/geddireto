@@ -71,6 +71,8 @@ public class PrincipalController {
 		Usuario usuario = usuarioService.selectByLogin(auth.getName());
 		//Usuario usuario = this.usuarioService.selectById(usuarioTemp.getIdUsuario());
 		
+		System.out.println("j_conta: "+session.getAttribute("j_usuario_conta"));
+		
 		//PstGrad pstgrad = usuario.getPstGrad();
 		
 		//Iterator<PstGrad> ite_pstgrad = usuario.getPstGrad().iterator();
