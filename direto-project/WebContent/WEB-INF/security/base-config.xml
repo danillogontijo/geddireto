@@ -12,7 +12,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 		http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
-	">
+	"> 
 	
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -40,9 +40,9 @@
 		
 	<import resource="classpath:/br/org/ged/direto/model/entity/hibernate-config.xml" />
 	
-	<bean id="jdbcUserServiceCustom" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+	<!--<bean id="jdbcUserServiceCustom" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
 		<property name="dataSource" ref="dataSource"/>
-		<!-- Ch 4 Enable Groups Exercise -->
+		 Ch 4 Enable Groups Exercise 
 		<property name="enableGroups" value="false"/>
 		<property name="enableAuthorities" value="true"/>
 		
@@ -58,7 +58,7 @@
 		 
 	</bean>	
 	
-	<!--<bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
+	--><!--<bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
 	 	<property name="authenticationManager" ref="authenticationManager"/>
 	 </bean>
 	

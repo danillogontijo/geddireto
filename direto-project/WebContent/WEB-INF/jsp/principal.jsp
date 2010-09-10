@@ -150,6 +150,29 @@
 			</div>
 		
 		</div>
+		
+		<div style="width:100%; text-align:left; float: left; position: static; width: 822px; vertical-align: middle;">
+				
+			<c:forEach var="conta" items="${usuario.contas}">
+			 
+			  <c:forEach var="docs" items="${conta.carteira.documentos}">
+		      
+		        <c:out value="${conta.carteira.cartAbr}" /> -
+		      	<c:out value="${docs.documentoDetalhes.assunto}" /> <br>
+		      
+		      </c:forEach>
+		      
+		    </c:forEach>
+		    
+		    <br><br>
+		    
+		    <c:forEach var="d" items="${documentos}">
+		    	<c:set var="ass" value="${d.documentoDetalhes.assunto}" />
+		    	<c:out value="ass" />
+		    
+		    </c:forEach>
+		
+		</div>
 	
 		
 	</div>

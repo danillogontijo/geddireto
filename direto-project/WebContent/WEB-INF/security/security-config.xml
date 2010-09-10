@@ -39,8 +39,13 @@
 		
 		<custom-filter ref="requestHeaderFilter" before="FORM_LOGIN_FILTER" />
 		
-		<custom-filter ref="custumSessionManagerFilter" before="SESSION_MANAGEMENT_FILTER" />
-
+		<!--<custom-filter ref="custumSessionManagerFilter" before="SESSION_MANAGEMENT_FILTER" />
+		
+		--><custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
+		
+		<session-management session-authentication-strategy-ref="defaultConcurrentSessionController"/>
+		
+		
 		<!--<session-management session-fixation-protection="migrateSession" invalid-session-url="/login.html">
 			<concurrency-control max-sessions="1"
 				expired-url="/login.html?login_error=1" error-if-maximum-exceeded="true" />
@@ -68,8 +73,13 @@
 	<beans:bean id="authenticationFailureHandler"
 		class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
 		<beans:property name="defaultFailureUrl" value="/login.html?login_error=1" />
-		
-	</beans:bean>	
+	</beans:bean>
+	
+	<beans:bean id="concurrencyFilter"
+		class="org.springframework.security.web.session.ConcurrentSessionFilter">
+		<beans:property name="sessionRegistry" ref="sessionRegistry" />
+		<beans:property name="expiredUrl" value="/login.html?login_error=1" />
+	</beans:bean>
 	
 	<beans:bean id="securityContextRepository"
 		class="org.springframework.security.web.context.HttpSessionSecurityContextRepository" >
@@ -79,8 +89,8 @@
 	<beans:bean id="defaultConcurrentSessionController"
 		class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
 		<beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
-		<beans:property name="exceptionIfMaximumExceeded" value="true" />
-		<beans:property name="maximumSessions" value="1" />
+		<!--<beans:property name="exceptionIfMaximumExceeded" value="true" />
+		--><beans:property name="maximumSessions" value="1" />
 		<beans:property name="migrateSessionAttributes" value="true" />
 	</beans:bean>
 
