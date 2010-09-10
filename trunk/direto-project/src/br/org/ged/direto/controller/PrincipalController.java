@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 
 
+import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.Pastas;
 
 import br.org.ged.direto.model.entity.Usuario;
+import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.PastasService;
 import br.org.ged.direto.model.service.UsuarioService;
 
@@ -35,6 +37,9 @@ public class PrincipalController {
 	
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private DocumentosService documentosService;
 	
 	@Autowired
 	private PastasService pastasService;
@@ -56,7 +61,16 @@ public class PrincipalController {
 		
 		return pastas;
 	}
-
+	
+	@ModelAttribute("documentos")
+	public Collection<Documento> todosDocumentos() {
+		
+		List<Documento> pastas = new ArrayList<Documento>();
+		
+		pastas = this.documentosService.listByLimited(); 
+		
+		return pastas;
+	}
 
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -64,6 +78,10 @@ public class PrincipalController {
 		
 		if (box == 0)
 			box = 1;
+		
+		//String request.getParameter("");
+		
+		//System.out.println(this.documentosService.selectByIdCarteira(new Integer(2)));
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		HttpSession session = request.getSession(true);

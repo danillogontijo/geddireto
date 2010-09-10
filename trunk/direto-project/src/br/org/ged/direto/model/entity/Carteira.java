@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 
@@ -31,6 +32,7 @@ public class Carteira implements Serializable {
 	private Funcao funcao;
 	private Secao secao;
 	private OM om;
+	private Set<Documento> documentos = new HashSet<Documento>(0);
 
 	
 	public Carteira(){	}
@@ -109,6 +111,15 @@ public class Carteira implements Serializable {
 
 	public void setOm(OM om) {
 		this.om = om;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carteira", cascade = CascadeType.ALL)
+	public Set<Documento> getDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(Set<Documento> documentos) {
+		this.documentos = documentos;
 	}
 
 
