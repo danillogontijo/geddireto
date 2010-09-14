@@ -28,7 +28,22 @@
 -->
 
 
-
+<sec:authorize ifAnyGranted="ROLE_ADMIN">
+				<a href="/admin/" class="menu_titulo">Admin</a> |	
+			</sec:authorize>
+			
+			<sec:authorize ifAnyGranted="ROLE_PROTOCOLO">
+				<a href="/admin/" class="menu_titulo">Admin</a> |	
+			</sec:authorize>
+			
+			<!--<a href="passar_conta.jsp" class="menu_titulo">Passar Conta</a> |
+			
+			<a href="dados_cadastro.jsp?modo=ver" class="menu_titulo">Dados Cadastrais</a> |
+			<a href="configuracao.jsp" class="menu_titulo">Configurações</a> |  
+			<a href="logout.jsp" class="menu_titulo">Sair</a>
+			
+			
+			-->
 
 
 <form:form commandName="usuario" action="editProduct.html">

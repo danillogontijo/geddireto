@@ -42,7 +42,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
-	public List<Documento> listByLimited (){
+	public List<Documento> listByLimited(Integer idCarteira){
 		
 		messages.getMessage("limitByPage");
 		
@@ -68,8 +68,10 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		
 		return list;*/
 		
+		System.out.println("Doc Repository: "+idCarteira);
+		
 		return (List<Documento>) hibernateTemplate.find("from "
-				+ Documento.class.getName());
+				+ Documento.class.getName() + " where idCarteira = ? order by idDocumento desc",idCarteira);
 	}
 	
 	@Override
