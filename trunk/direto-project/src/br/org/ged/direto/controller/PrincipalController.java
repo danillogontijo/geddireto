@@ -1,7 +1,12 @@
 package br.org.ged.direto.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import java.util.List;
 
@@ -9,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
@@ -26,9 +32,12 @@ import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.Pastas;
 
 import br.org.ged.direto.model.entity.Usuario;
+import br.org.ged.direto.model.entity.menus.MenuTopo;
 import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.PastasService;
 import br.org.ged.direto.model.service.UsuarioService;
+import br.org.ged.direto.model.service.menus.IMenuTopo;
+import br.org.ged.direto.model.service.menus.MenuTopoImpl;
 
 @Controller
 @RequestMapping("/principal.html")
@@ -45,7 +54,12 @@ public class PrincipalController {
 	private PastasService pastasService;
 	
 	@Autowired
-	SessionRegistry sessionRegistry;
+	private SessionRegistry sessionRegistry;
+	
+	@Autowired
+	private IMenuTopo menuTopo;
+	
+	private HttpSession session;
 	
 	@ModelAttribute("numUsers")
 	public int getNumberOfUsers() {
@@ -62,14 +76,61 @@ public class PrincipalController {
 		return pastas;
 	}
 	
+	@ModelAttribute("menuTopo")
+	public Collection<MenuTopo> menuTopo() {
+		Collection<MenuTopo> menu = new ArrayList<MenuTopo>();
+		
+		try {
+			menu = menuTopo.filterMenuTopo(menuTopo.getMenuTopo());
+			
+			//menu = menuTopo.getMenuTopo();
+			
+		}catch(Exception e){
+			//System.out.println();
+			e.printStackTrace();
+		}
+		
+		//System.out.println(menu.toString());
+		
+		return menu;
+	}
+	
+	/*public Map<String,String> menuTopo() {
+		
+		
+		Map<String, String> map = new HashMap<String, String>();
+	    map.put("Passar Conta", "passar_conta.jsp");
+	    map.put("Dados Cadastrais", "dados_cadastro.jsp?modo=ver");
+	    map.put("Configurações", "configuracao.jsp");
+	    //Set<?> set = map.entrySet();
+		
+		
+		
+		//List<String> menuTopo = new ArrayList<String>();
+		
+		
+		
+		return map;
+	}*/
+	
 	@ModelAttribute("documentos")
-	public Collection<Documento> todosDocumentos() {
+	public Collection<Documento> todosDocumentos(HttpServletRequest request) {
 		
-		List<Documento> pastas = new ArrayList<Documento>();
+		this.session = request.getSession(true);
 		
-		pastas = this.documentosService.listByLimited(); 
+		Integer idCarteira = new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
 		
-		return pastas;
+		//String usuLogin = (String)session.getAttribute("usuLogin");
+		
+		//System.out.println("j_conta DOCUMENTOS: "+session.getAttribute("j_usuario_conta"));
+		
+		//Integer idCarteira = new Integer(2);
+		
+		List<Documento> docsByConta = new ArrayList<Documento>();
+		
+		docsByConta = this.documentosService.listByLimited(idCarteira); 
+		
+		return docsByConta;
 	}
 
 	
@@ -84,7 +145,7 @@ public class PrincipalController {
 		//System.out.println(this.documentosService.selectByIdCarteira(new Integer(2)));
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		HttpSession session = request.getSession(true);
+		this.session = request.getSession(true);
 		
 		Usuario usuario = usuarioService.selectByLogin(auth.getName());
 		//Usuario usuario = this.usuarioService.selectById(usuarioTemp.getIdUsuario());
@@ -109,5 +170,10 @@ public class PrincipalController {
 		return "principal";
 	
 	}
-
+	
+	
 }
+
+
+
+

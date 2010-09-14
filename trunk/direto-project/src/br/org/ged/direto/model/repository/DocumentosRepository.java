@@ -10,7 +10,7 @@ public interface DocumentosRepository {
 	
 	public List<DataUtils> listDocumentsFromAccount (Integer idCarteira);
 	public void sendDocument(Carteira[] carteira, Documento documento);
-	public List<Documento> listByLimited();
+	public List<Documento> listByLimited(Integer idCarteira);
 	public Documento selectByIdCarteira(Integer idCarteira);
 	
 

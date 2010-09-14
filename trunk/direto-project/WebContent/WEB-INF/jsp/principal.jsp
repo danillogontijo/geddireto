@@ -16,21 +16,21 @@
 		<div style="float: left;"><img name="direto_r1_c1" src="imagens/direto_r1_c1.jpg" width="189" height="43" border="0" id="direto_r1_c1" usemap="#m_direto_r1_c1" alt="" /></div>
 		<div style="float: left; line-height:43px; background-image: url('imagens/direto_r1_c2.jpg'); width: 813px; height:43px; text-align: center;" class="menu_titulo">
 			
-			<sec:authorize ifAnyGranted="ROLE_ADMIN">
-				<a href="/admin/" class="menu_titulo">Admin</a> |	
-			</sec:authorize>
+			<c:forEach var="mt" items="${menuTopo}">
+ 				<c:set value="${mt.name}" var="name"/>
+ 				<c:set value="${mt.value}" var="value"/>
+ 				
+ 				<c:url value="name" var="mtURL">
+				  <c:param name="box" value="${box}" />
+				</c:url>
+				
+				<c:if test="${name != 'Admin'}">| </c:if>
+				
+				<a href="<c:out value="${mtURL}" />" class="menu_titulo">${name}</a> 
+			</c:forEach>
 			
-			<sec:authorize ifAnyGranted="ROLE_PROTOCOLO">
-				<a href="/admin/" class="menu_titulo">Admin</a> |	
-			</sec:authorize>
-			
-			<a href="passar_conta.jsp" class="menu_titulo">Passar Conta</a> |
-			
-			<a href="dados_cadastro.jsp?modo=ver" class="menu_titulo">Dados Cadastrais</a> |
-			<a href="configuracao.jsp" class="menu_titulo">Configurações</a> |  
-			<a href="logout.jsp" class="menu_titulo">Sair</a>
-			 
-   		</div>
+ 			
+ 			</div>
    		<div style="float: left;"><img src="imagens/spacer.gif" width="1" height="43" border="0" alt="" /></div>
 	</div>
 
@@ -168,9 +168,12 @@
 		    
 		    <c:forEach var="d" items="${documentos}">
 		    	<c:set var="ass" value="${d.documentoDetalhes.assunto}" />
-		    	<c:out value="ass" />
+		    	<c:out value="${d.idDocumento}" />
+		    	<c:out value="${ass}" /><br>
 		    
 		    </c:forEach>
+		    
+		   
 		
 		</div>
 	

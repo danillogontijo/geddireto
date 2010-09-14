@@ -32,8 +32,8 @@ public class DocumentosServiceImpl implements DocumentosService {
 	}
 
 	@Override
-	public List<Documento> listByLimited() {
-		return documentosRepository.listByLimited();
+	public List<Documento> listByLimited(Integer idCarteira) {
+		return documentosRepository.listByLimited(idCarteira);
 	}
 
 	@Override
