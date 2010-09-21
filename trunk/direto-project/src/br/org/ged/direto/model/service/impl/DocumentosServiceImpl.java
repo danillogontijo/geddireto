@@ -22,7 +22,7 @@ public class DocumentosServiceImpl implements DocumentosService {
 	@Override
 	public List<DataUtils> listDocumentsFromAccount(Integer idCarteira) {
 		// TODO Auto-generated method stub
-		return null;
+		return this.documentosRepository.listDocumentsFromAccount(idCarteira);
 	}
 
 	@Override

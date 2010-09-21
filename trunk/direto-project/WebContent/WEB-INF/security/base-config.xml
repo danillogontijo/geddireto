@@ -74,6 +74,12 @@
 		</property>
 	</bean>
 	
+	<!-- JDBC TEMPLATE -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	
+	
 	<bean class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" id="passwordEncoder" />
 	
 	<bean id="customerUserDetailsService" class="br.org.ged.direto.model.service.security.CustomerUserDetailsService">

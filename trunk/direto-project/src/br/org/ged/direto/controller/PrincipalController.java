@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 
 
+import br.org.direto.util.DataUtils;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.Pastas;
 
@@ -74,6 +75,16 @@ public class PrincipalController {
 		pastas = pastasService.getAll(); 
 		
 		return pastas;
+	}
+	
+	@ModelAttribute("DocDWR")
+	public Collection<DataUtils> docDWR(HttpServletRequest request) {
+		
+		this.session = request.getSession(true);
+		
+		Integer idCarteira = new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
+		
+		return documentosService.listDocumentsFromAccount(idCarteira);
 	}
 	
 	@ModelAttribute("menuTopo")
@@ -128,7 +139,10 @@ public class PrincipalController {
 		
 		List<Documento> docsByConta = new ArrayList<Documento>();
 		
-		docsByConta = this.documentosService.listByLimited(idCarteira); 
+		docsByConta = this.documentosService.listByLimited(idCarteira);
+		
+		//System.out.println(documentosService.listDocumentsFromAccount(new Integer(2)).toString());
+		
 		
 		return docsByConta;
 	}
@@ -167,6 +181,7 @@ public class PrincipalController {
 		//System.out.println(auth.toString());
 		System.out.println(usuario.getContas().size());
 		
+				
 		return "principal";
 	
 	}
