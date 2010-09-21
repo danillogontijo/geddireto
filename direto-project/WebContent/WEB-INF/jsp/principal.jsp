@@ -173,6 +173,14 @@
 		    
 		    </c:forEach>
 		    
+		    <br>DocDWR<br>
+		    
+		    <c:forEach var="dwr" items="${DocDWR}">
+		    	<c:out value="${dwr.id}" />
+		    	<c:out value="${dwr.texto}" /><br>
+		    
+		    </c:forEach>
+		    
 		   
 		
 		</div>
