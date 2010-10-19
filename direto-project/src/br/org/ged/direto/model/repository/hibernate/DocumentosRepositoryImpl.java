@@ -3,6 +3,7 @@ package br.org.ged.direto.model.repository.hibernate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -90,10 +91,51 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<DataUtils> listDocumentsFromAccount(Integer idCarteira) {
+	public List<DataUtils> listDocumentsFromAccount(Integer idCarteira, int ordenacao, int inicio, String box) {
 		
-		String sql = "SELECT  {dc.*}, {d.*} FROM idmensausu dc, mensagens d WHERE dc.IdMensagem = d.Id AND dc.IdCarteira = ?";
-		//String sql = "from Documento doc_cart inner join doc_cart.documentoDetalhes as doc"; 
+		String textoOrdenacao = "";
+		
+		if (ordenacao == 0){
+			textoOrdenacao = " prioridade DESC,dataHora ASC ";
+		}else{
+			if (ordenacao == 1){
+				textoOrdenacao = " dataHora DESC, prioridade DESC ";
+			}else{
+				textoOrdenacao = " dataHora ASC, prioridade DESC ";
+			}
+		}
+		
+		/*Long count =  (Long) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("SELECT count(distinct doc.documentoDetalhes.idDocumentoDetalhes) FROM Documento as doc " +
+				"WHERE doc.carteira.idCarteira = ? " +
+				"").setInteger(0, idCarteira).uniqueResult();
+		*/
+		
+		//Long count = counterDocumentsByBox("0", idCarteira);
+		
+		//Long count =  (Long)hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("select count(*) from Usuario").uniqueResult();
+		
+		
+		//System.out.println("count: "+count);
+		
+		/*for(int i=0;i<count.size();i++){
+			
+			Object o = (Object)count.iterator().next();
+			System.out.println(o.toString());
+			
+		}*/
+		
+		box = ((box.equals("1") || box.equals("0")) ? "0,1" : box);
+		int limitePorPagina = 2;
+		
+		String sql = "from Documento as doc inner join doc.documentoDetalhes details " +
+		"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")"+
+		"GROUP BY details.idDocumentoDetalhes ORDER BY "+textoOrdenacao;
+		
+		//Query query;
+		/*String sql = "SELECT {dc.*}, {d.*} FROM idmensausu dc, mensagens d " +
+				"WHERE dc.IdMensagem = d.Id AND dc.IdCarteira = ? " +
+				"GROUP BY d.Id ORDER BY "+textoOrdenacao;//+" LIMIT 1,2";
+		*///String sql = "from Documento doc_cart inner join doc_cart.documentoDetalhes as doc"; 
 		/*Query query = sessionFactory.openSession().createSQLQuery(sql);
 		query.setInteger(0, idCarteira);
 		*/
@@ -101,9 +143,11 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		//query.setEntity(DocumentoDetalhes.class);
 		//query.setEntity("doc_cart",Documento.class);
 		
-		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createSQLQuery(sql)
+		/*Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createSQLQuery(sql)
 		.addEntity("dc", Documento.class)
-		.addEntity("d", DocumentoDetalhes.class);
+		.addEntity("d", DocumentoDetalhes.class);*/
+		
+		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
 		
 	/*	Query query = sessionFactory.openSession().createSQLQuery(sql)
 		.addEntity("dc", Documento.class)
@@ -111,13 +155,23 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 	*/	
 		query.setInteger(0, idCarteira);
 		
+		query.setFirstResult(inicio);
+		query.setMaxResults(limitePorPagina);
+		
 		
 		List results = query.list();
-		List<DataUtils> r = new ArrayList<DataUtils>();
+					
+		List<DataUtils> documentos = new LinkedList<DataUtils>();
 		
 		//DocumentoDetalhes doc = (DocumentoDetalhes) results.get(0); 
 		
-		System.out.println("ListDoc: "+results.size());
+		//System.out.println("ListDoc: "+results.size());
+		
+		//DataUtils total = new DataUtils();
+		//total.setId("0");
+		//total.setTexto("Total de registros: "+ count);
+		
+		//r.add(total);
 		
 		for(int i=0; i<results.size(); i++){
 			DataUtils data = new DataUtils();
@@ -127,22 +181,18 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			Documento doc_cart = (Documento) objects[0];
 			
 			data.setId(Integer.toString(doc.getIdDocumentoDetalhes()));
-			data.setTexto("Prioridade: "+doc.getPrioridade()+" - Status: "+doc_cart.getStatus());
+			data.setTexto(doc.getAssunto() + " - Prioridade: "+doc.getPrioridade()+";"+doc_cart.getStatus());
 			
-			r.add(data);
+			documentos.add(data);
 		}
 		
-		return r;
+		return documentos;
 
 		
 		//data.setId(query.)
 		
 		//List list = query.list();
-
-		
-		
-		
-		
+	
 		
 		
 		/*String sql = "SELECT * FROM mensagens doc,idmensausu doc_cart WHERE doc_cart.IdCarteira = ?";
@@ -174,7 +224,16 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		
 		return myResults;*/
 	}
-
+	
+	@Override
+	public Long counterDocumentsByBox(String box, int idCarteira){
+		
+		box = ((box.equals("1") || box.equals("0")) ? "0,1" : box);
+		
+		return (Long) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("SELECT count(distinct doc.documentoDetalhes.idDocumentoDetalhes) FROM Documento as doc " +
+				"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")" +
+		"").setInteger(0, idCarteira).uniqueResult();
+	}
 
 	@Override
 	public void sendDocument(Carteira[] carteira, Documento documento) {

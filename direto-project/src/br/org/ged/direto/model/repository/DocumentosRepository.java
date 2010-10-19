@@ -8,10 +8,11 @@ import br.org.ged.direto.model.entity.Documento;
 
 public interface DocumentosRepository {
 	
-	public List<DataUtils> listDocumentsFromAccount (Integer idCarteira);
+	public List<DataUtils> listDocumentsFromAccount (Integer idCarteira, int ordenacao, int inicio, String box);
 	public void sendDocument(Carteira[] carteira, Documento documento);
 	public List<Documento> listByLimited(Integer idCarteira);
 	public Documento selectByIdCarteira(Integer idCarteira);
+	public Long counterDocumentsByBox(String box, int idCarteira);
 	
 
 }

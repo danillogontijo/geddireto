@@ -57,6 +57,9 @@ a {text-decoration:none; color: black;}
 
 .menu2 {font-weight: normal; text-decoration: none;}
 
+.pages {font: 12px Verdana, Arial, Helvetica, sans-serif;color: #003399;}
+.pages:hover {text-decoration: underline;}
+
 .rodape {color: #666666; font-size: 10px;}
 
 /**
