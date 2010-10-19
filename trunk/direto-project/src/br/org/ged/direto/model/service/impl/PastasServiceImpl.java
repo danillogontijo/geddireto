@@ -1,5 +1,7 @@
 package br.org.ged.direto.model.service.impl;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,8 @@ public class PastasServiceImpl implements PastasService {
 	private PastasRepository pastasRepository;
 		
 	@Override
-	public List<Pastas> getAll() {
-		return pastasRepository.getAll();
+	public Collection<Pastas> getAll() {
+		return (List<Pastas>) pastasRepository.getAll();
 	}
 
 	@Override

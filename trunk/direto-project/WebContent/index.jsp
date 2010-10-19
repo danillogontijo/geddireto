@@ -17,11 +17,16 @@
 <a href="usuarioTeste.html?id=1" >usuarioTeste.html?id=1</a><br>
 <a href="login.html" >Login.html</a><br>
 <a href="exitUser.jsp" >exit</a><br>
-<a href="principal.html?box=1" >principal</a><br>
+<a href="principal.html?box=1&pr=0" >principal</a><br>
 <a href="logout.jsp" >logout</a><br>
 <a href="login.jsp" >login</a><br>
 <a href="changePwd.html" >Change Pwd</a><br>
 
+
+<applet archive="aenviar.jar" code=localfile.class width=300 height=120>
+
+	<param name=documento value="teste.odt" />
+ </applet>
 
 
 <%

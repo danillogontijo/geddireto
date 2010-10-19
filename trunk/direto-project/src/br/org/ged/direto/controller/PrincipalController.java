@@ -1,16 +1,28 @@
 package br.org.ged.direto.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,24 +79,82 @@ public class PrincipalController {
 		return sessionRegistry.getAllPrincipals().size();
 	}
 	
+	
 	@ModelAttribute("pastas")
-	public Collection<Pastas> todasPastas() {
+	public Collection<Pastas> todasPastas(@RequestParam("pr")int pr,@RequestParam("box") String box,HttpServletRequest request,ModelMap model) {
 		
-		List<Pastas> pastas = new ArrayList<Pastas>();
 		
-		pastas = pastasService.getAll(); 
+		
+		//Integer idCarteira = new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
+		
+		/*Map<Long,Pastas> pastaMapped = new LinkedHashMap<Long,Pastas>();
+		
+		Set<Pastas> pastas = new LinkedHashSet<Pastas>();
+		pastas = (Set<Pastas>) pastasService.getAll(); 
+		
+		Iterator<Pastas> ite = pastas.iterator();
+		
+		while (ite.hasNext()){
+			
+			Pastas pasta = new Pastas();
+			pasta = ite.next();
+			
+			pastaMapped.put(documentosService.counterDocumentsByBox(pasta.getIdPasta().toString(), (idCarteira.intValue()*1000*pasta.getIdPasta())), pasta);
+			
+		}*/
+		 
+		
+		//return pastaMapped;
+		Integer idCarteira = this.getIdCarteiraFromSession(request);
+		
+		int limitePorPagina = 2;
+		long totalregs = this.documentosService.counterDocumentsByBox(box, idCarteira);
+		int totalpgs = Math.round(totalregs / limitePorPagina);
+		if ((totalregs % limitePorPagina) > 0)
+			totalpgs++;
+		
+		int pageAtual = ((pr + limitePorPagina))/limitePorPagina;
+		int nextPage = (pageAtual*limitePorPagina);
+		int previousPage = (pageAtual*limitePorPagina)-(limitePorPagina);
+		
+		System.out.println("Next page: "+previousPage);
+		
+		
+		model.addAttribute("totalRegs",totalregs);
+		model.addAttribute("pages",totalpgs);
+		model.addAttribute("page", pageAtual);
+		model.addAttribute("nextPage", nextPage);
+		model.addAttribute("previousPage", previousPage);
+		model.addAttribute("limiteByPage", limitePorPagina);
+		
+		//System.out.println("IDCARTEIRA: "+idCarteira);
+		
+		List<Pastas> pastas = (ArrayList<Pastas>) pastasService.getAll();
+		
+		
+		Iterator<Pastas> ite = pastas.iterator();
+		
+		while (ite.hasNext()){
+			
+			Pastas pasta = new Pastas();
+			pasta = ite.next();
+			long total = this.documentosService.counterDocumentsByBox(String.valueOf(pasta.getIdPasta()), idCarteira);
+			String nomePasta = pasta.getNomePasta()+" ("+total+")";
+			pasta.setNomePasta(nomePasta);
+		}
 		
 		return pastas;
 	}
 	
-	@ModelAttribute("DocDWR")
-	public Collection<DataUtils> docDWR(HttpServletRequest request) {
-		
+	public Integer getIdCarteiraFromSession(HttpServletRequest request){
 		this.session = request.getSession(true);
-		
-		Integer idCarteira = new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
-		
-		return documentosService.listDocumentsFromAccount(idCarteira);
+		return new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
+	}
+	
+	@ModelAttribute("DocDWR")
+	public Collection<DataUtils> docDWR(@RequestParam("box") String box,@RequestParam("pr")int pr, HttpServletRequest request) {
+		Integer idCarteira = this.getIdCarteiraFromSession(request);
+		return documentosService.listDocumentsFromAccount(idCarteira,0,pr,box);
 	}
 	
 	@ModelAttribute("menuTopo")
@@ -127,6 +197,7 @@ public class PrincipalController {
 	@ModelAttribute("documentos")
 	public Collection<Documento> todosDocumentos(HttpServletRequest request) {
 		
+		
 		this.session = request.getSession(true);
 		
 		Integer idCarteira = new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
@@ -146,10 +217,42 @@ public class PrincipalController {
 		
 		return docsByConta;
 	}
+	
+	
+	public static byte[] getBytesFromFile(File file) throws IOException {
+        InputStream is = new FileInputStream(file);
+    
+        // Get the size of the file
+        long length = file.length();
+    
+        if (length > Integer.MAX_VALUE) {
+            // File is too large
+        }
+    
+        // Create the byte array to hold the data
+        byte[] bytes = new byte[(int)length];
+    
+        // Read in the bytes
+        int offset = 0;
+        int numRead = 0;
+        while (offset < bytes.length
+               && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+            offset += numRead;
+        }
+    
+        // Ensure all the bytes have been read in
+        if (offset < bytes.length) {
+            throw new IOException("Could not completely read file "+file.getName());
+        }
+    
+        // Close the input stream and return bytes
+        is.close();
+        return bytes;
+    }
 
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String showUserDetails(@RequestParam("box") int box, ModelMap model, HttpServletRequest request) {
+	public String showUserDetails(@RequestParam("box") int box, ModelMap model, HttpServletRequest request, HttpServletResponse response) {
 		
 		if (box == 0)
 			box = 1;
@@ -170,6 +273,8 @@ public class PrincipalController {
 		
 		//Iterator<PstGrad> ite_pstgrad = usuario.getPstGrad().iterator();
 		
+		
+		
 		model.addAttribute("usuario",usuario);
 		model.addAttribute("box",box);
 		model.addAttribute("contaAtual", session.getAttribute("j_usuario_conta"));
@@ -180,6 +285,77 @@ public class PrincipalController {
 		
 		//System.out.println(auth.toString());
 		System.out.println(usuario.getContas().size());
+		
+		
+		/*File file;
+		FileInputStream in = null;
+		//FileOutputStream out;
+		//response.
+		
+		try {
+			
+			file = new File("/home/danillo/teste.odt");
+			
+			byte[] buffer = getBytesFromFile(file);
+			
+			//System.out.println(buffer.length);
+			
+			//response.setHeader("Content-Length", String.valueOf(buffer.length));
+			
+			//response.setContentType("application/vnd.oasis.opendocument.text");
+			
+			
+			//String fullName = file.getPath();
+			 		
+			  
+		     String pathName = file.getPath();//response.getServletContext().getRealPath ( "/" + fullName) ; 
+		     String contentType = request.getSession().getServletContext().getMimeType(pathName) ; 
+		  
+		  
+		     if  ( contentType != null )  
+		         response.setContentType (contentType) ; 
+		     else 
+		         response.setContentType ("application/octet-stream") ; 
+
+		     System.out.println(contentType);
+			
+			//in = new FileInputStream(file);
+			//out = new FileOutputStream(file);
+		     
+		     response.setContentType("application/vnd.oasis.opendocument.text");
+		     response.setHeader("Content-disposition","attachment; filename=" + file.getName() );
+			ServletOutputStream sout = response.getOutputStream(); 
+			
+			//in.r
+	        
+	        int bytesRead = 0;
+
+	        do
+	        {
+	                bytesRead = in.read(buffer);
+	            	System.out.println(bytesRead);
+	                response.getOutputStream().write(buffer);
+	        }
+	        while (bytesRead == buffer.length);
+
+			
+			sout.write(buffer);
+			sout.flush();
+			
+	       //file.
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally
+	    {
+	        if(in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	    }*/
 		
 				
 		return "principal";

@@ -28,6 +28,29 @@
 -->
 
 
+<c:forEach var="conta" items="${usuario.contas}">
+			 
+			  <c:forEach var="docs" items="${conta.carteira.documentos}">
+		      
+		        <c:out value="${conta.carteira.cartAbr}" /> -
+		      	<c:out value="${docs.documentoDetalhes.assunto}" /> <br>
+		      
+		      </c:forEach>
+		      
+		    </c:forEach>
+		    
+		    <br><br>
+		    
+		    <c:forEach var="d" items="${documentos}">
+		    	<c:set var="ass" value="${d.documentoDetalhes.assunto}" />
+		    	<c:out value="${d.idDocumento}" />
+		    	<c:out value="${ass}" /><br>
+		    
+		    </c:forEach>
+		    
+		    <br>DocDWR<br>
+
+
 <sec:authorize ifAnyGranted="ROLE_ADMIN">
 				<a href="/admin/" class="menu_titulo">Admin</a> |	
 			</sec:authorize>

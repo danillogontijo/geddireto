@@ -19,6 +19,7 @@
 		<intercept-url pattern="/login.html" access="permitAll" />
 		<intercept-url pattern="/error.html" access="permitAll" />
 		<intercept-url pattern="/dwr/*" access="permitAll" />
+		<intercept-url pattern="/arquivos/*" access="permitAll" />
 		<intercept-url pattern="/dwr/interface/*" access="permitAll" />
 		<intercept-url pattern="/imagens/*" access="permitAll" />
 		<intercept-url pattern="/css/*" access="permitAll" />
@@ -31,9 +32,9 @@
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN') and fullyAuthenticated" />
 		<form-login login-page="/login.html" authentication-failure-url="/login.html?login_error=1" />
 			
-		<!--<x509 user-service-ref="customerUserDetailsService" subject-principal-regex="CN=(.*?),"/>
+		<x509 user-service-ref="customerUserDetailsService" subject-principal-regex="CN=(.*?),"/>
 
-		--><!--<remember-me key="geddireto" token-validity-seconds="3600" />
+		<!--<remember-me key="geddireto" token-validity-seconds="3600" />
 
 		--><logout invalidate-session="true" logout-success-url="/index.jsp" />
 		
@@ -63,8 +64,8 @@
 			<password-encoder ref="passwordEncoder"></password-encoder>
 		</authentication-provider>
 		 --><!-- X509 -->
-		 <!--<authentication-provider ref="preauthAuthenticationProvider"/>
-	--></authentication-manager>
+		<authentication-provider ref="preauthAuthenticationProvider"/>
+	</authentication-manager>
 
 	
 	<beans:bean id="sessionRegistry"

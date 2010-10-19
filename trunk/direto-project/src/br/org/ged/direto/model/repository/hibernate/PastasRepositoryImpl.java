@@ -1,5 +1,7 @@
 package br.org.ged.direto.model.repository.hibernate;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -22,7 +24,7 @@ public class PastasRepositoryImpl implements PastasRepository {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Pastas> getAll() {
+	public Collection<Pastas> getAll() {
 		return (List<Pastas>) hibernateTemplate.find("from "
 				+ Pastas.class.getName() + " order by idPasta asc");
 	}
