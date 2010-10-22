@@ -23,6 +23,7 @@
 		<intercept-url pattern="/dwr/interface/*" access="permitAll" />
 		<intercept-url pattern="/imagens/*" access="permitAll" />
 		<intercept-url pattern="/css/*" access="permitAll" />
+		<intercept-url pattern="/js/*" access="permitAll" />
 		<!--
 			<intercept-url pattern="/secure/**"
 			access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"

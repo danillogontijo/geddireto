@@ -1,6 +1,7 @@
 package br.org.ged.direto.model.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "mensagens")
@@ -36,7 +39,40 @@ public class DocumentoDetalhes implements Serializable {
 	private char prioridade;
 	
 	@Column(name = "Assunto")
-	private String Assunto;
+	private String assunto;
+	
+	@Column(name = "Remetente")
+	private String remetente;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DtDocumento", nullable = false)
+	private Date dataDocumento;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "Data", nullable = false)
+	private Date dataEntSistema;
+	
+	@Column(name = "TipoDoc")
+	private String tipoDocumento;
+	
+	@Column(name = "Destinatario")
+	private String destinatario;
+	
+	@Column(name = "NrDoc")
+	private String nrDocumento;
+	
+	@Column(name = "NrProtocolo")
+	private String nrProtocolo;
+	
+	@Column(name = "Assinatura",length=1,nullable=false)
+	private int assinatura;
+	
+	@Column(name = "AssinadoPor")
+	private String assinadoPor;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "IdUsuRem", nullable = false)
+	private Usuario usuarioElaborador;
 	
 	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "mensagens", cascade = CascadeType.ALL)
 	private Set<Documento> documentos = new HashSet<Documento>(0);
@@ -48,9 +84,89 @@ public class DocumentoDetalhes implements Serializable {
 	public void setDocumentos(Set<Documento> documentos) {
 		this.documentos = documentos;
 	}*/
-
+	
 	public Integer getIdDocumentoDetalhes() {
 		return idDocumentoDetalhes;
+	}
+
+	public Usuario getUsuarioElaborador() {
+		return usuarioElaborador;
+	}
+
+	public void setUsuarioElaborador(Usuario usuarioElaborador) {
+		this.usuarioElaborador = usuarioElaborador;
+	}
+
+	public String getRemetente() {
+		return remetente;
+	}
+
+	public void setRemetente(String remetente) {
+		this.remetente = remetente;
+	}
+
+	public Date getDataDocumento() {
+		return dataDocumento;
+	}
+
+	public void setDataDocumento(Date dataDocumento) {
+		this.dataDocumento = dataDocumento;
+	}
+
+	public Date getDataEntSistema() {
+		return dataEntSistema;
+	}
+
+	public void setDataEntSistema(Date dataEntSistema) {
+		this.dataEntSistema = dataEntSistema;
+	}
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public String getDestinatario() {
+		return destinatario;
+	}
+
+	public void setDestinatario(String destinatario) {
+		this.destinatario = destinatario;
+	}
+
+	public String getNrDocumento() {
+		return nrDocumento;
+	}
+
+	public void setNrDocumento(String nrDocumento) {
+		this.nrDocumento = nrDocumento;
+	}
+
+	public String getNrProtocolo() {
+		return nrProtocolo;
+	}
+
+	public void setNrProtocolo(String nrProtocolo) {
+		this.nrProtocolo = nrProtocolo;
+	}
+
+	public int getAssinatura() {
+		return assinatura;
+	}
+
+	public void setAssinatura(int assinatura) {
+		this.assinatura = assinatura;
+	}
+
+	public String getAssinadoPor() {
+		return assinadoPor;
+	}
+
+	public void setAssinadoPor(String assinadoPor) {
+		this.assinadoPor = assinadoPor;
 	}
 
 	public void setIdDocumentoDetalhes(Integer idDocumentoDetalhes) {
@@ -74,13 +190,15 @@ public class DocumentoDetalhes implements Serializable {
 	}
 
 	public String getAssunto() {
-		return Assunto;
+		return this.assunto;
 	}
 
 	public void setAssunto(String assunto) {
-		Assunto = assunto;
+		this.assunto = assunto;
 	}
 	
-	
+	public boolean isAssign(){
+		return this.assinatura == 1 ? true : false;
+	}
 
 }

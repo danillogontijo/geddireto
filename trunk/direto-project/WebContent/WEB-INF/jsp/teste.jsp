@@ -28,6 +28,34 @@
 -->
 
 
+<div style="vertical-align: middle; line-height:30px; text-align: left; float: left; width: 100%; height: 30px; border-bottom: 1px solid gray;">
+		    		<input type="checkbox" class="chkbox" value="${dwr.id}" id="chk${i}"
+						onClick="javascript:seleciona('${i}');" />
+		    		
+		    		<c:set var="texto" value="${dwr.texto}" />
+		    		
+					<c:set var="texto_split" value="${fn:split(texto,';')}" ></c:set>
+								
+					<c:choose> 
+  						<c:when test="${texto_split[1] == 0}" > 
+  							<img src="imagens/outras/cartaFec.gif" style="vertical-align: middle; line-height:30px;" /> 
+    						<c:out value="<b>${texto_split[0]}</b>" escapeXml="false"></c:out> 
+  						</c:when> 
+  						<c:otherwise> 
+  							<img src="imagens/outras/cartaAbr.gif" style="vertical-align: middle; line-height:30px;"/> 
+    						${texto_split[0]} 
+  						</c:otherwise> 
+					</c:choose> 
+		    		
+		    		<font style="background-color: aqua; padding: 5px 5px 5px 5px "></font>
+		    		
+					
+		    		
+		    		
+		    		
+		    	</div>
+
+
 <c:forEach var="conta" items="${usuario.contas}">
 			 
 			  <c:forEach var="docs" items="${conta.carteira.documentos}">

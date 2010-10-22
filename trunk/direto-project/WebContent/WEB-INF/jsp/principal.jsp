@@ -116,6 +116,7 @@ function listDocuments(dataFromServer,inicio){
  			<c:url value="principal.html" var="pastaURL">
 				  <c:param name="box" value="${p.idPasta}" />
 				  <c:param name="pr" value="0" />
+				  <c:param name="filtro" value="todas" />
 				  <c:param name="idCarteira" value="${contaAtual}" />
 			</c:url>
       		
@@ -176,6 +177,7 @@ function listDocuments(dataFromServer,inicio){
 		
 		<c:url value="principal.html" var="mostrarURL">
 		  <c:param name="box"   value="${box}" />
+		  <c:param name="pr" value="${(page*limiteByPage) - limiteByPage}" />
 		  <c:param name="filtro" value="" />
 		</c:url>
 		
@@ -183,7 +185,7 @@ function listDocuments(dataFromServer,inicio){
 		<div style="width:100%; text-align:left; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
 		
 			<input name="checkbox" type="checkbox" id="sel_tudo"
-				onClick="selTudo('15')" value="15" style="position: relative; top: 2px;" /> 
+				onClick="js.direto.sel_chkbox_doc('16')" value="16" style="position: relative; top: 2px;" /> 
 			
 			Mostrar: 
 			
@@ -191,7 +193,7 @@ function listDocuments(dataFromServer,inicio){
 			
 			<a href="<c:out value="${mostrarURL}naolidas" />" style="margin-left: 5px;" class="menu2">Não lidas</a> |
 			
-			<a href="<c:out value="${mostrarURL}urgente" />" style="margin-left: 5px;" class="menu2">Urgentes</a> |
+			<a href="<c:out value="${mostrarURL}urgentes" />" style="margin-left: 5px;" class="menu2">Urgentes</a> |
 				
 			<a href="<c:out value="${mostrarURL}encaminhar" />" style="margin-left: 5px;" class="menu2">Encaminhar selecionadas</a>  	
 			
@@ -216,31 +218,7 @@ function listDocuments(dataFromServer,inicio){
 			
 			<c:set var="i" value="1"></c:set>
 			<c:forEach var="dwr" items="${DocDWR}">
-		    	<div style="vertical-align: middle; line-height:30px; text-align: left; float: left; width: 100%; height: 30px; border-bottom: 1px solid gray;">
-		    		<input type="checkbox" class="chkbox" value="${dwr.id}" id="chk${i}"
-						onClick="javascript:seleciona('${i}');" />
-		    		
-		    		<c:set var="texto" value="${dwr.texto}" />
-		    		
-					<c:set var="texto_split" value="${fn:split(texto,';')}" ></c:set>
-								
-					<c:choose> 
-  						<c:when test="${texto_split[1] == 0}" > 
-  							<img src="imagens/outras/cartaFec.gif" style="vertical-align: middle; line-height:30px;" /> 
-    						<c:out value="<b>${texto_split[0]}</b>" escapeXml="false"></c:out> 
-  						</c:when> 
-  						<c:otherwise> 
-  							<img src="imagens/outras/cartaAbr.gif" style="vertical-align: middle; line-height:30px;"/> 
-    						${texto_split[0]} 
-  						</c:otherwise> 
-					</c:choose> 
-		    		
-		    		
-					
-		    		
-		    		
-		    		
-		    	</div>
+		    	${dwr.texto}
 		    	<c:set var="i" value="${i+1}"></c:set>
 		    </c:forEach>
 		    
@@ -275,6 +253,7 @@ function listDocuments(dataFromServer,inicio){
 					    <c:url value="principal.html" var="previousPageURL">
 							  <c:param name="box" value="${box}" />
 							  <c:param name="pr" value="${previousPage - limiteByPage}" />
+							  <c:param name="filtro" value="${filtro}" />
 							  <c:param name="idCarteira" value="${contaAtual}" />
 						</c:url>
 					    
@@ -286,6 +265,7 @@ function listDocuments(dataFromServer,inicio){
 			   				<c:url value="principal.html" var="pagesURL">
 							  <c:param name="box" value="${box}" />
 							  <c:param name="pr" value="${(i*limiteByPage) - limiteByPage}" />
+							  <c:param name="filtro" value="${filtro}" />
 							  <c:param name="idCarteira" value="${contaAtual}" />
 							</c:url>
 							
@@ -295,6 +275,7 @@ function listDocuments(dataFromServer,inicio){
 					    <c:url value="principal.html" var="nextPageURL">
 							  <c:param name="box" value="${box}" />
 							  <c:param name="pr" value="${nextPage}" />
+							  <c:param name="filtro" value="${filtro}" />
 							  <c:param name="idCarteira" value="${contaAtual}" />
 						</c:url>
 					    

@@ -13,6 +13,7 @@ public interface UsuarioRepository {
 	public Usuario selectByLogin(String login);
 	public List<DataUtils> listActivedContas (String usuLogin);
 	public void changePassword(String usuLogin, String usuSenha);
+	public String whoUser(int userid);
 	
 	//public Usuario doLogin(String login, String senha) throws Exception;
 

@@ -21,19 +21,26 @@ import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.org.direto.util.DataTimeUtil;
 import br.org.direto.util.DataUtils;
+import br.org.direto.util.DocumentosUtil;
+import br.org.direto.util.UsuarioUtil;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.DocumentosRepository;
+import br.org.ged.direto.model.service.UsuarioService;
 
 @Repository("documentoRepository")
 public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSourceAware {
 
 	private HibernateTemplate hibernateTemplate;
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    
+    @Autowired
+	private UsuarioService usuarioService;
     
     /*@Autowired	
     private JdbcTemplate jdbcTemplate;*/
@@ -89,9 +96,21 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 				+ Documento.class.getName() + " where idCarteira = ? order by idDocumento desc",idCarteira);
 	}
 	
+	public String queryFiltro(String filtro){
+		
+		if(filtro == null || filtro.equals("todas") || filtro.equals("naolidas")){
+			filtro = "";
+		}else{
+			filtro = " AND details.prioridade = '2' ";			
+		}
+		
+		return filtro;
+		
+	}
+	
 	@Override
 	@Transactional(readOnly = true)
-	public List<DataUtils> listDocumentsFromAccount(Integer idCarteira, int ordenacao, int inicio, String box) {
+	public List<DataUtils> listDocumentsFromAccount(Integer idCarteira, int ordenacao, int inicio, String box, String filtro) {
 		
 		String textoOrdenacao = "";
 		
@@ -124,11 +143,28 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			
 		}*/
 		
-		box = ((box.equals("1") || box.equals("0")) ? "0,1" : box);
+		System.out.println(filtro);
+		
+		if(filtro == "" || filtro == null || filtro.equals("todas")){
+			box = ((box.equals("1") || box.equals("0")) ? "0,1" : box);
+			filtro = "";
+		}else{
+			if(filtro.equals("urgentes")){
+				filtro = " AND details.prioridade = '2' ";
+				box = ((box.equals("1") || box.equals("0")) ? "0,1" : box);
+			}else{
+				box = "0";
+				filtro = "";
+			}
+		}
+		
+		
+		System.out.println(box);
+		
 		int limitePorPagina = 2;
 		
 		String sql = "from Documento as doc inner join doc.documentoDetalhes details " +
-		"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")"+
+		"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")"+filtro+
 		"GROUP BY details.idDocumentoDetalhes ORDER BY "+textoOrdenacao;
 		
 		//Query query;
@@ -180,8 +216,47 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			DocumentoDetalhes doc = (DocumentoDetalhes) objects[1];
 			Documento doc_cart = (Documento) objects[0];
 			
+			DocumentosUtil.documentos.put(doc.getIdDocumentoDetalhes(), doc);
+			
 			data.setId(Integer.toString(doc.getIdDocumentoDetalhes()));
-			data.setTexto(doc.getAssunto() + " - Prioridade: "+doc.getPrioridade()+";"+doc_cart.getStatus());
+			String pri = "";
+			if (doc.getPrioridade() == '0') {
+				pri = " N";
+			} else {
+				if (doc.getPrioridade() == '1') {
+					pri = " U";
+					//bgColor = "#FFFF00";
+				} else {
+					if (doc.getPrioridade() == '2') {
+						pri = "UU";
+						//bgColor = "#FF0000";
+					}
+				}
+			}
+			
+			String assunto = doc.getAssunto();
+			assunto = assunto + assunto + assunto + assunto + assunto;
+			
+			if (assunto.length() > 60){
+				assunto = assunto.substring(0, 59)+"...";
+			}
+			
+			String texto = "<div class='div_docs'"+(doc_cart.getStatus() == '0' ? " style='font-weight: bold;'" : "")+" id='div_doc"+(i)+"'>";
+			texto = texto + "<input type='checkbox' class='chkbox' value='"+doc.getIdDocumentoDetalhes()+"' id='chk"+i+"' "+
+						"onClick='js.direto.sel_chkbox_doc("+(i)+");' />";
+			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
+			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
+			texto = texto + (pri.equals(" N") ? "<font class='prio_n_docs'>"+pri+"</font>" : (pri.equals(" U") ? "<font class='prio_u_docs'>"+pri+"</font>" : "<font class='prio_uu_docs'>"+pri+"</font>"));
+			texto = texto + ("<a href='' title='"+doc.getUsuarioElaborador().getUsuLogin()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente()+"</a>");
+			texto = texto + ("<a href='' title='"+doc.getAssunto()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
+			texto = texto + ("<font class='data_docs'>"+DataTimeUtil.getBrazilFormatDataHora(doc_cart.getDataHora())+"</font>");
+			texto = texto + "</div>";
+			
+			//doc_cart.getCarteira().getContas().
+			
+			System.out.println(this.usuarioService.whoUser(1));
+					
+			data.setTexto(texto);
 			
 			documentos.add(data);
 		}
@@ -226,12 +301,23 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 	}
 	
 	@Override
-	public Long counterDocumentsByBox(String box, int idCarteira){
+	public Long counterDocumentsByBox(String box, int idCarteira, String filtro){
 		
-		box = ((box.equals("1") || box.equals("0")) ? "0,1" : box);
+		if(filtro == "" || filtro == null || filtro.equals("todas")){
+			box = ((box.equals("1") || box.equals("0")) ? "0,1" : box);
+			filtro = "";
+		}else{
+			if(filtro.equals("urgentes")){
+				filtro = " AND doc.documentoDetalhes.prioridade = '2' ";
+				box = ((box.equals("1") || box.equals("0")) ? "0,1" : box);
+			}else{
+				box = "0";
+				filtro = "";
+			}
+		}
 		
 		return (Long) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("SELECT count(distinct doc.documentoDetalhes.idDocumentoDetalhes) FROM Documento as doc " +
-				"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")" +
+				"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")" + filtro +
 		"").setInteger(0, idCarteira).uniqueResult();
 	}
 

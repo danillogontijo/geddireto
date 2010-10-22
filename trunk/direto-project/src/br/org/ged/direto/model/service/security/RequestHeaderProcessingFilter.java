@@ -20,6 +20,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.util.TextEscapeUtils;
 import org.springframework.util.Assert;
 
+import br.org.ged.direto.model.entity.Usuario;
+
 
 public class RequestHeaderProcessingFilter extends AbstractAuthenticationProcessingFilter {
 	
@@ -62,11 +64,11 @@ public class RequestHeaderProcessingFilter extends AbstractAuthenticationProcess
 	        }
 
 	        username = username.trim();
-	       	        
+	        
 	        System.out.println("Autenticando RequestHeaderProcessingFilter:" + usuarioConta);
 
 	        UsuarioContaAuthenticationToken authRequest = new UsuarioContaAuthenticationToken(username, password, usuarioConta);
-
+	               
 	        // Place the last username attempted into HttpSession for views
 	        HttpSession session = request.getSession(true);
 	        
@@ -81,6 +83,9 @@ public class RequestHeaderProcessingFilter extends AbstractAuthenticationProcess
 
 	        // Allow subclasses to set the "details" property
 	        setDetails(request, authRequest);
+	        
+	        //Authentication a = this.getAuthenticationManager().authenticate(authRequest);
+	        //UserDetails u = a.getPrincipal();
 
 	        return this.getAuthenticationManager().authenticate(authRequest);
 
@@ -138,7 +143,7 @@ public class RequestHeaderProcessingFilter extends AbstractAuthenticationProcess
     
     public void setusuarioContaParameter(String usuarioContaParameter) {
         Assert.hasText(usuarioContaParameter, "usuarioConta parameter must not be empty or null");
-        this.usuarioContaParameter = passwordParameter;
+        this.usuarioContaParameter = usuarioContaParameter;
     }
 
     public void setPostOnly(boolean postOnly) {
