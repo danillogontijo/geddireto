@@ -22,8 +22,8 @@ public class DocumentosServiceImpl implements DocumentosService {
 	
 	@Override
 	@RemoteMethod
-	public List<DataUtils> listDocumentsFromAccount(Integer idCarteira, int ordenacao, int inicio, String box) {
-		return this.documentosRepository.listDocumentsFromAccount(idCarteira, ordenacao, inicio, box);
+	public List<DataUtils> listDocumentsFromAccount(Integer idCarteira, int ordenacao, int inicio, String box, String filtro) {
+		return this.documentosRepository.listDocumentsFromAccount(idCarteira, ordenacao, inicio, box, filtro);
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public class DocumentosServiceImpl implements DocumentosService {
 
 	@Override
 	@RemoteMethod
-	public Long counterDocumentsByBox(String box, int idCarteira) {
-		return documentosRepository.counterDocumentsByBox(box, idCarteira);
+	public Long counterDocumentsByBox(String box, int idCarteira, String filtro) {
+		return documentosRepository.counterDocumentsByBox(box, idCarteira, filtro);
 	}
 
 }

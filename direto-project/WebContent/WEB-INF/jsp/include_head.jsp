@@ -13,3 +13,5 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentosJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/engine.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/util.js"></script>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js"></script>

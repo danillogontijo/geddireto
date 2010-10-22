@@ -22,6 +22,7 @@ public class CustomerUserDetailsService extends JdbcDaoImpl implements
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Override
 	public UserDetails loadUserByUsername(String usuLogin)
 			throws UsernameNotFoundException, DataAccessException {
 
@@ -62,11 +63,25 @@ public class CustomerUserDetailsService extends JdbcDaoImpl implements
         }
 
         //return user;
+        //super.
         
         return createUserDetails(usuLogin, user, dbAuths);
 
         //return usuario;
 	}
+	
+	@Override
+	protected UserDetails createUserDetails(String username, UserDetails userFromUserQuery,
+            List<GrantedAuthority> combinedAuthorities) {
+        
+		//String returnUsername = userFromUserQuery.getUsername();
+		
+		Usuario u = this.usuarioService.selectByLogin(username);
+		
+		System.out.println(u.toString());
+
+        return u;
+    }
 
 	public void changePassword(String usuLogin, String usuSenha) {
 

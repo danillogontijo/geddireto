@@ -17,6 +17,8 @@ public interface UsuarioService {
 	public Usuario selectById(Integer idUsuario);
 	public Usuario selectByLogin(String usuLogin);
 	
+	public String whoUser(int userid);
+	
 	//@PreAuthorize("ROLE_ADMIN")
 	public boolean validateUser(String usuLogin);
 	

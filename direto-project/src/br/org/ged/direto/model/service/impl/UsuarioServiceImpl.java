@@ -94,6 +94,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 		
 	}
 
+	@Override
+	public String whoUser(int userid) {
+		return this.usuarioRepository.whoUser(userid);
+	}
+
 	/*public String getValidationMessage(Errors errors, String fieldName) {
 		String message = "";
 

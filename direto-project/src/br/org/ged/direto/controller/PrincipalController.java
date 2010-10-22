@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 
 import br.org.direto.util.DataUtils;
+import br.org.direto.util.DocumentosUtil;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.Pastas;
 
@@ -73,6 +74,8 @@ public class PrincipalController {
 	private IMenuTopo menuTopo;
 	
 	private HttpSession session;
+	
+	final int LIMITE_POR_PAGINA = 2;
 	
 	@ModelAttribute("numUsers")
 	public int getNumberOfUsers() {
@@ -107,7 +110,7 @@ public class PrincipalController {
 		//return pastaMapped;
 		Integer idCarteira = this.getIdCarteiraFromSession(request);
 		
-		int limitePorPagina = 2;
+		/*int limitePorPagina = 2;
 		long totalregs = this.documentosService.counterDocumentsByBox(box, idCarteira);
 		int totalpgs = Math.round(totalregs / limitePorPagina);
 		if ((totalregs % limitePorPagina) > 0)
@@ -125,7 +128,7 @@ public class PrincipalController {
 		model.addAttribute("page", pageAtual);
 		model.addAttribute("nextPage", nextPage);
 		model.addAttribute("previousPage", previousPage);
-		model.addAttribute("limiteByPage", limitePorPagina);
+		model.addAttribute("limiteByPage", limitePorPagina);*/
 		
 		//System.out.println("IDCARTEIRA: "+idCarteira);
 		
@@ -138,7 +141,7 @@ public class PrincipalController {
 			
 			Pastas pasta = new Pastas();
 			pasta = ite.next();
-			long total = this.documentosService.counterDocumentsByBox(String.valueOf(pasta.getIdPasta()), idCarteira);
+			long total = this.documentosService.counterDocumentsByBox(String.valueOf(pasta.getIdPasta()), idCarteira,null);
 			String nomePasta = pasta.getNomePasta()+" ("+total+")";
 			pasta.setNomePasta(nomePasta);
 		}
@@ -152,9 +155,41 @@ public class PrincipalController {
 	}
 	
 	@ModelAttribute("DocDWR")
-	public Collection<DataUtils> docDWR(@RequestParam("box") String box,@RequestParam("pr")int pr, HttpServletRequest request) {
+	public Collection<DataUtils> docDWR(@RequestParam("box") String box,@RequestParam("filtro") String filtro,@RequestParam("pr")int pr, HttpServletRequest request, ModelMap model) {
 		Integer idCarteira = this.getIdCarteiraFromSession(request);
-		return documentosService.listDocumentsFromAccount(idCarteira,0,pr,box);
+		
+		List<DataUtils> docList = documentosService.listDocumentsFromAccount(idCarteira,0,pr,box,filtro);
+		
+		
+		long totalregs = this.documentosService.counterDocumentsByBox(box, idCarteira,filtro);
+		int totalpgs = Math.round(totalregs / LIMITE_POR_PAGINA);
+		if ((totalregs % LIMITE_POR_PAGINA) > 0)
+			totalpgs++;
+		
+		int pageAtual = ((pr + LIMITE_POR_PAGINA))/LIMITE_POR_PAGINA;
+		int nextPage = (pageAtual*LIMITE_POR_PAGINA);
+		int previousPage = (pageAtual*LIMITE_POR_PAGINA)-(LIMITE_POR_PAGINA);
+		
+		model.addAttribute("totalRegs",totalregs);
+		model.addAttribute("pages",totalpgs);
+		model.addAttribute("page", pageAtual);
+		model.addAttribute("nextPage", nextPage);
+		model.addAttribute("previousPage", previousPage);
+		model.addAttribute("limiteByPage", LIMITE_POR_PAGINA);
+		//model.addAttribute("docUtil", DocumentosUtil.documentos.size());
+		
+		String s = "Danillo";
+		
+		System.out.println(s.hashCode());
+		
+		System.out.println("[Documentos Estaticos]: "+DocumentosUtil.documentos.toString());
+		
+		System.out.println("First key: "+DocumentosUtil.documentos.firstKey());
+		System.out.println("Last key: "+DocumentosUtil.documentos.lastKey());
+		
+		model.addAttribute("filtro", filtro);
+		
+		return docList; 
 	}
 	
 	@ModelAttribute("menuTopo")
@@ -263,28 +298,35 @@ public class PrincipalController {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		this.session = request.getSession(true);
-		
+		//(Usuario) auth.getPrincipal();
 		Usuario usuario = usuarioService.selectByLogin(auth.getName());
 		//Usuario usuario = this.usuarioService.selectById(usuarioTemp.getIdUsuario());
 		
-		System.out.println("j_conta: "+session.getAttribute("j_usuario_conta"));
+		//System.out.println("j_conta: "+session.getAttribute("j_usuario_conta"));
 		
 		//PstGrad pstgrad = usuario.getPstGrad();
 		
 		//Iterator<PstGrad> ite_pstgrad = usuario.getPstGrad().iterator();
+		/*Usuario usuario;
+		Object principal = auth.getPrincipal(); 
 		
+		if(principal instanceof Usuario){
+			usuario = (Usuario)principal;
+		}else{
+			return "error.html";
+		}*/
 		
 		
 		model.addAttribute("usuario",usuario);
 		model.addAttribute("box",box);
-		model.addAttribute("contaAtual", session.getAttribute("j_usuario_conta"));
+		model.addAttribute("contaAtual", usuario.getIdCarteira());
 		//model.addAttribute(pstgrad);
 		//model.addAttribute(usuarioService.listActivedContas(auth.getName()));
 		
 		//model.addAttribute(auth.getCredentials());
 		
 		//System.out.println(auth.toString());
-		System.out.println(usuario.getContas().size());
+		//System.out.println(usuario.getContas().size());
 		
 		
 		/*File file;

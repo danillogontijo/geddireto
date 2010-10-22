@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,6 +124,18 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
 	@Override
 	public void changePassword(String usuLogin, String usuSenha) {
 				
+	}
+
+	@Override
+	public String whoUser(int userid) {
+		
+		String sql = "SELECT usuLogin FROM Usuario u WHERE u.idUsuario = ?";
+		
+		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setInteger(0, new Integer(userid));
+		
+		//return (selectById(new Integer(userid))).getUsuLogin();
+		return query.uniqueResult().toString();
 	}
 
 }
