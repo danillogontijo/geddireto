@@ -27,6 +27,36 @@
 
 -->
 
+	${documento.assunto}<br>
+		
+		
+		<c:forEach var="doc_cart" items="${allDocuments}">
+		    	
+		    	<c:set var="status" value="${doc_cart.status}" />
+		    	
+		    	<c:set var="s" value="${'0'}" />
+		    	
+		    	${status}<br><br>
+		    	
+		    	
+		    	
+		    	
+		    	<c:forEach var="conta" items="${doc_cart.carteira.contas}">
+		    					    			
+		    		<c:choose> 
+  						<c:when test="${doc_cart.status == '0'}" > 
+  							<font color="red" title="${conta.carteira.idCarteira}">${conta.usuario.usuLogin}</font> 
+  						</c:when> 
+  						<c:otherwise> 
+  							<font title="${conta.carteira.idCarteira}">${conta.usuario.usuLogin}</font> 
+  						</c:otherwise> 
+					</c:choose>
+		    			
+		    				
+		    	 </c:forEach>
+		    	 </c:forEach>
+		    	
+
 
 <div style="vertical-align: middle; line-height:30px; text-align: left; float: left; width: 100%; height: 30px; border-bottom: 1px solid gray;">
 		    		<input type="checkbox" class="chkbox" value="${dwr.id}" id="chk${i}"

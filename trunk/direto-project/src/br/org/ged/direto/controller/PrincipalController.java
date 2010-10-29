@@ -55,8 +55,8 @@ import br.org.ged.direto.model.service.menus.MenuTopoImpl;
 
 @Controller
 @RequestMapping("/principal.html")
-@SessionAttributes({"usuario", "mt"})
-public class PrincipalController {
+@SessionAttributes({"usuario", "mt","pastas","menuTopo","box"})
+public class PrincipalController extends BaseController {
 	
 	@Autowired
 	private UsuarioService usuarioService;
@@ -68,19 +68,10 @@ public class PrincipalController {
 	private PastasService pastasService;
 	
 	@Autowired
-	private SessionRegistry sessionRegistry;
-	
-	@Autowired
 	private IMenuTopo menuTopo;
 	
-	private HttpSession session;
 	
-	final int LIMITE_POR_PAGINA = 2;
 	
-	@ModelAttribute("numUsers")
-	public int getNumberOfUsers() {
-		return sessionRegistry.getAllPrincipals().size();
-	}
 	
 	
 	@ModelAttribute("pastas")
@@ -149,10 +140,7 @@ public class PrincipalController {
 		return pastas;
 	}
 	
-	public Integer getIdCarteiraFromSession(HttpServletRequest request){
-		this.session = request.getSession(true);
-		return new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
-	}
+	
 	
 	@ModelAttribute("DocDWR")
 	public Collection<DataUtils> docDWR(@RequestParam("box") String box,@RequestParam("filtro") String filtro,@RequestParam("pr")int pr, HttpServletRequest request, ModelMap model) {
@@ -178,14 +166,14 @@ public class PrincipalController {
 		model.addAttribute("limiteByPage", LIMITE_POR_PAGINA);
 		//model.addAttribute("docUtil", DocumentosUtil.documentos.size());
 		
-		String s = "Danillo";
+	/*	String s = "Danillo";
 		
 		System.out.println(s.hashCode());
 		
 		System.out.println("[Documentos Estaticos]: "+DocumentosUtil.documentos.toString());
 		
 		System.out.println("First key: "+DocumentosUtil.documentos.firstKey());
-		System.out.println("Last key: "+DocumentosUtil.documentos.lastKey());
+		System.out.println("Last key: "+DocumentosUtil.documentos.lastKey());*/
 		
 		model.addAttribute("filtro", filtro);
 		

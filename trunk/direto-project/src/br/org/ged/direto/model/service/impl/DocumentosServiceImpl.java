@@ -5,6 +5,8 @@ import java.util.List;
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceAware;
 import org.springframework.stereotype.Service;
 
 import br.org.direto.util.DataUtils;
@@ -48,4 +50,15 @@ public class DocumentosServiceImpl implements DocumentosService {
 		return documentosRepository.counterDocumentsByBox(box, idCarteira, filtro);
 	}
 
+	@Override
+	public Documento selectById(Integer id,Integer idCarteira) {
+		return documentosRepository.selectById(id, idCarteira);
+	}
+
+	@Override
+	public List<Documento> getAllById(Integer id) {
+		return documentosRepository.getAllById(id);
+	}
+
+	
 }

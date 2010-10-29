@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.security.core.SpringSecurityMessageSource;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
+import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.repository.DocumentosRepository;
 import br.org.ged.direto.model.service.UsuarioService;
 
@@ -215,8 +217,8 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			Object[] objects = (Object[]) results.get(i);
 			DocumentoDetalhes doc = (DocumentoDetalhes) objects[1];
 			Documento doc_cart = (Documento) objects[0];
-			
-			DocumentosUtil.documentos.put(doc.getIdDocumentoDetalhes(), doc);
+			System.out.println("Hash Code doc: "+doc.hashCode());
+			//DocumentosUtil.documentos.put(doc.getIdDocumentoDetalhes(), doc);
 			
 			data.setId(Integer.toString(doc.getIdDocumentoDetalhes()));
 			String pri = "";
@@ -247,8 +249,8 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
 			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
 			texto = texto + (pri.equals(" N") ? "<font class='prio_n_docs'>"+pri+"</font>" : (pri.equals(" U") ? "<font class='prio_u_docs'>"+pri+"</font>" : "<font class='prio_uu_docs'>"+pri+"</font>"));
-			texto = texto + ("<a href='' title='"+doc.getUsuarioElaborador().getUsuLogin()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente()+"</a>");
-			texto = texto + ("<a href='' title='"+doc.getAssunto()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
+			texto = texto + ("<a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getUsuarioElaborador().getUsuLogin()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente()+"</a>");
+			texto = texto + ("<a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getAssunto()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
 			texto = texto + ("<font class='data_docs'>"+DataTimeUtil.getBrazilFormatDataHora(doc_cart.getDataHora())+"</font>");
 			texto = texto + "</div>";
 			
@@ -349,5 +351,29 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		});
 	}
 
+	@Override
+	public Documento selectById(Integer id, Integer idCarteira) {
+		
+		Documento returnDoc = (Documento) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("FROM Documento as doc " +
+				"WHERE doc.carteira.idCarteira = ? AND doc.documentoDetalhes.idDocumentoDetalhes = ? GROUP BY doc.carteira.idCarteira" +
+		"").setInteger(0, idCarteira).setInteger(1, id).uniqueResult(); 
+		
+		if (returnDoc == null) {
+			throw new DocumentNotFoundException(messages.getMessage("documento.exception.notfound"));
+		}
+		
+		return returnDoc;
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Documento> getAllById(Integer id) {
+		
+		return (List<Documento>) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("FROM Documento as doc " +
+				"WHERE doc.documentoDetalhes.idDocumentoDetalhes = ? GROUP BY doc.carteira.idCarteira ORDER BY doc.idDocumento" +
+		"").setInteger(0, id).list(); 
+			
+	}
 
 }
