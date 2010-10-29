@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -74,19 +75,22 @@ public class DocumentoDetalhes implements Serializable {
 	@JoinColumn(name = "IdUsuRem", nullable = false)
 	private Usuario usuarioElaborador;
 	
-	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "mensagens", cascade = CascadeType.ALL)
-	private Set<Documento> documentos = new HashSet<Documento>(0);
-
-	public Set<Documento> getDocumentos() {
-		return documentos;
-	}
-
-	public void setDocumentos(Set<Documento> documentos) {
-		this.documentos = documentos;
-	}*/
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "Id", nullable = true)
+	private Set<Documento> documentosByCarteira = new HashSet<Documento>(0);
+	
+		
 	
 	public Integer getIdDocumentoDetalhes() {
 		return idDocumentoDetalhes;
+	}
+
+	public Set<Documento> getDocumentosByCarteira() {
+		return documentosByCarteira;
+	}
+
+	public void setDocumentosByCarteira(Set<Documento> documentosByCarteira) {
+		this.documentosByCarteira = documentosByCarteira;
 	}
 
 	public Usuario getUsuarioElaborador() {
