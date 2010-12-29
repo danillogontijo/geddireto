@@ -2,6 +2,8 @@ package br.org.ged.direto.model.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,7 +13,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -49,6 +53,18 @@ public class Documento implements Serializable
 	@Column(name = "DataHora", nullable = true)
 	private Date dataHora;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "UltimaNotificacao", nullable = true)
+	private Date dataHoraNotificacao;
+	
+	@Column(name="Notificar")
+	private Integer notificar;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "IdMensausu", nullable = true)
+	@OrderBy("idNotificacao asc") 
+	private Set<Notificacao> notificacoes = new HashSet<Notificacao>(0);
+	
 	public Documento(){}
 	
 	
@@ -58,6 +74,16 @@ public class Documento implements Serializable
 		this.documentoDetalhes = documentoDetalhes;
 		this.status = status;
 		this.carteira = carteira;
+	}
+
+
+	public Set<Notificacao> getNotificacoes() {
+		return notificacoes;
+	}
+
+
+	public void setNotificacoes(Set<Notificacao> notificacoes) {
+		this.notificacoes = notificacoes;
 	}
 
 
@@ -100,6 +126,27 @@ public class Documento implements Serializable
 	public void setCarteira(Carteira carteira) {
 		this.carteira = carteira;
 	}
+
+
+	public Date getDataHoraNotificacao() {
+		return dataHoraNotificacao;
+	}
+
+
+	public void setDataHoraNotificacao(Date dataHoraNotificacao) {
+		this.dataHoraNotificacao = dataHoraNotificacao;
+	}
+
+
+	public Integer getNotificar() {
+		return notificar;
+	}
+
+
+	public void setNotificar(Integer notificar) {
+		this.notificar = notificar;
+	}
+	
 	
 	
 }

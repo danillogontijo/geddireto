@@ -22,6 +22,9 @@
                 <value>br.org.ged.direto.model.entity.Secao</value>
                 <value>br.org.ged.direto.model.entity.Funcao</value>
                 <value>br.org.ged.direto.model.entity.Pastas</value>
+                <value>br.org.ged.direto.model.entity.Anexo</value>
+                <value>br.org.ged.direto.model.entity.Grupos</value>
+                <value>br.org.ged.direto.model.entity.NomeGrupos</value>
             </list>
         </property>
         

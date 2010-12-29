@@ -29,7 +29,7 @@ public class UsuarioContaAuthenticationProvider extends DaoAuthenticationProvide
 		
 		Usuario usuarioDetails = (Usuario)userDetails;
 		usuarioDetails.setIdCarteira(Integer.parseInt(contaUsuarioToken.getRequestUsuarioConta()));
-		
+		System.out.println("CONTA: "+contaUsuarioToken.getRequestUsuarioConta());
 		//usuarioDetails.setContaAtual(contaUsuarioToken.getRequestUsuarioConta());
 		
 		super.additionalAuthenticationChecks(usuarioDetails, contaUsuarioToken);

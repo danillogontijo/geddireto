@@ -72,7 +72,7 @@
         out.println("AUTH -----"+auth.getAuthorities().toString());
         
         br.org.ged.direto.model.service.security.SuspendRealTimeVoter s = new br.org.ged.direto.model.service.security.SuspendRealTimeVoter();
-        s.suspend("sgt.danillo");
+        //s.suspend("sgt.danillo");
         //out.println(s.isSuspended("sgt.danillo"));
        // s.grant("sgt.danillo");
         

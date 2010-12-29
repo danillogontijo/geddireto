@@ -55,6 +55,37 @@
 		    				
 		    	 </c:forEach>
 		    	 </c:forEach>
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+		    <c:forEach var="userMap" items="${allDocuments}">
+		    	<c:set var="user" value="${userMap.key}"/>
+		    	<c:set var="texto" value="${userMap.value}" />
+		    	<c:set var="texto_split" value="${fn:split(texto,',')}" ></c:set>
+		    	
+		    	<c:choose> 
+  						<c:when test="${texto_split[0] == 0}" > 
+  							<font color="red" title="${texto_split[1]}">${user.usuLogin}</font> 
+  						</c:when> 
+  						<c:otherwise> 
+  							<font title="${texto_split[1]}">${user.usuLogin}</font> 
+  						</c:otherwise> 
+					</c:choose> 
+		    	
+		    	<font></font>
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	<br>
+		    	
+		 </c:forEach>
 		    	
 
 

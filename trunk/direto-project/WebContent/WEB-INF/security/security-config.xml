@@ -12,7 +12,7 @@
 	<global-method-security pre-post-annotations="enabled"></global-method-security>
 
 	<!--<http auto-config="true" use-expressions="true" entry-point-ref="forbiddenAuthEntryPoint">-->
-	<http auto-config="true" use-expressions="true">
+	<http auto-config="true" use-expressions="true" access-decision-manager-ref="accessDecisionManager">
 		<!--<access-denied-handler error-page="/accessDenied.html" />
 
 		--><intercept-url pattern="/index.jsp" access="permitAll" />
@@ -67,7 +67,45 @@
 		 --><!-- X509 -->
 		<authentication-provider ref="preauthAuthenticationProvider"/>
 	</authentication-manager>
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- Define AccessDesisionManager as UnanimousBased -->
+	<beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+		<beans:property name="decisionVoters">
+			<beans:list>
+			    <beans:ref bean="suspendVoter" />
+				<beans:bean class="org.springframework.security.access.vote.RoleVoter" />
+				<beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />		
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+	
+	<!-- Define custom Voter -->
+	<beans:bean id="suspendVoter" class="br.org.ged.direto.model.service.security.SuspendRealTimeVoter" />
+	
+	<!-- JMX enable custom Voter -->
+	<beans:bean class="org.springframework.jmx.export.MBeanExporter">
+		<beans:property name="beans">
+			<beans:map>
+				<beans:entry key="org.springframework.security.access:name=SuspendRealTimeVoter" value-ref="suspendVoter" />
+			</beans:map>
+		</beans:property>
+	</beans:bean>
+	
+	
+	
+	
 	
 	<beans:bean id="sessionRegistry"
 		class="org.springframework.security.core.session.SessionRegistryImpl" />

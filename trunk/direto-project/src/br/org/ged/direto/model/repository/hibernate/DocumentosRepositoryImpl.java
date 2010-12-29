@@ -3,8 +3,11 @@ package br.org.ged.direto.model.repository.hibernate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -26,9 +29,11 @@ import br.org.direto.util.DataTimeUtil;
 import br.org.direto.util.DataUtils;
 import br.org.direto.util.DocumentosUtil;
 import br.org.direto.util.UsuarioUtil;
+import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
+import br.org.ged.direto.model.entity.Notificacao;
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
@@ -240,7 +245,25 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			assunto = assunto + assunto + assunto + assunto + assunto;
 			
 			if (assunto.length() > 60){
-				assunto = assunto.substring(0, 59)+"...";
+				assunto = assunto.substring(0, 49)+"...";
+			}
+			
+			String notificar = "";
+			if (doc_cart.getNotificar() == 1){
+				Date ultimaVerificacaoNotificacao = doc_cart.getDataHoraNotificacao();
+				Set<Notificacao> notficacaoes = doc_cart.getNotificacoes();
+				Iterator<Notificacao> ite = notficacaoes.iterator();
+				
+				int c = 0;
+				while(ite.hasNext()){
+					Notificacao not = ite.next();
+					if (not.getDataHoraNotificacao().after(ultimaVerificacaoNotificacao)){
+						c++;
+					}
+				}
+				
+				notificar = "<font color=red><b>("+c+") </b></font>";
+				
 			}
 			
 			String texto = "<div class='div_docs'"+(doc_cart.getStatus() == '0' ? " style='font-weight: bold;'" : "")+" id='div_doc"+(i)+"'>";
@@ -249,8 +272,8 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
 			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
 			texto = texto + (pri.equals(" N") ? "<font class='prio_n_docs'>"+pri+"</font>" : (pri.equals(" U") ? "<font class='prio_u_docs'>"+pri+"</font>" : "<font class='prio_uu_docs'>"+pri+"</font>"));
-			texto = texto + ("<a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getUsuarioElaborador().getUsuLogin()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente()+"</a>");
-			texto = texto + ("<a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getAssunto()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
+			texto = texto + (notificar+"<a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getUsuarioElaborador().getUsuLogin()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente().replace('-',' ')+"</a>");
+			texto = texto + (" - <a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getAssunto()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
 			texto = texto + ("<font class='data_docs'>"+DataTimeUtil.getBrazilFormatDataHora(doc_cart.getDataHora())+"</font>");
 			texto = texto + "</div>";
 			
@@ -374,6 +397,14 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 				"WHERE doc.documentoDetalhes.idDocumentoDetalhes = ? GROUP BY doc.carteira.idCarteira ORDER BY doc.idDocumento" +
 		"").setInteger(0, id).list(); 
 			
+	}
+
+	@Override
+	public List<Anexo> getAllAnexos(Integer idDocumentoDetalhes) {
+		
+		hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("").setInteger(0, idDocumentoDetalhes).list(); 
+		
+		return null;
 	}
 
 }

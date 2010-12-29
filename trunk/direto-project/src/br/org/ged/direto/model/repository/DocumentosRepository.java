@@ -3,6 +3,7 @@ package br.org.ged.direto.model.repository;
 import java.util.List;
 
 import br.org.direto.util.DataUtils;
+import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
 
@@ -15,5 +16,5 @@ public interface DocumentosRepository {
 	public Long counterDocumentsByBox(String box, int idCarteira, String filtro);
 	public Documento selectById(Integer id, Integer idCarteira);
 	public List<Documento> getAllById(Integer id);
-
+	public List<Anexo> getAllAnexos(Integer idDocumentoDetalhes);
 }

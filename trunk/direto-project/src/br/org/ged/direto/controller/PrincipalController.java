@@ -48,6 +48,7 @@ import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.menus.MenuTopo;
 import br.org.ged.direto.model.service.DocumentosService;
+import br.org.ged.direto.model.service.GruposService;
 import br.org.ged.direto.model.service.PastasService;
 import br.org.ged.direto.model.service.UsuarioService;
 import br.org.ged.direto.model.service.menus.IMenuTopo;
@@ -55,7 +56,8 @@ import br.org.ged.direto.model.service.menus.MenuTopoImpl;
 
 @Controller
 @RequestMapping("/principal.html")
-@SessionAttributes({"usuario", "mt","pastas","menuTopo","box"})
+//@SessionAttributes({"usuario", "mt","pastas","menuTopo","box"})
+@SessionAttributes({"usuario", "mt","menuTopo","box"})
 public class PrincipalController extends BaseController {
 	
 	@Autowired
@@ -64,24 +66,32 @@ public class PrincipalController extends BaseController {
 	@Autowired
 	private DocumentosService documentosService;
 	
-	@Autowired
-	private PastasService pastasService;
+	/*@Autowired
+	private PastasService pastasService;*/
 	
 	@Autowired
 	private IMenuTopo menuTopo;
 	
+	@Autowired
+	private GruposService gruposService;
 	
 	
+	@ModelAttribute("grupos")
+	public Collection<DataUtils> gruposCarteira(HttpServletRequest request) {
+		Integer idCarteira = this.getIdCarteiraFromSession(request);
+		return gruposService.listGroups(idCarteira);
+		
+	}
 	
 	
-	@ModelAttribute("pastas")
-	public Collection<Pastas> todasPastas(@RequestParam("pr")int pr,@RequestParam("box") String box,HttpServletRequest request,ModelMap model) {
+	/*@ModelAttribute("pastas")
+	public Collection<Pastas> todasPastas(HttpServletRequest request) {
 		
 		
 		
 		//Integer idCarteira = new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
 		
-		/*Map<Long,Pastas> pastaMapped = new LinkedHashMap<Long,Pastas>();
+		Map<Long,Pastas> pastaMapped = new LinkedHashMap<Long,Pastas>();
 		
 		Set<Pastas> pastas = new LinkedHashSet<Pastas>();
 		pastas = (Set<Pastas>) pastasService.getAll(); 
@@ -95,13 +105,13 @@ public class PrincipalController extends BaseController {
 			
 			pastaMapped.put(documentosService.counterDocumentsByBox(pasta.getIdPasta().toString(), (idCarteira.intValue()*1000*pasta.getIdPasta())), pasta);
 			
-		}*/
+		}
 		 
 		
 		//return pastaMapped;
 		Integer idCarteira = this.getIdCarteiraFromSession(request);
 		
-		/*int limitePorPagina = 2;
+		int limitePorPagina = 2;
 		long totalregs = this.documentosService.counterDocumentsByBox(box, idCarteira);
 		int totalpgs = Math.round(totalregs / limitePorPagina);
 		if ((totalregs % limitePorPagina) > 0)
@@ -119,7 +129,7 @@ public class PrincipalController extends BaseController {
 		model.addAttribute("page", pageAtual);
 		model.addAttribute("nextPage", nextPage);
 		model.addAttribute("previousPage", previousPage);
-		model.addAttribute("limiteByPage", limitePorPagina);*/
+		model.addAttribute("limiteByPage", limitePorPagina);
 		
 		//System.out.println("IDCARTEIRA: "+idCarteira);
 		
@@ -138,7 +148,11 @@ public class PrincipalController extends BaseController {
 		}
 		
 		return pastas;
-	}
+		
+		
+		return this.pastasService.pastasComNrDocumentos(idCarteira);
+		
+	}*/
 	
 	
 	
@@ -288,6 +302,10 @@ public class PrincipalController extends BaseController {
 		this.session = request.getSession(true);
 		//(Usuario) auth.getPrincipal();
 		Usuario usuario = usuarioService.selectByLogin(auth.getName());
+		//Usuario o = (Usuario) auth.getPrincipal();
+		//usuario.setIdCarteira(o.getIdCarteira());
+		
+		
 		//Usuario usuario = this.usuarioService.selectById(usuarioTemp.getIdUsuario());
 		
 		//System.out.println("j_conta: "+session.getAttribute("j_usuario_conta"));
@@ -307,7 +325,7 @@ public class PrincipalController extends BaseController {
 		
 		model.addAttribute("usuario",usuario);
 		model.addAttribute("box",box);
-		model.addAttribute("contaAtual", usuario.getIdCarteira());
+		//model.addAttribute("contaAtual", usuario.getIdCarteira());
 		//model.addAttribute(pstgrad);
 		//model.addAttribute(usuarioService.listActivedContas(auth.getName()));
 		

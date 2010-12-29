@@ -2,6 +2,7 @@ package br.org.ged.direto.model.repository.hibernate;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -35,6 +36,15 @@ public class ContaRepositoryImpl implements ContaRepository {
 	public void tieUsers(List<Usuario> usuarios) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public List<Usuario> listarUsuariosPorConta(Integer idCarteira){
+		String sql = "FROM Conta c inner join c.carteira carteira WHERE carteira.idCarteira = ?";
+		
+		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setInteger(0, idCarteira);
+		
+		return null;
 	}
 
 	

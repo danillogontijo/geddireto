@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import br.org.direto.util.DataUtils;
+import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
@@ -25,4 +26,6 @@ public interface DocumentosService {
 	public Long counterDocumentsByBox(String box, int idCarteira, String filtro);
 	
 	public List<Documento> getAllById(Integer id);
+	
+	public List<Anexo> getAllAnexos(Integer idDocumentoDetalhes);
 }
