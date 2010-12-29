@@ -1,5 +1,13 @@
 body {margin: 0px 0px 0px 0px; font: 12px verdana, arial, helvetica, sans-serif; font-weight: normal;}
-a {text-decoration:none; color: black;}
+a {text-decoration: none; color: black;}
+a:hover {text-decoration: underline;}
+
+#disabledZone {
+	filter:opacity(alpha=60); /* para o IE */
+    -moz-opacity:0.6; /* para o FireFox */
+    opacity:0.6; /* para o outros Navegadores */
+
+background-color: black;}
 
 /**
  *	ERROS CAMPOS
@@ -46,19 +54,16 @@ a {text-decoration:none; color: black;}
  * CLASSES PARA OS TEXTOS
  */
 .menu_titulo {color: #333333; font: bold 12px verdana, arial, helvetica, sans-serif;}
-.menu_titulo a:hover {text-decoration: underline;}
 
 .menuLado {font-weight: normal; margin-top: 5px; margin-bottom: 5px;}
-.menuLado a:hover {text-decoration: underline;}
+
 .menuLadoSel {font-weight: bold; margin-top: 10px; margin-bottom: 10px;}
 
 .menu1 {color: #ffffff;	font-weight: bold; text-decoration: none;}
-.menu1 a:hover {text-decoration: underline;}
 
 .menu2 {font-weight: normal; text-decoration: none;}
 
 .pages {font: 12px Verdana, Arial, Helvetica, sans-serif;color: #003399;}
-.pages:hover {text-decoration: underline;}
 
 .rodape {color: #666666; font-size: 10px;}
 
@@ -93,3 +98,12 @@ a {text-decoration:none; color: black;}
 	 line-height:30px; margin-left: 68px; margin-right: 10px;font-weight: bold;}
  
  .data_docs{float: right;color: gray; font-style: italic;}
+ 
+ 
+ 
+  
+ /**
+ * ESTILO PAGINA VISUALIZACAO DE DOCUMENTO (documento.html)
+ */
+  
+#link_titulo {font-weight: bold;}

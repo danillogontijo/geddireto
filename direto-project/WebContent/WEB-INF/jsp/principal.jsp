@@ -5,61 +5,6 @@
 <%@ include file="include_head.jsp" %>
 
 
-
-<script language="JavaScript"><!--
-
-function init(){
-	getAllDocuments(null);
-}
-
-//DWREngine.setErrorHandler(null);
-//DWREngine.setWarningHandler(null);
-var allDocuments;
-
-function getAllDocuments(inicio){
-
-	if (inicio == null){
-		documentosJS.listDocumentsFromAccount(2, 0, 0, {
-			callback:function(dataFromServer) {
-				
-				if (dataFromServer != "" || dataFromServer != null)
-					listDocuments(dataFromServer,null);
-  			}
-  		});
-
-		//alert(allDocuments);
-	  		
-	}	
-	
-}
-
-function listDocuments(dataFromServer,inicio){
-	allDocuments = dataFromServer;
-	limit = 1;
-	size = allDocuments.length;
-	resto = size%1;
-	paginas = size/1;
-	alert("size"+resto);
-	
-	if (inicio == null){
-
-		inicio = 0;
-		pagina = 1;
-
-		if (resto == 0){
-			for(i = inicio; i<(pagina*limit);i++){
-				//alert(allDocuments[i].texto);
-			}
-		}	
-	}
-	
-}
-
-//alert(allDocuments);
-
-</script>    
-
-
 		
 		<c:url value="principal.html" var="mostrarURL">
 		  <c:param name="box"   value="${box}" />
@@ -81,7 +26,9 @@ function listDocuments(dataFromServer,inicio){
 			
 			<a href="<c:out value="${mostrarURL}urgentes" />" style="margin-left: 5px;" class="menu2">Urgentes</a> |
 				
-			<a href="<c:out value="${mostrarURL}encaminhar" />" style="margin-left: 5px;" class="menu2">Encaminhar selecionadas</a>  	
+			<a href="#grupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar selecionadas</a>  |	
+			
+			<a href="javascript: mostrarGrupos();" style="margin-left: 5px;" class="menu2">Acompanhar</a>
 			
 			<c:if test="${box == 2}">
 				<a href="javascript:Arquivar(4);" class="menu1">Apagar</a> |

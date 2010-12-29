@@ -11,9 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "usuomsec")
@@ -101,6 +103,7 @@ public class Conta implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdCarteira", nullable = false)
+	@OrderBy("cartAbr asc")
 	public Carteira getCarteira() {
 		return carteira;
 	}
@@ -108,6 +111,16 @@ public class Conta implements Serializable {
 	public void setCarteira(Carteira carteira) {
 		this.carteira = carteira;
 	}
+	
+	@Transient
+	public boolean isPrincipal() {
+		
+		//isContaPrincipal = (this.getContaPrincipal() == 1) ? true : false; 
+		
+		return (this.getContaPrincipal() == 1) ? true : false; 
+	}
+	
+	
 	
 	
 }

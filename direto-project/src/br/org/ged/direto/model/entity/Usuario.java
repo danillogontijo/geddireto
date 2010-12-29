@@ -55,6 +55,7 @@ public class Usuario implements Serializable,UserDetails
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdPstGrad", nullable = false)
+	@OrderBy("idPstGrad asc")
 	private PstGrad pstGrad;
 	
 	@Column(name = "UsuNome", nullable = false, length = 150)
@@ -80,7 +81,7 @@ public class Usuario implements Serializable,UserDetails
 	private Date usuUltimoLogin;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario", cascade = CascadeType.ALL)
-	@OrderBy("contaPrincipal desc,idConta asc")  
+	@OrderBy("contaPrincipal desc, carteira asc")  
 	private Set<Conta> contas = new HashSet<Conta>(0);
 	
 	@Transient
@@ -355,7 +356,7 @@ public class Usuario implements Serializable,UserDetails
 	        sb.append("AccountNonLocked: ").append(this.isAccountNonLocked()).append("; ");
 
 	        if (!getAuthorities().isEmpty()) {
-	            sb.append("Granted Authorities: ");
+	            sb.append("Granted Authorities [atual]: ");
 
 	            boolean first = true;
 	            for (GrantedAuthority auth : getAuthorities()) {

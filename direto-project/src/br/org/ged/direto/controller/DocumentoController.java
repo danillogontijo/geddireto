@@ -1,11 +1,13 @@
 package br.org.ged.direto.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +36,7 @@ import br.org.direto.util.DataUtils;
 import br.org.direto.util.DocumentosUtil;
 import br.org.direto.util.Utils;
 import br.org.ged.direto.controller.forms.LoginForm;
+import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
@@ -41,6 +44,7 @@ import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.service.DocumentosService;
+import br.org.ged.direto.model.service.SegurancaService;
 
 @Controller
 @RequestMapping("/documento.html")
@@ -56,6 +60,10 @@ public class DocumentoController extends BaseController {
 	@Autowired
 	DocumentoError documentoError;
 	
+	@Autowired
+	private SegurancaService segurancaService;
+	
+		
 	@ExceptionHandler(DocumentNotFoundException.class)
 	public ModelAndView handlerDocumentNotFoundException(DocumentNotFoundException ex){
 		 System.out.println("["+DocumentNotFoundException.class.getName()+"] "+ ex.getMessage());
@@ -66,6 +74,13 @@ public class DocumentoController extends BaseController {
 	}
 	
 	@ModelAttribute("allDocuments")
+	public ArrayList<Documento> allDocumentsById(@RequestParam("id")Integer id){
+		ArrayList<Documento> list = (ArrayList<Documento>) documentosService.getAllById(id);
+		return list;
+	}
+	
+		
+	@ModelAttribute("allDocumentsUsers")
 	public Map<Usuario,String> allDocumentsUsers(@RequestParam("id")Integer id){
 		
 		//Set<DataUtils> set = new HashSet<DataUtils>();
@@ -102,7 +117,44 @@ public class DocumentoController extends BaseController {
 		model.addAttribute("documento",documento);
 		/*Set<Documento> todos = documento.getDocumentosByCarteira();
 		model.addAllAttributes(todos);*/
+		model.addAttribute("doc_conta",doc_conta);
+		model.addAttribute("usuarioElaborador",doc_conta.getDocumentoDetalhes().getUsuarioElaborador());
 		
+		Set<Anexo> listAnexos = doc_conta.getDocumentoDetalhes().getAnexos();
+		Iterator<Anexo> iteAnexos = listAnexos.iterator();
+		
+		Anexo principal = null;
+		
+		if(iteAnexos.hasNext())
+			principal = iteAnexos.next();
+		
+		
+		if (principal == null){
+			model.addAttribute("documento_principal", "Sem documento");
+		}else{
+			model.addAttribute("documento_principal", principal);
+			listAnexos.remove(principal);
+		}
+		
+		model.addAttribute("anexos",listAnexos);
+		
+		String sha1 = "Ocorreu erro";
+		
+		try {
+			File file = new File("/home/danillo/teste.odt");
+			
+			sha1 = segurancaService.sh1withRSA(file);
+			
+		}catch(Exception e){
+			
+		}
+		
+		model.addAttribute("sha1", sha1);
+		
+		System.out.println("-----"+doc_conta.getDocumentoDetalhes().getAnexos().size());
+		//model.addAllAttributes(doc_conta.getDocumentoDetalhes().getAnexos());
+		//documentosService.
+		//model.containsAttribute("anexos");
 		
 		/*DocumentoError o = new DocumentoError();
 		o.setDocumento(this.documento.getDocumento());

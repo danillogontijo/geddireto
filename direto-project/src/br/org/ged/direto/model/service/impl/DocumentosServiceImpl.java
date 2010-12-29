@@ -10,6 +10,7 @@ import org.springframework.context.MessageSourceAware;
 import org.springframework.stereotype.Service;
 
 import br.org.direto.util.DataUtils;
+import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.repository.DocumentosRepository;
@@ -58,6 +59,12 @@ public class DocumentosServiceImpl implements DocumentosService {
 	@Override
 	public List<Documento> getAllById(Integer id) {
 		return documentosRepository.getAllById(id);
+	}
+
+	@Override
+	public List<Anexo> getAllAnexos(Integer idDocumentoDetalhes) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

@@ -75,6 +75,7 @@ public class Carteira implements Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "carteira")
+	@OrderBy("usuario asc")  
 	public Set<Conta> getContas() {
 		return this.contas;
 	}

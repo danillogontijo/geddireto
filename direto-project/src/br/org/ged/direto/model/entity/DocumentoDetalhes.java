@@ -65,6 +65,9 @@ public class DocumentoDetalhes implements Serializable {
 	@Column(name = "NrProtocolo")
 	private String nrProtocolo;
 	
+	@Column(name = "Referencia")
+	private String referencia;
+	
 	@Column(name = "Assinatura",length=1,nullable=false)
 	private int assinatura;
 	
@@ -79,7 +82,12 @@ public class DocumentoDetalhes implements Serializable {
 	@JoinColumn(name = "Id", nullable = true)
 	private Set<Documento> documentosByCarteira = new HashSet<Documento>(0);
 	
-		
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "IdMensagem", nullable = true)
+	@OrderBy("idAnexo asc") 
+	private Set<Anexo> anexos = new HashSet<Anexo>(0);
+	
+		 
 	
 	public Integer getIdDocumentoDetalhes() {
 		return idDocumentoDetalhes;
@@ -204,5 +212,23 @@ public class DocumentoDetalhes implements Serializable {
 	public boolean isAssign(){
 		return this.assinatura == 1 ? true : false;
 	}
+
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
+	}
+
+	public Set<Anexo> getAnexos() {
+		return anexos;
+	}
+
+	public void setAnexos(Set<Anexo> anexos) {
+		this.anexos = anexos;
+	}
+	
+	
 
 }

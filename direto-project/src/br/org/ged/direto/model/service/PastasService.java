@@ -11,5 +11,6 @@ public interface PastasService {
 	
 	public Collection<Pastas> getAll();
 	public Pastas getPastaById(Integer id);
+	public Collection<Pastas> pastasComNrDocumentos(int idCarteira);
 
 }
