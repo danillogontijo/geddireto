@@ -12,19 +12,20 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.ged.direto.model.entity.Pastas;
+import br.org.ged.direto.model.repository.DocumentosRepository;
 import br.org.ged.direto.model.repository.PastasRepository;
 import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.PastasService;
 
 @Service("pastasService")
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+@Transactional(readOnly=true, rollbackFor=Exception.class)
 public class PastasServiceImpl implements PastasService {
 
 	@Autowired
 	private PastasRepository pastasRepository;
 	
 	@Autowired
-	private DocumentosService documentosService;
+	private DocumentosRepository documentosRepository;
 		
 	@Override
 	public Collection<Pastas> getAll() {
@@ -37,7 +38,7 @@ public class PastasServiceImpl implements PastasService {
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly=true,propagation=Propagation.NEVER)
 	public Collection<Pastas> pastasComNrDocumentos(int idCarteira){
 		
 		List<Pastas> pastas = (ArrayList<Pastas>) pastasRepository.getAll();
@@ -47,7 +48,7 @@ public class PastasServiceImpl implements PastasService {
 			
 			Pastas pasta = new Pastas();
 			pasta = ite.next();
-			long total = this.documentosService.counterDocumentsByBox(String.valueOf(pasta.getIdPasta()),idCarteira,null);
+			long total = this.documentosRepository.counterDocumentsByBox(String.valueOf(pasta.getIdPasta()),idCarteira,null);
 			String nomePasta = pasta.getNomePasta()+" ("+total+")";
 			pasta.setNomePasta(nomePasta);
 			System.out.println(nomePasta);

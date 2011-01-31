@@ -4,6 +4,29 @@
 <%@ include file="include_taglibs.jsp" %>
 <%@ include file="include_head.jsp" %>
 
+<style type="text/css" media="all">
+/* simple css-based tooltip */
+.tooltip {
+	background-color:#000;
+	border:1px solid #fff;
+	padding:10px 15px;
+	width:200px;
+	display:none;
+	color:#fff;
+	text-align:left;
+	font-size:12px;
+	position: absolute;
+	z-index: 9999;
+
+	/* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:0 0 10px #000;
+}
+
+/*@import "css/dateinput.css";*/
+</style>
+
+
 
 		
 		<c:url value="principal.html" var="mostrarURL">
@@ -51,7 +74,7 @@
 			
 			<c:set var="i" value="1"></c:set>
 			<c:forEach var="dwr" items="${DocDWR}">
-		    	${dwr.texto}
+		    	<c:out value="${dwr.texto}" escapeXml="false"></c:out>
 		    	<c:set var="i" value="${i+1}"></c:set>
 		    </c:forEach>
 		    
@@ -136,10 +159,19 @@
 	
 <div id="table" style="position: relative; width: 1002px; top: 400px; left: 167px; margin-top: 0px; text-align: center;">
 		
+		
+<input type="date" />
+
+
+	
 	<font class="rodape" style="left: 167px;">
 			© 2010 - Direto - Gerenciador Eletrônico de Documentos<br>
 						Ver. 3.0
 	</font>
+	
+	
+	
+	
 </div>
 
 

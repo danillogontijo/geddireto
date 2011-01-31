@@ -13,8 +13,6 @@ import br.org.ged.direto.model.repository.PstGradRepository;
 
 //This will make easier to autowired
 @Repository("pstgradRepository")
-// Default is read only
-@Transactional
 public class PstGradRepositoryImpl implements PstGradRepository {
 
 	private HibernateTemplate hibernateTemplate;

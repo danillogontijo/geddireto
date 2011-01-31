@@ -12,7 +12,7 @@
 	<global-method-security pre-post-annotations="enabled"></global-method-security>
 
 	<!--<http auto-config="true" use-expressions="true" entry-point-ref="forbiddenAuthEntryPoint">-->
-	<http auto-config="true" use-expressions="true" access-decision-manager-ref="accessDecisionManager">
+	<http auto-config="true" use-expressions="true" access-decision-manager-ref="">
 		<!--<access-denied-handler error-page="/accessDenied.html" />
 
 		--><intercept-url pattern="/index.jsp" access="permitAll" />

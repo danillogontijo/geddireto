@@ -19,11 +19,11 @@ public class Pastas implements Serializable{
 	private static final long serialVersionUID = -4805607521619811891L;
 	
 	@Id
-	@Column(name = "IdPasta")
+	@Column(name = "IdPasta",updatable=false)
 	@OrderBy("idPasta desc")  
 	private Integer idPasta;
 	
-	@Column(name = "NomePasta")
+	@Column(name = "NomePasta",updatable=false)
 	private String nomePasta;
 	
 	public Integer getIdPasta() {

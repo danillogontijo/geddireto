@@ -6,6 +6,7 @@
 	
 <!-- Inicio Folha de Estilos -->
 <link href="css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="css/dateinput.css" rel="stylesheet" type="text/css" />
 <!-- Fim Folha de Estilos -->
     
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/gruposJS.js"></script>    
@@ -17,13 +18,36 @@
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8""></script>
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.pack.js"></script>
+<script src="<%=request.getContextPath() %>/js/jquery.tools.min.js"></script>
+
+<!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.pack.js"></script> -->
+<!-- <script type="text/javascript" src="<%=request.getContextPath() %>/js/jtip.js" charset="utf-8""></script> -->
+
 <script type="text/javascript">
 
 jQuery.noConflict();
 
+
+
 jQuery(document).ready(function($) {	
 
+
+	$.tools.dateinput.localize("pt-br",  {
+		   months:        'Janeiro,Fevereiro,Março,Abril,Maio,Junho,Julho,Agosto,Setembro,' +
+		                   	'Outubro,Novembro,Dezembro',
+		   shortMonths:   'jan,fev,mar,abr,mai,jun,jul,ago,set,out,nov,dez',
+		   days:          'domingo,segunda-feira,terça-feira,quarta-feira,quinta-feira,sexta-feira,s&eacute;bado',
+		   shortDays:     'dom,seg,ter,qua,qui,sex,sáb'
+		});
+
+	$(":date").dateinput({ 
+		lang: 'pt-br', 
+		format: 'dd/mm/yyyy',
+		//offset: [30, 0]
+	});
+
+	
+	
 	//select all the a tag with name equal to modal
 	$('a[name=modal]').click(function(e) {
 		getGrupos();
@@ -71,7 +95,27 @@ jQuery(document).ready(function($) {
 	$('#mask').click(function () {
 		$(this).hide();
 		$('.window').hide();
-	});			
+	});	
+
+	
+		
+	$('a[name=tooltip]').tooltip({
+
+		events: {def: "click,blur"},
+		// each trashcan image works as a trigger
+		tip: '#notificacoes',
+
+		// custom positioning
+		position: 'bottom center',
+
+		// move tooltip a little bit to the right
+		offset: [0, 0],
+
+		// there is no delay when the mouse is moved away from the trigger
+		delay: 0
+
+		
+	});		
 	
 });
 
@@ -79,6 +123,26 @@ jQuery(document).ready(function($) {
 
 <script type="text/javascript">
 
+function getNotificacoes(id){
+
+	
+
+		jQuery.getJSON("notificacoes.html?id="+id, function(json){
+	        //$('#tipoUdt').val(json.tipo);
+	        //$('#tituloUdt').val(json.titulo);
+	        //$('#descricaoUdt').val(json.descricao);
+			//alert(json.id_categoria);
+			//$('#notificacoes')innerHTML = "teste: ";
+			//divN.innerHTML = "teste: "+id;
+			jQuery("#notificacoes").html(json.notificacoes);
+			
+	        } // fim do callback
+		); // fim do .getJSON()
+
+	
+	
+	
+}
 
 function getGrupos()
 {
@@ -196,6 +260,12 @@ function montaUsersByGrupos(listBeans){
   width:840px; 
   height:400px;
 }
+
+#boxes #notificacoes {
+  width:140px; 
+  height:100px;
+}
+
 </style>
 
 </head>
@@ -203,6 +273,10 @@ function montaUsersByGrupos(listBeans){
 
 <body onload="">
 
+
+<div id="notificacoes" class="tooltip">
+	Remove this row.
+</div>
 
 <div id="boxes">
   
@@ -259,6 +333,15 @@ function montaUsersByGrupos(listBeans){
 	<input type="hidden" id="idCarteira" value="${contaAtual}" />
 </div>
 <!-- End of Login Dialog -->  
+
+<div id="notificacoes" class="window">
+	<table>
+		<tr><td>Teste Notificacao</td></tr>	
+	</table>
+
+</div>
+
+
 
 <!-- Mask to cover the whole screen -->
   <div id="mask"></div>

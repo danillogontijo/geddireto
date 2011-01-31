@@ -24,8 +24,6 @@ import br.org.ged.direto.model.repository.UsuarioRepository;
 
 //This will make easier to autowired
 @Repository("usuarioRepository")
-// Default is read only
-@Transactional
 public class UsuarioRepositoryImpl implements UsuarioRepository {
 
 	private HibernateTemplate hibernateTemplate;
@@ -35,7 +33,6 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
 		hibernateTemplate = new HibernateTemplate(sessionFactory);
 	}
 
-	@Transactional(readOnly = false)
 	public void save(Usuario usuario) {
 		hibernateTemplate.saveOrUpdate(usuario);
 
