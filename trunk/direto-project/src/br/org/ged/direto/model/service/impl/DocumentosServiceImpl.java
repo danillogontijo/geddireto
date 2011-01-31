@@ -1,5 +1,6 @@
 package br.org.ged.direto.model.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.directwebremoting.annotations.RemoteMethod;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.org.direto.util.DataUtils;
 import br.org.ged.direto.model.entity.Anexo;
@@ -18,6 +21,7 @@ import br.org.ged.direto.model.service.DocumentosService;
 
 @Service("documentosService")
 @RemoteProxy(name = "documentosJS")
+@Transactional(readOnly=true,propagation=Propagation.SUPPORTS,rollbackFor=Exception.class)
 public class DocumentosServiceImpl implements DocumentosService {
 
 	@Autowired
@@ -65,6 +69,13 @@ public class DocumentosServiceImpl implements DocumentosService {
 	public List<Anexo> getAllAnexos(Integer idDocumentoDetalhes) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED,readOnly = false)
+	public void setDataNotificacao(Date data, Integer id, Integer idCarteira) {
+		documentosRepository.selectById(id, idCarteira).setDataHoraNotificacao(data);
+		
 	}
 
 	

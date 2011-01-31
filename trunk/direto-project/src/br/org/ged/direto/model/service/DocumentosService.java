@@ -1,5 +1,6 @@
 package br.org.ged.direto.model.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -28,4 +29,8 @@ public interface DocumentosService {
 	public List<Documento> getAllById(Integer id);
 	
 	public List<Anexo> getAllAnexos(Integer idDocumentoDetalhes);
+	
+	public void setDataNotificacao(Date data,Integer id,Integer idCarteira);
+	//public Documento selectById(Integer id) throws DocumentNotFoundException;
+	
 }

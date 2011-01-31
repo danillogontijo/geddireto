@@ -14,8 +14,6 @@ import br.org.ged.direto.model.repository.CarteiraRepository;
 
 //This will make easier to autowired
 @Repository("carteiraRepository")
-// Default is read only
-@Transactional
 public class CarteiraRepositoryImpl implements CarteiraRepository {
 
 	

@@ -15,8 +15,6 @@ import br.org.ged.direto.model.repository.ContaRepository;
 
 //This will make easier to autowired
 @Repository("contaRepository")
-// Default is read only
-@Transactional
 public class ContaRepositoryImpl implements ContaRepository {
 	
 	private HibernateTemplate hibernateTemplate;

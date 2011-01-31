@@ -12,7 +12,6 @@ import br.org.ged.direto.model.entity.Funcao;
 import br.org.ged.direto.model.repository.FuncaoRepository;
 
 @Repository("funcaoRepository")
-@Transactional
 public class FuncaoRepositoryImpl implements FuncaoRepository {
 
 	private HibernateTemplate hibernateTemplate;

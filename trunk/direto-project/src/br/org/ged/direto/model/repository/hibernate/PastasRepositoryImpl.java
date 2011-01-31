@@ -8,13 +8,13 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.repository.PastasRepository;
 
 @Repository("pastasRepository")
-@Transactional
 public class PastasRepositoryImpl implements PastasRepository {
 
 	private HibernateTemplate hibernateTemplate;
@@ -26,7 +26,6 @@ public class PastasRepositoryImpl implements PastasRepository {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	@Transactional(readOnly = true)
 	public Collection<Pastas> getAll() {
 		return (List<Pastas>) hibernateTemplate.find("from "
 				+ Pastas.class.getName() + " order by idPasta asc");

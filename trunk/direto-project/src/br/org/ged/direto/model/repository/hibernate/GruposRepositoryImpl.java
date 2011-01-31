@@ -22,7 +22,6 @@ import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.GruposRepository;
 
 @Repository("gruposRepository")
-@Transactional
 public class GruposRepositoryImpl implements GruposRepository {
 
 	private HibernateTemplate hibernateTemplate;
@@ -33,7 +32,6 @@ public class GruposRepositoryImpl implements GruposRepository {
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
 	public List<DataUtils> listGroups(Integer idCarteira) {
 		
 		String sql = "FROM Grupos g inner join g.carteira ng WHERE ng.idCarteira = ?";

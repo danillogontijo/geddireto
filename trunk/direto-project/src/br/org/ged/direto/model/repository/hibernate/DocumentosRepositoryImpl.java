@@ -23,6 +23,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.direto.util.DataTimeUtil;
@@ -67,7 +68,6 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 	}
 
 	@SuppressWarnings("unchecked")
-	@Transactional(readOnly = true)
 	public List<Documento> listByLimited(Integer idCarteira){
 		
 		messages.getMessage("limitByPage");
@@ -116,7 +116,6 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
 	public List<DataUtils> listDocumentsFromAccount(Integer idCarteira, int ordenacao, int inicio, String box, String filtro) {
 		
 		String textoOrdenacao = "";
@@ -262,7 +261,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 					}
 				}
 				
-				notificar = "<font color=red><b>("+c+") </b></font>";
+				notificar = "<a href='javascript:getNotificacoes("+doc.getIdDocumentoDetalhes()+");' class='' name='tooltip'><font color=red><b>("+c+")</b> </font> </a>";
 				
 			}
 			

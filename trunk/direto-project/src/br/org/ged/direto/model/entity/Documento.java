@@ -54,7 +54,7 @@ public class Documento implements Serializable
 	private Date dataHora;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "UltimaNotificacao", nullable = true)
+	@Column(name = "UltimaNotificacao", nullable = true, updatable=true)
 	private Date dataHoraNotificacao;
 	
 	@Column(name="Notificar")
