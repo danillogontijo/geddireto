@@ -39,7 +39,7 @@ public class DocumentosUtil {
 		System.out.println("STATIC RETURN DOCUMENT"+id+idCarteira);
 		DocumentoDetalhes dd = doc.getDocumentoDetalhes();
 				
-		if (doc != null){
+		/*if (doc != null){
 			 dd = DocumentosUtil.documentos.get(id);
 			 
 			 if (dd == null){
@@ -51,7 +51,7 @@ public class DocumentosUtil {
 						size++;
 					}
 				}
-		}
+		}*/
 		
 		System.out.println(size);
 		

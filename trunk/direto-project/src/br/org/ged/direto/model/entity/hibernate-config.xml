@@ -25,6 +25,8 @@
                 <value>br.org.ged.direto.model.entity.Anexo</value>
                 <value>br.org.ged.direto.model.entity.Grupos</value>
                 <value>br.org.ged.direto.model.entity.NomeGrupos</value>
+                <value>br.org.ged.direto.model.entity.Anotacao</value>
+                <value>br.org.ged.direto.model.entity.Despacho</value>
             </list>
         </property>
         

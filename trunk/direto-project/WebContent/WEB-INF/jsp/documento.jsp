@@ -56,9 +56,29 @@
 		<font color="#666666">Data de entrada no sistema: </font><b><fmt:formatDate pattern="EEEE, d MMMM yyyy HH:mm" value="${documento.dataEntSistema}" /></b><br>
 		<font color="#666666">Referência: </font><b>${documento.referencia}</b><br>
 	
-		<font color="#666666">Documento: </font><b>${documento_principal}</b><br>
+		<font color="#666666">Documento: </font><b>${documento_principal}</b> 
+		
+   <c:if test="${documento_principal != 'Sem documento'}">			
+		
+		>>
+		
+		<c:choose>
+			<c:when test="${documento.assinatura == 0}">
+				<c:if test="${documento_principal.assinado == 0}">
+				 <span id="s_editar"><a href="#editar" id="${documento_principal.anexoCaminho}" name="modal" class="l_edicao_vis">Editar</a></span> |
+				</c:if>
+			</c:when>
+			<c:otherwise>
+				Documento assinado.
+			</c:otherwise>
+		</c:choose>
+		
+		<span id="s_visualizar"><a href="" class="l_edicao_vis">Visualizar</a></span>
+		
+		<br>
 		<font color="#666666">SHA-1: </font><b>${sha1}</b><br>
 		
+	</c:if>
 		
 		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
 			<a href="" id="link_titulo">Anexos</a>
@@ -69,6 +89,16 @@
 		<c:forEach var="anexo" items="${anexos}">
 			<div id="div_anexos" style="border-bottom: 1px solid gray; background-color: #FFFFCC; position: relative; width: 822px; height: 25px; text-align: center; line-height: 25px;">
 				${anexo.anexoNome}
+				(
+				<c:choose>
+					<c:when test="${documento.assinatura == 0}">
+						<c:if test="${anexo.assinado == 0}">
+							<a href="#editar" name="modal" id="${anexo.anexoCaminho}" class="l_edicao_vis">Editar</a> |
+						</c:if>
+					</c:when>
+				</c:choose>
+				<a href="" class="l_edicao_vis">Visualizar</a>
+				)
 			</div>
 		</c:forEach>
 	

@@ -261,7 +261,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 					}
 				}
 				
-				notificar = "<a href='javascript:getNotificacoes("+doc.getIdDocumentoDetalhes()+");' class='' name='tooltip'><font color=red><b>("+c+")</b> </font> </a>";
+				notificar = "<a href='"+doc.getIdDocumentoDetalhes()+"' class='notificacao' name='tooltip' id='notificacao_"+doc.getIdDocumentoDetalhes()+"'>("+c+") </a>";
 				
 			}
 			
@@ -274,7 +274,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			texto = texto + (notificar+"<a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getUsuarioElaborador().getUsuLogin()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente().replace('-',' ')+"</a>");
 			texto = texto + (" - <a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getAssunto()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
 			texto = texto + ("<font class='data_docs'>"+DataTimeUtil.getBrazilFormatDataHora(doc_cart.getDataHora())+"</font>");
-			texto = texto + "</div>";
+			texto = texto + "</div>"; 
 			
 			//doc_cart.getCarteira().getContas().
 			

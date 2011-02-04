@@ -87,8 +87,21 @@ public class DocumentoDetalhes implements Serializable {
 	@OrderBy("idAnexo asc") 
 	private Set<Anexo> anexos = new HashSet<Anexo>(0);
 	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "IdMensagem", nullable = true)
+	@OrderBy("dataHoraAnotacao asc") 
+	private Set<Anotacao> anotacoes = new HashSet<Anotacao>(0);
+	
 		 
 	
+	public Set<Anotacao> getAnotacoes() {
+		return anotacoes;
+	}
+
+	public void setAnotacoes(Set<Anotacao> anotacoes) {
+		this.anotacoes = anotacoes;
+	}
+
 	public Integer getIdDocumentoDetalhes() {
 		return idDocumentoDetalhes;
 	}

@@ -5,6 +5,10 @@ if (window['dojo']) dojo.provide('js.direto');
 if (typeof window['js'] == 'undefined') window.js = {};
 if (typeof dwr['direto'] == 'undefined') js.direto = {};
 
+js.direto.close_mask = function(){
+	$j('#mask').hide();
+	$j('.window').hide();
+}
 
 js.direto.sel_chkbox_doc = function(id) {
 	

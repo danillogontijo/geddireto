@@ -27,6 +27,14 @@
 
 -->
 
+
+<c:forEach var="a" items="${anotacoes}">
+ 	
+    ${a.anotacao} - ${a.dataHoraAnotacao}  
+      <br>
+ </c:forEach>
+
+
 	${documento.assunto}<br>
 		
 		

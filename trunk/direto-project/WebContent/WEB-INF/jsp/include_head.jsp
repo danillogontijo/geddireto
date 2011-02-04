@@ -20,12 +20,13 @@
 
 <script src="<%=request.getContextPath() %>/js/jquery.tools.min.js"></script>
 
+
 <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.pack.js"></script> -->
 <!-- <script type="text/javascript" src="<%=request.getContextPath() %>/js/jtip.js" charset="utf-8""></script> -->
 
 <script type="text/javascript">
 
-jQuery.noConflict();
+var $j = jQuery.noConflict();
 
 
 
@@ -46,18 +47,45 @@ jQuery(document).ready(function($) {
 		//offset: [30, 0]
 	});
 
+
+
+	$('input[type=button]').click(function(e) {
+		var bt_name = $(this).attr('name');
+		var nome_anexo = $('#hn_nome_anexo').val();
+		
+		if(bt_name == 'bt_editar_nao'){
+
+			confirma_edicao(0,nome_anexo);
+
+			
+			alert("fecha esse trem");
+
+			js.direto.close_mask();
+			
+		}	
+
+		
+	});
 	
-	
+		
 	//select all the a tag with name equal to modal
 	$('a[name=modal]').click(function(e) {
-		getGrupos();
 
+	
 		//Cancel the link behavior
 		e.preventDefault();
 		
 		//Get the A tag
 		var id = $(this).attr('href');
-	
+
+		if (id == '#grupos'){
+			getGrupos();
+		}else{
+			var anexoCaminho = $(this).attr('id');
+			$('#hn_nome_anexo').val(anexoCaminho);
+			alert("abrir documento: "+anexoCaminho);
+		}
+		
 		//Get the screen height and width
 		var maskHeight = $(document).height();
 		var maskWidth = $(window).width();
@@ -71,7 +99,7 @@ jQuery(document).ready(function($) {
 	
 		//Get the window height and width
 		var winH = $(window).height();
-		var winW = '1002px';//$(window).width();
+		var winW = '1002';//$(window).width();
               
 		//Set the popup window to center
 		$(id).css('top',  winH/2-$(id).height()/2);
@@ -81,60 +109,177 @@ jQuery(document).ready(function($) {
 		$(id).fadeIn(2000); 
 	
 	});
+
+	
 	
 	//if close button is clicked
 	$('.window .close').click(function (e) {
 		//Cancel the link behavior
 		e.preventDefault();
 		
-		$('#mask').hide();
-		$('.window').hide();
+		js.direto.close_mask();
 	});		
 	
 	//if mask is clicked
-	$('#mask').click(function () {
-		$(this).hide();
+	/*$('#mask').click(function () {
+		/$(this).hide();
 		$('.window').hide();
-	});	
+	});*/
 
-	
-		
-	$('a[name=tooltip]').tooltip({
-
+	//$('a[name=tooltip]').live('click', function(clickEvent){clickEvent.preventDefault();});
+	/*$('a[name=tooltip]').tooltip({
+			 
 		events: {def: "click,blur"},
 		// each trashcan image works as a trigger
 		tip: '#notificacoes',
 
+		effect: "fade",
+		predelay: 40,
 		// custom positioning
 		position: 'bottom center',
 
 		// move tooltip a little bit to the right
-		offset: [0, 0],
+		offset: [10, 0],
 
 		// there is no delay when the mouse is moved away from the trigger
 		delay: 0
+	});*/
 
+
+	//$(document).ready(function() {
+		 // var $box = $('#box')
+		 //.wrap('<div id="box-outer"></div>');
+		  //$('#blind').click(function() {
+		 //$box.blindToggle('slow');
+		  //});
+	//});
+
+	$('a[name=tooltip]').click(function(e) {
+		e.preventDefault();
+
+		var id = $(this).attr('href');
 		
-	});		
+		//javascript:getNotificacoes("+doc.getIdDocumentoDetalhes()+",this);
+		
+		getNotificacoes(id,$(this));
+		//alert("teste");
+		
+	  //get the position of the placeholder element
+	  var pos = $('a[name=tooltip]').offset();  
+	  var width = $('a[name=tooltip]').width();
+
+//	alert(pos.left);
+//	alert(pos.top);
+	  
+	  //show the menu directly over the placeholder
+	  $("#notificacoes").css( { "left": (pos.left) + "px", "top":(pos.top+20) + "px" } );
+	  $("#notificacoes").toggle("fast");
+
+
+	  });	
+
 	
+	
+	
+			
+
+	//var $not = $('#notificacoes').wrap('<div id="box-outer"></div>');		
+
+	//$('a[name=tooltip]').click(function() {
+		//$not.blindToggle('slow');
+		  //});	
+
+
+		  
+		
 });
 
 </script>
 
 <script type="text/javascript">
 
-function getNotificacoes(id){
+jQuery.fn.blindToggle = function(speed, easing, callback) {
+	  var h = this.height() + parseInt(this.css('paddingTop')) + parseInt(this.css('paddingBottom'));
+	  return this.animate({marginTop: parseInt(this.css('marginTop')) <0 ? 0 : -h}, speed, easing, callback);
+	};
 
 	
 
-		jQuery.getJSON("notificacoes.html?id="+id, function(json){
+function confirma_edicao(resposta,nome_anexo){
+
+	if (resposta == 0){
+		alert(nome_anexo+" - Apaga arquivo temp servidor e cancela operação");
+	}else{
+		alert(nome_anexo+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.");
+	}
+	
+}
+
+var first_click_notification = true;
+var no_notifications;
+
+function getNotificacoes(id,ele){
+
+	//alert(first_click_notification);
+	//ele.style.backgroundColor="#dddddd"; 
+
+	$j.getJSON("notificacoes.html?id="+id, function(json){
 	        //$('#tipoUdt').val(json.tipo);
 	        //$('#tituloUdt').val(json.titulo);
 	        //$('#descricaoUdt').val(json.descricao);
 			//alert(json.id_categoria);
 			//$('#notificacoes')innerHTML = "teste: ";
 			//divN.innerHTML = "teste: "+id;
-			jQuery("#notificacoes").html(json.notificacoes);
+		
+		if (first_click_notification){
+
+			$j("#s_sem_notificacoes").hide()
+
+			var arNotificacoes = (json.notificacoes).split('<br>');
+
+			var total = arNotificacoes.length-1;
+
+			no_notifications = (total == 0 ? true : false);
+
+			total = "("+total+") ";
+			$j(ele).html(total);
+			
+			(no_notifications == true ? $j("#s_sem_notificacoes").show() : $j("#p_notificacoes").append(json.notificacoes)); 
+		 	
+		 	first_click_notification = false;
+			
+
+		}else{
+
+			$j("#s_sem_notificacoes").hide()	
+			
+			var qtde_notificacoes = $j(ele).text();
+			qtde_notificacoes = qtde_notificacoes.replace("(","");
+			qtde_notificacoes = qtde_notificacoes.replace(")","");
+			qtde_notificacoes = parseInt(qtde_notificacoes);
+			//qtde_notificacoes = qtde_notificacoes.match(/[0-9]/g);
+			//alert(qtde_notificacoes);
+			//$j("#notificacoes").html(str);
+			
+			var arNotificacoes = (json.notificacoes).split('<br>');
+
+			var total = arNotificacoes.length-1;
+			total = qtde_notificacoes+total;
+
+			no_notifications = (total == 0 ? true : false);
+			
+			total = "("+total+") ";
+
+			//var element = $j(ele).attr('id');
+			//element = "#"+element;
+
+			$j(ele).html(total);
+
+			(no_notifications == true ? $j("#s_sem_notificacoes").show() : $j("#p_notificacoes").append(json.notificacoes));
+
+		 	//$j("#notificacoes").append(json.notificacoes)
+		}
+
 			
 	        } // fim do callback
 		); // fim do .getJSON()
@@ -234,6 +379,22 @@ function montaUsersByGrupos(listBeans){
 </script>  
 
 <style>
+#box {
+  padding: 10px;
+  height: 100px;
+  width: 100px;
+  background: #e459e9;
+}
+#box-outer {
+  overflow: hidden;
+  height: 120px;
+  margin: 20px;
+  z-index: 99999;
+}
+
+
+
+
 #mask {
   position:absolute;
   left:0;
@@ -261,11 +422,55 @@ function montaUsersByGrupos(listBeans){
   height:400px;
 }
 
+#boxes #editar {
+  width:300px; 
+  height:70px;
+  /* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #fff;
+	-webkit-box-shadow:0 0 10px #fff;
+}
+
 #boxes #notificacoes {
   width:140px; 
   height:100px;
 }
 
+#bt_conf_edicao {
+	border: 1px solid #006;
+    background: #ccf
+}
+#bt_conf_edicao:hover {
+	 border: 1px solid #f00;
+    background: #eef;
+}
+
+</style>
+
+<style type="text/css" media="all">
+/* simple css-based tooltip */
+.tooltip {
+	/*background-color:#000;
+	border:1px solid #fff;
+	padding:10px 15px;
+	width:200px;
+	display:none;
+	color:#fff;
+	text-align:left;*/
+	font-size:12px;
+	position: absolute;
+	z-index: 9999;
+	text-align: center;
+	width: 200px;
+	display: none;
+	border:1px solid #000;
+	background-color: white;
+
+	/* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:0 0 10px #000;
+}
+
+/*@import "css/dateinput.css";*/
 </style>
 
 </head>
@@ -275,10 +480,31 @@ function montaUsersByGrupos(listBeans){
 
 
 <div id="notificacoes" class="tooltip">
-	Remove this row.
+	<table width="100%">
+		<tr>
+			<td colspan="2" align="center" bgcolor="red" class="titulo_notificacoes" height="20" valign="middle">Notificações</td>
+		</tr>
+	</table>
+	<p id="p_notificacoes"><span id="s_sem_notificacoes" style="display: none;">Sem notificacoes.</span></p>
 </div>
 
 <div id="boxes">
+
+<!-- Confirmação da edição documento -->
+<div id="editar" class="window">
+	<table width="100%">
+		<tr>
+			<td colspan="2" align="center" bgcolor="#1E90FF" class="titulo_confirmacao" height="20" valign="middle">Confirmar edição do documento?</td>
+		</tr>
+		<tr>
+			<td height="35" valign="bottom"><input type="button" id="bt_conf_edicao" value="Sim" name="bt_editar_sim"></td>
+			<td valign="bottom"><input type="button" id="bt_conf_edicao" value="Não" name="bt_editar_nao"></td>
+		</tr>
+		
+	</table>
+	
+	<input type="hidden" id="hn_nome_anexo">
+</div>
   
 <!-- Start of Login Dialog -->  
 <div id="grupos" class="window">
@@ -333,14 +559,6 @@ function montaUsersByGrupos(listBeans){
 	<input type="hidden" id="idCarteira" value="${contaAtual}" />
 </div>
 <!-- End of Login Dialog -->  
-
-<div id="notificacoes" class="window">
-	<table>
-		<tr><td>Teste Notificacao</td></tr>	
-	</table>
-
-</div>
-
 
 
 <!-- Mask to cover the whole screen -->
