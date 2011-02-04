@@ -67,6 +67,24 @@ background-color: black;}
 
 .rodape {color: #666666; font-size: 10px;}
 
+.titulo_confirmacao {color: #ffffff; font-weight: bold; text-decoration: none; font-size: 14px;}
+
+.titulo_notificacoes {color: #ffffff; font-weight: bold; text-decoration: none; font-size: 14px;}
+
+.notificacao {color: red; font-weight: bold;}
+
+/**
+ * CLASSES PARA OS LINKS
+ */
+.l_edicao_vis {color: red;	font-weight: normal; text-decoration: none;}
+
+
+/**
+ * CLASSES PARA OS SPAMs
+ */
+#s_editar {margin-right: 20px;}
+#s_visualizar {margin-left: 20px;}
+
 /**
  * DIVS DO MENU LATERAL
  */
