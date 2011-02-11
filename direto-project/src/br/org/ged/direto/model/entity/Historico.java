@@ -16,8 +16,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "anotacoes")
-public class Anotacao implements Serializable {
+@Table(name = "historico")
+public class Historico implements Serializable {
 
 	
 	/**
@@ -28,10 +28,10 @@ public class Anotacao implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(name = "Id")
-	private Integer idAnotacao;
+	private Integer idHistorico;
 	
-	@Column(name = "Anotacao")
-	private String anotacao;
+	@Column(name = "Acao")
+	private String historico;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdMensagem", nullable = false, insertable = false, updatable = false)
@@ -43,12 +43,29 @@ public class Anotacao implements Serializable {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DataHora", nullable = true)
-	private Date dataHoraAnotacao;
+	private Date dataHoraHistorico;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdCarteira", nullable = false, insertable = false, updatable = false)
 	private Carteira carteira;
 
+
+	
+	public Integer getIdHistorico() {
+		return idHistorico;
+	}
+
+	public void setIdHistorico(Integer idHistorico) {
+		this.idHistorico = idHistorico;
+	}
+
+	public String getHistorico() {
+		return historico;
+	}
+
+	public void setHistorico(String historico) {
+		this.historico = historico;
+	}
 
 	public Carteira getCarteira() {
 		return carteira;
@@ -56,22 +73,6 @@ public class Anotacao implements Serializable {
 
 	public void setCarteira(Carteira carteira) {
 		this.carteira = carteira;
-	}
-
-	public Integer getIdAnotacao() {
-		return idAnotacao;
-	}
-
-	public void setIdAnotacao(Integer idAnotacao) {
-		this.idAnotacao = idAnotacao;
-	}
-
-	public String getAnotacao() {
-		return anotacao;
-	}
-
-	public void setAnotacao(String anotacao) {
-		this.anotacao = anotacao;
 	}
 
 	public DocumentoDetalhes getDocumentoDetalhes() {
@@ -90,13 +91,15 @@ public class Anotacao implements Serializable {
 		this.usuario = usuario;
 	}
 
-	public Date getDataHoraAnotacao() {
-		return dataHoraAnotacao;
+	public Date getDataHoraHistorico() {
+		return dataHoraHistorico;
 	}
 
-	public void setDataHoraAnotacao(Date dataHoraAnotacao) {
-		this.dataHoraAnotacao = dataHoraAnotacao;
+	public void setDataHoraHistorico(Date dataHoraHistorico) {
+		this.dataHoraHistorico = dataHoraHistorico;
 	}
+
+	
 
 	
 	

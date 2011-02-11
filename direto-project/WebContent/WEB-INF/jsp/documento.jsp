@@ -103,16 +103,39 @@
 		</c:forEach>
 	
 		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
-			<a href="" id="link_titulo">Despachos</a>
+			<a href="javascript:show_updates(${idDocumento},'despachos')" id="link_titulo">Despachos</a>
 		</div>
+		<div style="position: relative" id="despachos">
+			<c:forEach var="d" items="${despachos}">
+				<div id="div_despachos" class="celula despacho">
+					<strong>[${d.carteira.cartAbr }] [${d.usuario.pstGrad.pstgradNome} ${d.usuario.usuNGuerra}]</strong> - ${d.despacho} - 
+					<span id="data_despacho"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${d.dataHoraDespacho}" /></span> 
+				</div>
+			 </c:forEach>
+		 </div>
 		
-		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
-			<a href="" id="link_titulo">Anotações</a>
+		<div id="line" class="div_title_anotacoes" style="">
+			<a href="javascript:show_updates(${idDocumento},'anotacoes')" id="link_titulo">Anotações</a>
 		</div>
-		
+		<div style="position: relative" id="anotacoes">
+			<c:forEach var="a" items="${anotacoes}">
+				<div id="div_anotacoes" class="celula anotacao">
+					<strong>[${a.carteira.cartAbr }] [${a.usuario.pstGrad.pstgradNome} ${a.usuario.usuNGuerra}]</strong> - ${a.anotacao} - 
+					<span id="data_anotacao"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${a.dataHoraAnotacao}" /></span> 
+				</div>
+			 </c:forEach>
+		 </div>	
+		 
 		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
 			<a href="" id="link_titulo">Histórico</a>
 		</div>
+		
+		<c:forEach var="h" items="${historico}">
+			<div id="div_anotacoes" class="celula historico">
+				<strong>[${h.carteira.cartAbr }] [${h.usuario.pstGrad.pstgradNome} ${h.usuario.usuNGuerra}]</strong> - ${h.historico} - 
+				<span id="data_historico"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${h.dataHoraHistorico}" /></span> 
+			</div>
+		 </c:forEach>
 	
 	
 	</div>	

@@ -37,13 +37,19 @@ import br.org.direto.util.DocumentosUtil;
 import br.org.direto.util.Utils;
 import br.org.ged.direto.controller.forms.LoginForm;
 import br.org.ged.direto.model.entity.Anexo;
+import br.org.ged.direto.model.entity.Anotacao;
 import br.org.ged.direto.model.entity.Conta;
+import br.org.ged.direto.model.entity.Despacho;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
+import br.org.ged.direto.model.entity.Historico;
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
+import br.org.ged.direto.model.service.AnotacaoService;
+import br.org.ged.direto.model.service.DespachoService;
 import br.org.ged.direto.model.service.DocumentosService;
+import br.org.ged.direto.model.service.HistoricoService;
 import br.org.ged.direto.model.service.SegurancaService;
 
 @Controller
@@ -62,6 +68,15 @@ public class DocumentoController extends BaseController {
 	
 	@Autowired
 	private SegurancaService segurancaService;
+	
+	@Autowired
+	private AnotacaoService anotacaoService;
+	
+	@Autowired
+	private DespachoService despachoService;
+	
+	@Autowired
+	private HistoricoService historicoService;
 	
 		
 	@ExceptionHandler(DocumentNotFoundException.class)
@@ -106,6 +121,29 @@ public class DocumentoController extends BaseController {
 		return map;
 	}
 	
+	@ModelAttribute("anotacoes")
+	public Collection<Anotacao> anotacoes(@RequestParam("id")Integer id) {
+    	
+		List<Anotacao> results = this.anotacaoService.getAnotacaoByDocumento(id); 
+		
+        return results;
+        
+    }
+	
+	@ModelAttribute("despachos")
+	public Collection<Despacho> despachos(@RequestParam("id")Integer id) {
+    	
+        return (List<Despacho>)this.despachoService.getDespachoByDocumento(id);
+        
+    }
+	
+	@ModelAttribute("historico")
+	public Collection<Historico> historico(@RequestParam("id")Integer id) {
+    	
+        return (List<Historico>)this.historicoService.getHistoricoByDocumento(id);
+        
+    }
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String showDocument(@RequestParam("id")Integer id, HttpServletRequest request, ModelMap model){
 		
@@ -114,7 +152,9 @@ public class DocumentoController extends BaseController {
 		Documento doc_conta = this.documentosService.selectById(id, idCarteira);
 		DocumentoDetalhes documento = DocumentosUtil.returnDocument(id, idCarteira,doc_conta);
 		//this.documentoError.setDocumento(DocumentosUtil.returnDocument(id, idCarteira,doc_conta));
+		model.addAttribute("idDocumento",id);
 		model.addAttribute("documento",documento);
+		
 		/*Set<Documento> todos = documento.getDocumentosByCarteira();
 		model.addAllAttributes(todos);*/
 		model.addAttribute("doc_conta",doc_conta);

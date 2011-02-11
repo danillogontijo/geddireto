@@ -59,11 +59,11 @@ public class TesteController {
 	       
 			
 			
-			 //this.anotacaoService.getAnotacaoByDocumento(new Integer(13)); 
+			 
 			
 			//System.out.println("ANOTACOES: "+r.size());
 			
-			List<Anotacao> results = new ArrayList<Anotacao>();
+			List<Anotacao> results = this.anotacaoService.getAnotacaoByDocumento(new Integer(13)); 
 			
 	        return results;
 	        
@@ -79,7 +79,7 @@ public class TesteController {
 			model.addAttribute("usuario", this.usuarioService.selectByLogin(auth.getName()));
 			//model.addAttribute("anotacoes", attributeValue)
 			
-			 this.anotacaoService.getAnotacaoByDocumento(new Integer(13));
+			// this.anotacaoService.getAnotacaoByDocumento(new Integer(13));
 			
 			return "teste";
 		}

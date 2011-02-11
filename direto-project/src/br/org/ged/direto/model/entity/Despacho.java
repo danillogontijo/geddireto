@@ -43,6 +43,19 @@ public class Despacho implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DataHora", nullable = true)
 	private Date dataHoraDespacho;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "IdCarteira", nullable = false, insertable = false, updatable = false)
+	private Carteira carteira;
+
+
+	public Carteira getCarteira() {
+		return carteira;
+	}
+
+	public void setCarteira(Carteira carteira) {
+		this.carteira = carteira;
+	}
 
 	public Integer getIdDespacho() {
 		return idDespacho;

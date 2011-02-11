@@ -1,4 +1,4 @@
-package br.org.ged.direto.controller;
+package br.org.ged.direto.controller.json;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import br.org.ged.direto.controller.BaseController;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.Notificacao;
 import br.org.ged.direto.model.service.DocumentosService;

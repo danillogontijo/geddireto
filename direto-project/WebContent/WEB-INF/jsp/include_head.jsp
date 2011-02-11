@@ -203,7 +203,7 @@ jQuery.fn.blindToggle = function(speed, easing, callback) {
 	  return this.animate({marginTop: parseInt(this.css('marginTop')) <0 ? 0 : -h}, speed, easing, callback);
 	};
 
-	
+
 
 function confirma_edicao(resposta,nome_anexo){
 
@@ -289,6 +289,51 @@ function getNotificacoes(id,ele){
 	
 }
 
+function show_updates(id,type){
+
+	var singular = type;
+
+	if(type == "anotacoes"){
+		singular = "anotacao";
+	}else if (type == "despachos"){
+		singular = "despacho";
+	}else singular = "unknow";	
+
+	var txt_date = $j('#'+type+' #data_'+singular).last().text();
+	var last_date = js.direto.parseDate(txt_date);
+	
+		$j.getJSON(type+".html?id="+id, function(data) {
+
+			
+	    $j.each(data.dados, function(i,d){
+			//alert(a.anotacao);
+	        //$j("#anotacoes div:last").after('div');
+	        
+	        
+	        var date_json_return = js.direto.parseDate(d.dataHora);
+
+			
+	        
+	       // if(js.direto.compareDate(date_json_return,last_date) == 1){
+	        
+		        $j('#'+type+' div:last').after("<div></div>");
+		        $j('#'+type+' div').last().hide();
+		        $j('#'+type+' div').last().html(d.acao);
+		        $j('#'+type+' div').last().addClass('celula '+singular);
+		        $j('#'+type+' div').last().fadeIn("slow");
+
+	       // }
+	        
+			//$j('<div>teste</div>').insertAfter($('#div_anotacoes div:last'));
+
+	        
+	      });
+	    });
+
+	
+    
+}
+	
 function getGrupos()
 {
 	var idCarteira = $('idCarteira').value;

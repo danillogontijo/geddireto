@@ -28,11 +28,11 @@ public class AnotacaoRepositoryImpl implements AnotacaoRepository {
 	@Override
 	public List<Anotacao> getAnotacaoByDocumento(Integer idDocumentoDetalhes) {
 
-		//String sql = "from Anotacao";
+		String sql = "from Anotacao as a where a.documentoDetalhes.idDocumentoDetalhes = ? order by dataHoraAnotacao asc";
 		
-		//Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
+		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
 		
-		//query.setInteger(0, idDocumentoDetalhes);
+		query.setInteger(0, idDocumentoDetalhes);
 		
 		//List<Anotacao> results = query.list();
 		
@@ -40,16 +40,9 @@ public class AnotacaoRepositoryImpl implements AnotacaoRepository {
 		
 		//return results;
 		
-		//return (List<Carteira>) hibernateTemplate.find("from "+ PstGrad.class.getName());
+		return (List<Anotacao>) query.list();
 		
-		List<Anotacao> r = new ArrayList<Anotacao>();
 		
-		Anotacao a = new Anotacao();
-		a.setAnotacao("teste");
-		
-		r.add(a);
-		
-		return r; 
 	}
 
 	@SuppressWarnings("unchecked")
@@ -70,4 +63,5 @@ public class AnotacaoRepositoryImpl implements AnotacaoRepository {
 		hibernateTemplate.save(anotacao);
 		
 	}
+
 }

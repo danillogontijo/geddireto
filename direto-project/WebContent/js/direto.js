@@ -10,6 +10,38 @@ js.direto.close_mask = function(){
 	$j('.window').hide();
 }
 
+js.direto.parseDate = function(txt_date) {
+	var dia =  txt_date.substr(0,2);
+	var mes = txt_date.substr(3,2);
+	var ano = txt_date.substr(6,4);
+	var hora = txt_date.substr(11,2);
+	var min = txt_date.substr(14,2);
+	
+	var date = new Date();
+	date.setDate(dia);
+	date.setMonth(parseInt(mes)-1);
+	date.setFullYear(ano);
+	date.setHours(hora,min);
+	date.setMilliseconds(0);
+	date.setSeconds(0);
+	  
+	return date;
+};
+
+js.direto.compareDate = function(data1,data2){
+	milliSegundos1 = data1.getTime();
+    milliSegundos2 = data2.getTime();
+
+    if(milliSegundos1 == milliSegundos2){
+        return 0;
+    } else if(milliSegundos1 > milliSegundos2){
+        return 1;
+    } else if(milliSegundos1 < milliSegundos2){
+        return -1;
+    } else return -1;
+};
+
+
 js.direto.sel_chkbox_doc = function(id) {
 	
 	

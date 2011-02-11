@@ -21,8 +21,7 @@ public class DespachoServiceImpl implements DespachoService {
 
 	@Override
 	public List<Despacho> getDespachoByDocumento(Integer idDocumentoDetalhes) {
-		// TODO Auto-generated method stub
-		return null;
+		return despachoRepository.getDespachoByDocumento(idDocumentoDetalhes);
 	}
 
 	@Override
