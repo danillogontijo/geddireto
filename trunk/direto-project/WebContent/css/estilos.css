@@ -125,3 +125,11 @@ background-color: black;}
  */
   
 #link_titulo {font-weight: bold;}
+
+#line .div_title_anotacoes {margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;}
+
+.celula{border-bottom: 1px solid gray; background-color: #FFFFCC; position: relative; width: 822px; height: 25px; text-align: center; line-height: 25px;}
+
+.anotacao {color: blue;}
+.despacho {color: blue;}
+.historico {color: red;}

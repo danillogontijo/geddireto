@@ -30,7 +30,7 @@
 
 <c:forEach var="a" items="${anotacoes}">
  	
-    ${a.anotacao} - ${a.dataHoraAnotacao}  
+    ${a.anotacao} - ${a.dataHoraAnotacao} - ${a.usuario.usuLogin}  
       <br>
  </c:forEach>
 

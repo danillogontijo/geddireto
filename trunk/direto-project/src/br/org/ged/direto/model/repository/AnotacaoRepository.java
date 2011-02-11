@@ -9,4 +9,5 @@ public interface AnotacaoRepository {
 	public void save(Anotacao anotacao);
 	public List<Anotacao> getAnotacaoByDocumento(Integer idDocumentoDetalhes);
 	public List<Anotacao> getAnotacaoByUsuario(Integer idUsuario);
+	//public List<Anotacao> getAnotacaoAfterDate(Integer idDocumentoDetalhes, String date_pt_br);
 }

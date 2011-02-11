@@ -9,11 +9,11 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import br.org.ged.direto.model.entity.Anotacao;
-import br.org.ged.direto.model.entity.Despacho;
-import br.org.ged.direto.model.repository.DespachoRepository;
+import br.org.ged.direto.model.entity.Historico;
+import br.org.ged.direto.model.repository.HistoricoRepository;
 
-@Repository("despachoRepository")
-public class DespachoRepositoryImpl implements DespachoRepository {
+@Repository("historicoRepository")
+public class HistoricoRepositoryImpl implements HistoricoRepository {
 
 	private HibernateTemplate hibernateTemplate;
 	
@@ -22,26 +22,33 @@ public class DespachoRepositoryImpl implements DespachoRepository {
 		hibernateTemplate = new HibernateTemplate(sessionFactory);
 	}
 	
+	@Override
+	public List<Historico> getHistoricoByCarteira(Integer idCarteira) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Despacho> getDespachoByDocumento(Integer idDocumentoDetalhes) {
-		String sql = "from Despacho as d where d.documentoDetalhes.idDocumentoDetalhes = ?";
+	public List<Historico> getHistoricoByDocumento(Integer idDocumentoDetalhes) {
+
+		String sql = "from Historico as h where h.documentoDetalhes.idDocumentoDetalhes = ?";
 		
 		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
 		
 		query.setInteger(0, idDocumentoDetalhes);
 		
-		return (List<Despacho>) query.list();
+		return (List<Historico>) query.list();
 	}
 
 	@Override
-	public List<Despacho> getDespachoByUsuario(Integer idUsuario) {
+	public List<Historico> getHistoricoByUsuario(Integer idUsuario) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void save(Despacho despacho) {
+	public void save(Historico historico) {
 		// TODO Auto-generated method stub
 		
 	}
