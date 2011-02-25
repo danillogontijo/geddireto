@@ -5,10 +5,18 @@ if (window['dojo']) dojo.provide('js.direto');
 if (typeof window['js'] == 'undefined') window.js = {};
 if (typeof dwr['direto'] == 'undefined') js.direto = {};
 
+js.direto.charProibido = function charProibido(e){
+    var tecla=(window.event)?event.keyCode:e.which;
+    //alert(tecla);
+    if(tecla == 124 || tecla == 168) { alert("Caracter proibido"); return false;}
+    else{ return true; }
+};
+
+
 js.direto.close_mask = function(){
 	$j('#mask').hide();
 	$j('.window').hide();
-}
+};
 
 js.direto.parseDate = function(txt_date) {
 	var dia =  txt_date.substr(0,2);

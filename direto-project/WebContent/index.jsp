@@ -21,6 +21,7 @@
 <a href="logout.jsp" >logout</a><br>
 <a href="login.jsp" >login</a><br>
 <a href="changePwd.html" >Change Pwd</a><br>
+<a href="upload/upload" >Upload</a><br>
 
 
 <applet archive="aenviar.jar" code=localfile.class width=300 height=120>

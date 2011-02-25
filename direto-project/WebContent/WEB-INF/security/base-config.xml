@@ -108,7 +108,12 @@
 		<property name="userDetailsService" ref="customerUserDetailsService"/>
 	</bean>
 	
-	<context:annotation-config />
+	<!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="100000"/>
+    </bean>
+    
+	
+	--><!--<context:annotation-config />
 
 	<dwr:configuration>
 		<dwr:convert type="bean" class="br.org.direto.util.DataUtils" />
@@ -120,10 +125,16 @@
 
 	<context:component-scan base-package="br.org.ged.direto" />
 	
+	-->
+	
+	<context:annotation-config />
+    <context:component-scan base-package="br.org.ged.direto" />
+	
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
 		<property name="order" value="1" />
 	</bean>
 	
+	<import resource="../dwr.xml" />
 	
 	
 </beans>

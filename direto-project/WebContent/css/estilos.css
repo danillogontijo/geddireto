@@ -1,4 +1,4 @@
-body {margin: 0px 0px 0px 0px; font: 12px verdana, arial, helvetica, sans-serif; font-weight: normal;}
+body {margin: 0px 0px 0px 0px; font: 13px "Trebuchet MS", sans-serif; font-weight: normal;}
 a {text-decoration: none; color: black;}
 a:hover {text-decoration: underline;}
 
@@ -53,7 +53,7 @@ background-color: black;}
 /**
  * CLASSES PARA OS TEXTOS
  */
-.menu_titulo {color: #333333; font: bold 12px verdana, arial, helvetica, sans-serif;}
+.menu_titulo {color: #333333; font-weight: normal;}
 
 .menuLado {font-weight: normal; margin-top: 5px; margin-bottom: 5px;}
 
@@ -129,7 +129,8 @@ background-color: black;}
 #line .div_title_anotacoes {margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;}
 
 .celula{border-bottom: 1px solid gray; background-color: #FFFFCC; position: relative; width: 822px; height: 25px; text-align: center; line-height: 25px;}
+	.anotacao {color: blue;}
+	.despacho {color: blue;}
+	.historico {color: red;}
 
-.anotacao {color: blue;}
-.despacho {color: blue;}
-.historico {color: red;}
+#historico {display: none;}
