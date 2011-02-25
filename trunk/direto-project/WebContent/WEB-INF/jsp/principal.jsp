@@ -26,7 +26,7 @@
 			
 			<a href="<c:out value="${mostrarURL}urgentes" />" style="margin-left: 5px;" class="menu2">Urgentes</a> |
 				
-			<a href="#grupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar selecionadas</a>  |	
+			<a href="#wgrupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar selecionadas</a>  |	
 			
 			<a href="javascript: mostrarGrupos();" style="margin-left: 5px;" class="menu2">Acompanhar</a>
 			

@@ -55,7 +55,7 @@ function validateCallback(retorno){
 function validateAccountInputField(element)
 {
 
-	loginValidatorJS.getMessageValidator(element.id, element.value, {
+	loginValidatorJS.getMessageValidator('LoginForm',element.id, element.value, {
 		callback:function(dataFromServer) {
 			if (dataFromServer == "")
 				usuarioJS.listActivedContas(element.value,montaContas);

@@ -6,34 +6,51 @@
 	
 <!-- Inicio Folha de Estilos -->
 <link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<link href="css/dateinput.css" rel="stylesheet" type="text/css" />
+<!-- <link href="css/dateinput.css" rel="stylesheet" type="text/css" /> -->
+
+<link href="css/custom-theme-jquery/jquery-ui-1.8.10.custom.css" rel="stylesheet" type="text/css" />
+
 <!-- Fim Folha de Estilos -->
     
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/gruposJS.js"></script>    
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/loginValidatorJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentoValidatorJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentosJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/engine.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/util.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8""></script>
 
-<script src="<%=request.getContextPath() %>/js/jquery.tools.min.js"></script>
+<!-- <script src="<%=request.getContextPath() %>/js/jquery.tools.min.js"></script> -->
+
+<script src="<%=request.getContextPath() %>/js/custom/jquery-1.4.4.min.js"></script>
+
+<!-- <script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> -->
+
+<script src="<%=request.getContextPath() %>/js/custom/external/jquery.bgiframe-2.1.2.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.core.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.widget.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.datepicker.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.datepicker-pt-BR.js"></script>
+
 
 
 <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.pack.js"></script> -->
 <!-- <script type="text/javascript" src="<%=request.getContextPath() %>/js/jtip.js" charset="utf-8""></script> -->
 
 <script type="text/javascript">
-
 var $j = jQuery.noConflict();
 
-
+function init(page){
+	if(page=="documento"){
+        $j('#corpo_documento').fadeIn("slow");
+ 	}	
+}
 
 jQuery(document).ready(function($) {	
 
-
-	$.tools.dateinput.localize("pt-br",  {
+	/*$.tools.dateinput.localize("pt-br",  {
 		   months:        'Janeiro,Fevereiro,Março,Abril,Maio,Junho,Julho,Agosto,Setembro,' +
 		                   	'Outubro,Novembro,Dezembro',
 		   shortMonths:   'jan,fev,mar,abr,mai,jun,jul,ago,set,out,nov,dez',
@@ -45,42 +62,33 @@ jQuery(document).ready(function($) {
 		lang: 'pt-br', 
 		format: 'dd/mm/yyyy',
 		//offset: [30, 0]
-	});
+	});*/
 
-
-
-	$('input[type=button]').click(function(e) {
-		var bt_name = $(this).attr('name');
-		var nome_anexo = $('#hn_nome_anexo').val();
-		
-		if(bt_name == 'bt_editar_nao'){
-
-			confirma_edicao(0,nome_anexo);
-
-			
-			alert("fecha esse trem");
-
-			js.direto.close_mask();
-			
-		}	
-
-		
-	});
+	$( "#datepicker" ).datepicker();
+	$( "#datepicker" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
+	
 	
 		
 	//select all the a tag with name equal to modal
 	$('a[name=modal]').click(function(e) {
 
+		var winH = e.pageX;
+		var winW = '1002';
 	
 		//Cancel the link behavior
 		e.preventDefault();
 		
 		//Get the A tag
 		var id = $(this).attr('href');
+		//alert(id);
 
-		if (id == '#grupos'){
+		if (id == '#wgrupos'){
 			getGrupos();
-		}else{
+		}else if(id == '#wacao'){
+			//var winH = $(id).position();
+			var txt = $(this).text();
+			$(id+' .titulo_confirmacao').html(txt);
+		}else{	
 			var anexoCaminho = $(this).attr('id');
 			$('#hn_nome_anexo').val(anexoCaminho);
 			alert("abrir documento: "+anexoCaminho);
@@ -98,11 +106,14 @@ jQuery(document).ready(function($) {
 		$('#mask').fadeTo("slow",0.8);	
 	
 		//Get the window height and width
-		var winH = $(window).height();
-		var winW = '1002';//$(window).width();
+		//var winH = $(window).height();
+		//var winH = $(id).position();
+		//var winW = '1002';//$(window).width();
               
 		//Set the popup window to center
-		$(id).css('top',  winH/2-$(id).height()/2);
+		//$(id).css('top',  winH/2-$(id).height()/2);
+		//alert(winH);
+		$(id).css('top',  winH-$(id).height()-100);
 		$(id).css('left', winW/2-$(id).width()/2);
 	
 		//transition effect
@@ -110,8 +121,6 @@ jQuery(document).ready(function($) {
 	
 	});
 
-	
-	
 	//if close button is clicked
 	$('.window .close').click(function (e) {
 		//Cancel the link behavior
@@ -126,10 +135,14 @@ jQuery(document).ready(function($) {
 		$('.window').hide();
 	});*/
 
+	//$("#testeTooltip a[title]").tooltip();
+	//$("#testeTooltip").tooltip();
+	
+	
 	//$('a[name=tooltip]').live('click', function(clickEvent){clickEvent.preventDefault();});
-	/*$('a[name=tooltip]').tooltip({
+	/*$('#testeTooltip').tooltip({
 			 
-		events: {def: "click,blur"},
+		//events: {def: "click,blur"},
 		// each trashcan image works as a trigger
 		tip: '#notificacoes',
 
@@ -145,7 +158,7 @@ jQuery(document).ready(function($) {
 		delay: 0
 	});*/
 
-
+	
 	//$(document).ready(function() {
 		 // var $box = $('#box')
 		 //.wrap('<div id="box-outer"></div>');
@@ -181,15 +194,16 @@ jQuery(document).ready(function($) {
 	
 	
 	
-			
+	
 
+	
 	//var $not = $('#notificacoes').wrap('<div id="box-outer"></div>');		
 
 	//$('a[name=tooltip]').click(function() {
 		//$not.blindToggle('slow');
 		  //});	
 
-
+	
 		  
 		
 });
@@ -198,22 +212,10 @@ jQuery(document).ready(function($) {
 
 <script type="text/javascript">
 
-jQuery.fn.blindToggle = function(speed, easing, callback) {
+/*jQuery.fn.blindToggle = function(speed, easing, callback) {
 	  var h = this.height() + parseInt(this.css('paddingTop')) + parseInt(this.css('paddingBottom'));
 	  return this.animate({marginTop: parseInt(this.css('marginTop')) <0 ? 0 : -h}, speed, easing, callback);
-	};
-
-
-
-function confirma_edicao(resposta,nome_anexo){
-
-	if (resposta == 0){
-		alert(nome_anexo+" - Apaga arquivo temp servidor e cancela operação");
-	}else{
-		alert(nome_anexo+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.");
-	}
-	
-}
+	};*/
 
 var first_click_notification = true;
 var no_notifications;
@@ -233,7 +235,7 @@ function getNotificacoes(id,ele){
 		
 		if (first_click_notification){
 
-			$j("#s_sem_notificacoes").hide()
+			$j("#s_sem_notificacoes").hide();
 
 			var arNotificacoes = (json.notificacoes).split('<br>');
 
@@ -289,50 +291,7 @@ function getNotificacoes(id,ele){
 	
 }
 
-function show_updates(id,type){
 
-	var singular = type;
-
-	if(type == "anotacoes"){
-		singular = "anotacao";
-	}else if (type == "despachos"){
-		singular = "despacho";
-	}else singular = "unknow";	
-
-	var txt_date = $j('#'+type+' #data_'+singular).last().text();
-	var last_date = js.direto.parseDate(txt_date);
-	
-		$j.getJSON(type+".html?id="+id, function(data) {
-
-			
-	    $j.each(data.dados, function(i,d){
-			//alert(a.anotacao);
-	        //$j("#anotacoes div:last").after('div');
-	        
-	        
-	        var date_json_return = js.direto.parseDate(d.dataHora);
-
-			
-	        
-	       // if(js.direto.compareDate(date_json_return,last_date) == 1){
-	        
-		        $j('#'+type+' div:last').after("<div></div>");
-		        $j('#'+type+' div').last().hide();
-		        $j('#'+type+' div').last().html(d.acao);
-		        $j('#'+type+' div').last().addClass('celula '+singular);
-		        $j('#'+type+' div').last().fadeIn("slow");
-
-	       // }
-	        
-			//$j('<div>teste</div>').insertAfter($('#div_anotacoes div:last'));
-
-	        
-	      });
-	    });
-
-	
-    
-}
 	
 function getGrupos()
 {
@@ -366,6 +325,8 @@ function montaUsersByGrupos(listBeans){
 	}
 	
 }
+
+
 
 /*function mostrarGrupos(){
 
@@ -462,14 +423,22 @@ function montaUsersByGrupos(listBeans){
   
 }
 
-#boxes #grupos {
+#boxes #wgrupos {
   width:840px; 
   height:400px;
 }
 
-#boxes #editar {
+#boxes #weditar {
   width:300px; 
   height:70px;
+  /* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #fff;
+	-webkit-box-shadow:0 0 10px #fff;
+}
+
+#boxes #wacao {
+  width:700px; 
+  height:200px;
   /* outline radius for mozilla/firefox only */
 	-moz-box-shadow:0 0 10px #fff;
 	-webkit-box-shadow:0 0 10px #fff;
@@ -520,9 +489,9 @@ function montaUsersByGrupos(listBeans){
 
 </head>
 
+<c:set var="pagePath" value="${pageContext.request.requestURI}"></c:set>
 
-<body onload="">
-
+<body onload="init('${fn:split((fn:split(pagePath,"/")[(fn:length(fn:split(pagePath,"/"))-1)]),".")[0]}')">
 
 <div id="notificacoes" class="tooltip">
 	<table width="100%">
@@ -536,7 +505,7 @@ function montaUsersByGrupos(listBeans){
 <div id="boxes">
 
 <!-- Confirmação da edição documento -->
-<div id="editar" class="window">
+<div id="weditar" class="window">
 	<table width="100%">
 		<tr>
 			<td colspan="2" align="center" bgcolor="#1E90FF" class="titulo_confirmacao" height="20" valign="middle">Confirmar edição do documento?</td>
@@ -550,9 +519,44 @@ function montaUsersByGrupos(listBeans){
 	
 	<input type="hidden" id="hn_nome_anexo">
 </div>
+
+<!-- Despacho e Anotaçao -->
+<div id="wacao" class="window">
+	<table width="100%">
+		<tr>
+			<td align="center" bgcolor="#1E90FF" width="96%" class="titulo_confirmacao" height="20" valign="middle" id="titulo"></td>
+			<td width="4%"><a href="#" class="close" style="font-weight: bold">X</a></td>
+		</tr>
+		
+		<tr>
+			<td colspan="2">Padronizados: 
+<select onchange="TrocaTexto(this.value,&quot;Tdespachar&quot;);" style="width: 327pt;" name="slPreDespacho">
+<option value="0"></option>
+<option value="Arquivar.">Arquivar</option>
+<option value="Ciente.">Ciente</option>
+<option value="Para conhecimento.">Para conhecimento</option>
+<option value="Providenciar.">Providenciar</option>
+<option value="Para conhecimento e providências.">Para conhecimento e providências</option>
+<option value="Providências em andamento.">Providências em andamento</option>
+<option value="Encaminhar.">Encaminhar</option></select>
+<br>Digite aqui seu texto: <br>
+<textarea onkeypress="return js.direto.charProibido(event)" cols="76" rows="2" onkeyup="" id="Tdespachar"></textarea>
+<div id="progdespachar">(0 / 500)</div>
+</td>
+		
+		</tr>
+		
+		<tr>
+			<td height="35" valign="bottom" colspan="2"><input type="button" id="bt_conf_edicao" value="Salvar" name="bt_editar_sim"></td>
+		</tr>
+		
+	</table>
+
+
+</div>
   
 <!-- Start of Login Dialog -->  
-<div id="grupos" class="window">
+<div id="wgrupos" class="window">
     <table align=center cellPadding=10 cellSpacing=10 width=80%>
 		<tr>
 			<td>
@@ -721,11 +725,11 @@ function montaUsersByGrupos(listBeans){
 		
 		<div style="width:100%; text-align:left; background-color: #1E90FF; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu1">
 	
-			<a href="escrever.jsp" style="margin-left: 5px;" class="menu1">Novo</a> | 
+			<a href="criarDocumento.html" style="margin-left: 5px;" class="menu1">Novo</a> | 
 			 
 			<c:if test="${box == 1}">
 				<a href="javascript:Arquivar(2);" class="menu1">Arquivar</a> |
-				<a href="javascript:Arquivar(3);" class="menu1" onClick="">Pender</a> |
+				<a href="#" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
 			</c:if>
 			
 			<c:if test="${box == 2}">

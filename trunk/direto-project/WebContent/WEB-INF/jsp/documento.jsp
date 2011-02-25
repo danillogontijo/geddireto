@@ -4,6 +4,130 @@
 <%@ include file="include_taglibs.jsp" %>
 <%@ include file="include_head.jsp" %>
 
+<script type="text/javascript">
+
+/*Eventos MouseOver de atualização histórico,anotaçoes e despachos */
+$j(function(){
+
+	$j('#despachos').mouseenter(function(e) {
+	
+		var tipo = $j(this).attr('id');
+		//setTimeout("show_updates(${idDocumento},tipo)",100);
+	
+	 });
+	
+	$j('#anotacoes').mouseenter(function(e) {
+	
+		var tipo = $j(this).attr('id');
+		//show_updates(${idDocumento},tipo);
+	
+	 });
+	
+	$j('#despachos').mouseenter(function(e) {
+	
+		var tipo = $j(this).attr('id');
+		//show_updates(${idDocumento},tipo);
+	
+	 });
+	
+	$j('#historico').mouseenter(function(e) {
+	
+		var tipo = $j(this).attr('id');
+		//show_updates(${idDocumento},tipo);
+	
+	 });
+
+
+	/*Efeitos histórico,anotaçoes e despachos */		
+	$j('a[name=link_historico]').toggle(function() {
+		$j(this).parent().next('#historico').slideDown(100);
+					
+	}, function() {
+		$j(this).parent().next('#historico').slideUp(100);
+	});
+
+
+	$j('a[name=link_anotacoes]').toggle(function() {
+		$j(this).parent().next('#anotacoes').fadeOut('slow');
+					
+	}, function() {
+		$j(this).parent().next('#anotacoes').fadeIn(1000);
+	});
+
+	$j('a[name=link_despachos]').click(function(e) {
+		e.preventDefault();
+		//alert('');
+		$j('#despachos').toggle("slow");
+	});
+
+
+	/*Evento do botão de confirmação da edição do documento*/
+	$j('input[type=button]').click(function(e) {
+		var bt_name = $j(this).attr('name');
+		var nome_anexo = $j('#hn_nome_anexo').val();
+		if(bt_name == 'bt_editar_nao'){
+			confirma_edicao(0,nome_anexo);
+			alert("fecha esse trem");
+			js.direto.close_mask();
+		}	
+	});
+
+	/*Função Update histórico,anotaçoes e despachos */
+	function show_updates(id,type){
+		var singular = type;
+
+		if (type == "anotacoes") {
+			singular = "anotacao";
+		} else if (type == "despachos") {
+			singular = "despacho";
+		} else singular = "unknow";	
+
+		var txt_date = $j('#'+type+' #data_'+singular).last().text();
+		var last_date = js.direto.parseDate(txt_date);
+		var retorno = 0;
+			$j.getJSON(type+".html?id="+id, function(data) {
+				
+		    $j.each(data.dados, function(i,d){
+				//alert(i);
+		        //$j("#anotacoes div:last").after('div');
+		        var date_json_return = js.direto.parseDate(d.dataHora);
+				retorno = js.direto.compareDate(date_json_return,last_date);
+		        if( retorno == 1){
+					var txt = "";
+					txt = txt + "<strong>["+d.carteira+"] ["+d.usuNGuerra+"]</strong> - ";
+					txt = txt + d.acao;
+					txt = txt + " - <span id='data_despacho'>"+d.dataHora+"</span>";
+			        
+			        $j('#'+type+' div:last').after("<div id='div_despachos'></div>");
+			        //$j('#'+type+' div').last().hide();
+			        $j('#'+type+' div').last().html(txt);
+			        $j('#'+type+' div').last().addClass('celula '+singular);
+			        //$j('#'+type+' div').last().remove();
+			       // $j('#'+type+' div').last().fadeIn("slow");
+		       }
+				//$j('<div>teste</div>').insertAfter($('#div_anotacoes div:last'));
+		      });
+		    });
+	}
+		
+
+
+});
+
+
+
+
+/*Função de confirmação da edição do documento*/
+function confirma_edicao(resposta,nome_anexo){
+	if (resposta == 0) {
+		alert(nome_anexo+" - Apaga arquivo temp servidor e cancela operação");
+	} else {
+		alert(nome_anexo+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.");
+	}
+}
+
+</script>
+
 <div style="width: 822px; text-align:left; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
 		
 				
@@ -18,7 +142,7 @@
 
 
 
-<div style="float: left; position: static; width: 822px; vertical-align: middle;">
+<div id="corpo_documento" style="float: left; position: static; width: 822px; vertical-align: middle; display: none;">
 	
 	<div style="float: left; text-align: left; margin-top: 10px; margin-left: 7px">
 	
@@ -65,7 +189,7 @@
 		<c:choose>
 			<c:when test="${documento.assinatura == 0}">
 				<c:if test="${documento_principal.assinado == 0}">
-				 <span id="s_editar"><a href="#editar" id="${documento_principal.anexoCaminho}" name="modal" class="l_edicao_vis">Editar</a></span> |
+				 <span id="s_editar"><a href="#weditar" id="${documento_principal.anexoCaminho}" name="modal" class="l_edicao_vis">Editar</a></span> |
 				</c:if>
 			</c:when>
 			<c:otherwise>
@@ -103,7 +227,7 @@
 		</c:forEach>
 	
 		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
-			<a href="javascript:show_updates(${idDocumento},'despachos')" id="link_titulo">Despachos</a>
+			<a href="javascript:show_updates(${idDocumento},'despachos')" id="link_titulo" name="link_despachos">Despachos</a> [<a href="#wacao" name="modal">Despachar</a>]
 		</div>
 		<div style="position: relative" id="despachos">
 			<c:forEach var="d" items="${despachos}">
@@ -115,7 +239,7 @@
 		 </div>
 		
 		<div id="line" class="div_title_anotacoes" style="">
-			<a href="javascript:show_updates(${idDocumento},'anotacoes')" id="link_titulo">Anotações</a>
+			<a href="javascript:show_updates(${idDocumento},'anotacoes')" id="link_titulo" name="link_anotacoes">Anotações</a> [<a href="#wacao" name="modal">Anotar</a>]
 		</div>
 		<div style="position: relative" id="anotacoes">
 			<c:forEach var="a" items="${anotacoes}">
@@ -127,16 +251,16 @@
 		 </div>	
 		 
 		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
-			<a href="" id="link_titulo">Histórico</a>
+			<a href="#" id="link_titulo" name="link_historico">Histórico</a>
 		</div>
-		
-		<c:forEach var="h" items="${historico}">
-			<div id="div_anotacoes" class="celula historico">
-				<strong>[${h.carteira.cartAbr }] [${h.usuario.pstGrad.pstgradNome} ${h.usuario.usuNGuerra}]</strong> - ${h.historico} - 
-				<span id="data_historico"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${h.dataHoraHistorico}" /></span> 
-			</div>
-		 </c:forEach>
-	
+		<div style="position: relative" id="historico">
+			<c:forEach var="h" items="${historico}">
+				<div id="div_historico" class="celula historico">
+					<strong>[${h.carteira.cartAbr }] [${h.usuario.pstGrad.pstgradNome} ${h.usuario.usuNGuerra}]</strong> - ${h.historico} - 
+					<span id="data_historico"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${h.dataHoraHistorico}" /></span> 
+				</div>
+			 </c:forEach>
+		</div>
 	
 	</div>	
 		

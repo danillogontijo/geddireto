@@ -25,7 +25,7 @@ import br.org.ged.direto.model.service.UsuarioService;
 ;
 
 @Controller
-@RequestMapping("/teste.html")
+@RequestMapping("/teste.json")
 @SessionAttributes("usuario")
 public class TesteController {
 	

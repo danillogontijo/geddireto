@@ -1,6 +1,4 @@
-package br.org.ged.direto.controller.forms;
-
-
+package br.org.ged.direto.controller.forms.validators;
 
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
@@ -9,6 +7,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
+
+import br.org.ged.direto.controller.forms.LoginForm;
 import br.org.ged.direto.model.service.UsuarioService;
 
 @Component
@@ -26,6 +26,12 @@ public class LoginValidator extends FormsValidator {
 	public LoginValidator(MessageSource messageSource){
 		super(messageSource);
 	}
+	
+	/*@Override
+	public boolean supports(Class<?> clazz) {
+		//return clazz.equals(Usuario.class);
+		return LoginForm.class.isAssignableFrom(clazz);
+	}*/
 	
 	@Override
 	public void validate(Object obj, Errors errors) {
@@ -51,10 +57,13 @@ public class LoginValidator extends FormsValidator {
 		}
 	}
 
+	@Override
 	@RemoteMethod
-	public String getMessageValidator(String formInputId, String formInputValue){
+	public String getMessageValidator(String className, String formInputId, String formInputValue) {
+		super.setClassName(className);
 		return super.getInputFieldValidationMessage(formInputId, formInputValue);
 	}
+	
 	
 	
 	

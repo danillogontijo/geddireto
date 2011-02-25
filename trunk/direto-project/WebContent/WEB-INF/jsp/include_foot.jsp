@@ -10,7 +10,8 @@
 		<button id="blind">Blind Toggle</button>
 <div id="box">Blind me up. Blind me up. Blind me up.</div>
 		
-		
+		<p>Date: <input type="text" id="datepicker"></p>
+		<a name="teste" id="teste" class="menu2" style="margin-left: 5px;" href="#wgrupos">CLICK</a>
 		
 <div id="placeholder">Hover over me to show the menu here</div>
 		
@@ -19,6 +20,7 @@
 						Ver. 3.0
 	</font>
 </div>
+
 
 
 </div>
