@@ -12,28 +12,28 @@ $j(function(){
 	$j('#despachos').mouseenter(function(e) {
 	
 		var tipo = $j(this).attr('id');
-		//setTimeout("show_updates(${idDocumento},tipo)",100);
+		show_updates(${idDocumento},tipo);
 	
 	 });
 	
 	$j('#anotacoes').mouseenter(function(e) {
 	
 		var tipo = $j(this).attr('id');
-		//show_updates(${idDocumento},tipo);
+		show_updates(${idDocumento},tipo);
 	
 	 });
 	
 	$j('#despachos').mouseenter(function(e) {
 	
 		var tipo = $j(this).attr('id');
-		//show_updates(${idDocumento},tipo);
+		show_updates(${idDocumento},tipo);
 	
 	 });
 	
 	$j('#historico').mouseenter(function(e) {
 	
 		var tipo = $j(this).attr('id');
-		//show_updates(${idDocumento},tipo);
+		show_updates(${idDocumento},tipo);
 	
 	 });
 
@@ -82,8 +82,9 @@ $j(function(){
 			singular = "despacho";
 		} else singular = "unknow";	
 
-		var txt_date = $j('#'+type+' #data_'+singular).last().text();
+		var txt_date = $j('#'+type+' span:last').text();
 		var last_date = js.direto.parseDate(txt_date);
+		//alert(last_date);
 		var retorno = 0;
 			$j.getJSON(type+".html?id="+id, function(data) {
 				
@@ -91,6 +92,7 @@ $j(function(){
 				//alert(i);
 		        //$j("#anotacoes div:last").after('div');
 		        var date_json_return = js.direto.parseDate(d.dataHora);
+		        
 				retorno = js.direto.compareDate(date_json_return,last_date);
 		        if( retorno == 1){
 					var txt = "";
@@ -99,11 +101,11 @@ $j(function(){
 					txt = txt + " - <span id='data_despacho'>"+d.dataHora+"</span>";
 			        
 			        $j('#'+type+' div:last').after("<div id='div_despachos'></div>");
-			        //$j('#'+type+' div').last().hide();
+			        $j('#'+type+' div').last().hide();
 			        $j('#'+type+' div').last().html(txt);
 			        $j('#'+type+' div').last().addClass('celula '+singular);
 			        //$j('#'+type+' div').last().remove();
-			       // $j('#'+type+' div').last().fadeIn("slow");
+			        $j('#'+type+' div').last().fadeIn("slow");
 		       }
 				//$j('<div>teste</div>').insertAfter($('#div_anotacoes div:last'));
 		      });
