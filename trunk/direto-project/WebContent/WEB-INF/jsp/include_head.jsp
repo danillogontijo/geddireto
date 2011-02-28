@@ -26,14 +26,18 @@
 
 <script src="<%=request.getContextPath() %>/js/custom/jquery-1.4.4.min.js"></script>
 
-<!-- <script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> -->
+<script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> 
 
-<script src="<%=request.getContextPath() %>/js/custom/external/jquery.bgiframe-2.1.2.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/external/tooltip.js"></script>
+
+
+<!-- <script src="<%=request.getContextPath() %>/js/custom/external/jquery.bgiframe-2.1.2.js"></script>
+
 <script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.core.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.widget.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.datepicker.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.datepicker-pt-BR.js"></script>
-
+ -->
 
 
 <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.pack.js"></script> -->
@@ -44,7 +48,8 @@ var $j = jQuery.noConflict();
 
 function init(page){
 	if(page=="documento"){
-        $j('#corpo_documento').fadeIn("slow");
+		//$j('#corpo_documento').fadeIn('slow');
+        $j('#corpo_documento').show("clip");
  	}	
 }
 
@@ -135,8 +140,27 @@ jQuery(document).ready(function($) {
 		$('.window').hide();
 	});*/
 
+	$.tools.tooltip.addEffect("explode",
+
+			// opening animation
+			function(done) {
+				this.getTip().show('explode');
+			},
+
+			// closing animation
+			function(done) {
+				this.getTip().fadeOut('slow');
+			}
+		);
+
 	//$("#testeTooltip a[title]").tooltip();
-	//$("#testeTooltip").tooltip();
+	$("#testeTooltip").tooltip(
+			{ 
+				position: "center right", 
+				opacity: 0.7,
+				effect: 'explode'
+			}
+	);
 	
 	
 	//$('a[name=tooltip]').live('click', function(clickEvent){clickEvent.preventDefault();});
