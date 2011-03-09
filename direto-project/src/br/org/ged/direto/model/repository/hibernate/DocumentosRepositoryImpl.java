@@ -167,7 +167,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		
 		System.out.println(box);
 		
-		int limitePorPagina = 2;
+		int limitePorPagina = DocumentosUtil.LIMITE_POR_PAGINA;
 		
 		String sql = "from Documento as doc inner join doc.documentoDetalhes details " +
 		"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")"+filtro+
@@ -270,7 +270,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 						"onClick='js.direto.sel_chkbox_doc("+(i)+");' />";
 			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
 			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
-			texto = texto + (pri.equals(" N") ? "<font class='prio_n_docs'>"+pri+"</font>" : (pri.equals(" U") ? "<font class='prio_u_docs'>"+pri+"</font>" : "<font class='prio_uu_docs'>"+pri+"</font>"));
+			texto = texto + (pri.equals(" N") ? "<span class='prio_n_docs'>"+pri+"</span>" : (pri.equals(" U") ? "<span class='prio_u_docs'>"+pri+"</span>" : "<span class='prio_uu_docs'>"+pri+"</span>"));
 			texto = texto + (notificar+"<a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getUsuarioElaborador().getUsuLogin()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente().replace('-',' ')+"</a>");
 			texto = texto + (" - <a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getAssunto()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
 			texto = texto + ("<font class='data_docs'>"+DataTimeUtil.getBrazilFormatDataHora(doc_cart.getDataHora())+"</font>");
@@ -404,6 +404,11 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("").setInteger(0, idDocumentoDetalhes).list(); 
 		
 		return null;
+	}
+	
+	@Override
+	public Integer getLastId(){
+		return (Integer)hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("SELECT max(doc.idDocumentoDetalhes) FROM DocumentoDetalhes as doc").uniqueResult();
 	}
 
 }

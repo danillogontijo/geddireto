@@ -1,9 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-<%@ include file="include_taglibs.jsp" %>
-<%@ include file="include_head.jsp" %>
 
+<%@ include file="include_head.jsp" %>
 
 		
 		<c:url value="principal.html" var="mostrarURL">
@@ -48,6 +47,8 @@
 		
 		<!-- INICIO CORPO DE LISTA DOCUMENTOS -->
 		<div style="width:100%; text-align:center; float: left; position: static; width: 822px; vertical-align: middle;">
+			
+			
 			
 			<c:set var="i" value="1"></c:set>
 			<c:forEach var="dwr" items="${DocDWR}">
@@ -121,7 +122,7 @@
 		   </c:if>
 		   
 		   <c:if test="${totalRegs == 0}">
-		   	Nenhum registro encontrado
+		   	<p>Nenhum registro encontrado</p>
 		   </c:if>
 		
 		</div>

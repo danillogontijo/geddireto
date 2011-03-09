@@ -32,5 +32,5 @@ public interface DocumentosService {
 	
 	public void setDataNotificacao(Date data,Integer id,Integer idCarteira);
 	//public Documento selectById(Integer id) throws DocumentNotFoundException;
-	
+	public Integer getLastId();
 }

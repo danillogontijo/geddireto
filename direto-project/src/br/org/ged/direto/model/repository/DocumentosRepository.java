@@ -17,4 +17,5 @@ public interface DocumentosRepository {
 	public Documento selectById(Integer id, Integer idCarteira);
 	public List<Documento> getAllById(Integer id);
 	public List<Anexo> getAllAnexos(Integer idDocumentoDetalhes);
+	public Integer getLastId();
 }

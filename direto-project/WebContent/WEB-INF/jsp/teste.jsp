@@ -95,7 +95,15 @@
 		    	
 		 </c:forEach>
 		    	
-
+	<input type="date" min="-20" max="2013-03-10" /><br>
+		
+		<button id="blind">Blind Toggle</button>
+<div id="box">Blind me up. Blind me up. Blind me up.</div>
+		
+		<p>Date: <input type="text" id="datepicker"></p>
+		<a name="teste" id="teste" class="menu2" style="margin-left: 5px;" href="#wgrupos">CLICK</a>
+		
+<div id="placeholder">Hover over me to show the menu here</div>
 
 <div style="vertical-align: middle; line-height:30px; text-align: left; float: left; width: 100%; height: 30px; border-bottom: 1px solid gray;">
 		    		<input type="checkbox" class="chkbox" value="${dwr.id}" id="chk${i}"

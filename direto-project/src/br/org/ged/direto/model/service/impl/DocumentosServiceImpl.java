@@ -78,5 +78,10 @@ public class DocumentosServiceImpl implements DocumentosService {
 		
 	}
 
+	@Override
+	public Integer getLastId() {
+		return documentosRepository.getLastId();
+	}
+
 	
 }
