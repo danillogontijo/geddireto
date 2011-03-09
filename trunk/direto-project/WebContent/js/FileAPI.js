@@ -48,7 +48,19 @@ qq.getItemByFileId = function(id){
      }   
           
 };
-
+qq.hasClass = function(element, name){
+    var re = new RegExp('(^| )' + name + '( |$)');
+    return re.test(element.className);
+};
+qq.addClass = function(element, name){
+    if (!qq.hasClass(element, name)){
+        element.className += ' ' + name;
+    }
+};
+qq.removeClass = function(element, name){
+    var re = new RegExp('(^| )' + name + '( |$)');
+    element.className = element.className.replace(re, ' ').replace(/^\s+|\s+$/g, "");
+};
 
 
 function FileAPI (t, d, f) {
@@ -77,7 +89,7 @@ function FileAPI (t, d, f) {
         dropZone.style.display = 'none';
 
         qq.attach(document, 'dragenter', function(e){     
-            dropZone.style.display = 'block';            
+            dropZone.style.display = 'block'; 
         });      
         
         qq.attach(document, 'dragleave', function(e){
@@ -98,15 +110,18 @@ function FileAPI (t, d, f) {
         qq.attach(ele, 'dragover', function(e){
         	e.stopPropagation();
             e.preventDefault();
-        	ele.style["backgroundColor"] = "#F0FCF0";
+        	/*ele.style["backgroundColor"] = "#ffffff";
             ele.style["borderColor"] = "#3DD13F";
-            ele.style["color"] = "#3DD13F";
+            //ele.style["color"] = "#1D5987";
+            ele.*/
+            
+            qq.addClass(ele,"fileDropOver");
         });
         
         qq.attach(ele, 'dragenter', function(e){
-            ele.style["backgroundColor"] = "#F0FCF0";
-            ele.style["borderColor"] = "#3DD13F";
-            ele.style["color"] = "#3DD13F";
+            //ele.style["backgroundColor"] = "#000";
+            //ele.style["borderColor"] = "#3DD13F";
+            ele.style["color"] = "red";
             e.stopPropagation();
             e.preventDefault();
             
@@ -118,10 +133,12 @@ function FileAPI (t, d, f) {
             // do not fire when moving a mouse over a descendant
             if (qq.contains(this, relatedTarget)) return;
            
-            ele.style["backgroundColor"] = "#FEFEFE";
+            /*ele.style["backgroundColor"] = "#FF7256";
             ele.style["borderColor"] = "#3DD13F";
-            ele.style["color"] = "#3DD13F";
-            
+            ele.style["color"] = "#1D5987";*/
+            //ele.style["color"] = "red"
+            qq.removeClass(ele,'fileDropOver');
+            ele.style["color"] = "#FFF";
         });
                 
         qq.attach(ele, 'drop', function(e){
@@ -133,9 +150,9 @@ function FileAPI (t, d, f) {
             
             ele.style.display = 'none';
             
-            ele.style["backgroundColor"] = "#FEFEFE";
+            /*ele.style["backgroundColor"] = "#FF7256";
             ele.style["borderColor"] = "#3DD13F";
-            ele.style["color"] = "#3DD13F";
+            ele.style["color"] = "#3DD13F";*/
              
         });   
     	
@@ -158,6 +175,7 @@ function FileAPI (t, d, f) {
             fileList.removeChild(
                 fileList.childNodes[fileList.childNodes.length - 1]
             );
+            size--;
         }
     }
     
@@ -217,7 +235,11 @@ function FileAPI (t, d, f) {
     }*/
 
     this.uploadQueue = function (ev) {
+    	//alert('u');
         ev.preventDefault();
+        var erro = false;
+        var count = fileQueue.length;
+        
         while (fileQueue.length > 0) {
             var item = fileQueue.pop();
             var p = document.createElement("p");
@@ -225,12 +247,18 @@ function FileAPI (t, d, f) {
             var pText = document.createTextNode("Enviando...");
             p.appendChild(pText);
             item.li.appendChild(p);
-            if (item.file.size < 1048576) {
-                uploadFile(item.file, item.li);
+            if (item.file.size < 10485760) {
+                uploadFile(item.file, item.li, count);
+                count--;
             } else {
                 p.textContent = "Tamanho excedido";
                 p.style["color"] = "red";
+                erro = true;
             }
+        }
+        if (!erro){
+        	//setTimeout("document.getElementById('documentoForm').submit()",1000);
+        	alert('enviado');
         }
     }
     
@@ -258,7 +286,7 @@ function FileAPI (t, d, f) {
                 li.appendChild(thumb);
             }
             var h3 = document.createElement("h3");
-            var h3Text = document.createTextNode(file.name);
+            var h3Text = (size == 1) ? document.createTextNode(file.name + ' - Documento principal') : document.createTextNode(file.name + ' - Anexo');
             var close = document.createElement("a");
             close.setAttribute('href','#');
             close.setAttribute('class','remove');
@@ -332,7 +360,7 @@ function FileAPI (t, d, f) {
         }
     }
 
-    var uploadFile = function (file, li) {
+    var uploadFile = function (file, li, count) {
         if (li && file) {
             var xhr = new XMLHttpRequest(),
                 upload = xhr.upload;
@@ -362,7 +390,7 @@ function FileAPI (t, d, f) {
             );
             xhr.setRequestHeader("Cache-Control", "no-cache");
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-            xhr.setRequestHeader("X-File-Name", file.name);
+            xhr.setRequestHeader("X-File-Name", count+file.name);
             xhr.send(file);
         }
     }
@@ -379,6 +407,6 @@ window.onload = function () {
     FileAPI.init();
     var reset = document.getElementById("reset");
     reset.onclick = FileAPI.clearList;
-    var upload = document.getElementById("upload");
-    upload.onclick = FileAPI.uploadQueue;
+   /* var upload = document.getElementById("upload");
+    upload.onclick = FileAPI.uploadQueue;*/
 }

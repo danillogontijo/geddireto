@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DocumentoForm {
 	
-	private int destinatarios[];
+	private int[] destinatarios;
 	private String tipoDocumento;
 	private String nrDocumento;
 	private Date dataDocumento;
@@ -20,8 +20,15 @@ public class DocumentoForm {
 	private String nrProtocol;
 	private int assinatura;
 	private String assinadoPor;
+	private char origem;
 	
 	
+	public char getOrigem() {
+		return origem;
+	}
+	public void setOrigem(char origem) {
+		this.origem = origem;
+	}
 	public int[] getDestinatarios() {
 		return destinatarios;
 	}

@@ -1,0 +1,80 @@
+#box {
+  padding: 10px;
+  height: 100px;
+  width: 100px;
+  background: #e459e9;
+}
+
+#box-outer {
+  overflow: hidden;
+  height: 120px;
+  margin: 20px;
+  z-index: 9990;
+}
+
+#mask {
+  position:absolute;
+  left:0;
+  top:0;
+  z-index:9000;
+  background-color:#000;
+  display:none;
+}
+  
+#boxes .window {
+  position:absolute;
+  left:85px;
+  top:0;
+  width:1002px;
+  height:500px;
+  display:none;
+  z-index:9991;
+  background-color:#FFF;
+  text-align: center;
+  
+}
+
+#boxes #wgrupos {
+  width:840px; 
+  height:400px;
+}
+
+#boxes #weditar {
+  width:300px; 
+  height:70px;
+  /* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #fff;
+	-webkit-box-shadow:0 0 10px #fff;
+}
+
+#boxes #wacao {
+  width:700px; 
+  height:200px;
+  /* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #fff;
+	-webkit-box-shadow:0 0 10px #fff;
+}
+
+#boxes #notificacoes {
+  	font-size:12px;
+	position: absolute;
+	z-index: 9999;
+	text-align: center;
+	width: 200px;
+	display: none;
+	border:1px solid #000;
+	background-color: white;
+
+	/* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:0 0 10px #000;
+}
+
+#bt_conf_edicao {
+	border: 1px solid #006;
+    background: #ccf
+}
+#bt_conf_edicao:hover {
+	border: 1px solid #f00;
+    background: #eef;
+}

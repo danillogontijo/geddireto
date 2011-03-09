@@ -14,6 +14,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import br.org.direto.util.DocumentosUtil;
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.service.PastasService;
@@ -22,7 +23,7 @@ import br.org.ged.direto.model.service.PastasService;
 @Controller
 public abstract class BaseController {
 
-	final int LIMITE_POR_PAGINA = 2;
+	final int LIMITE_POR_PAGINA = DocumentosUtil.LIMITE_POR_PAGINA;
 	
 	protected HttpSession session;
 	

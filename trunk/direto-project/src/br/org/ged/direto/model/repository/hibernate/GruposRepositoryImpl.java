@@ -124,9 +124,16 @@ public class GruposRepositoryImpl implements GruposRepository {
 			//Object[] o = (Object[]) results.get(i);
 			//Usuario user = (Usuario)results.get(i);
 			Conta conta = (Conta)results.get(i);
+			boolean respondendo = (conta.isPrincipal() ? false : true);
 			
 			data.setId(String.valueOf(conta.getCarteira().getIdCarteira()));
-			data.setTexto(conta.getUsuario().getPstGrad().getPstgradNome()+" "+conta.getUsuario().getUsuNGuerra()+"["+conta.getCarteira().getCartAbr()+"]");
+			
+			if(respondendo){
+				data.setTexto(conta.getUsuario().getPstGrad().getPstgradNome()+" "+conta.getUsuario().getUsuNGuerra()+"[Resp "+conta.getCarteira().getCartAbr()+"]");
+			}else{
+				data.setTexto(conta.getUsuario().getPstGrad().getPstgradNome()+" "+conta.getUsuario().getUsuNGuerra()+"["+conta.getCarteira().getCartAbr()+"]");
+			}
+			
 			usersDwr.add(data);
 		
 			

@@ -5,11 +5,52 @@ if (window['dojo']) dojo.provide('js.direto');
 if (typeof window['js'] == 'undefined') window.js = {};
 if (typeof dwr['direto'] == 'undefined') js.direto = {};
 
-js.direto.charProibido = function charProibido(e){
+js.direto.charProibido = function (e){
     var tecla=(window.event)?event.keyCode:e.which;
     //alert(tecla);
     if(tecla == 124 || tecla == 168) { alert("Caracter proibido"); return false;}
     else{ return true; }
+};
+
+js.direto.enviarPara = function(){
+	
+	$j("#ListaPARA option").each(function () {
+          var id = $j(this).val();
+		  var user = $j(this).text();
+		  var insert = true;
+
+		  for (var i = 0; i < DESTINATARIOS.length ; i++) {
+				if(DESTINATARIOS[i].id == id){
+					insert = false;
+				}
+			}
+
+		  if(insert){
+	          DESTINATARIOS.push({
+	        	  id : id,
+	        	  user : user
+	          });
+		  }   
+     });
+
+};
+
+
+js.direto.atualiza = function(page){
+	var list = "";
+	for (var i = 0; i < DESTINATARIOS.length ; i++) {
+		var item = DESTINATARIOS[i];
+		list += item.user+",";
+	}
+	
+	if(page=="principal"){
+		alert(list);
+ 	}else if(page=="documento"){
+ 		alert(list+'documento');
+ 		}else{
+ 			$j('#destinatarios').val(list);
+ 		}	
+	
 };
 
 
@@ -96,6 +137,48 @@ js.direto.sel_chkbox_doc = function(id) {
 
 	}	
 };
+
+
+
+/*Função Update histórico,anotaçoes e despachos */
+js.direto.show_updates = function(id,type){
+	var singular = type;
+
+	if (type == "anotacoes") {
+		singular = "anotacao";
+	} else if (type == "despachos") {
+		singular = "despacho";
+	} else singular = "unknow";	
+
+	var txt_date = $j('#'+type+' span:last').text();
+	var last_date = js.direto.parseDate(txt_date);
+	//alert(last_date);
+	var retorno = 0;
+		$j.getJSON(type+".html?id="+id, function(data) {
+			
+	    $j.each(data.dados, function(i,d){
+			//alert(i);
+	        //$j("#anotacoes div:last").after('div');
+	        var date_json_return = js.direto.parseDate(d.dataHora);
+	        
+			retorno = js.direto.compareDate(date_json_return,last_date);
+	        if( retorno == 1){
+				var txt = "";
+				txt = txt + "<strong>["+d.carteira+"] ["+d.usuNGuerra+"]</strong> - ";
+				txt = txt + d.acao;
+				txt = txt + " - <span id='data_despacho'>"+d.dataHora+"</span>";
+		        
+		        $j('#'+type+' div:last').after("<div id='div_despachos'></div>");
+		        $j('#'+type+' div').last().hide();
+		        $j('#'+type+' div').last().html(txt);
+		        $j('#'+type+' div').last().addClass('celula '+singular);
+		        //$j('#'+type+' div').last().remove();
+		        $j('#'+type+' div').last().fadeIn("slow");
+	       }
+			//$j('<div>teste</div>').insertAfter($('#div_anotacoes div:last'));
+	      });
+	    });
+}
 
 
 var lbUsuarios_len = "";

@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<%@ include file="include_taglibs.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -6,9 +9,11 @@
 	
 <!-- Inicio Folha de Estilos -->
 <link href="css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="css/modals.css" rel="stylesheet" type="text/css" />
 <!-- <link href="css/dateinput.css" rel="stylesheet" type="text/css" /> -->
 
 <link href="css/custom-theme-jquery/jquery-ui-1.8.10.custom.css" rel="stylesheet" type="text/css" />
+<link href="css/custom-theme-jquery/jquery.alerts.css" rel="stylesheet" type="text/css" media="screen" />
 
 <!-- Fim Folha de Estilos -->
     
@@ -26,35 +31,81 @@
 
 <script src="<%=request.getContextPath() %>/js/custom/jquery-1.4.4.min.js"></script>
 
-<script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> 
+<!-- <script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> --> 
 
 <script src="<%=request.getContextPath() %>/js/custom/external/tooltip.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/external/validator.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/external/jquery.alerts.js"></script>
 
 
-<!-- <script src="<%=request.getContextPath() %>/js/custom/external/jquery.bgiframe-2.1.2.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/external/jquery.bgiframe-2.1.2.js"></script>
 
-<script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.core.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.widget.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.datepicker.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.core.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.widget.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.datepicker.min.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.datepicker-pt-BR.js"></script>
- -->
 
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.effects.core.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.effects.clip.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.effects.explode.min.js"></script>
+
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.mouse.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.button.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.draggable.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.position.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.resizable.min.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.dialog.min.js"></script>
+
+<style type="text/css">
+		
+			.tela_apresentacao {
+				background: #fff url(imagens/direto_r4_c2.jpg) center no-repeat;
+				/*background-color: #ff0000;*/
+				background-position: center center;
+				 z-index: 9999;
+				 position: absolute;
+				 width: 822px;
+				 height: 700px;;
+				 /*vertical-align: middle;*/
+				 /*line-height: 700px;*/
+				 top: 133px;
+				 left: 180px;
+				 display: block;
+			}
+		
+		</style>
 
 <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.pack.js"></script> -->
 <!-- <script type="text/javascript" src="<%=request.getContextPath() %>/js/jtip.js" charset="utf-8""></script> -->
 
 <script type="text/javascript">
 var $j = jQuery.noConflict();
+var DESTINATARIOS = new Array();
+var PAGE = '';
 
 function init(page){
+	PAGE = page;
+
 	if(page=="documento"){
 		//$j('#corpo_documento').fadeIn('slow');
         $j('#corpo_documento').show("clip");
- 	}	
+ 	}
+
+	if(page=="documento"){
+		$j('.tela_apresentacao').hide();
+ 	}
+
+	if(page=="criarDocumento"){
+		
+ 	}
+
+	if(page=="principal"){
+	    setTimeout("$j('.tela_apresentacao').hide('explode')",1100);
+  	}
 }
 
 jQuery(document).ready(function($) {	
-
+	
 	/*$.tools.dateinput.localize("pt-br",  {
 		   months:        'Janeiro,Fevereiro,Março,Abril,Maio,Junho,Julho,Agosto,Setembro,' +
 		                   	'Outubro,Novembro,Dezembro',
@@ -68,9 +119,10 @@ jQuery(document).ready(function($) {
 		format: 'dd/mm/yyyy',
 		//offset: [30, 0]
 	});*/
+	
 
-	$( "#datepicker" ).datepicker();
-	$( "#datepicker" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
+	$( "#data" ).datepicker();
+	$( "#data" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
 	
 	
 		
@@ -122,7 +174,7 @@ jQuery(document).ready(function($) {
 		$(id).css('left', winW/2-$(id).width()/2);
 	
 		//transition effect
-		$(id).fadeIn(2000); 
+		$(id).fadeIn(100); 
 	
 	});
 
@@ -130,7 +182,14 @@ jQuery(document).ready(function($) {
 	$('.window .close').click(function (e) {
 		//Cancel the link behavior
 		e.preventDefault();
-		
+
+		js.direto.close_mask();
+	});
+
+	$('.window .send').click(function (e) {
+		e.preventDefault();
+		js.direto.enviarPara();
+		js.direto.atualiza(PAGE);
 		js.direto.close_mask();
 	});		
 	
@@ -235,11 +294,6 @@ jQuery(document).ready(function($) {
 </script>
 
 <script type="text/javascript">
-
-/*jQuery.fn.blindToggle = function(speed, easing, callback) {
-	  var h = this.height() + parseInt(this.css('paddingTop')) + parseInt(this.css('paddingBottom'));
-	  return this.animate({marginTop: parseInt(this.css('marginTop')) <0 ? 0 : -h}, speed, easing, callback);
-	};*/
 
 var first_click_notification = true;
 var no_notifications;
@@ -408,238 +462,46 @@ function montaUsersByGrupos(listBeans){
 
 </script>  
 
-<style>
-#box {
-  padding: 10px;
-  height: 100px;
-  width: 100px;
-  background: #e459e9;
-}
-#box-outer {
-  overflow: hidden;
-  height: 120px;
-  margin: 20px;
-  z-index: 99999;
-}
 
 
 
-
-#mask {
-  position:absolute;
-  left:0;
-  top:0;
-  z-index:9000;
-  background-color:#000;
-  display:none;
-}
-  
-#boxes .window {
-  position:absolute;
-  left:85px;
-  top:0;
-  width:1002px;
-  height:500px;
-  display:none;
-  z-index:9999;
-  background-color:#FFF;
-  text-align: center;
-  
-}
-
-#boxes #wgrupos {
-  width:840px; 
-  height:400px;
-}
-
-#boxes #weditar {
-  width:300px; 
-  height:70px;
-  /* outline radius for mozilla/firefox only */
-	-moz-box-shadow:0 0 10px #fff;
-	-webkit-box-shadow:0 0 10px #fff;
-}
-
-#boxes #wacao {
-  width:700px; 
-  height:200px;
-  /* outline radius for mozilla/firefox only */
-	-moz-box-shadow:0 0 10px #fff;
-	-webkit-box-shadow:0 0 10px #fff;
-}
-
-#boxes #notificacoes {
-  width:140px; 
-  height:100px;
-}
-
-#bt_conf_edicao {
-	border: 1px solid #006;
-    background: #ccf
-}
-#bt_conf_edicao:hover {
-	 border: 1px solid #f00;
-    background: #eef;
-}
-
-</style>
-
-<style type="text/css" media="all">
-/* simple css-based tooltip */
-.tooltip {
-	/*background-color:#000;
-	border:1px solid #fff;
-	padding:10px 15px;
-	width:200px;
-	display:none;
-	color:#fff;
-	text-align:left;*/
-	font-size:12px;
-	position: absolute;
-	z-index: 9999;
-	text-align: center;
-	width: 200px;
-	display: none;
-	border:1px solid #000;
-	background-color: white;
-
-	/* outline radius for mozilla/firefox only */
-	-moz-box-shadow:0 0 10px #000;
-	-webkit-box-shadow:0 0 10px #000;
-}
-
-/*@import "css/dateinput.css";*/
-</style>
 
 </head>
 
 <c:set var="pagePath" value="${pageContext.request.requestURI}"></c:set>
+<c:set var="pageName" value="${fn:split((fn:split(pagePath,'/')[(fn:length(fn:split(pagePath,'/'))-1)]),'.')[0]}"></c:set>
 
-<body onload="init('${fn:split((fn:split(pagePath,"/")[(fn:length(fn:split(pagePath,"/"))-1)]),".")[0]}')">
+<body onload="init('${pageName}')">
 
-<div id="notificacoes" class="tooltip">
-	<table width="100%">
-		<tr>
-			<td colspan="2" align="center" bgcolor="red" class="titulo_notificacoes" height="20" valign="middle">Notificações</td>
-		</tr>
-	</table>
-	<p id="p_notificacoes"><span id="s_sem_notificacoes" style="display: none;">Sem notificacoes.</span></p>
-</div>
 
+
+
+<!-- MODALS -->
 <div id="boxes">
 
-<!-- Confirmação da edição documento -->
-<div id="weditar" class="window">
-	<table width="100%">
-		<tr>
-			<td colspan="2" align="center" bgcolor="#1E90FF" class="titulo_confirmacao" height="20" valign="middle">Confirmar edição do documento?</td>
-		</tr>
-		<tr>
-			<td height="35" valign="bottom"><input type="button" id="bt_conf_edicao" value="Sim" name="bt_editar_sim"></td>
-			<td valign="bottom"><input type="button" id="bt_conf_edicao" value="Não" name="bt_editar_nao"></td>
-		</tr>
-		
-	</table>
+	<c:if test="${pageName == 'principal'}">
+		<%@ include file="includes/principalModals.jsp" %>
+	</c:if>
 	
-	<input type="hidden" id="hn_nome_anexo">
-</div>
-
-<!-- Despacho e Anotaçao -->
-<div id="wacao" class="window">
-	<table width="100%">
-		<tr>
-			<td align="center" bgcolor="#1E90FF" width="96%" class="titulo_confirmacao" height="20" valign="middle" id="titulo"></td>
-			<td width="4%"><a href="#" class="close" style="font-weight: bold">X</a></td>
-		</tr>
-		
-		<tr>
-			<td colspan="2">Padronizados: 
-<select onchange="TrocaTexto(this.value,&quot;Tdespachar&quot;);" style="width: 327pt;" name="slPreDespacho">
-<option value="0"></option>
-<option value="Arquivar.">Arquivar</option>
-<option value="Ciente.">Ciente</option>
-<option value="Para conhecimento.">Para conhecimento</option>
-<option value="Providenciar.">Providenciar</option>
-<option value="Para conhecimento e providências.">Para conhecimento e providências</option>
-<option value="Providências em andamento.">Providências em andamento</option>
-<option value="Encaminhar.">Encaminhar</option></select>
-<br>Digite aqui seu texto: <br>
-<textarea onkeypress="return js.direto.charProibido(event)" cols="76" rows="2" onkeyup="" id="Tdespachar"></textarea>
-<div id="progdespachar">(0 / 500)</div>
-</td>
-		
-		</tr>
-		
-		<tr>
-			<td height="35" valign="bottom" colspan="2"><input type="button" id="bt_conf_edicao" value="Salvar" name="bt_editar_sim"></td>
-		</tr>
-		
-	</table>
-
-
-</div>
-  
-<!-- Start of Login Dialog -->  
-<div id="wgrupos" class="window">
-    <table align=center cellPadding=10 cellSpacing=10 width=80%>
-		<tr>
-			<td>
-			<TABLE border=0 cellpadding=3 cellspacing=0 width=90% class=table>
-				<TBODY>
-					<TR>
-						<TD colspan="3" align="center">
-						<b>Grupo:</b> <SELECT
-							name=slGrupo id="slGrupo" style="width: 200pt" LANGUAGE=javascript
-							onchange="carregaGrupo()" onfocus="getGrupos()">
-							<option id="0" value="0" selected>Selecione o grupo</option>
-							
-						</SELECT></TD>
-					</TR>
-					<TR>
-						<TD style="width: 40%">
-						<FIELDSET><LEGEND>&nbsp;<b>Usuários</b>&nbsp;</LEGEND> <SELECT
-							name=ListaDE id=ListaDE multiple size=11 style="width: 310px;"
-							ondblClick="mover($('ListaDE'), $('ListaPARA')); return false;">
+	<c:if test="${pageName == 'documento'}">
+		<%@ include file="includes/principalModals.jsp" %>
+		<%@ include file="includes/documentoModals.jsp" %>
+	</c:if>
 	
-	
-						</SELECT></FIELDSET>
-						</TD>
-						<TD style="text-align: center" style="width:20%"><INPUT
-							type="button" value="Incluir >>" style="width: 90pt"
-							id=btParaDireita
-							onClick="mover($('ListaDE'), $('ListaPARA')); return false;">
-						<INPUT type="button" value="<< Remover" style="width: 90pt"
-							name=btExclui id=btParaEsquerda
-							onClick="remover($('ListaPARA'), $('ListaDE')); return false;">
-						</TD>
-	
-						<TD style="text-align: center" style="width:40%">
-						<FIELDSET><LEGEND>&nbsp;<b>Destinatário</b>&nbsp;</LEGEND>
-						<SELECT name=ListaPARA id=ListaPARA size=11 style="width: 310px;"
-							multiple
-							ondblClick="remover($('ListaPARA'), $('ListaDE')); return false;">
-	
-						</SELECT></FIELDSET>
-						</TD>
-					</TR>
-					
-				</TBODY>
-			</TABLE>
-			</td>
-		</tr>
-	</table>   
-	<a href="#" class="close"/>Fechar [Enviar]</a>
-	<input type="hidden" id="idCarteira" value="${contaAtual}" />
-</div>
-<!-- End of Login Dialog -->  
+	<c:if test="${pageName == 'criarDocumento'}">
+		<%@ include file="includes/principalModals.jsp" %>
+		<%@ include file="includes/criarDocumentoModals.jsp" %>
+	</c:if>	
 
-
-<!-- Mask to cover the whole screen -->
+  <!-- Mask para bloquear tela -->
   <div id="mask"></div>
 </div>
 
 
-<div id="table" style="position: absolute; width: 1002px; top: 0; left: 0;">  
+<div id="#tela_apresentacao" class="tela_apresentacao"></div> 
+
+<div id="table" style="position: absolute; width: 1002px; top: 0; left: 0;">
+		 
 
 <div id="table" style="position: relative; width: 1002px; top: 0; left: 0;">
 
@@ -676,7 +538,7 @@ function montaUsersByGrupos(listBeans){
 </div>
 
     
-<div id="table" style="position: relative; width: 1002px; text-align: center; top: 75px; left: 0px; height: 400px; background-color: white;">
+<div id="table" style="position: relative; width: 1002px; text-align: center; top: 75px; left: 0px; height: 700px; background-color: white; border-bottom: 1px solid #ccc">
 	<div id="line" style="width: 167px; float: left; position: absolute; text-align: left; background-color: #ffffff; top: -27px; left: 5px" class="menuLado">
 		
 		<div style="height: 30px; font-size: 14px; font-weight: bold;">
@@ -741,7 +603,7 @@ function montaUsersByGrupos(listBeans){
 		   <br>${numUsers} usuário(s) no sistema!
 	</div>
 	
-	<div id="line" style="width: 1px; position: absolute; margin: 0; background-color: gray; left: 177px; height: 700px;" class="menuLado">
+	<div id="line" style="width: 1px; position: absolute; margin: 0; background-color: #ccc; left: 177px; height: 700px;" class="menuLado">
 		
 	</div>
 	
@@ -750,30 +612,43 @@ function montaUsersByGrupos(listBeans){
 		<div style="width:100%; text-align:left; background-color: #1E90FF; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu1">
 	
 			<a href="criarDocumento.html" style="margin-left: 5px;" class="menu1">Novo</a> | 
+			
+			<c:if test="${pageName == 'principal'}">
 			 
-			<c:if test="${box == 1}">
-				<a href="javascript:Arquivar(2);" class="menu1">Arquivar</a> |
-				<a href="#" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
-			</c:if>
+				<c:choose>
+			      <c:when test="${box == 1}">
+			      	<a href="javascript:Arquivar(2);" class="menu1">Arquivar</a> |
+					<a href="#" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
+			      </c:when>
 			
-			<c:if test="${box == 2}">
-				<a href="javascript:Arquivar(3);" class="menu1" onClick="">Pender</a> |
-				<a href="javascript:Arquivar(3);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
-			</c:if>
-			
-			<c:if test="${box == 3}">
-				
-			</c:if>
-			
-			<c:if test="${box == 4}">
-				<a href="javascript:Arquivar(3);" class="menu1" onClick="">Arquivar</a> |
-				<a href="javascript:Arquivar(3);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
-			</c:if>		
-		
-			<c:if test="${box == 5}">
-				<a href="javascript:Arquivar(4);" class="menu1">Apagar</a> |
-			</c:if>		
+			      <c:when test="${box == 2}">
+			      	<a href="javascript:Arquivar(3);" class="menu1" onClick="">Pender</a> |
+					<a href="javascript:Arquivar(3);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
+			      </c:when>
+					
+				  <c:when test="${box == 3}">
+			      	
+			      </c:when>
+			      
+			      <c:when test="${box == 4}">
+			      	<a href="javascript:Arquivar(3);" class="menu1" onClick="">Arquivar</a> |
+					<a href="javascript:Arquivar(3);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
+					<a href="javascript:Arquivar(4);" class="menu1">Apagar</a> |
+			      </c:when>
+			      
+			      <c:when test="${box == 5}">
+			      	<a href="javascript:Arquivar(4);" class="menu1">Apagar</a> |
+			      </c:when>
+			      
+			      <c:otherwise>
+			        
+			      </c:otherwise>
+	    		</c:choose>
+    	</c:if>	
 			
 			<a href="pesquisa.jsp" class="menu1">Pesquisar</a> |
-			<a href="javascript: history.go(-1);" class="menu1">Voltar</a>			
+			<a href="javascript: history.go(-1);" class="menu1">Voltar</a>
+						
 		</div>
+		
+		
