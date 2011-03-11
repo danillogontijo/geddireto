@@ -55,6 +55,11 @@ public abstract class BaseController {
 		Usuario o = (Usuario) auth.getPrincipal();
 		return o.getIdCarteira();
 	}
+	
+	public Usuario getUsuarioLogado(){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return (Usuario) auth.getPrincipal();
+	}
 
 	
 		

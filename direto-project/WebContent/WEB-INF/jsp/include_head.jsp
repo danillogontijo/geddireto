@@ -95,6 +95,10 @@ function init(page){
 		$j('.tela_apresentacao').hide();
  	}
 
+	if(page=="pesquisar"){
+		$j('.tela_apresentacao').hide();
+ 	}
+
 	if(page=="criarDocumento"){
 		
  	}
@@ -119,6 +123,7 @@ jQuery(document).ready(function($) {
 		format: 'dd/mm/yyyy',
 		//offset: [30, 0]
 	});*/
+
 	
 
 	$( "#data" ).datepicker();
@@ -250,7 +255,7 @@ jQuery(document).ready(function($) {
 		  //});
 	//});
 
-	$('a[name=tooltip]').click(function(e) {
+	$('a[name=notificacoes]').click(function(e) {
 		e.preventDefault();
 
 		var id = $(this).attr('href');
@@ -261,8 +266,8 @@ jQuery(document).ready(function($) {
 		//alert("teste");
 		
 	  //get the position of the placeholder element
-	  var pos = $('a[name=tooltip]').offset();  
-	  var width = $('a[name=tooltip]').width();
+	  var pos = $(this).offset();  
+	  var width = $(this).width();
 
 //	alert(pos.left);
 //	alert(pos.top);
@@ -275,7 +280,29 @@ jQuery(document).ready(function($) {
 	  });	
 
 	
-	
+
+	$('a[name=acompanhar]').click(function(e) {
+		//e.preventDefault();
+
+		$(".div_docs input[type=checkbox]").each(function () {
+
+			var id = $(this).val();
+			var isChecked = $(this).is(':checked');
+			var existeNotificacao = $(".div_docs a[id="+id+"]").text();
+			
+			if (existeNotificacao == "" && isChecked) 
+				documentosJS.acompanhar(id,true);
+
+			if (existeNotificacao != "" && isChecked){
+				documentosJS.acompanhar(id,false);
+			}
+			
+		});	
+
+		//document.location.reload(true);
+		setTimeout("document.location.reload(true)",1000);
+
+	});
 	
 	
 
@@ -646,7 +673,7 @@ function montaUsersByGrupos(listBeans){
 	    		</c:choose>
     	</c:if>	
 			
-			<a href="pesquisa.jsp" class="menu1">Pesquisar</a> |
+			<a href="pesquisar.html" class="menu1">Pesquisar</a> |
 			<a href="javascript: history.go(-1);" class="menu1">Voltar</a>
 						
 		</div>

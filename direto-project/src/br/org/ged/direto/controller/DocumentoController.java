@@ -152,6 +152,11 @@ public class DocumentoController extends BaseController {
 		Documento doc_conta = this.documentosService.selectById(id, idCarteira);
 		DocumentoDetalhes documento = DocumentosUtil.returnDocument(id, idCarteira,doc_conta);
 		//this.documentoError.setDocumento(DocumentosUtil.returnDocument(id, idCarteira,doc_conta));
+		
+		if (doc_conta.getStatus() == '0')
+			documentosService.setDocumentoStatus(doc_conta.getIdDocumento(), '1');
+		
+		
 		model.addAttribute("idDocumento",id);
 		model.addAttribute("documento",documento);
 		

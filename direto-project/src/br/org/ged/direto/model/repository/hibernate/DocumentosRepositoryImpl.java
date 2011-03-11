@@ -4,10 +4,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -30,6 +32,8 @@ import br.org.direto.util.DataTimeUtil;
 import br.org.direto.util.DataUtils;
 import br.org.direto.util.DocumentosUtil;
 import br.org.direto.util.UsuarioUtil;
+import br.org.ged.direto.controller.forms.PesquisaForm;
+import br.org.ged.direto.controller.utils.DocumentoCompleto;
 import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
@@ -261,12 +265,12 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 					}
 				}
 				
-				notificar = "<a href='"+doc.getIdDocumentoDetalhes()+"' class='notificacao' name='tooltip' id='notificacao_"+doc.getIdDocumentoDetalhes()+"'>("+c+") </a>";
+				notificar = "<a href='"+doc.getIdDocumentoDetalhes()+"' class='notificacao' name='notificacoes' id='"+doc_cart.getIdDocumento()+"'>("+c+") </a>";
 				
 			}
 			
 			String texto = "<div class='div_docs'"+(doc_cart.getStatus() == '0' ? " style='font-weight: bold;'" : "")+" id='div_doc"+(i)+"'>";
-			texto = texto + "<input type='checkbox' class='chkbox' value='"+doc.getIdDocumentoDetalhes()+"' id='chk"+i+"' "+
+			texto = texto + "<input type='checkbox' class='chkbox' value='"+doc_cart.getIdDocumento()+"' id='chk"+i+"' "+
 						"onClick='js.direto.sel_chkbox_doc("+(i)+");' />";
 			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
 			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
@@ -409,6 +413,94 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 	@Override
 	public Integer getLastId(){
 		return (Integer)hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("SELECT max(doc.idDocumentoDetalhes) FROM DocumentoDetalhes as doc").uniqueResult();
+	}
+
+	@Override
+	public Documento getByIdPKey(Integer id) {
+		return (Documento)hibernateTemplate.get(Documento.class, id);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Set<DocumentoCompleto> returnSearch(PesquisaForm form) {
+		
+		Set<DocumentoCompleto> documentos = new HashSet<DocumentoCompleto>();
+		
+		List<Carteira> carteiras;
+		
+		int idSecao = form.getCarteira().getSecao().getIdSecao();
+		int idOM = form.getCarteira().getOm().getIdOM();
+		
+		
+		String sql = "from Carteira as c where c.secao.idSecao = ? and c.om.idOM = ? ";
+		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setInteger(0, idSecao);
+		query.setInteger(1, idOM);
+		
+		carteiras = query.list();
+		
+		//System.out.println("==============="+carteiras.size());
+		
+		Iterator<Carteira> ite = carteiras.iterator();
+		while(ite.hasNext()){
+			Carteira carteira = ite.next();
+			
+			Set<Documento> listDoc = carteira.getDocumentos();
+			Iterator<Documento> iteListDoc = listDoc.iterator();
+			while(iteListDoc.hasNext()){
+				Documento doc_conta = iteListDoc.next();
+				DocumentoDetalhes doc_det = doc_conta.getDocumentoDetalhes();
+				
+				DocumentoCompleto doc_completo = new DocumentoCompleto(doc_conta,doc_det);
+				
+				documentos.add(doc_completo);
+				
+			}
+			
+			
+			
+		}
+		
+		/*for (int i=0;i<results.size();i++){
+			
+			Object[] objects = (Object[]) results.get(i);
+			//DocumentoDetalhes doc = (DocumentoDetalhes) objects[1];
+			//Documento doc_cart = (Documento) objects[0];
+			Carteira objects 
+			
+		}*/
+		
+		//String sql = "from Documento as doc inner join doc.documentoDetalhes details "; 
+		
+		//String sql = "SELECT *,Date_format(data,'%d-%m-%Y %H:%i:%s') as date FROM mensagens,idmensausu "
+			//		+ " WHERE  mensagens.Id=idmensausu.idMensagem ";
+		
+		/*if (form.isUserInRole("USER")) {
+			sql = sql 
+					+ " AND idmensausu.idOM = "
+					+ idOM
+					+ " AND (idmensausu.idSecao = "
+					+ idSecao + secoesPesquisa + ")"
+					+ " AND  idmensausu.status in (0,1,2,4) ";
+					
+		}*/
+		
+		
+		
+		return documentos;
+	}
+
+	@Override
+	public Documento selectById(Integer idDocumentoDetalhes) {
+		Documento returnDoc = (Documento) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("FROM Documento as doc " +
+				"WHERE doc.documentoDetalhes.idDocumentoDetalhes = ? GROUP BY doc.documentoDetalhes.idDocumentoDetalhes" +
+		"").setInteger(0, idDocumentoDetalhes).uniqueResult(); 
+		
+		if (returnDoc == null) {
+			throw new DocumentNotFoundException(messages.getMessage("documento.exception.notfound"));
+		}
+		
+		return returnDoc;
 	}
 
 }
