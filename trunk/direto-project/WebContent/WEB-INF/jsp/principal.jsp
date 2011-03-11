@@ -27,7 +27,7 @@
 				
 			<a href="#wgrupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar selecionadas</a>  |	
 			
-			<a href="javascript: mostrarGrupos();" style="margin-left: 5px;" class="menu2">Acompanhar</a>
+			<a href="#acompanhar" style="margin-left: 5px;" class="menu2" name="acompanhar">Acompanhar</a>
 			
 			<c:if test="${box == 2}">
 				<a href="javascript:Arquivar(4);" class="menu1">Apagar</a> |

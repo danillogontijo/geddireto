@@ -9,4 +9,5 @@ public interface CarteiraRepository {
 	
 	public void save(Carteira carteira);
 	public List<Carteira> getAll(Carteira carteira);
+	public Carteira selectById(Integer primaryKey);
 }

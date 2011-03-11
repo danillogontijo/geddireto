@@ -1,23 +1,33 @@
 package br.org.ged.direto.model.service.impl;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.direto.util.DataUtils;
+import br.org.ged.direto.controller.forms.PesquisaForm;
+import br.org.ged.direto.controller.utils.DocumentoCompleto;
 import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Carteira;
+import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Documento;
+import br.org.ged.direto.model.entity.Usuario;
+import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.repository.DocumentosRepository;
 import br.org.ged.direto.model.service.DocumentosService;
+import br.org.ged.direto.model.service.UsuarioService;
 
 @Service("documentosService")
 @RemoteProxy(name = "documentosJS")
@@ -26,6 +36,9 @@ public class DocumentosServiceImpl implements DocumentosService {
 
 	@Autowired
 	private DocumentosRepository documentosRepository;
+	
+	@Autowired
+	private UsuarioService usuarioService;
 	
 	@Override
 	@RemoteMethod
@@ -56,8 +69,40 @@ public class DocumentosServiceImpl implements DocumentosService {
 	}
 
 	@Override
-	public Documento selectById(Integer id,Integer idCarteira) {
-		return documentosRepository.selectById(id, idCarteira);
+	public Documento selectById(Integer idDocumentoDetalhes,Integer idCarteira) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario obj = (Usuario)auth.getPrincipal();
+		Usuario usuario = usuarioService.selectByLogin(auth.getName());
+		usuario.setIdCarteira(obj.getIdCarteira());
+		//Documento documento = getDocumento(id); 
+		
+		Documento documento = documentosRepository.selectById(idDocumentoDetalhes);
+		
+		int secaoDocumento = documento.getCarteira().getSecao().getIdSecao();
+		int omDocumento = documento.getCarteira().getOm().getIdOM();
+		
+		Iterator<Conta> ite = usuario.getContas().iterator();
+		
+		while(ite.hasNext()){
+			
+			Carteira carteiraUsuarioLogado = ite.next().getCarteira();
+			
+			if (usuario.getIdCarteira() == carteiraUsuarioLogado.getIdCarteira()){
+			
+				int secaoUsuarioLogado = carteiraUsuarioLogado.getSecao().getIdSecao();
+				int omUsuarioLogado = carteiraUsuarioLogado.getOm().getIdOM();
+				
+				if (secaoUsuarioLogado == secaoDocumento && omUsuarioLogado == omDocumento)
+					documento.setGranted(true);
+			}
+			
+		}
+		
+		if (!documento.isGranted()) 
+			throw new DocumentNotFoundException("Sem permissão de visualização");
+		
+		return documento;
 	}
 
 	@Override
@@ -81,6 +126,61 @@ public class DocumentosServiceImpl implements DocumentosService {
 	@Override
 	public Integer getLastId() {
 		return documentosRepository.getLastId();
+	}
+
+	@Override
+	@RemoteMethod
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	public void acompanhar(Integer id, boolean yesOrNo) {
+		Documento doc = documentosRepository.getByIdPKey(id);
+		if (yesOrNo) { doc.setNotificar(1); } else { doc.setNotificar(0);}
+	}
+
+	@Override
+	@RemoteMethod
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	public void setDocumentoStatus(Integer id, char status) {
+		Documento doc = documentosRepository.getByIdPKey(id);
+		doc.setStatus(status);
+	}
+
+	@Override
+	public Documento getDocumento(Integer primaryKey) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario obj = (Usuario)auth.getPrincipal();
+		Usuario usuario = usuarioService.selectByLogin(auth.getName());
+		usuario.setIdCarteira(obj.getIdCarteira());
+		Documento documento = documentosRepository.getByIdPKey(primaryKey);
+		
+		int secaoDocumento = documento.getCarteira().getSecao().getIdSecao();
+		int omDocumento = documento.getCarteira().getOm().getIdOM();
+		
+		Iterator<Conta> ite = usuario.getContas().iterator();
+		
+		while(ite.hasNext()){
+			
+			Carteira carteiraUsuarioLogado = ite.next().getCarteira();
+			
+			if (usuario.getIdCarteira() == carteiraUsuarioLogado.getIdCarteira()){
+			
+				int secaoUsuarioLogado = carteiraUsuarioLogado.getSecao().getIdSecao();
+				int omUsuarioLogado = carteiraUsuarioLogado.getOm().getIdOM();
+				
+				if (secaoUsuarioLogado == secaoDocumento && omUsuarioLogado == omDocumento)
+					documento.setGranted(true);
+			}
+			
+		}
+		
+		if (!documento.isGranted()) 
+			throw new DocumentNotFoundException("Sem permissão de visualização");
+		
+		return documento;
+	}
+
+	@Override
+	public Set<DocumentoCompleto> returnSearch(PesquisaForm form) {
+		return documentosRepository.returnSearch(form);
 	}
 
 	

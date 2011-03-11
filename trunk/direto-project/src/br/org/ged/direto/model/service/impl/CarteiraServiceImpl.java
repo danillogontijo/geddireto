@@ -34,4 +34,9 @@ public class CarteiraServiceImpl implements CarteiraService {
 		
 	}
 
+	@Override
+	public Carteira selectById(Integer primaryKey) {
+		return carteiraRepository.selectById(primaryKey);
+	}
+
 }

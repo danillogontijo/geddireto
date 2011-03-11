@@ -8,5 +8,6 @@ public interface CarteiraService {
 	
 	public void save(Carteira carteira);
 	public List<Carteira> getAll(Carteira carteira);
+	public Carteira selectById(Integer primaryKey);
 
 }

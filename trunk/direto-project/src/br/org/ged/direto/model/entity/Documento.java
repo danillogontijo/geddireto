@@ -19,6 +19,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 @Entity
@@ -65,6 +66,19 @@ public class Documento implements Serializable
 	@OrderBy("idNotificacao asc") 
 	private Set<Notificacao> notificacoes = new HashSet<Notificacao>(0);
 	
+	@Transient
+	private boolean granted = false;
+	
+	public boolean isGranted() {
+		return granted;
+	}
+
+
+	public void setGranted(boolean granted) {
+		this.granted = granted;
+	}
+
+
 	public Documento(){}
 	
 	

@@ -36,5 +36,10 @@ public class CarteiraRepositoryImpl implements CarteiraRepository {
 		hibernateTemplate.saveOrUpdate(carteira);
 
 	}
+	
+	@Override
+	public Carteira selectById(Integer primaryKey){
+		return (Carteira) hibernateTemplate.get(Carteira.class, primaryKey);
+	}
 
 }
