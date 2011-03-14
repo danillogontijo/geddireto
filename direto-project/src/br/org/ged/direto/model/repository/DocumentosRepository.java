@@ -1,5 +1,6 @@
 package br.org.ged.direto.model.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -23,5 +24,6 @@ public interface DocumentosRepository {
 	public List<Anexo> getAllAnexos(Integer idDocumentoDetalhes);
 	public Integer getLastId();
 	public Documento getByIdPKey(Integer id);
-	public Set<DocumentoCompleto> returnSearch(PesquisaForm form);
+	public Collection<DocumentoCompleto> returnSearch(PesquisaForm form);
+	public int returnTotalSearch(PesquisaForm form);
 }

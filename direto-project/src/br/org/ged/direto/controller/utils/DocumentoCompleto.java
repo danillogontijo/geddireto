@@ -37,8 +37,6 @@ public class DocumentoCompleto implements Serializable {
 	}
 	
 	public int hashCode() {
-		/*int code = 1;
-		code = code * this.documentoDetalhes.getIdDocumentoDetalhes() * 1000;*/
 		return this.documentoDetalhes.getIdDocumentoDetalhes();
 	}
 	

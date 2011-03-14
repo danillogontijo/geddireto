@@ -1,5 +1,6 @@
 package br.org.ged.direto.model.service.impl;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -179,8 +180,13 @@ public class DocumentosServiceImpl implements DocumentosService {
 	}
 
 	@Override
-	public Set<DocumentoCompleto> returnSearch(PesquisaForm form) {
+	public Collection<DocumentoCompleto> returnSearch(PesquisaForm form) {
 		return documentosRepository.returnSearch(form);
+	}
+
+	@Override
+	public int returnTotalSearch(PesquisaForm form) {
+		return documentosRepository.returnTotalSearch(form);
 	}
 
 	

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+
     
 
 <%@ include file="include_head.jsp" %>
@@ -8,10 +7,11 @@
 </style> 
 <script src="<%=request.getContextPath() %>/js/dataTable/jquery.dataTables.min.js"></script>
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript" charset="ISO-8859-1">
 var asInitVals = new Array();
 
 function ini(){
+	//alert("");
 	$j('#example tbody tr').each( function(i) {
 		/*var nTr = $j(this.nTr);
 		var nTds = $j('td', nTr);*/
@@ -45,18 +45,19 @@ function ini(){
 
 	$j("#example_paginate span").click(function(event) {
 		
-			ini();		
+		setTimeout("ini();",1000);		
 
 	});	
 }
 
 $j(function(){
 
-	
+	//alert('${total}');
 	
 	var oTable = $j('#example').dataTable( {
+		"iDisplayLength": 5,
 		"bProcessing": true,
-		//"bServerSide": true,
+		"bServerSide": true,
 		"oLanguage": {
 			"sUrl": "js/dataTable/pt_BR.txt"
 		},
@@ -71,11 +72,11 @@ $j(function(){
 		  			/* Data */    null
 		  		], 
 
-		 "aLengthMenu": [[15, 20, -1], [15, 20, "All"]],
+		 "aLengthMenu": [[5, 20, -1], [5, 20, "All"]],
 		  		      		 		
 		
 		"sPaginationType": "full_numbers",
-		"sAjaxSource": "http://localhost:8080/direto-project/resultado.html"
+		"sAjaxSource": "http://localhost:8080/direto-project/resultado.html?total=${total}&bServerSide=${bServerSide}"
 
 	} );
 
@@ -88,7 +89,7 @@ $j(function(){
 
 		//alert($j(this).text());
 
-		setTimeout("ini();",1000);
+		//setTimeout("ini();",3000);
 
 		
 		
@@ -269,7 +270,13 @@ $j(function(){
 	</tfoot> 
 </table> 
 		
-		
+		<form action="http://localhost:8080/direto-project/resultado.html"
+			method="get">
+		<input type="text" value="Ofí" name="sSearch" />
+		<input type="hidden" value="9" name="total">
+		<input type="hidden" value="true" name="bServerSide">
+		<input type="submit" value="enviar">
+		</form>
 			
 		
 		
