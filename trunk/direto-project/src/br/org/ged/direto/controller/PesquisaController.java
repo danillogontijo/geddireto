@@ -1,8 +1,21 @@
 package br.org.ged.direto.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -12,7 +25,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
+import com.springsource.json.writer.JSONArray;
+import com.springsource.json.writer.JSONObject;
 
 import br.org.ged.direto.controller.forms.PesquisaForm;
 import br.org.ged.direto.controller.utils.DocumentoCompleto;
@@ -45,13 +62,39 @@ public class PesquisaController extends BaseController {
 	}	
 	
 	@RequestMapping(method=RequestMethod.GET,value="/pesquisar.html")
-	public String pesquisar(ModelMap model) {		
+	public String pesquisar(HttpServletRequest request,ModelMap model) {		
 		
 		PesquisaForm form = new PesquisaForm();
-		List<DocumentoCompleto> docs = new ArrayList<DocumentoCompleto>();
+		Usuario obj = super.getUsuarioLogado();
+		
+		Carteira carteira = carteiraService.selectById(obj.getIdCarteira());
+		
+		form.setCarteira(carteira);
+		form.setPapel(obj.getUsuPapel());
+		
+		this.session = request.getSession(true);
+		
+		int total = documentoService.returnTotalSearch(form);
+		
+		if(this.session.getAttribute("totalPesquisa") == null || this.session.getAttribute("totalPesquisa") == "" ){
+			total = documentoService.returnTotalSearch(form);
+			this.session.setAttribute("totalPesquisa", String.valueOf(total));
+		} else {
+			total = Integer.parseInt((String) this.session.getAttribute("totalPesquisa"));
+		}
+		
+		
+		
+		boolean bServerSide = (total > 200 ? true : false);
+		model.addAttribute("bServerSide",bServerSide);
+		model.addAttribute("total",total);
+		
+		System.out.println("TOTAL RESULTS ====== "+total);
+		
+		/*List<DocumentoCompleto> docs = new ArrayList<DocumentoCompleto>();
 		
 		model.addAttribute(NAME_OBJ_COMMAND, form);
-		model.addAttribute("docs", docs);
+		model.addAttribute("docs", docs);*/
 		
 		return "pesquisar";
 	}
@@ -66,30 +109,171 @@ public class PesquisaController extends BaseController {
 		form.setCarteira(carteira);
 		form.setPapel(obj.getUsuPapel());
 		
-		Set<DocumentoCompleto> docs = documentoService.returnSearch(form);
+		List<DocumentoCompleto> docs = (List<DocumentoCompleto>) documentoService.returnSearch(form);
 		
 		model.addAttribute("docs", docs);
 		
 		return "json/pesquisaResultado";
 	}
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(method=RequestMethod.GET,value="/resultado.html")
-	public String resultadoJSON(ModelMap model) {		
+	public void resultadoJSON(@RequestParam("total") int total,HttpServletRequest request,
+			HttpServletResponse response,ModelMap model) {		
+		
+		CharsetDecoder charsetDec = Charset.forName("UTF-8").newDecoder();
+		//response.setContentType("text/html; charset=utf-8");
+		try {
+			request.setCharacterEncoding("ISO-8859-1");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		System.out.println(request.getCharacterEncoding());
 		
 		PesquisaForm form = new PesquisaForm();
-		
-		Usuario obj = getUsuarioLogado();
+		Usuario obj = super.getUsuarioLogado();
 		
 		Carteira carteira = carteiraService.selectById(obj.getIdCarteira());
 		
 		form.setCarteira(carteira);
 		form.setPapel(obj.getUsuPapel());
+		form.setTotal(total);
 		
-		Set<DocumentoCompleto> docs = documentoService.returnSearch(form);
+		PrintWriter writer = null;
 		
-		model.addAttribute("docs", docs);
+		try {
+			writer = response.getWriter();
+		} catch (IOException ex) {
+			System.err.println(PesquisaController.class.getName() + "ocorreu uma exceção: "	+ ex.getMessage());
+		}
 		
-		return "json/pesquisaResultado";
+		String[] cols = { "details.idDocumentoDetalhes", "details.tipoDocumento", "details.nrProtocolo", "details.nrDocumento", "details.assunto", "details.dataEntSistema" };
+		
+		JSONObject result = new JSONObject();
+		JSONArray array = new JSONArray();
+		int amount = 5;
+		int start = 0;
+		int echo = 0;
+		int col = 0;
+		
+		String id = "";
+		String tipo = "";
+		String protocolo = "";
+		String nrDoc = "";
+		String assunto = "";
+		String data = "";
+
+		String dir = "asc";
+		String sStart = request.getParameter("iDisplayStart");
+		String sAmount = request.getParameter("iDisplayLength");
+		String sEcho = request.getParameter("sEcho");
+		String sCol = request.getParameter("iSortCol_0");
+		String sdir = request.getParameter("sSortDir_0");
+		boolean bServerSide = (((String)request.getParameter("bServerSide")).equals("true")?true:false);
+		form.setServerSide(bServerSide);
+		
+		id = request.getParameter("sSearch_0");
+		
+		tipo = request.getParameter("sSearch_1");
+		if(tipo != null)
+			form.setTipoDocumento(tipo);
+		
+		protocolo = request.getParameter("sSearch_2");
+		if(protocolo != null)
+			form.setNrProtocol(protocolo);
+		
+		nrDoc = request.getParameter("sSearch_3");
+		if(nrDoc != null)
+			form.setNrDocumento(nrDoc);
+		
+		assunto = request.getParameter("sSearch_4");
+		if(assunto != null)
+			form.setAssunto(assunto);
+		
+		data = request.getParameter("sSearch_5");
+		if(data != null)
+			form.setDataEntSistema(data);
+		
+		if (sStart != null) {
+			start = Integer.parseInt(sStart);
+			if (start < 0)
+				start = 0;
+		}
+		form.setStart(start);
+		
+		if (sAmount != null) {
+			amount = Integer.parseInt(sAmount);
+			if (amount < 5 || amount > 100)
+				amount = 10;
+		}
+		form.setAmount(amount);
+		
+		if (sEcho != null) {
+			echo = Integer.parseInt(sEcho);
+		}
+		form.setEcho(echo);
+		
+		if (sCol != null) {
+			col = Integer.parseInt(sCol);
+			if (col < 0 || col > 6)
+				col = 0;
+		}
+		form.setCol(col);
+		
+		if (sdir != null) {
+			if (!sdir.equals("asc"))
+				dir = "desc";
+		}
+		form.setDir(dir);
+		
+		String colName = cols[col];
+		form.setColName(colName);
+		
+		String searchTerm = request.getParameter("sSearch");
+		if (searchTerm == null)
+			searchTerm = "";
+		try {
+			form.setSearchTerm(charsetDec.decode(ByteBuffer.wrap(searchTerm.getBytes())).toString());
+		} catch (CharacterCodingException e) {
+			e.printStackTrace();
+		}
+		System.out.println("==="+searchTerm);
+		
+		int totalAfterFilter = total;
+		
+		List<DocumentoCompleto> docs = (List<DocumentoCompleto>) documentoService.returnSearch(form);
+		
+		if (searchTerm != "" || form.getIndividualSearch()!="")
+			totalAfterFilter = docs.size();
+		
+		Iterator<DocumentoCompleto> ite = docs.iterator();
+		
+		while (ite.hasNext()) {
+			DocumentoCompleto dc = ite.next();
+			
+			JSONArray ja = new JSONArray();
+			ja.put(String.valueOf(dc.getDocumentoDetalhes().getIdDocumentoDetalhes()));
+			ja.put(dc.getDocumentoDetalhes().getTipoDocumento());
+			ja.put(dc.getDocumentoDetalhes().getNrProtocolo());
+			ja.put(dc.getDocumentoDetalhes().getNrDocumento());
+			ja.put(dc.getDocumentoDetalhes().getAssunto());
+			ja.put(dc.getDocumentoDetalhes().getDataEntSistema());
+			array.put(ja);
+		}
+		
+		response.setHeader("Content-Type", "application/json; charset=ISO-8859-1");
+			
+		result.put("iTotalRecords", total);
+		result.put("iTotalDisplayRecords", totalAfterFilter);
+		result.put("aaData", array);
+		
+		writer.print(result);
+		
+		writer.flush();
+		writer.close();
+		
 	}
 
 }

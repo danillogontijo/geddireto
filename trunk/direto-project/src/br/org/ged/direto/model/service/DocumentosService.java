@@ -1,5 +1,6 @@
 package br.org.ged.direto.model.service;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -46,5 +47,7 @@ public interface DocumentosService {
 	
 	public void setDocumentoStatus(Integer id, char status);
 	
-	public Set<DocumentoCompleto> returnSearch(PesquisaForm form);
+	public Collection<DocumentoCompleto> returnSearch(PesquisaForm form);
+	
+	public int returnTotalSearch(PesquisaForm form);
 }

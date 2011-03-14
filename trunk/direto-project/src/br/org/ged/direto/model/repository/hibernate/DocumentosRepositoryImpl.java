@@ -3,16 +3,19 @@ package br.org.ged.direto.model.repository.hibernate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -50,7 +53,8 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 
 	private HibernateTemplate hibernateTemplate;
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    
+    //private Session session = hibernateTemplate.getSessionFactory().getCurrentSession();
+	
     @Autowired
 	private UsuarioService usuarioService;
     
@@ -59,7 +63,9 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
     
     @Autowired
     private SessionFactory sessionFactory;
-
+    
+    //private Session session = sessionFactory.getCurrentSession();
+    
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		hibernateTemplate = new HibernateTemplate(sessionFactory);
@@ -69,6 +75,10 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 	@Autowired
 	public void setMessageSource(MessageSource messageSource) {
 		this.messages = new MessageSourceAccessor(messageSource);
+	}
+	
+	public Session getSession(){
+		return sessionFactory.getCurrentSession();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -422,70 +432,119 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<DocumentoCompleto> returnSearch(PesquisaForm form) {
+	public Collection<DocumentoCompleto> returnSearch(PesquisaForm form) {
 		
-		Set<DocumentoCompleto> documentos = new HashSet<DocumentoCompleto>();
-		
-		List<Carteira> carteiras;
+		//Set<DocumentoCompleto> documentos = new HashSet<DocumentoCompleto>();
+		List<DocumentoCompleto> documentos = new ArrayList<DocumentoCompleto>();
 		
 		int idSecao = form.getCarteira().getSecao().getIdSecao();
 		int idOM = form.getCarteira().getOm().getIdOM();
 		
+		int	start = form.getStart();
+		int	amount = form.getAmount();
 		
-		String sql = "from Carteira as c where c.secao.idSecao = ? and c.om.idOM = ? ";
-		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
-		query.setInteger(0, idSecao);
-		query.setInteger(1, idOM);
+		String tipo = "";
+		String protocolo = "";
+		String nrDoc = "";
+		String assunto = "";
+		String data = "";
 		
-		carteiras = query.list();
+		tipo = form.getTipoDocumento();
+		protocolo = form.getNrProtocol();
+		nrDoc = form.getNrDocumento();
+		assunto = form.getAssunto();
+		data = form.getDataEntSistema();
 		
-		//System.out.println("==============="+carteiras.size());
+		List<String> sArray = new ArrayList<String>();
 		
-		Iterator<Carteira> ite = carteiras.iterator();
-		while(ite.hasNext()){
-			Carteira carteira = ite.next();
-			
-			Set<Documento> listDoc = carteira.getDocumentos();
-			Iterator<Documento> iteListDoc = listDoc.iterator();
-			while(iteListDoc.hasNext()){
-				Documento doc_conta = iteListDoc.next();
-				DocumentoDetalhes doc_det = doc_conta.getDocumentoDetalhes();
-				
-				DocumentoCompleto doc_completo = new DocumentoCompleto(doc_conta,doc_det);
-				
-				documentos.add(doc_completo);
-				
-			}
-			
-			
-			
+		if (!tipo.equals("")) {
+			String sTipo = " details.tipoDocumento like '%" + tipo + "%'";
+			sArray.add(sTipo);
+		}
+		if (!protocolo.equals("")) {
+			String sProtocolo = " details.nrProtocolo like '%" + protocolo + "%'";
+			sArray.add(sProtocolo);
+		}
+		if (!nrDoc.equals("")) {
+			String sNrDoc = " details.nrDocumento like '%" + nrDoc + "%'";
+			sArray.add(sNrDoc);
+		}
+		if (!assunto.equals("")) {
+			String sAssunto = " details.assunto like '%" + assunto + "%'";
+			sArray.add(sAssunto);
+		}
+		if (!data.equals("")) {
+			String sData = " details.dataEntSistema like '%" + data + "%'";
+			sArray.add(sData);
 		}
 		
-		/*for (int i=0;i<results.size();i++){
+		String individualSearch = "";
+		if(sArray.size()==1){
+			individualSearch = sArray.get(0);
+		}else if(sArray.size()>1){
+			for(int i=0;i<sArray.size()-1;i++){
+				individualSearch += sArray.get(i)+ " and ";
+			}
+			individualSearch += sArray.get(sArray.size()-1);
+		}
+		form.setIndividualSearch(individualSearch);
+		
+		String searchSQL = "";
+		String sql = "from Documento as doc inner join doc.documentoDetalhes details";
+		String searchTerm = form.getSearchTerm();
+		
+		String globeSearch =  " where (" 
+									+ "details.tipoDocumento like '%"+searchTerm+"%'"
+									+ " or details.nrProtocolo like '%"+searchTerm+"%'"
+									+ " or details.nrDocumento like '%"+searchTerm+"%'"
+									+ " or details.assunto like '%"+searchTerm+"%'"
+									+ " or details.dataEntSistema like '%"+searchTerm+"%')";
+		String baseSearch = " doc.carteira.secao.idSecao = "+idSecao+" and doc.carteira.om.idOM = "+idOM+"";
+		
+		if(searchTerm!=""&&individualSearch!=""){
+			searchSQL = globeSearch + " and " + individualSearch;
+			baseSearch = " and" + baseSearch;
+		}
+		else if(individualSearch!=""){
+			searchSQL = " where " + individualSearch;
+			baseSearch = " and" + baseSearch;
+		}else if(searchTerm!=""){
+			searchSQL=globeSearch;
+			baseSearch = " and" + baseSearch;
+		}
+		
+		if (searchTerm==""&&individualSearch=="")
+			baseSearch = " where" + baseSearch;
+		
+		sql += searchSQL;
+		sql += baseSearch;
+		sql += " group by details.idDocumentoDetalhes order by " + form.getColName() + " " + form.getDir();
+		
+		System.out.println(sql);
+		
+		Query query = getSession().createQuery(sql);
+		
+		if(form.isServerSide()){
+			query.setFirstResult(start);
+			query.setMaxResults(amount);
+		}
+		
+		List results = query.list();
+		System.out.println(results.size());
+		System.out.println(query.getQueryString());
+		
+		for(int i=0; i<results.size(); i++){
 			
 			Object[] objects = (Object[]) results.get(i);
-			//DocumentoDetalhes doc = (DocumentoDetalhes) objects[1];
-			//Documento doc_cart = (Documento) objects[0];
-			Carteira objects 
+			DocumentoDetalhes doc_det = (DocumentoDetalhes) objects[1];
+			Documento doc_conta = (Documento) objects[0];
+			System.out.println(doc_det.getIdDocumentoDetalhes());
+			DocumentoCompleto doc_completo = new DocumentoCompleto(doc_conta,doc_det);
 			
-		}*/
-		
-		//String sql = "from Documento as doc inner join doc.documentoDetalhes details "; 
-		
-		//String sql = "SELECT *,Date_format(data,'%d-%m-%Y %H:%i:%s') as date FROM mensagens,idmensausu "
-			//		+ " WHERE  mensagens.Id=idmensausu.idMensagem ";
-		
-		/*if (form.isUserInRole("USER")) {
-			sql = sql 
-					+ " AND idmensausu.idOM = "
-					+ idOM
-					+ " AND (idmensausu.idSecao = "
-					+ idSecao + secoesPesquisa + ")"
-					+ " AND  idmensausu.status in (0,1,2,4) ";
-					
-		}*/
-		
-		
+			documentos.add(doc_completo);
+			
+		}
+			
 		
 		return documentos;
 	}
@@ -501,6 +560,20 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		}
 		
 		return returnDoc;
+	}
+
+	@Override
+	public int returnTotalSearch(PesquisaForm form) {
+		
+		int idSecao = form.getCarteira().getSecao().getIdSecao();
+		int idOM = form.getCarteira().getOm().getIdOM();
+		
+		String sqlCount = "select count(distinct doc.documentoDetalhes.idDocumentoDetalhes) from Documento as doc" +
+		" where doc.carteira.secao.idSecao = "+idSecao+" and doc.carteira.om.idOM = "+idOM;
+		
+		Integer total = ((Long)getSession().createQuery(sqlCount).uniqueResult()).intValue();
+		
+		return (total == null ? 0 : total.intValue()); 
 	}
 
 }
