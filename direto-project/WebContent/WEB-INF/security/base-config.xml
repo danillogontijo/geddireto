@@ -64,6 +64,14 @@
 	
 	-->
 	
+	<bean id="documentoProtocolo" class="br.org.direto.util.DocumentoProtocolo">
+		<property name="documentosService" ref="documentosService"></property>
+	</bean> 
+	
+	<bean id="protocolo" class="br.org.direto.util.Protocolo">
+		<property name="docProt" ref="documentoProtocolo"></property>
+	</bean> 
+	
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">

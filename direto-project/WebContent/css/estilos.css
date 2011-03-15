@@ -134,3 +134,38 @@ background-color: black;}
 	.historico {color: red;}
 
 #historico {display: none;}
+
+
+/**
+ * ESTILO PAGINA DE PESQUISA (pesquisar.html)
+*/
+
+input,select,textarea {
+	border:1px solid #444;
+	background-color:#fff;
+	padding:2px;
+	
+	/* CSS3 spicing */
+	text-shadow:1px 1px 1px #ddd;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;		
+}
+
+.field_inputs {
+	/*border:1px solid #444;
+	background-color:#79b7e7;
+	padding:2px;*/
+	background-color:#DFEFFC;
+	
+}
+
+.field_inputs_shadow {-webkit-box-shadow: 0px 0px 6px #000;
+	-moz-box-shadow: 0px 0px 6px #000;	}
+
+input.field_inputs_active:focus { 
+	color:#000; 
+	background-color:#DFEFFC; 
+	-moz-box-shadow: 0px 0px 6px red;
+	-webkit-box-shadow: 0px 0px 6px red;
+	}
+input.field_inputs_active:active { background-color:red; }

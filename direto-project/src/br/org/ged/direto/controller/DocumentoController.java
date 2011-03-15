@@ -149,13 +149,26 @@ public class DocumentoController extends BaseController {
 		
 		
 		Integer idCarteira = Utils.getIdCarteiraFromSession(request);
+		System.out.println(idCarteira+"Caretira");
 		Documento doc_conta = this.documentosService.selectById(id, idCarteira);
 		DocumentoDetalhes documento = DocumentosUtil.returnDocument(id, idCarteira,doc_conta);
 		//this.documentoError.setDocumento(DocumentosUtil.returnDocument(id, idCarteira,doc_conta));
+		//char compare = '0';
+		char cDoc = doc_conta.getStatus();
+		String sDocStatus = ""+doc_conta.getStatus();
 		
-		if (doc_conta.getStatus() == '0')
-			documentosService.setDocumentoStatus(doc_conta.getIdDocumento(), '1');
+		int x = cDoc;
 		
+		System.out.println(x);
+		System.out.println(doc_conta.getStatus());
+		System.out.println(doc_conta.getIdDocumento());
+		
+		if (doc_conta.getStatus() == x){
+			System.out.println("CHAR IGUAL");
+			//documentosService.setDocumentoStatus(doc_conta.getIdDocumento(), '1');
+		}else{
+			System.out.println("CHAR DIFERENTE");
+		}
 		
 		model.addAttribute("idDocumento",id);
 		model.addAttribute("documento",documento);

@@ -57,20 +57,14 @@ import br.org.ged.direto.model.service.menus.MenuTopoImpl;
 @Controller
 @RequestMapping("/principal.html")
 //@SessionAttributes({"usuario", "mt","pastas","menuTopo","box"})
-@SessionAttributes({"usuario", "mt","menuTopo","box"})
+@SessionAttributes({"box"})
 public class PrincipalController extends BaseController {
-	
-	@Autowired
-	private UsuarioService usuarioService;
 	
 	@Autowired
 	private DocumentosService documentosService;
 	
 	/*@Autowired
 	private PastasService pastasService;*/
-	
-	@Autowired
-	private IMenuTopo menuTopo;
 	
 	@Autowired
 	private GruposService gruposService;
@@ -194,24 +188,7 @@ public class PrincipalController extends BaseController {
 		return docList; 
 	}
 	
-	@ModelAttribute("menuTopo")
-	public Collection<MenuTopo> menuTopo() {
-		Collection<MenuTopo> menu = new ArrayList<MenuTopo>();
-		
-		try {
-			menu = menuTopo.filterMenuTopo(menuTopo.getMenuTopo());
-			
-			//menu = menuTopo.getMenuTopo();
-			
-		}catch(Exception e){
-			//System.out.println();
-			e.printStackTrace();
-		}
-		
-		//System.out.println(menu.toString());
-		
-		return menu;
-	}
+	
 	
 	/*public Map<String,String> menuTopo() {
 		
@@ -289,123 +266,13 @@ public class PrincipalController extends BaseController {
 
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String showUserDetails(@RequestParam("box") int box, ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+	public String showPrincipal(@RequestParam("box") int box, ModelMap model, HttpServletRequest request, HttpServletResponse response) {
 		
 		if (box == 0)
 			box = 1;
 		
-		//String request.getParameter("");
-		
-		//System.out.println(this.documentosService.selectByIdCarteira(new Integer(2)));
-		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		this.session = request.getSession(true);
-		//(Usuario) auth.getPrincipal();
-		Usuario usuario = usuarioService.selectByLogin(auth.getName());
-		//Usuario o = (Usuario) auth.getPrincipal();
-		//usuario.setIdCarteira(o.getIdCarteira());
-		
-		
-		//Usuario usuario = this.usuarioService.selectById(usuarioTemp.getIdUsuario());
-		
-		//System.out.println("j_conta: "+session.getAttribute("j_usuario_conta"));
-		
-		//PstGrad pstgrad = usuario.getPstGrad();
-		
-		//Iterator<PstGrad> ite_pstgrad = usuario.getPstGrad().iterator();
-		/*Usuario usuario;
-		Object principal = auth.getPrincipal(); 
-		
-		if(principal instanceof Usuario){
-			usuario = (Usuario)principal;
-		}else{
-			return "error.html";
-		}*/
-		
-		
-		model.addAttribute("usuario",usuario);
 		model.addAttribute("box",box);
-		//model.addAttribute("contaAtual", usuario.getIdCarteira());
-		//model.addAttribute(pstgrad);
-		//model.addAttribute(usuarioService.listActivedContas(auth.getName()));
-		
-		//model.addAttribute(auth.getCredentials());
-		
-		//System.out.println(auth.toString());
-		//System.out.println(usuario.getContas().size());
-		
-		
-		/*File file;
-		FileInputStream in = null;
-		//FileOutputStream out;
-		//response.
-		
-		try {
-			
-			file = new File("/home/danillo/teste.odt");
-			
-			byte[] buffer = getBytesFromFile(file);
-			
-			//System.out.println(buffer.length);
-			
-			//response.setHeader("Content-Length", String.valueOf(buffer.length));
-			
-			//response.setContentType("application/vnd.oasis.opendocument.text");
-			
-			
-			//String fullName = file.getPath();
-			 		
-			  
-		     String pathName = file.getPath();//response.getServletContext().getRealPath ( "/" + fullName) ; 
-		     String contentType = request.getSession().getServletContext().getMimeType(pathName) ; 
-		  
-		  
-		     if  ( contentType != null )  
-		         response.setContentType (contentType) ; 
-		     else 
-		         response.setContentType ("application/octet-stream") ; 
-
-		     System.out.println(contentType);
-			
-			//in = new FileInputStream(file);
-			//out = new FileOutputStream(file);
-		     
-		     response.setContentType("application/vnd.oasis.opendocument.text");
-		     response.setHeader("Content-disposition","attachment; filename=" + file.getName() );
-			ServletOutputStream sout = response.getOutputStream(); 
-			
-			//in.r
-	        
-	        int bytesRead = 0;
-
-	        do
-	        {
-	                bytesRead = in.read(buffer);
-	            	System.out.println(bytesRead);
-	                response.getOutputStream().write(buffer);
-	        }
-	        while (bytesRead == buffer.length);
-
-			
-			sout.write(buffer);
-			sout.flush();
-			
-	       //file.
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally
-	    {
-	        if(in != null)
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	    }*/
-		
-				
+						
 		return "principal";
 	
 	}

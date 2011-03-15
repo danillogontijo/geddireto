@@ -1,5 +1,4 @@
-
-    
+  
 
 <%@ include file="include_head.jsp" %>
 <style type="text/css" title="currentStyle"> 
@@ -7,64 +6,24 @@
 </style> 
 <script src="<%=request.getContextPath() %>/js/dataTable/jquery.dataTables.min.js"></script>
 
-<script type="text/javascript" charset="ISO-8859-1">
+<script type="text/javascript" charset="utf-8">
 var asInitVals = new Array();
-
-function ini(){
-	//alert("");
-	$j('#example tbody tr').each( function(i) {
-		/*var nTr = $j(this.nTr);
-		var nTds = $j('td', nTr);*/
-
-		var nTds = $j('td', this);
-		var nrProtocolo = $j(nTds[2]).text();
-		var id = nrProtocolo.substring(6);
-
-		/* Caso queira usar a chave primaria do Documento como ID */
-		//var id = $j(nTds[0]).text();
-		
-		$j(nTds).each( function(i) {
-
-			var text = $j(nTds[i]).text();;
-			
-			if(i == 0){
-				$j(nTds[0]).attr('id',text);
-				
-			} else {
-				$j(nTds[i]).html('<a href="documento.html?id='+id+'">'+text+'</a>');
-			}
-
-				
-		});	
-		
-		$j(nTds[0]).html(i+1);
-		//alert($j(nTds[0]).text());
-	});
-
-
-
-	$j("#example_paginate span").click(function(event) {
-		
-		setTimeout("ini();",1000);		
-
-	});	
-}
 
 $j(function(){
 
 	//alert('${total}');
 	
-	var oTable = $j('#example').dataTable( {
-		"iDisplayLength": 5,
+	var oTable = $j('#pesquisaDataTables').dataTable( {
+		"iDisplayLength": 10,
 		"bProcessing": true,
-		"bServerSide": true,
+		"bServerSide": ${bServerSide},
 		"oLanguage": {
 			"sUrl": "js/dataTable/pt_BR.txt"
 		},
 
 		"aoColumns": [ 
 					/* ID */   { "bSearchable": false,
-			              			"bVisible":    true },
+			              			"bVisible":    false },
 		  			/* Tipo */   null,
 		  			/* Protocolo */  null,
 		  			/* NrDoc */ 	null,
@@ -72,7 +31,8 @@ $j(function(){
 		  			/* Data */    null
 		  		], 
 
-		 "aLengthMenu": [[5, 20, -1], [5, 20, "All"]],
+		 //"aLengthMenu": [[10, 15, -1], [10, 15, "All"]],
+		 "aLengthMenu": [10, 15, 20],
 		  		      		 		
 		
 		"sPaginationType": "full_numbers",
@@ -88,8 +48,52 @@ $j(function(){
 		
 
 		//alert($j(this).text());
+		
 
-		//setTimeout("ini();",3000);
+	setTimeout(function (){
+
+		//$j(".dataTables_filter input").addClass("field_inputs");
+		//$j(".dataTables_length select").addClass("field_inputs");
+		
+
+		$j(oTable.fnSettings().aoData).each(function (){
+			var nTr = $j(this.nTr);
+			var nTds = $j('td', nTr);
+
+			var nrProtocolo = $j(nTds[1]).text();
+			var id = nrProtocolo.substring(6);
+
+			$j(nTds).each( function(i) {
+				var text = $j(nTds[i]).text();;
+				$j(nTds[i]).html('<a href="documento.html?id='+id+'">'+text+'</a>');
+			});	
+			
+		});
+
+
+		$j(".dataTables_paginate span").click(function(event) {
+			setTimeout(function (){	
+
+				$j(oTable.fnSettings().aoData).each(function (){
+					var nTr = $j(this.nTr);
+					var nTds = $j('td', nTr);
+
+					var nrProtocolo = $j(nTds[1]).text();
+					var id = nrProtocolo.substring(6);
+
+					$j(nTds).each( function(i) {
+						var text = $j(nTds[i]).text();;
+						$j(nTds[i]).html('<a href="documento.html?id='+id+'">'+text+'</a>');
+					});	
+					
+				});
+		},100);
+				
+		});	
+		
+	},500);
+
+	
 
 		
 		
@@ -118,15 +122,10 @@ $j(function(){
 	 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
 	 * the footer
 	 */
-	$j("tfoot input").each( function (i) {
-		
-			asInitVals[i] = this.value;
-	});
-	
 	$j("tfoot input").focus( function () {
-		if ( this.className == "search_init" )
+		if ( this.className == "field_inputs search_init field_inputs_shadow" )
 		{
-			this.className = "";
+			this.className = "field_inputs search_init field_inputs_active";
 			this.value = "";
 		}
 	} );
@@ -134,12 +133,16 @@ $j(function(){
 	$j("tfoot input").blur( function (i) {
 		if ( this.value == "" )
 		{
-			this.className = "search_init";
+			this.className = "field_inputs search_init field_inputs_shadow";
 			this.value = asInitVals[$j("tfoot input").index(this)];
 		}
 	} );
 
-
+	$j("tfoot input").each( function (i) {
+		
+		asInitVals[i] = this.value;
+		$j(this).addClass("field_inputs_shadow");
+	});
 	
 	
 	/*$j('#example tbody tr').each( function() {
@@ -190,7 +193,7 @@ $j(function(){
 		//alert($j(event.target).text());
 
 
-		alert($j(event.target.parentNode).children().eq(1).text());
+		//alert($j(event.target.parentNode).children().eq(1).text());
 		
 	});
 	
@@ -242,7 +245,7 @@ $j(function(){
 <div id="corpo" style="width:100%; text-align:center; float: left; position: static; width: 822px; vertical-align: middle;">
 		
 		
-<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"> 
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="pesquisaDataTables"> 
 	<thead> 
 		<tr>
 			<th class="conf_id">ID</th>  
@@ -260,23 +263,17 @@ $j(function(){
 	
 	<tfoot> 
 		<tr>
-			<th><input type="hidden" name="search_id" value="Id" class="search_init" /></th>
-			<th><input type="text" name="search_tipo" value="Tipos" class="search_init" /></th> 
-			<th><input type="text" name="search_protocolo" value="Protocolo" class="search_init" /></th> 
-			<th><input type="text" name="search_nrdoc" value="Nr. Doc" class="search_init"/></th> 
-			<th><input type="text" name="search_assunto" value="Assunto" class="search_init" /></th> 
-			<th><input type="text" name="search_data" value="Data" class="search_init" /></th> 
+			<th><input type="hidden" name="search_id" value="Id" class="field_inputs search_init" /></th>
+			<th><input type="text" name="search_tipo" value="Tipos" class="field_inputs search_init" /></th> 
+			<th><input type="text" name="search_protocolo" value="Protocolo" class="field_inputs search_init" /></th> 
+			<th><input type="text" name="search_nrdoc" value="Nr. Doc" class="field_inputs search_init"/></th> 
+			<th><input type="text" name="search_assunto" value="Assunto" class="field_inputs search_init" /></th> 
+			<th><input type="text" name="search_data" value="Data" class="field_inputs search_init" /></th> 
 		</tr> 
 	</tfoot> 
 </table> 
 		
-		<form action="http://localhost:8080/direto-project/resultado.html"
-			method="get">
-		<input type="text" value="Ofí" name="sSearch" />
-		<input type="hidden" value="9" name="total">
-		<input type="hidden" value="true" name="bServerSide">
-		<input type="submit" value="enviar">
-		</form>
+		
 			
 		
 		
@@ -284,3 +281,11 @@ $j(function(){
 <!-- FIM CORPO DE LISTA DOCUMENTOS E PESQUISA-->
 		
 <%@ include file="include_foot.jsp" %>	
+
+
+
+
+
+
+
+

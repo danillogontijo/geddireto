@@ -10,6 +10,7 @@ import br.org.ged.direto.controller.utils.DocumentoCompleto;
 import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
+import br.org.ged.direto.model.entity.DocumentoDetalhes;
 
 public interface DocumentosRepository {
 	
@@ -26,4 +27,5 @@ public interface DocumentosRepository {
 	public Documento getByIdPKey(Integer id);
 	public Collection<DocumentoCompleto> returnSearch(PesquisaForm form);
 	public int returnTotalSearch(PesquisaForm form);
+	public void saveNewDocumento(DocumentoDetalhes documentoDetalhes);
 }
