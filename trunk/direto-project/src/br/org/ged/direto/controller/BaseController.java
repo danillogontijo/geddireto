@@ -1,5 +1,6 @@
 package br.org.ged.direto.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.org.direto.util.DocumentosUtil;
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
+import br.org.ged.direto.model.entity.menus.MenuTopo;
 import br.org.ged.direto.model.service.PastasService;
+import br.org.ged.direto.model.service.UsuarioService;
+import br.org.ged.direto.model.service.menus.IMenuTopo;
 
 
 @Controller
@@ -33,9 +37,23 @@ public abstract class BaseController {
 	@Autowired
 	private PastasService pastasService;
 	
+	@Autowired
+	private IMenuTopo menuTopo;
+	
+	@Autowired
+	private UsuarioService usuarioService;
+	
 	@ModelAttribute("numUsers")
 	public int getNumberOfUsers() {
 		return sessionRegistry.getAllPrincipals().size();
+	}
+	
+	@ModelAttribute("usuario")
+	public Usuario getUserLogon(HttpServletRequest request){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		this.session = request.getSession(true);
+		Usuario usuario = usuarioService.selectByLogin(auth.getName());
+		return usuario;
 	}
 	
 	public Integer getIdCarteiraFromSession(HttpServletRequest request){
@@ -61,6 +79,23 @@ public abstract class BaseController {
 		return (Usuario) auth.getPrincipal();
 	}
 
-	
+	@ModelAttribute("menuTopo")
+	public Collection<MenuTopo> menuTopo() {
+		Collection<MenuTopo> menu = new ArrayList<MenuTopo>();
+		
+		try {
+			menu = menuTopo.filterMenuTopo(menuTopo.getMenuTopo());
+			
+			//menu = menuTopo.getMenuTopo();
+			
+		}catch(Exception e){
+			//System.out.println();
+			e.printStackTrace();
+		}
+		
+		//System.out.println(menu.toString());
+		
+		return menu;
+	}
 		
 }

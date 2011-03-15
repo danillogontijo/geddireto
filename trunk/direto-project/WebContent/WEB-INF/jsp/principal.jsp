@@ -35,10 +35,10 @@
 			
 			<div style="position: relative; float: right">
 				Ordernação:
-				<select	name=slOrdenacao id="slOrdenacao" style="width: 100pt; font-style: normal; font-size: 12px; color: black;" onchange="ordenacao()">
-					<option  style="background-color: #FFFFFF;" value=0>Prioridade</option>
-					<option  style="background-color: #FFFFFF;" value=1>Data decrescente</option>
-					<option  style="background-color: #FFFFFF;" value=2>Data crescente</option>
+				<select	name=slOrdenacao id="slOrdenacao" style="width: 100pt; font-style: normal; font-size: 12px; color: black; margin-right: 3px;" onchange="ordenacao()">
+					<option value=0>Prioridade</option>
+					<option value=1>Data decrescente</option>
+					<option value=2>Data crescente</option>
 				</select>
 			</div>
 		

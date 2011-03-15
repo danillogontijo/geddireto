@@ -24,6 +24,7 @@ import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Documento;
+import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.repository.DocumentosRepository;
@@ -187,6 +188,24 @@ public class DocumentosServiceImpl implements DocumentosService {
 	@Override
 	public int returnTotalSearch(PesquisaForm form) {
 		return documentosRepository.returnTotalSearch(form);
+	}
+
+	@Override
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	public void saveNewDocumento(DocumentoDetalhes documentoDetalhes) {
+		System.out.println("\nDOCUMENTO GRAVADO: "+documentoDetalhes.toString()+"");
+		
+		Documento doc = documentosRepository.getByIdPKey(new Integer(1));
+		
+		documentoDetalhes.setDataDocumento(doc.getDocumentoDetalhes().getDataDocumento());
+		documentoDetalhes.setDataEntSistema(doc.getDocumentoDetalhes().getDataEntSistema());
+		documentoDetalhes.setUsuarioElaborador(doc.getDocumentoDetalhes().getUsuarioElaborador());
+		
+		//documentoDetalhes = doc.getDocumentoDetalhes();
+		
+		documentosRepository.saveNewDocumento(documentoDetalhes);
+		System.out.println("DOCUMENTO MODIFICADO: "+documentoDetalhes.toString()+"\n\n");
+		
 	}
 
 	

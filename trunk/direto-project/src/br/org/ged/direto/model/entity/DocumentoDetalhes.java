@@ -242,6 +242,10 @@ public class DocumentoDetalhes implements Serializable {
 		this.anexos = anexos;
 	}
 	
+	@Override
+	public String toString(){
+		return "Documento: [id: "+this.idDocumentoDetalhes+", assunto: "+this.assunto+"]";
+	}
 	
 
 }

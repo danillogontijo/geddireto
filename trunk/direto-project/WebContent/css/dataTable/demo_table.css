@@ -69,11 +69,11 @@
 	text-align: right;
 	background-color: #B8C9DD;
 	height:30px; 
-	vertical-align: middle;
+	vertical-align: bottom;
 }
 
 .dataTables_info {
-	width: 350px;
+	width: 420px;
 	float: left;
 	text-align: left;
 	vertical-align: middle;
@@ -275,6 +275,22 @@ tr.even {
 	text-align: center;
 }
 
+.dataTables_filter input {
+	margin-top: 5px;
+	font-size:10px;
+	font-weight: bold;
+	color:#000;
+	margin-right: 2px;
+}
+
+.dataTables_length select {
+	margin-top: 5px;
+	font-size:10px;
+	font-weight: bold;
+	color:#000;	
+	
+}
+
 tfoot input {
 	margin: 0.5em 0;
 	width: 100%;
@@ -282,7 +298,9 @@ tfoot input {
 }
 
 tfoot input.search_init {
-	color: #999;
+	color:#000;
+	font-size:10px;
+	font-weight: bold;
 }
 
 td.group {

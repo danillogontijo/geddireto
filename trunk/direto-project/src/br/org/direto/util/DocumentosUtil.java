@@ -31,6 +31,8 @@ public class DocumentosUtil {
 	private final int idDocumento;
 	private static int size = 0;
 	
+	public static List<DocumentoDetalhes> listaProtocolo = new ArrayList<DocumentoDetalhes>();
+	
 	public static final int LIMITE_POR_PAGINA = 15;
 	
 	public static final SortedMap<Integer,DocumentoDetalhes> documentos = new TreeMap<Integer,DocumentoDetalhes>();

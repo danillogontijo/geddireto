@@ -3,17 +3,12 @@ package br.org.ged.direto.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,6 +26,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.springsource.json.writer.JSONArray;
 import com.springsource.json.writer.JSONObject;
 
+import br.org.direto.util.DataTimeUtil;
 import br.org.ged.direto.controller.forms.PesquisaForm;
 import br.org.ged.direto.controller.utils.DocumentoCompleto;
 import br.org.ged.direto.model.entity.Carteira;
@@ -85,7 +81,7 @@ public class PesquisaController extends BaseController {
 		
 		
 		
-		boolean bServerSide = (total > 200 ? true : false);
+		boolean bServerSide = (total > 2 ? true : false);
 		model.addAttribute("bServerSide",bServerSide);
 		model.addAttribute("total",total);
 		
@@ -119,18 +115,7 @@ public class PesquisaController extends BaseController {
 	@SuppressWarnings("unused")
 	@RequestMapping(method=RequestMethod.GET,value="/resultado.html")
 	public void resultadoJSON(@RequestParam("total") int total,HttpServletRequest request,
-			HttpServletResponse response,ModelMap model) {		
-		
-		CharsetDecoder charsetDec = Charset.forName("UTF-8").newDecoder();
-		//response.setContentType("text/html; charset=utf-8");
-		try {
-			request.setCharacterEncoding("ISO-8859-1");
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		System.out.println(request.getCharacterEncoding());
+			HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {		
 		
 		PesquisaForm form = new PesquisaForm();
 		Usuario obj = super.getUsuarioLogado();
@@ -174,28 +159,28 @@ public class PesquisaController extends BaseController {
 		boolean bServerSide = (((String)request.getParameter("bServerSide")).equals("true")?true:false);
 		form.setServerSide(bServerSide);
 		
-		id = request.getParameter("sSearch_0");
+		//id = request.getParameter("sSearch_0");
 		
-		tipo = request.getParameter("sSearch_1");
+		tipo = request.getParameter("sSearch_0");
 		if(tipo != null)
 			form.setTipoDocumento(tipo);
 		
-		protocolo = request.getParameter("sSearch_2");
+		protocolo = request.getParameter("sSearch_1");
 		if(protocolo != null)
 			form.setNrProtocol(protocolo);
 		
-		nrDoc = request.getParameter("sSearch_3");
+		nrDoc = request.getParameter("sSearch_2");
 		if(nrDoc != null)
 			form.setNrDocumento(nrDoc);
 		
-		assunto = request.getParameter("sSearch_4");
+		assunto = request.getParameter("sSearch_3");
 		if(assunto != null)
 			form.setAssunto(assunto);
 		
-		data = request.getParameter("sSearch_5");
-		if(data != null)
-			form.setDataEntSistema(data);
-		
+		data = request.getParameter("sSearch_4");
+		if(data != null)			
+			form.setDataEntSistema(DataTimeUtil.convertKeyUpFormatBrazilToUS(data));
+			
 		if (sStart != null) {
 			start = Integer.parseInt(sStart);
 			if (start < 0)
@@ -232,14 +217,9 @@ public class PesquisaController extends BaseController {
 		form.setColName(colName);
 		
 		String searchTerm = request.getParameter("sSearch");
-		if (searchTerm == null)
-			searchTerm = "";
-		try {
-			form.setSearchTerm(charsetDec.decode(ByteBuffer.wrap(searchTerm.getBytes())).toString());
-		} catch (CharacterCodingException e) {
-			e.printStackTrace();
-		}
-		System.out.println("==="+searchTerm);
+		if (searchTerm != null)
+			form.setSearchTerm(DataTimeUtil.convertKeyUpFormatBrazilToUS(searchTerm));
+
 		
 		int totalAfterFilter = total;
 		
@@ -259,7 +239,7 @@ public class PesquisaController extends BaseController {
 			ja.put(dc.getDocumentoDetalhes().getNrProtocolo());
 			ja.put(dc.getDocumentoDetalhes().getNrDocumento());
 			ja.put(dc.getDocumentoDetalhes().getAssunto());
-			ja.put(dc.getDocumentoDetalhes().getDataEntSistema());
+			ja.put(DataTimeUtil.getBrazilFormatDataHora(dc.getDocumentoDetalhes().getDataEntSistema()));
 			array.put(ja);
 		}
 		
@@ -277,3 +257,5 @@ public class PesquisaController extends BaseController {
 	}
 
 }
+
+

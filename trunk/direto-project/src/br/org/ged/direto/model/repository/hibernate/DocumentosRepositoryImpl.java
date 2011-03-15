@@ -530,15 +530,12 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		}
 		
 		List results = query.list();
-		System.out.println(results.size());
-		System.out.println(query.getQueryString());
 		
 		for(int i=0; i<results.size(); i++){
 			
 			Object[] objects = (Object[]) results.get(i);
 			DocumentoDetalhes doc_det = (DocumentoDetalhes) objects[1];
 			Documento doc_conta = (Documento) objects[0];
-			System.out.println(doc_det.getIdDocumentoDetalhes());
 			DocumentoCompleto doc_completo = new DocumentoCompleto(doc_conta,doc_det);
 			
 			documentos.add(doc_completo);
@@ -574,6 +571,11 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		Integer total = ((Long)getSession().createQuery(sqlCount).uniqueResult()).intValue();
 		
 		return (total == null ? 0 : total.intValue()); 
+	}
+
+	@Override
+	public void saveNewDocumento(DocumentoDetalhes documentoDetalhes) {
+		hibernateTemplate.save(documentoDetalhes);
 	}
 
 }
