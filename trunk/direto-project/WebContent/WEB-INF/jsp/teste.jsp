@@ -1,16 +1,55 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
-<%@ include file="include_taglibs.jsp" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
+<%@ include file="include_head.jsp" %>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/protocoloJS.js"></script>
 
 <script type="text/javascript">
+
+var txt = "";
+
+
+$j(function(){
+
+	//setTimeout("addTxt();",100);
+
+});
+
+var formulario = null;
+
+protocoloJS.getF(ret);
+
+function ret(d){
+	formulario = d;
+	alert(d.nrDocumento);
+	protocoloJS.setF(formulario,setF);
+}
+
+function setF(d){
+	alert(d.nrDocumento+d.assinadoPor);	
+}
+
+
+function addTxt(){
+	//txt = txt + "<br>teste<br>";
+	protocoloJS.getsRetorno(retorno);
+}
+
+
+function retorno(dados){
+	txt = dados;
+	var t = $j("#retorno").text();
+	//$("retorno").innerHTML = txt;
+	$j("#retorno").html(txt);
+
+	if (t.indexOf("Finalizado") == -1){
+		setTimeout("addTxt();",300);
+	}else{
+		alert("finalizado.");
+		return false;
+	}
+}
 
 //alert("<c:out value="${pstgradList}"/>");
 
@@ -27,6 +66,9 @@
 
 -->
 
+<span id="retorno" style="min-height: 200px;"></span>
+
+<p>
 
 <c:forEach var="a" items="${listaProtocolo}">
  	
@@ -34,7 +76,7 @@
       <br>
  </c:forEach>
 
-
+</p>
 	
 
 </body>

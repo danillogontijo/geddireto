@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.direto.util.DataUtils;
+import br.org.direto.util.Protocolo;
+import br.org.ged.direto.controller.forms.DocumentoForm;
 import br.org.ged.direto.controller.forms.PesquisaForm;
 import br.org.ged.direto.controller.utils.DocumentoCompleto;
 import br.org.ged.direto.model.entity.Anexo;
@@ -41,6 +43,9 @@ public class DocumentosServiceImpl implements DocumentosService {
 	
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private Protocolo protocolo;
 	
 	@Override
 	@RemoteMethod
@@ -71,7 +76,7 @@ public class DocumentosServiceImpl implements DocumentosService {
 	}
 
 	@Override
-	public Documento selectById(Integer idDocumentoDetalhes,Integer idCarteira) {
+	public Documento selectById(Integer id,Integer idCarteira) {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario obj = (Usuario)auth.getPrincipal();
@@ -79,7 +84,8 @@ public class DocumentosServiceImpl implements DocumentosService {
 		usuario.setIdCarteira(obj.getIdCarteira());
 		//Documento documento = getDocumento(id); 
 		
-		Documento documento = documentosRepository.selectById(idDocumentoDetalhes);
+		//Documento documento = documentosRepository.selectByIdCarteira(idCarteira);//documentosRepository.selectById(idDocumentoDetalhes);
+		Documento documento = documentosRepository.getByIdPKey(id);
 		
 		int secaoDocumento = documento.getCarteira().getSecao().getIdSecao();
 		int omDocumento = documento.getCarteira().getOm().getIdOM();
@@ -102,7 +108,7 @@ public class DocumentosServiceImpl implements DocumentosService {
 		}
 		
 		if (!documento.isGranted()) 
-			throw new DocumentNotFoundException("Sem permissão de visualização");
+			throw new DocumentNotFoundException("Você não tem permissão para acessar este documento.");
 		
 		return documento;
 	}
@@ -206,6 +212,23 @@ public class DocumentosServiceImpl implements DocumentosService {
 		documentosRepository.saveNewDocumento(documentoDetalhes);
 		System.out.println("DOCUMENTO MODIFICADO: "+documentoDetalhes.toString()+"\n\n");
 		
+	}
+	
+	@RemoteMethod
+	public boolean sendAndSaveFormToNewDocumento(DocumentoForm form){
+		
+		try {
+			protocolo.setFormulario(form);
+			
+			Thread threadSingleton = new Thread(protocolo);
+			threadSingleton.setName("threadTo"+form.toString());
+			threadSingleton.start();
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		 return true;
 	}
 
 	

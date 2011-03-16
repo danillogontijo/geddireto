@@ -43,7 +43,7 @@ public class NewDocumentFormController extends BaseController {
 		
 		Integer protocolo = DocumentosUtil.geraProtocolo(documentoService.getLastId());
 		
-		model.addAttribute(documentoForm);
+		model.addAttribute("documentoForm",documentoForm);
 		model.addAttribute("protocolo",protocolo);
 		
 		return "criarDocumento";

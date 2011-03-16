@@ -94,6 +94,7 @@ function init(page){
 	if(page=="documento"){
 		$j('.tela_apresentacao').hide();
  	}
+ 	 	
 
 	if(page=="pesquisar"){
 		$j('.tela_apresentacao').hide();
@@ -106,6 +107,8 @@ function init(page){
 	if(page=="principal"){
 	    setTimeout("$j('.tela_apresentacao').hide('explode')",1100);
   	}
+
+	$j('.tela_apresentacao').hide();
 }
 
 jQuery(document).ready(function($) {	
@@ -134,8 +137,8 @@ jQuery(document).ready(function($) {
 	//select all the a tag with name equal to modal
 	$('a[name=modal]').click(function(e) {
 
-		var winH = e.pageX;
-		var winW = '1002';
+		//var winH = e.pageX;
+		var winW = 1002;
 	
 		//Cancel the link behavior
 		e.preventDefault();
@@ -175,7 +178,9 @@ jQuery(document).ready(function($) {
 		//Set the popup window to center
 		//$(id).css('top',  winH/2-$(id).height()/2);
 		//alert(winH);
-		$(id).css('top',  winH-$(id).height()-100);
+		//$(id).css('top',  winH-$(id).height()-100);
+		var pos = $(this).offset();
+		$(id).css('top',  pos.top-20);
 		$(id).css('left', winW/2-$(id).width()/2);
 	
 		//transition effect

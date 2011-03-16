@@ -258,7 +258,8 @@ function FileAPI (t, d, f) {
         }
         if (!erro){
         	//setTimeout("document.getElementById('documentoForm').submit()",1000);
-        	alert('enviado');
+        	//alert('enviado');
+        	fEnviar();        	
         }
     }
     

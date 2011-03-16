@@ -19,6 +19,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 @Entity
 @Table(name = "mensagens")
 public class DocumentoDetalhes implements Serializable {
@@ -27,9 +30,11 @@ public class DocumentoDetalhes implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 8737487864886359495L;
-	
-	@Id
-	@GeneratedValue
+
+	@Id 
+	@GeneratedValue(generator="lastId")
+	@GenericGenerator(name="lastId", strategy = "select", 
+			parameters = { @Parameter(name = "key", value = "nrProtocolo") })
 	@Column(name = "Id")
 	private Integer idDocumentoDetalhes;
 	
@@ -244,7 +249,7 @@ public class DocumentoDetalhes implements Serializable {
 	
 	@Override
 	public String toString(){
-		return "Documento: [id: "+this.idDocumentoDetalhes+", assunto: "+this.assunto+"]";
+		return "Documento: [id: "+this.idDocumentoDetalhes+", assunto: "+this.assunto+",nrDoc: "+this.nrDocumento+"]";
 	}
 	
 

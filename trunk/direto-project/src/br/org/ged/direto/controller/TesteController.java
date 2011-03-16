@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.org.direto.util.DocumentosUtil;
 import br.org.direto.util.Protocolo;
+import br.org.ged.direto.controller.forms.DocumentoForm;
 import br.org.ged.direto.model.entity.Anotacao;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.PstGrad;
@@ -58,7 +59,17 @@ public class TesteController extends BaseController {
 	}*/
 	
 	@RequestMapping(method=RequestMethod.GET,value="/teste.html")
-	public String show(){
+	public String show(@ModelAttribute("documentoForm") DocumentoForm f){
+		
+			//DocumentoForm f = new DocumentoForm();
+			//f.setNrDocumento("0000");
+			f.setAssinadoPor("assindoPor Teste");
+			
+			System.out.println(f.getDestinatarios());
+			System.out.println(f.getDataDocumento());
+			System.out.println(f.getNrDocumento());
+			
+			p1.setFormulario(f);
 			
 			Usuario user = super.getUsuarioLogado();
 			

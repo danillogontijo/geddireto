@@ -4,6 +4,12 @@
 
 <%@ include file="include_head.jsp" %>
 
+<script type="text/javascript">
+$j(function(){
+	$j(".div_docs:odd").css("background-color", "#E2E4FF");
+});	
+
+</script>
 		
 		<c:url value="principal.html" var="mostrarURL">
 		  <c:param name="box"   value="${box}" />
