@@ -7,10 +7,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class DocumentoForm {
 	
-	private int[] destinatarios;
+	//private int[] destinatarios;
+	private String destinatarios;
 	private String tipoDocumento;
 	private String nrDocumento;
-	private Date dataDocumento;
+	//private Date dataDocumento;
+	private String dataDocumento;
 	private char prioridade;
 	private String assunto;
 	private String remetente;
@@ -23,18 +25,31 @@ public class DocumentoForm {
 	private char origem;
 	
 	
+	
+	public String getDestinatarios() {
+		return destinatarios;
+	}
+	public void setDestinatarios(String destinatarios) {
+		this.destinatarios = destinatarios;
+	}
+	public String getDataDocumento() {
+		return dataDocumento;
+	}
+	public void setDataDocumento(String dataDocumento) {
+		this.dataDocumento = dataDocumento;
+	}
 	public char getOrigem() {
 		return origem;
 	}
 	public void setOrigem(char origem) {
 		this.origem = origem;
 	}
-	public int[] getDestinatarios() {
+	/*public int[] getDestinatarios() {
 		return destinatarios;
 	}
 	public void setDestinatarios(int[] destinatarios) {
 		this.destinatarios = destinatarios;
-	}
+	}*/
 	public String getTipoDocumento() {
 		return tipoDocumento;
 	}
@@ -47,12 +62,12 @@ public class DocumentoForm {
 	public void setNrDocumento(String nrDocumento) {
 		this.nrDocumento = nrDocumento;
 	}
-	public Date getDataDocumento() {
+	/*public Date getDataDocumento() {
 		return dataDocumento;
 	}
 	public void setDataDocumento(Date dataDocumento) {
 		this.dataDocumento = dataDocumento;
-	}
+	}*/
 	public char getPrioridade() {
 		return prioridade;
 	}

@@ -108,7 +108,7 @@ background-color: black;}
  .img_docs{	margin-left: 10px; position: absolute; margin-top: 4px}
  #doc_tipo {margin-left: 40px}
  
- .prio_n_docs{ background-color: #FFFFFF; padding: 6px 10px 6px 10px; vertical-align: top;
+ .prio_n_docs{ background-color: #FFF; padding: 6px 14px 6px 13px; vertical-align: top;
 	 line-height:30px; margin-left: 68px; margin-right: 10px; font-weight: bold;}
  .prio_u_docs{ background-color: #FFFF00; padding: 6px 14px 6px 13px; vertical-align: top;
 	 line-height:30px; margin-left: 68px; margin-right: 10px;font-weight: bold; }

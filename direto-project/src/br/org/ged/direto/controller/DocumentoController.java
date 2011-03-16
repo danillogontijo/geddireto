@@ -145,30 +145,17 @@ public class DocumentoController extends BaseController {
     }
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String showDocument(@RequestParam("id")Integer id, HttpServletRequest request, ModelMap model){
+	public String showDocument(@RequestParam("pk")Integer id, @RequestParam("carteira")Integer idCarteira, ModelMap model){
 		
 		
-		Integer idCarteira = Utils.getIdCarteiraFromSession(request);
-		System.out.println(idCarteira+"Caretira");
+		//Integer idCarteira = Utils.getIdCarteiraFromSession(request);
+
 		Documento doc_conta = this.documentosService.selectById(id, idCarteira);
-		DocumentoDetalhes documento = DocumentosUtil.returnDocument(id, idCarteira,doc_conta);
-		//this.documentoError.setDocumento(DocumentosUtil.returnDocument(id, idCarteira,doc_conta));
-		//char compare = '0';
-		char cDoc = doc_conta.getStatus();
-		String sDocStatus = ""+doc_conta.getStatus();
+		DocumentoDetalhes documento = doc_conta.getDocumentoDetalhes();
 		
-		int x = cDoc;
+		if (doc_conta.getStatus() == '0')
+			documentosService.setDocumentoStatus(doc_conta.getIdDocumento(), '1');
 		
-		System.out.println(x);
-		System.out.println(doc_conta.getStatus());
-		System.out.println(doc_conta.getIdDocumento());
-		
-		if (doc_conta.getStatus() == x){
-			System.out.println("CHAR IGUAL");
-			//documentosService.setDocumentoStatus(doc_conta.getIdDocumento(), '1');
-		}else{
-			System.out.println("CHAR DIFERENTE");
-		}
 		
 		model.addAttribute("idDocumento",id);
 		model.addAttribute("documento",documento);
@@ -208,38 +195,6 @@ public class DocumentoController extends BaseController {
 		}
 		
 		model.addAttribute("sha1", sha1);
-		
-		System.out.println("-----"+doc_conta.getDocumentoDetalhes().getAnexos().size());
-		//model.addAllAttributes(doc_conta.getDocumentoDetalhes().getAnexos());
-		//documentosService.
-		//model.containsAttribute("anexos");
-		
-		/*DocumentoError o = new DocumentoError();
-		o.setDocumento(this.documento.getDocumento());
-		Errors error = new BindException(o, "documento");
-		
-		if (o.getDocumento() == null){
-			error.reject("documento","Documento nao encontrado.");
-		}*/
-		
-		//errors.addAllErrors(errors);
-		
-		
-		/*try{
-			Integer idCarteira = Utils.getIdCarteiraFromSession(request);
-			Documento doc_conta = this.documentosService.selectById(id, idCarteira);
-			this.documentoError.setDocumento(DocumentosUtil.returnDocument(id, idCarteira,doc_conta));
-			model.addAttribute(documentoError);
-		}catch(Exception e){
-			Errors error = new BindException("documentoError", "documentoError");
-			error.reject("documentoError","documento.exception.notfound");
-			br.addAllErrors(error);
-			
-			//return "error";
-		}*/
-		
-		
-		
 		
 		return "documento";
 	}

@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import br.org.direto.util.DataUtils;
+import br.org.ged.direto.controller.forms.DocumentoForm;
 import br.org.ged.direto.controller.forms.PesquisaForm;
 import br.org.ged.direto.controller.utils.DocumentoCompleto;
 import br.org.ged.direto.model.entity.Anexo;
@@ -53,4 +54,6 @@ public interface DocumentosService {
 	public int returnTotalSearch(PesquisaForm form);
 	
 	public void saveNewDocumento(DocumentoDetalhes documentoDetalhes);
+	
+	public boolean sendAndSaveFormToNewDocumento(DocumentoForm form);
 }

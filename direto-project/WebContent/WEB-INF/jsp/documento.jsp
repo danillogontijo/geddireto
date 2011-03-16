@@ -89,7 +89,7 @@ function confirma_edicao(resposta,nome_anexo){
 <div style="width: 822px; text-align:left; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
 		
 				
-			<a href="#grupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar</a> |
+			<a href="#wgrupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar</a> |
 			<a href="" style="margin-left: 5px;" class="menu2">Responder</a> |
 			<a href="" style="margin-left: 5px;" class="menu2">Despachar</a> |
 			<a href="" style="margin-left: 5px;" class="menu2">Anotar</a> |

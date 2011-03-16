@@ -4,6 +4,8 @@
 <%@ include file="include_taglibs.jsp" %>
 <%@ include file="include_head.jsp" %>
 
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/formulariosJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/protocoloJS.js"></script>
 
 <div style="width: 822px; text-align:left; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
 		
@@ -287,8 +289,14 @@ function setInputFieldStatus(elementId, message)
 
 <script type="text/javascript">
 
-
 $j(function(){
+
+	//$j('span').click(function(e) {
+
+		
+		
+		
+	//});
 
 	$j('.tela_apresentacao').hide();
 	$j( "button", ".file_list_font" ).button();
@@ -387,10 +395,95 @@ $j("#documentoForm").bind("onFail", function(e, errors)  {
 
 
 
-
-
-
 });
+
+
+function fEnviar(){
+
+	var documentoFormJS = null;
+
+	getDocumentoFormJS();
+
+	function getDocumentoFormJS()
+	{
+
+		var winH = '800';//e.pageX;
+		var winW = 1002;
+		//e.preventDefault();
+		var id = '#wnovo_documento';
+
+		var maskHeight = $j(document).height();
+		var maskWidth = $j(window).width();
+	
+		$j('#mask').css({'width':maskWidth,'height':maskHeight});
+		
+		$j('#mask').fadeIn(1000);	
+		$j('#mask').fadeTo("slow",0.8);	
+
+		var pos = $j('#upload').offset();
+		
+		$j(id).css('top',  pos.top-$j(id).height());
+		$j(id).css('left', (167+winW-$j(id).width())/2);
+	
+		$j(id).fadeIn(100); 
+
+		setTimeout(function (){protocoloJS.getsRetorno(retorno);},100);
+	
+
+		function retorno(dados){
+			txt = dados;
+			var t = $j("#console").text();
+			$j("#console").html(txt);
+	
+			if (t.indexOf("Finalizado") == -1){
+				setTimeout(function (){protocoloJS.getsRetorno(retorno);},300);
+			}else{
+				//alert('ok');
+				//js.direto.close_mask();
+				//return false;
+			}
+		}
+
+		
+		formulariosJS.getDocumentoForm({
+			callback:function(dataFromServer) {
+				setDocumentoFormJS(dataFromServer);
+				
+	  		}
+	  	});
+	 	  	
+	}
+
+	function setDocumentoFormJS(documentoForm){
+		this.documentoFormJS = documentoForm;
+		var sDestinatarios = "";
+		for (var i = 0; i < DESTINATARIOS.length ; i++) {
+			var item = DESTINATARIOS[i];
+			sDestinatarios += item.id+",";
+		}
+
+		this.documentoFormJS.destinatarios = sDestinatarios;
+		this.documentoFormJS.tipoDocumento = $j('#tipoDocumento').val();
+
+		sendAndSaveFormToNewDocumentoJS(this.documentoFormJS);
+	}	
+
+	function sendAndSaveFormToNewDocumentoJS(documentoForm){
+
+		documentosJS.sendAndSaveFormToNewDocumento(documentoForm,{
+			callback:function(dataFromServer) {
+				var resposta = (dataFromServer ? 'enviado com sucesso' : 'nao enviado')
+				//alert(resposta);
+	  		}
+	  	});
+
+	}	
+	
+	//alert("Digite aki a funcao de finalizacao");
+
+	//setTimeout("document.getElementById('documentoForm').submit()",1000);
+	
+}
 </script>
 
 <div id="error-message" title="Error" class="ui-state-error ui-corner-all" style="display: none;">
@@ -534,7 +627,7 @@ $j("#documentoForm").bind("onFail", function(e, errors)  {
 
 <div id="formulario">
 
-<form:form modelAttribute="documentoForm" method="post" enctype="multipart/form-data" style="padding-top: 10px;">
+<form:form modelAttribute="documentoForm" method="get" enctype="multipart/form-data" style="padding-top: 10px;" action="teste.html">
 
  <h3>Formulário para novo documento</h3>
  

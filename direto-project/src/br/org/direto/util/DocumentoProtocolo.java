@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.directwebremoting.annotations.RemoteMethod;
+import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.org.ged.direto.controller.forms.DocumentoForm;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.service.DocumentosService;
 
+@RemoteProxy(name = "protocoloJS")
 public class DocumentoProtocolo {
 	
 	//public static DocumentoProtocolo documentoProtocolo;
@@ -17,6 +21,37 @@ public class DocumentoProtocolo {
 	
 	private DocumentosService documentosService;
 	
+	private DocumentoForm formulario;
+	
+	private String sRetorno = "";
+	
+	
+	@RemoteMethod
+	public String getsRetorno() {
+		return this.sRetorno;
+	}
+	
+	/*@RemoteMethod
+	public DocumentoForm getF(){
+		DocumentoForm f = new DocumentoForm();
+		System.out.println("DocumentoFormNovo: "+f.toString());
+		f.setNrDocumento("0000");
+		f.setAssinadoPor("assindoPor Teste");
+		return f;
+	}
+	
+	@RemoteMethod
+	public DocumentoForm setF(DocumentoForm f){
+		System.out.println("DocumentoFormSetado: "+f.toString());
+		f.setNrDocumento("00001");
+		f.setAssinadoPor("mudado");
+		return f;
+	}*/
+
+	public DocumentoForm getFormulario() {
+		return formulario;
+	}
+
 	public void setDocumentosService(DocumentosService documentosService) {
 		this.documentosService = documentosService;
 	}
@@ -33,16 +68,21 @@ public class DocumentoProtocolo {
 		return new DocumentoProtocolo();
 	}
 
-	public synchronized void pegaUltimoIdBD(){
+	public synchronized void pegaUltimoIdBD(DocumentoForm formulario){
 		try{
-			//Thread.sleep(500);  
+			this.formulario = formulario;
+			sRetorno = "";
+			
+			System.out.println("Formulario: "+this.formulario.toString());
+			//Thread.sleep(5000);  
 	        System.out.println("Buscando ultimo id para.... "+Thread.currentThread().getName());
-	        idCount++;
+	        sRetorno += "Iniciando envio...<br>Aguarde..<br>";
+	        //idCount++;
 	        //System.out.println("IDCount = "+idCount);
 	        //this.lastID = idCount;
 	        this.lastID = documentosService.getLastId()+1;
 	        System.out.println("IDCount = "+lastID);
-	       // Thread.sleep(500);
+	        //Thread.sleep(5000);
 	        gravaNaLista();
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -57,11 +97,15 @@ public class DocumentoProtocolo {
 	        DocumentoDetalhes documento = new DocumentoDetalhes();
 	        
 			documento.setIdDocumentoDetalhes(lastID);
+			documento.setNrProtocolo("201103"+lastID);
 			documento.setAssunto(Thread.currentThread().getName());
+			documento.setAssinadoPor(formulario.getAssinadoPor());
+			documento.setNrDocumento(formulario.getNrDocumento());
+			
 			this.documento = documento;
 			
 			DocumentosUtil.listaProtocolo.add(documento);
-			//Thread.sleep(500);
+			Thread.sleep(500);
 			gravaNoBanco();
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -70,31 +114,28 @@ public class DocumentoProtocolo {
 		
 	public synchronized void gravaNoBanco(){
 		try{
-			//Thread.sleep(500);  
+			Thread.sleep(5000);  
+			
+			sRetorno += ("Gravando documento no Banco de Dados....<br>");
+			
 	        System.out.println("\nGravando documento no Banco de Dados.... "+Thread.currentThread().getName());
 			int index = DocumentosUtil.listaProtocolo.indexOf(documento);
-			documentosService.saveNewDocumento(DocumentosUtil.listaProtocolo.get(index));
+			
+			
+			//documentosService.saveNewDocumento(DocumentosUtil.listaProtocolo.get(index));
+			
+			
 			/*System.out.println("POSICAO: "+index);
 			System.out.println("ID Gravado: " +DocumentosUtil.listaProtocolo.get(index).getIdDocumentoDetalhes());
 			System.out.println("Thread Gravada: " +DocumentosUtil.listaProtocolo.get(index).getTipoDocumento());*/
 			//mostraLista();
+			Thread.sleep(5000);
+			sRetorno += ("Finalizado");
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public synchronized void mostraLista(){
-		
-		Iterator<DocumentoDetalhes> ite = DocumentosUtil.listaProtocolo.iterator();
-		
-		int c = 0;
-		while (ite.hasNext()){
-			
-			System.out.println("INDEX: "+c+" - "+ite.next().getIdDocumentoDetalhes());
-			c++;
-		}
-	}
-		
 	
-
 }

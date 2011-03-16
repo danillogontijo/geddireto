@@ -261,6 +261,8 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 				assunto = assunto.substring(0, 49)+"...";
 			}
 			
+			String url = "documento.html?id="+doc.getIdDocumentoDetalhes()+"&pk="+doc_cart.getIdDocumento()+"&carteira="+idCarteira;
+			
 			String notificar = "";
 			if (doc_cart.getNotificar() == 1){
 				Date ultimaVerificacaoNotificacao = doc_cart.getDataHoraNotificacao();
@@ -285,8 +287,8 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
 			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
 			texto = texto + (pri.equals(" N") ? "<span class='prio_n_docs'>"+pri+"</span>" : (pri.equals(" U") ? "<span class='prio_u_docs'>"+pri+"</span>" : "<span class='prio_uu_docs'>"+pri+"</span>"));
-			texto = texto + (notificar+"<a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getUsuarioElaborador().getUsuLogin()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente().replace('-',' ')+"</a>");
-			texto = texto + (" - <a href='documento.html?id="+doc.getIdDocumentoDetalhes()+"' title='"+doc.getAssunto()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
+			texto = texto + (notificar+"<a href='"+url+"' title='"+doc.getUsuarioElaborador().getUsuLogin()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente().replace('-',' ')+"</a>");
+			texto = texto + (" - <a href='"+url+"' title='"+doc.getNrProtocolo()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
 			texto = texto + ("<font class='data_docs'>"+DataTimeUtil.getBrazilFormatDataHora(doc_cart.getDataHora())+"</font>");
 			texto = texto + "</div>"; 
 			
@@ -367,15 +369,6 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 
 	@Override
 	public Documento selectByIdCarteira(final Integer idCarteira) {
-		
-		/*Integer idDocumento = new Integer(2);
-		
-		Documento d = new Documento(idDocumento, null, '1', null);
-		
-		System.out.println(d.getStatus());
-		
-		return d;*/
-		
 		return (Documento) hibernateTemplate.execute(new HibernateCallback<Documento>() {
 			@Override
 			public Documento doInHibernate(org.hibernate.Session session)
@@ -388,11 +381,23 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 	}
 
 	@Override
-	public Documento selectById(Integer id, Integer idCarteira) {
-		
+	public Documento selectById(Integer idDocumentoDetalhes, Integer idCarteira) {
 		Documento returnDoc = (Documento) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("FROM Documento as doc " +
 				"WHERE doc.carteira.idCarteira = ? AND doc.documentoDetalhes.idDocumentoDetalhes = ? GROUP BY doc.carteira.idCarteira" +
-		"").setInteger(0, idCarteira).setInteger(1, id).uniqueResult(); 
+		"").setInteger(0, idCarteira).setInteger(1, idDocumentoDetalhes).uniqueResult(); 
+		
+		if (returnDoc == null) {
+			throw new DocumentNotFoundException(messages.getMessage("documento.exception.notfound"));
+		}
+		
+		return returnDoc;
+	}
+	
+	@Override
+	public Documento selectById(Integer idDocumentoDetalhes) {
+		Documento returnDoc = (Documento) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("FROM Documento as doc " +
+				"WHERE doc.documentoDetalhes.idDocumentoDetalhes = ? GROUP BY doc.documentoDetalhes.idDocumentoDetalhes" +
+		"").setInteger(0, idDocumentoDetalhes).uniqueResult(); 
 		
 		if (returnDoc == null) {
 			throw new DocumentNotFoundException(messages.getMessage("documento.exception.notfound"));
@@ -401,7 +406,6 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		return returnDoc;
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Documento> getAllById(Integer id) {
@@ -544,19 +548,6 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			
 		
 		return documentos;
-	}
-
-	@Override
-	public Documento selectById(Integer idDocumentoDetalhes) {
-		Documento returnDoc = (Documento) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("FROM Documento as doc " +
-				"WHERE doc.documentoDetalhes.idDocumentoDetalhes = ? GROUP BY doc.documentoDetalhes.idDocumentoDetalhes" +
-		"").setInteger(0, idDocumentoDetalhes).uniqueResult(); 
-		
-		if (returnDoc == null) {
-			throw new DocumentNotFoundException(messages.getMessage("documento.exception.notfound"));
-		}
-		
-		return returnDoc;
 	}
 
 	@Override
