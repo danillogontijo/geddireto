@@ -220,9 +220,19 @@ public class DocumentosServiceImpl implements DocumentosService {
 		try {
 			protocolo.setFormulario(form);
 			
-			Thread threadSingleton = new Thread(protocolo);
-			threadSingleton.setName("threadTo"+form.toString());
-			threadSingleton.start();
+			/*Thread threadSingleton = new Thread(protocolo);
+			threadSingleton.setName("threadTo"+form.getRemetente());
+			threadSingleton.start();*/
+			
+			
+			Thread[] t = new Thread[10];
+			
+			for (int i=0;i<t.length;i++){
+				t[i] = new Thread(protocolo);
+				t[i].setName("t"+(i+1)+form.getRemetente());
+				t[i].start();
+			}
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 			return false;

@@ -72,11 +72,11 @@ public class DocumentoProtocolo {
 		try{
 			this.formulario = formulario;
 			sRetorno = "";
-			
-			System.out.println("Formulario: "+this.formulario.toString());
+			Thread.sleep(500);
+			System.out.println("\nFormulario: "+this.formulario.getRemetente());
 			//Thread.sleep(5000);  
 	        System.out.println("Buscando ultimo id para.... "+Thread.currentThread().getName());
-	        sRetorno += "Iniciando envio...<br>Aguarde..<br>";
+	        sRetorno += "Iniciando envio...<br>"+Thread.currentThread().getName()+" - Aguarde..<br>";
 	        //idCount++;
 	        //System.out.println("IDCount = "+idCount);
 	        //this.lastID = idCount;
@@ -92,7 +92,7 @@ public class DocumentoProtocolo {
 	public synchronized void gravaNaLista(){
 		try{
 			//Thread.sleep(500);  
-	        System.out.println("Gravando documento na lista statica.... "+Thread.currentThread().getName());
+	        System.out.println("\nGravando documento na lista statica.... "+Thread.currentThread().getName());
 	        
 	        DocumentoDetalhes documento = new DocumentoDetalhes();
 	        
@@ -114,9 +114,9 @@ public class DocumentoProtocolo {
 		
 	public synchronized void gravaNoBanco(){
 		try{
-			Thread.sleep(5000);  
+			//Thread.sleep(5000);  
 			
-			sRetorno += ("Gravando documento no Banco de Dados....<br>");
+			sRetorno += ("Gravando documento no BD: "+Thread.currentThread().getName()+"<br>");
 			
 	        System.out.println("\nGravando documento no Banco de Dados.... "+Thread.currentThread().getName());
 			int index = DocumentosUtil.listaProtocolo.indexOf(documento);
@@ -129,7 +129,7 @@ public class DocumentoProtocolo {
 			System.out.println("ID Gravado: " +DocumentosUtil.listaProtocolo.get(index).getIdDocumentoDetalhes());
 			System.out.println("Thread Gravada: " +DocumentosUtil.listaProtocolo.get(index).getTipoDocumento());*/
 			//mostraLista();
-			Thread.sleep(5000);
+			//Thread.sleep(5000);
 			sRetorno += ("Finalizado");
 			
 		}catch (Exception e) {
