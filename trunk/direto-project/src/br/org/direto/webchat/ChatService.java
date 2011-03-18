@@ -20,6 +20,8 @@ public interface ChatService {
 	public void setHttpServletResponse(HttpServletResponse response);*/
 	
 	public UserChat checkNewMessageFromUser(UserChat user);
-	public void sendNewMessage(UserChat user, Message msg);
+	public void sendNewMessage(Message msg);
+	public Message getMessage(UserChat from);
+	public UserChat getUserChat(String name);
 
 }

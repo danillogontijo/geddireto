@@ -2,14 +2,26 @@ package br.org.direto.webchat;
 
 import java.util.List;
 
-public interface UserChat {
+public class UserChat {
+
+	private String nameUser;
+	private List<Message> messages;
 	
-	public String getUser();
+	public String getNameUser() {
+		return nameUser;
+	}
+	public void setNameUser(String nameUser) {
+		this.nameUser = nameUser;
+	}
+	public List<Message> getMessages() {
+		return messages;
+	}
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
+	}
 	
-	public Message getNewMessage();
 	
-	public void addMessage(Message msg);
 	
-	public void addMessages(List<Message> listMsg);
+	
 
 }

@@ -70,7 +70,7 @@
 				 /*line-height: 700px;*/
 				 top: 133px;
 				 left: 180px;
-				 display: block;
+				 display: none;
 			}
 		
 		</style>
@@ -199,7 +199,7 @@ jQuery(document).ready(function($) {
 	$('.window .send').click(function (e) {
 		e.preventDefault();
 		js.direto.enviarPara();
-		js.direto.atualiza(PAGE);
+		js.direto.atualiza(PAGE); //grava destinarios no array
 		js.direto.close_mask();
 	});		
 	

@@ -19,6 +19,8 @@
 	<dwr:configuration>
 		<dwr:convert type="bean" class="br.org.direto.util.DataUtils" />
 		<dwr:convert type="bean" class="br.org.ged.direto.controller.forms.DocumentoForm" />
+		<dwr:convert type="bean" class="br.org.direto.webchat.UserChat" />
+		<dwr:convert type="bean" class="br.org.direto.webchat.Message" />
 	</dwr:configuration>
 	
 	
