@@ -3,81 +3,117 @@
     
 <%@ include file="include_head.jsp" %>
 
-<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/protocoloJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/chatJS.js"></script>
 
 <script type="text/javascript">
 
-var txt = "";
-
+var isSendNewMessage = false;
+var userChat = null;
+var userChatTo = null;
+var message = null;
+var PARA = "DANILLO";
 
 $j(function(){
-
-	//setTimeout("addTxt();",100);
-
+	start();
 });
 
-var formulario = null;
+function start(){
 
-protocoloJS.getF(ret);
+	chatJS.getUserChat("${usuario.usuNGuerra}",{
+		callback:function(userChat) {
+			this.userChat = userChat;
+			$j('#console_chat').html("Entrou: "+userChat.nameUser);
 
-function ret(d){
-	formulario = d;
-	alert(d.nrDocumento);
-	protocoloJS.setF(formulario,setF);
+			chatJS.getMessage(userChat,{
+				callback:function(message) {
+					this.message = message;
+				}
+			});
+								
+		}
+	});
+
 }
 
-function setF(d){
-	alert(d.nrDocumento+d.assinadoPor);	
+
+setTimeout("checkNewMessage();",3000);
+
+function checkNewMessage(){
+	
+	chatJS.checkNewMessageFromUser(this.userChat,{
+		callback:function(userChatWithNewMessage) {
+			this.userChat = userChatWithNewMessage;
+
+			if (this.userChat.messages != null){
+				var list = this.userChat.messages;
+				
+				for (var prop in list){
+					var propvalue = list[prop];
+					var msgRec = propvalue.HTMLCode;
+					var from = propvalue.from.nameUser;
+					var to = propvalue.to.nameUser;
+
+					var msgTxt = "<p>"+from+" diz:<br>"+msgRec+"</p>";
+					
+					$j('#console_chat').append(msgTxt);			
+				}
+
+				this.userChat.messages = null;
+
+			}
+
+			if (!this.isSendNewMessage)
+				setTimeout("checkNewMessage();",10000);
+		}
+	});	
+		
 }
 
+function sendNewMessage(){
+	this.isSendNewMessage = true;
+	var msgTxt = $j('#new').val();
+	chatJS.getUserChat(this.PARA,{
+		callback:function(userChat) {
+			this.userChatTo = userChat;
+			this.message.to = this.userChatTo;
+			this.message.HTMLCode = msgTxt;
+			//$j('#console_chat').text("enviando... "+msg.HTMLCode);
+			chatJS.sendNewMessage(this.message);
+			//alert(this.message.to.nameUser+this.message.HTMLCode);
+			this.isSendNewMessage = false;
 
-function addTxt(){
-	//txt = txt + "<br>teste<br>";
-	protocoloJS.getsRetorno(retorno);
+			var showTxt = "<p><b>Eu:<b> <br>"+msgTxt+"</p>";
+			
+			$j('#console_chat').append(showTxt);
+			
+			setTimeout("checkNewMessage();",300);
+		}
+	});
+	
 }
 
+function teclaEnter(e){
+	
+	var evento = (window.event ? e.keyCode : e.which);
 
-function retorno(dados){
-	txt = dados;
-	var t = $j("#retorno").text();
-	//$("retorno").innerHTML = txt;
-	$j("#retorno").html(txt);
-
-	if (t.indexOf("Finalizado") == -1){
-		setTimeout("addTxt();",300);
-	}else{
-		alert("finalizado.");
-		return false;
-	}
+	if(evento == 13) 
+		sendNewMessage();
 }
 
-//alert("<c:out value="${pstgradList}"/>");
+function mudaTo(obj){
+	this.PARA = obj.value;
+	alert(this.PARA);
+}
 
 </script>
 
-<!--
+<div id="console_chat" style="max-height: 200px; min-height: 200px; max-width: 150px; border: 1px solid #000; overflow: auto; position: relative; left: 330px; font-size: 80%;">
 
- <c:forEach var="p" items="${pstgradList}">
- 	<c:set var="pList" value="${p.pstgradDesc}" />
-      <c:out value="${pList}"/>
-		<c:if test="${p.idPstGrad==usuario.pstGrad.idPstGrad}">selected</c:if>
-      <br>
- </c:forEach>
-
--->
-
-<span id="retorno" style="min-height: 200px;"></span>
-
-<p>
-
-<c:forEach var="a" items="${listaProtocolo}">
- 	
-    ${a.idDocumentoDetalhes} - ${a.assunto}  
-      <br>
- </c:forEach>
-
-</p>
+</div>
 	
+<input type="text" id="new" onkeypress="teclaEnter(event)"></input>
+
+<input type="text" id="para" onblur="mudaTo(this)"></input>
 
 </body>
 </html>
