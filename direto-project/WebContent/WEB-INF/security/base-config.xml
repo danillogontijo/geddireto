@@ -74,9 +74,11 @@
 	</bean> 
 	
 	<!--  -->
+	<bean id="chatUtils" class="br.org.direto.webchat.ChatUtils" />
 	<bean id="userChat" class="br.org.direto.webchat.UserChat" />
 	<bean id="messageChat" class="br.org.direto.webchat.Message" />
 	<bean id="chatService" class="br.org.direto.webchat.ChatServiceImpl" scope="session">
+		<property name="chatUtils" ref="chatUtils"></property>
 		<aop:scoped-proxy />
 	</bean>
 	

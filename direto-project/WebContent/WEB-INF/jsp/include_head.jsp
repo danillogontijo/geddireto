@@ -16,6 +16,9 @@
 <link href="css/custom-theme-jquery/jquery.alerts.css" rel="stylesheet" type="text/css" media="screen" />
 
 <!-- Fim Folha de Estilos -->
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/engine.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/util.js"></script>
     
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/gruposJS.js"></script>    
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioJS.js"></script>
@@ -23,11 +26,8 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentoValidatorJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentosJS.js"></script>
 
-
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/chatJS.js"></script>
-
-<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/engine.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/util.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/chatDireto.js" charset="utf-8""></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8""></script>
 
@@ -131,6 +131,8 @@ jQuery(document).ready(function($) {
 		//offset: [30, 0]
 	});*/
 
+	ChatDiretoAPI = new ChatDiretoAPI('${usuario.usuNGuerra}',${usuario.idUsuario});
+	ChatDiretoAPI.start(null);
 	
 
 	$( "#data" ).datepicker();
@@ -639,63 +641,41 @@ function montaUsersByGrupos(listBeans){
 		   <br>${numUsers} usuário(s) no sistema!
 		
 		<script type="text/javascript">
+		   
+			
+			
+				$j(function(){
+					//start(null);
+					
+				  $j('#stayOn').click(function(e) {
+						e.preventDefault();
+						ChatDiretoAPI.start(e);
+					});
 
-var PARA = 0;
-var USER = "${usuario.usuNGuerra} da silva";
-var ID_USER = ${usuario.idUsuario};
-var USER_IS_TYPING = false;
-var USER_IS_ACTIVE = false;
-var TIMER;
-var SIZE_MESSAGES = 0;
-var TIME_TO_INACTIVE = 0.5; //em minutos
-
-$j(function(){
-	start(null);
-
-	$j('#stayOn').click(function(e) {
-		e.preventDefault();
-		start(e);
-	});
-
-	hideOffline();
-
-	
-});
-
-
-dwr.engine.setErrorHandler(errh);
-
-function errh(msg, exc) {
-	 // alert("Error message is: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));
-	/*
-	 * Redirect to login page when a DWR request is send after a session timeout
-	 */
-	try {
-	    if (dwr && dwr.engine) {
-	        dwr.engine.setTextHtmlHandler(function() {
-					alert('session expirou');
-		           // document.location = 'here goes the url to your login page';
-	        });
-	    }   
-	 } catch(err) {} //ignore 
-		 
-}
+				  $j('#welcome').click(function(e){ChatDiretoAPI.searchUser();});
+				
+					//hideOffline();
+				
+					$j('#console_chat').click(function(){ChatDiretoAPI.showMinimized();});	
+					//$j('#div_status').click(function(){ChatDiretoAPI.showMaximized();});
+								
+				});
 
 
 </script>
 
-	<script type="text/javascript" src="<%=request.getContextPath() %>/js/chatDireto.js" charset="utf-8""></script>
 		<div id="chat" class="border_radius">
-			<div id="console_chat" class="border_radius"><div></div>
+			<div id="welcome"></div>
+			<div id="console_chat" class="border_radius">
 			
 			</div>
 			<div id="div_new">
-				<input type="text" id="new" onkeypress="teclaEnter(event)" onfocus="checkToUser()"></input>
+				<input type="text" id="new" onkeypress="ChatDiretoAPI.teclaEnter(event)" onfocus="ChatDiretoAPI.checkToUser()"></input>
 			</div>
 			<div id="div_usuarios">
-				<select id="usuariosON" name="usuariosON" onchange="mudaTo(this)"></select>
+				<select id="usuariosON" name="usuariosON" onchange="ChatDiretoAPI.mudaTo(this)"></select>
 			</div>
-			<div id="div_status"><span id="status"><a href="#" id="stayOn">Fique on-line</a></span></div>
+			<div id="div_status"><span id="status"><a href="#" id="stayOn">Entrar no chat</a></span></div>
 		</div>	
 				   
 	</div>

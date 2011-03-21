@@ -206,8 +206,8 @@ input.field_inputs_active:active { background-color:red; }
 }
 
 #console_chat {
-	min-height: 100px; 
-	max-height: 100px;
+	min-height: 200px; 
+	max-height: 200px;
 	max-width: 146px;
 	overflow: auto;  
 	top: 2px;
@@ -221,7 +221,7 @@ input.field_inputs_active:active { background-color:red; }
 .user2 {background-color: yellow;}
 
 
-#div_status span {font-style: italic;}
+#div_status span {font-style: normal;}
 
 .offline,.alert {color: red;}
 .inactive {color: yellow;}

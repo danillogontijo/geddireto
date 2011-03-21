@@ -1,289 +1,452 @@
-function stop(e){
-	if(e != null)
-		e.preventDefault();
-	changeStatus(0);
-	showInactive();
-}
+function ChatDiretoAPI (userName, userID) {
 
-
-function start(e){
-	if(e != null)
-		e.preventDefault();
 	
-	chatJS.start(this.ID_USER,this.USER,{
-		callback:function(initialStatus) {
-			if(initialStatus != -1){
-				showOnline();
-				usuariosON();
+	var PARA = 0,
+		USER = userName,
+		ID_USER = userID;
+	
+	var USER_IS_TYPING = false,
+		USER_IS_ACTIVE = false,
+		TIMER = null,
+		SIZE_MESSAGES = 0,
+		TIME_TO_INACTIVE = 1; //em minutos
+	
+	
+	
+	this.stop =function(e){
+		if(e != null)
+			e.preventDefault();
+		changeStatus(0);
+		showInactive();
+	};
+	
+	this.search = function(){
+		
+		chatJS.getAllUsersOn({
+			callback:function(allUsers) {
+				var search = $j('#search').val();
+				search = search.replace(/^\s+/,'').replace(/\s+$/,''); // trim 
+				var s = '';
+				var c = 0;
+				var newList = new Array();
+				for (var i in allUsers){
+					
+					var user = allUsers[i];
+					var nameUser = (user.nameUser).toLowerCase();
 				
-				if(initialStatus != 0 || e != null){
-					$j('#div_status').html('Aguarde...');
+					//alert(nameUser.indexOf(search));
 					
-					if(initialStatus == 1)					
-						startTimer();
-				
-					setTimeout("messagesSession();",2800);
-					setTimeout("checkNewMessage();",2900);
+					if (nameUser.indexOf(search) != -1){
+						//alert('removeu: '+(allUsers.splice(0, 1)).nameUser);
+						//newList.push(allUsers.splice(i, 1));
+						//allUsers.pop();
+						newList.push(user);
+					}
+				}		
+			
+				//alert(newList[0].nameUser);
+				dwr.util.removeAllOptions('usuariosON');
+				for (var i in newList){
+					//alert(allUsers.length);
+					var user = newList[i];
+					var userId = user.idUser;
+					var userStatus = user.statusUser;
 					
-					
-						setTimeout("changeStatus(1);",3000);
-					
-					setTimeout("checkUsers();",3100);
-					$j('#console_chat').find('div').text('Entrou: '+USER);
-					$j('#console_chat').find('div').addClass('welcome border_radius');
-				
-				}else{
-					showInactive();
-					setTimeout("messagesSession();",2800);
+					if (ID_USER != userId){
+						var selectedUser = '';
+						var disabledUser = '';
+						var status = ' - ON';
+			
+						if (PARA == userId)
+							selectedUser = 'selected';
+						if (userStatus == 0){
+							//disabledUser = 'disabled ';
+							status = ' - OFF';
+						}else if (userStatus == 2){
+							status = ' - INATIVO';
+						}
+						
+						var oOption = '<option value="'+userId+'" class="user'+user.statusUser
+							+'" '+disabledUser+selectedUser+'>'
+							+user.nameUser+status+'</option>';
+						
+						$j('#usuariosON').append(oOption);
+						
+					}	
 				}
-			}	
-		}
-	});
 		
-	
-}
-
-function hideOffline(){
-	$j('#console_chat').hide('blind',1000);
-	$j('#div_usuarios').hide();
-	$j('#div_new').hide();
-}
-
-function showOnline(){
-	$j('#console_chat').show('blind',500);
-	$j('#console_chat').css('background-color', '#fff');
-	$j('#div_usuarios').fadeIn('slow');
-	$j('#div_new').fadeIn('slow');
-	$j('#new').removeAttr('disabled');
-}
-
-function showInactive(){
-	$j('#console_chat').css('background-color', '#E8E8E8');
-	$j('#new').attr('disabled','disabled');
-}
-
-
-function usuariosON(){
-	chatJS.getAllUsersOn({
-		callback:function(allUsers) {
-			montaListaUsuarios(allUsers);	
-		}
-	});
-}
-
-
-function montaListaUsuarios(allUsers){
-	
-	dwr.util.removeAllOptions('usuariosON');
-	$j('#usuariosON').append('<option>Selecione um usuário</option>');
-	
-	for (var i in allUsers){
-		var user = allUsers[i];
-		var userId = user.idUser;
-		var userStatus = user.statusUser;
-		
-		if (this.ID_USER != userId){
-			var selectedUser = '';
-			var disabledUser = '';
-			var status = ' - ON';
-
-			if (this.PARA == userId)
-				selectedUser = 'selected';
-			if (userStatus == 0){
-				//disabledUser = 'disabled ';
-				status = ' - OFF';
-			}else if (userStatus == 2){
-				status = ' - INATIVO';
 			}
-			
-			var oOption = '<option value="'+userId+'" class="user'+user.statusUser
-				+'" '+disabledUser+selectedUser+'>'
-				+user.nameUser+status+'</option>';
-			
-			$j('#usuariosON').append(oOption)
-			
-		}	
-	}
-}
-
-function checkUsers(){
-	chatJS.checkUsers({
-		callback:function(allUsers) {
-			//dwr.util.removeAllOptions('usuariosON');
-			//dwr.util.addOptions('usuariosON', allUsers, 'idUser', 'nameUser');
-			if (allUsers != null){
-				montaListaUsuarios(allUsers);
-				setTimeout("checkUsers();",3000);
-			}else{
-				sessionExpired();	
-			}	
-		}
-	});
-}
-
-function sessionExpired(){
-	$j('#new').attr('readonly','readonly');
-	$j('#div_status').find('span').html('Sua sessão expirou! <a href="reload()">Entre novamente</a>');
-}
-
-function messagesSession(){
-	chatJS.messagesSession({
-		callback:function(listMsgCallback) {
-			if(listMsgCallback != null)
-				iteratorMessages(listMsgCallback,true);
-		}
-	});	
-}
-
-function iteratorMessages(listMsgCallback,isSession){
-	var pClass = 'messageChat';
-	var isOffline = false;
+		});
+		
+	};	
 	
-	if (isSession) {
-		pClass += ' session';
-	}else if (listMsgCallback.length > 1){
-			isOffline = true;
-			pClass += ' offline';
-	}
+	this.searchUser = function(){
+		$j('#new').hide();
+		$j('#div_new').append('<input type="text" id="search" value="Pesquisar" onkeypress="ChatDiretoAPI.search()" />');
+		
+		
+	};
 	
-	for (var i in listMsgCallback){
-		var newMsgCallback = listMsgCallback[i];
+	var welcomeMessage = function(status){
+		//Mensagem que o usuario entrou
+		/*$j('#console_chat').html('');
+		$j('#console_chat').prepend('<div>Entrou: '+USER+'</div>');
+		$j('#console_chat').find('div').addClass('welcome border_radius');*/
 		
-		SIZE_MESSAGES++;
+		var msgWelcome = 'Você entrou: '+USER;
 		
-		var msgRec = newMsgCallback.HTMLCode;
-		var from = newMsgCallback.from.nameUser;
-		//var to = newMsgCallback.to.nameUser;
-		var fromIdUser = newMsgCallback.from.idUser;
-		from += ' diz:';
-		if (fromIdUser == ID_USER)
-			from = "Eu:";
-			
-		if (isOffline){
-			from += ' (Offline)';
+		if(status == 0)
+			msgWelcome = 'Você saiu!';
+		
+		$j('#welcome').html(msgWelcome);
+		$j('#welcome').addClass('welcome border_radius');
+		
+		if(status == 0){
+			$j('#welcome').css('background-color', '#FF8C69');
+		}else if (status == 1){
+			$j('#welcome').css('background-color', '#90EE90');
+		}else{
+			$j('#welcome').css('background-color', 'yellow');
+		}
+
+	};
+
+	var initial = function (status){
+		showOnline();
+		usuariosON();
+		$j('#div_status').html('Aguarde...');
+		setTimeout(function(){messagesSession();},2800); //Mensagens da sessao 
+		messageStatus(status); //Mostra em qual estado o user se encontra no status
+		setTimeout(function(){checkUsers();},3100); //Ativar o checador de users
+		
+		welcomeMessage(status);
+		
+		if(status == 0){
+			showInactive();
+			setTimeout(function(){messagesSession();},2800);
+		}else if (status == 1){
+			setTimeout(function(){checkNewMessage();},2900); //Ativa checador de msgs somente se o user != 0
+			startTimer(); // So inicia o timer se user == 1
+		}else{
+			setTimeout(function(){checkNewMessage();},2900); //Ativa checador de msgs somente se o user != 0
+		}
+	};
+	
+	this.changeStatusInChat = function(e,status){
+		e.preventDefault();
+		changeStatus(status);
+		if (status == 1){
+			showOnline();
+			setTimeout(function(){checkNewMessage();},2900); //Ativa checador de msgs somente se o user != 0
+		}	 
+		
+	};
+	
+	var changeStatus = function (status){
+		chatJS.changeUserStatus(status);
+		messageStatus(status);
+		welcomeMessage(status);
+		//setTimeout(function(){messagesSession();},100); //Mensagens da sessao
+	};
+	
+	var messageStatus = function (status){
+		
+		if (status == 0){
+			$j('#div_status').html('<span>OFF-LINE</></span> (<a href="#" id="stayOn" onclick="ChatDiretoAPI.changeStatusInChat(event,1)">Online</a>)');
+			$j('#div_status').find('span').addClass('offline');
+			$j('#console_chat').find('div').text('Você saiu!');
+			$j('#console_chat').find('div').css('background-color', '#FF8C69');
+			clearTimer(false,false);
+			return;
 		}
 		
-		var msgHTML = '<p id="'+this.SIZE_MESSAGES+'" class="'+pClass+'">'
-				+from+'<br>'+msgRec+'</p>';
+		(status == 2 ? clearTimer(false,false) : startTimer(false,true));
 		
-		showMessage(msgHTML);
-	}
-}
+		var logoff = ' (<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)';
+		var status = 'Você está <span>'+(USER_IS_ACTIVE ? 'ON' : 'INATIVO')
+						+'</span>'+logoff;
+		$j('#div_status').html(status);
+		$j('#div_status').find('span').addClass((USER_IS_ACTIVE ? 'online' : 'inactive'));
+		
+		
+	};
 
-function checkNewMessage(){
-	
-	chatJS.checkNewMessage(this.ID_USER,{
-		callback:function(listMsgCallback) {
-			if(listMsgCallback != null){
-				iteratorMessages(listMsgCallback,false);			
-				setTimeout("checkNewMessage();",300);
+	this.start = function start(e){
+		var isRequest = (e == null ? true : false);
+		if(!isRequest)
+			e.preventDefault();
+		
+		chatJS.start(ID_USER,USER,{
+			callback:function(initialStatus) {
+			
+				if(initialStatus == -1){
+					hideOffline(); //mostra minimizado se usuario nao existia na lista
+				} else {
+					initial(initialStatus);			
+				}
 				
-			}else{
-				alert("\t\tVocê ficou offline!\nAs mensagens que os usuários lhe enviarem\nserão mostradas da próxima vez que entrar.");
+			}
+		});
+			
+		
+	};
+	
+	this.showMinimized = function(){
+		hideOffline();
+	};
+	
+	this.showMaximized = function(){
+		showOnline();
+	};
+
+	var hideOffline = function(){
+		$j('#console_chat').hide('blind',1000);
+		$j('#div_usuarios').hide();
+		$j('#div_new').hide();
+	};
+	
+	var showOnline = function (){
+		$j('#console_chat').show('blind',500);
+		$j('#console_chat').css('background-color', '#fff');
+		$j('#div_usuarios').fadeIn('slow');
+		$j('#div_new').fadeIn('slow');
+		$j('#new').removeAttr('disabled');
+	};
+	
+	var showInactive = function (){
+		$j('#console_chat').css('background-color', '#E8E8E8');
+		$j('#new').attr('disabled','disabled');
+	};
+	
+	
+	var usuariosON = function (){
+		chatJS.getAllUsersOn({
+			callback:function(allUsers) {
+				montaListaUsuarios(allUsers);	
+			}
+		});
+	};
+	
+	
+	var montaListaUsuarios = function(allUsers){
+		
+		dwr.util.removeAllOptions('usuariosON');
+		$j('#usuariosON').append('<option>Selecione um usuário</option>');
+		
+		for (var i in allUsers){
+			//alert(allUsers.length);
+			var user = allUsers[i];
+			var userId = user.idUser;
+			var userStatus = user.statusUser;
+			
+			if (ID_USER != userId){
+				var selectedUser = '';
+				var disabledUser = '';
+				var status = ' - ON';
+	
+				if (PARA == userId)
+					selectedUser = 'selected';
+				if (userStatus == 0){
+					//disabledUser = 'disabled ';
+					status = ' - OFF';
+				}else if (userStatus == 2){
+					status = ' - INATIVO';
+				}
+				
+				var oOption = '<option value="'+userId+'" class="user'+user.statusUser
+					+'" '+disabledUser+selectedUser+'>'
+					+user.nameUser+status+'</option>';
+				
+				$j('#usuariosON').append(oOption);
+				
 			}	
 		}
-	});	
-		
-}
-
-function sendNewMessage(){
-	if (this.PARA == 0){
-		alert("Nenhum destinatario selecionado!");
-		return;
-	}	
-	var msgTxt = $j('#new').val();
-	chatJS.send(this.PARA,this.ID_USER,msgTxt);
-			SIZE_MESSAGES++;
-			
-			var msgHTML = '<p id="'+SIZE_MESSAGES+'" style="display:none;"><b>Eu:<b><br>'
-				+msgTxt+'</p>';
-			
-			showMessage(msgHTML);
-}
-
-function showMessage(msgHTML){
-	var divConsole = $j('#console_chat');
-	divConsole.append(msgHTML);
+	};
 	
-	var pMsg = $j('#console_chat p[id='+SIZE_MESSAGES+']');
-	pMsg.fadeIn('slow');
-	
-	divConsole.scrollTop(divConsole.scrollTop()+pMsg.offset().top);
-}
-
-function doTimer(){
-	this.TIMER = setTimeout("changeStatus(2)",(TIME_TO_INACTIVE*60*1000));
-}
-
-function clearTimer(isTyping,isUserActive){
-	this.USER_IS_TYPING = isTyping;
-	this.USER_IS_ACTIVE = isUserActive;
-	clearTimeout(TIMER);
-}
-
-function startTimer(){
-	this.USER_IS_TYPING = false;
-	this.USER_IS_ACTIVE = true;
-	doTimer();
-}
-
-function isTyping(b){
-	if (b)
-		clearTimer(b,true);
-	startTimer();
-}
-
-function teclaEnter(e){
-	if(!USER_IS_ACTIVE)
-		changeStatus(1);
-	
-	isTyping(true);
-	
-	var evento = (window.event ? e.keyCode : e.which);
-
-	if(evento == 13) 
-		sendNewMessage();
-}
-
-function mudaTo(obj){
-	this.PARA = $j(obj).val();
-}
-
-function checkToUser(){
-	if (PARA != 0){
-		chatJS.checkToUser(PARA,{
-			callback:function(statusCallback) {
-				if(statusCallback == 0){
-					usuariosON();
-					var statusHTML = $j('#div_status').html();
-					$j('#div_status').html('<span>Atenção: destinatário offline!</span>');
-					setTimeout(function(){$j('#div_status').html(statusHTML);},5000);
-					$j('#div_status').find('span').addClass('alert');
+	var checkUsers = function (){
+		chatJS.checkUsers({
+			callback:function(allUsers) {
+				//dwr.util.removeAllOptions('usuariosON');
+				//dwr.util.addOptions('usuariosON', allUsers, 'idUser', 'nameUser');
+				if (allUsers != null){
+					montaListaUsuarios(allUsers);
+					setTimeout(function(){checkUsers();},300);
+				}else{
+					sessionExpired();	
 				}	
 			}
 		});
-	}	
+	};
+	
+	var sessionExpired = function (){
+		$j('#new').attr('readonly','readonly');
+		$j('#div_status').find('span').html('Sua sessão expirou! <a href="reload()">Entre novamente</a>');
+	};
+	
+	var messagesSession = function (){
+		chatJS.messagesSession({
+			callback:function(listMsgCallback) {
+				if(listMsgCallback != null)
+					iteratorMessages(listMsgCallback,true);
+			}
+		});	
+	};
+	
+	var iteratorMessages = function (listMsgCallback,isSession){
+		var pClass = 'messageChat';
+		var isOffline = false;
+		
+		if (isSession) {
+			pClass += ' session';
+		}else if (listMsgCallback.length > 1){
+				isOffline = true;
+				pClass += ' offline';
+		}
+		
+		for (var i in listMsgCallback){
+			var newMsgCallback = listMsgCallback[i];
+			
+			SIZE_MESSAGES++;
+			
+			var msgRec = newMsgCallback.HTMLCode;
+			var from = newMsgCallback.from.nameUser;
+			//var to = newMsgCallback.to.nameUser;
+			var fromIdUser = newMsgCallback.from.idUser;
+			
+			if (fromIdUser == ID_USER)
+				from = "Eu:";
+				
+			if (isOffline){
+				from += ' disse: (Offline)';
+			}else if (isSession){
+				from += ' disse:';	
+			}else{
+				from += ' diz:';
+			}
+			
+			var msgHTML = '<p id="'+SIZE_MESSAGES+'" class="'+pClass+'">'
+					+from+'<br>'+msgRec+'</p>';
+			
+			showMessage(msgHTML);
+		}
+	};
+	
+	var checkNewMessage = function (){
+		
+		chatJS.checkNewMessage(ID_USER,{
+			callback:function(listMsgCallback) {
+				if(listMsgCallback != null){
+					iteratorMessages(listMsgCallback,false);			
+					setTimeout(function(){checkNewMessage();},300);
+					
+				}else{
+					alert("\t\tVocê ficou offline!\nAs mensagens que os usuários lhe enviarem\nserão mostradas da próxima vez que entrar.");
+				}	
+			}
+		});	
+			
+	};
+	
+	var sendNewMessage = function (){
+		if (PARA == 0){
+			alert("Nenhum destinatario selecionado!");
+			return;
+		}	
+		var msgTxt = $j('#new').val();
+		chatJS.send(PARA,ID_USER,msgTxt);
+				SIZE_MESSAGES++;
+				
+				var msgHTML = '<p id="'+SIZE_MESSAGES+'" style="display:none;"><b>Eu:<b><br>'
+					+msgTxt+'</p>';
+				
+				showMessage(msgHTML);
+	};
+	
+	var showMessage = function (msgHTML){
+		var divConsole = $j('#console_chat');
+		divConsole.append(msgHTML);
+		
+		var pMsg = $j('#console_chat p[id='+SIZE_MESSAGES+']');
+		pMsg.fadeIn('slow');
+		
+		divConsole.scrollTop(divConsole.scrollTop()+pMsg.offset().top);
+	};
+	
+	var doTimer = function (){
+		TIMER = setTimeout(function(){changeStatus(2);},(TIME_TO_INACTIVE*60*1000));
+	};
+	
+	var clearTimer = function (isTyping,isUserActive){
+		USER_IS_TYPING = isTyping;
+		USER_IS_ACTIVE = isUserActive;
+		clearTimeout(TIMER);
+	};
+	
+	var startTimer = function (){
+		USER_IS_TYPING = false;
+		USER_IS_ACTIVE = true;
+		doTimer();
+	};
+	
+	var isTyping = function (b){
+		if (b)
+			clearTimer(b,true);
+		startTimer();
+	};
+	
+	this.teclaEnter = function (e){
+		if(!USER_IS_ACTIVE)
+			changeStatus(1);
+		
+		isTyping(true);
+		
+		var evento = (window.event ? e.keyCode : e.which);
+	
+		if(evento == 13){ 
+			sendNewMessage();
+			$j('#new').val('');
+		}	
+	};
+	
+	this.mudaTo = function (obj){
+		PARA = $j(obj).val();
+	};
+	
+	this.checkToUser = function (){
+		if (PARA != 0){
+			chatJS.checkToUser(PARA,{
+				callback:function(statusCallback) {
+					if(statusCallback == 0){
+						usuariosON();
+						var statusHTML = $j('#div_status').html();
+						$j('#div_status').html('<span>Atenção: destinatário offline!</span>');
+						setTimeout(function(){$j('#div_status').html(statusHTML);},5000);
+						$j('#div_status').find('span').addClass('alert');
+					}	
+				}
+			});
+		}	
+	};
+	
+	
 }
 
-function changeStatus(status){
+dwr.engine.setErrorHandler(errh);
+
+function errh(msg, exc) {
+	 //alert("O erro é: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));
 	
-	chatJS.changeUserStatus(status);
-	
-	if (status == 0){
-		$j('#div_status').html('<span>OFF-LINE</></span> (<a href="#" id="stayOn" onclick="start(event)">Online</a>)');
-		$j('#div_status').find('span').addClass('offline');
-		$j('#console_chat').find('div').text('Você saiu!');
-		$j('#console_chat').find('div').css('background-color', '#FF8C69');
-		clearTimer(false,false);
-		return;
-	}
-	
-	(status == 2 ? clearTimer(false,false) : startTimer(false,true));
-	
-	var logoff = ' (<a href="#" id="stayOff" onclick="stop(event)">Offline</a>)';
-	var status = 'Você está <span>'+(USER_IS_ACTIVE ? 'ON' : 'INATIVO')
-					+'</span>'+logoff;
-	$j('#div_status').html(status);
-	$j('#div_status').find('span').addClass((USER_IS_ACTIVE ? 'online' : 'inactive'));
-	
+	/*
+	 * Tratamento de execção quando DWR request é enviado deopois que deu timeout na sessao
+	 */
+	try {
+	    if (dwr && dwr.engine) {
+	        dwr.engine.setTextHtmlHandler(function() {
+					alert('session expirou');
+		           // document.location = '/direto-project/login.html';
+	        });
+	    }   
+	 } catch(err) {} 
+		 
 }
+
