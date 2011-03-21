@@ -2,6 +2,7 @@ package br.org.ged.direto.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.org.direto.util.DocumentosUtil;
+import br.org.direto.webchat.ChatService;
+import br.org.direto.webchat.Message;
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.menus.MenuTopo;
@@ -52,6 +55,7 @@ public abstract class BaseController {
 	public Usuario getUserLogon(HttpServletRequest request){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		this.session = request.getSession(true);
+		System.out.println("\n\nSESSAO CONTROLER"+this.session.toString());
 		Usuario usuario = usuarioService.selectByLogin(auth.getName());
 		return usuario;
 	}

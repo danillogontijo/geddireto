@@ -4,9 +4,23 @@ import java.util.List;
 
 public class UserChat {
 
+	private int idUser;
 	private String nameUser;
 	private List<Message> messages;
+	private int statusUser = 0;
 	
+	public int getStatusUser() {
+		return statusUser;
+	}
+	public void setStatusUser(int statusUser) {
+		this.statusUser = statusUser;
+	}
+	public int getIdUser() {
+		return idUser;
+	}
+	public void setIdUser(int idUser) {
+		this.idUser = idUser;
+	}
 	public String getNameUser() {
 		return nameUser;
 	}
