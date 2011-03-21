@@ -29,17 +29,25 @@ public class ChatServiceImpl implements ChatService, Serializable{
 	@Autowired
 	private SessionRegistry sessionRegistry;
 	
-	public static Map<Integer,List<Message>> messages = new Hashtable<Integer,List<Message>>();
+	private Map<Integer,List<Message>> messages;
 	
-	public static Map<Integer,UserChat> users = new Hashtable<Integer,UserChat>();
+	private Map<Integer,UserChat> users;
 	
 	private UserChat user;
 	
 	List<Message> messagesSession;
 	
+	ChatUtils chatUtils;
+	
+	public void setChatUtils(ChatUtils chatUtils) {
+		this.chatUtils = chatUtils;
+		messages = chatUtils.getMessages();
+		users = chatUtils.getUsers();
+	}
+
 	public static HttpSession session() {
 	    ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-	    return attr.getRequest().getSession(true); // true == allow create
+	    return attr.getRequest().getSession(true); // true == permite criar
 	}
 	
 	@RemoteMethod
@@ -56,14 +64,15 @@ public class ChatServiceImpl implements ChatService, Serializable{
 	@SuppressWarnings("unchecked")
 	@RemoteMethod
 	public int start(int idUser,String nameUser){
+		
 		if(session().getAttribute("messagesSession") == null)
 			session().setAttribute("messagesSession", new ArrayList<Message>());
+
 		messagesSession = (List<Message>)(session().getAttribute("messagesSession"));
-		
+
 		int initialStatus = initialStatus(idUser);
 		
 		addUser(idUser,nameUser,(initialStatus != -1 ? true : false));
-		
 		return initialStatus;
 	}
 	
@@ -107,9 +116,10 @@ public class ChatServiceImpl implements ChatService, Serializable{
 		
 		List<Message> msgs = null;
 		
+		if(user.getStatusUser() != 0){
 			msgs = (List<Message>) messages.remove(idUser);
 			addMessageInSession(msgs);
-		
+		}
 		return msgs;
 	}
 	
@@ -150,7 +160,6 @@ public class ChatServiceImpl implements ChatService, Serializable{
 	
 	@RemoteMethod
 	public void send(int idToUser, int idFromUser, String msgHTML){
-		
 		UserChat to = null;
 		List<Message> listMsgUser = null;
 		Message msg = new Message();
@@ -169,8 +178,8 @@ public class ChatServiceImpl implements ChatService, Serializable{
 					listMsgUser = messages.get(idToUser);
 					listMsgUser.add(msg);
 				}
-			if(to.getStatusUser()!=0)
-				to.notifyAll();
+			//if(to.getStatusUser()!=0)
+				to.notify();
 		}
 		
 		addMessageInSession(msg);
@@ -214,7 +223,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 	
 	public void notifyUser(){
 		synchronized (user) {
-			user.notifyAll();
+			user.notify();
 		}
 	}
 

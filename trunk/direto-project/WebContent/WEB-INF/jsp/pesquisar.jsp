@@ -36,7 +36,7 @@ $j(function(){
 		  		      		 		
 		
 		"sPaginationType": "full_numbers",
-		"sAjaxSource": "http://localhost:8080/direto-project/resultado.html?total=${total}&bServerSide=${bServerSide}"
+		"sAjaxSource": "/direto-project/resultado.html?total=${total}&bServerSide=${bServerSide}"
 
 	} );
 
