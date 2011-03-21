@@ -22,6 +22,10 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/loginValidatorJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentoValidatorJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentosJS.js"></script>
+
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/chatJS.js"></script>
+
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/engine.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/util.js"></script>
 
@@ -31,13 +35,13 @@
 
 <script src="<%=request.getContextPath() %>/js/custom/jquery-1.4.4.min.js"></script>
 
-<!-- <script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> --> 
+ <script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> 
 
 <script src="<%=request.getContextPath() %>/js/custom/external/tooltip.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/external/validator.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/external/jquery.alerts.js"></script>
 
-
+<!--
 <script src="<%=request.getContextPath() %>/js/custom/external/jquery.bgiframe-2.1.2.js"></script>
 
 <script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.core.min.js"></script>
@@ -55,7 +59,7 @@
 <script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.position.min.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.resizable.min.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.dialog.min.js"></script>
-
+ -->
 <style type="text/css">
 		
 			.tela_apresentacao {
@@ -571,7 +575,7 @@ function montaUsersByGrupos(listBeans){
 
     
 <div id="table" style="position: relative; width: 1002px; text-align: center; top: 75px; left: 0px; height: 700px; background-color: white; border-bottom: 1px solid #ccc">
-	<div id="line" style="width: 167px; float: left; position: absolute; text-align: left; background-color: #ffffff; top: -27px; left: 5px" class="menuLado">
+	<div id="line" style="width: 167px; height: 715px; position: absolute; text-align: left; background-color: #ffffff; top: -27px; left: 5px" class="menuLado">
 		
 		<div style="height: 30px; font-size: 14px; font-weight: bold;">
 			<spring:message code="welcome"/>
@@ -633,6 +637,67 @@ function montaUsersByGrupos(listBeans){
 		 
 		  
 		   <br>${numUsers} usuário(s) no sistema!
+		
+		<script type="text/javascript">
+
+var PARA = 0;
+var USER = "${usuario.usuNGuerra} da silva";
+var ID_USER = ${usuario.idUsuario};
+var USER_IS_TYPING = false;
+var USER_IS_ACTIVE = false;
+var TIMER;
+var SIZE_MESSAGES = 0;
+var TIME_TO_INACTIVE = 0.5; //em minutos
+
+$j(function(){
+	start(null);
+
+	$j('#stayOn').click(function(e) {
+		e.preventDefault();
+		start(e);
+	});
+
+	hideOffline();
+
+	
+});
+
+
+dwr.engine.setErrorHandler(errh);
+
+function errh(msg, exc) {
+	 // alert("Error message is: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));
+	/*
+	 * Redirect to login page when a DWR request is send after a session timeout
+	 */
+	try {
+	    if (dwr && dwr.engine) {
+	        dwr.engine.setTextHtmlHandler(function() {
+					alert('session expirou');
+		           // document.location = 'here goes the url to your login page';
+	        });
+	    }   
+	 } catch(err) {} //ignore 
+		 
+}
+
+
+</script>
+
+	<script type="text/javascript" src="<%=request.getContextPath() %>/js/chatDireto.js" charset="utf-8""></script>
+		<div id="chat" class="border_radius">
+			<div id="console_chat" class="border_radius"><div></div>
+			
+			</div>
+			<div id="div_new">
+				<input type="text" id="new" onkeypress="teclaEnter(event)" onfocus="checkToUser()"></input>
+			</div>
+			<div id="div_usuarios">
+				<select id="usuariosON" name="usuariosON" onchange="mudaTo(this)"></select>
+			</div>
+			<div id="div_status"><span id="status"><a href="#" id="stayOn">Fique on-line</a></span></div>
+		</div>	
+				   
 	</div>
 	
 	<div id="line" style="width: 1px; position: absolute; margin: 0; background-color: #ccc; left: 177px; height: 700px;" class="menuLado">
