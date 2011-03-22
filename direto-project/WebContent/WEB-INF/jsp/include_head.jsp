@@ -652,25 +652,64 @@ function montaUsersByGrupos(listBeans){
 						ChatDiretoAPI.start(e);
 					});
 
-				  $j('#welcome').click(function(e){ChatDiretoAPI.searchUser();});
+				 
 				
-					//hideOffline();
-				
-					$j('#console_chat').click(function(){ChatDiretoAPI.showMinimized();});	
-					//$j('#div_status').click(function(){ChatDiretoAPI.showMaximized();});
+					
+					$j('#topo div[name=minimize]').toggle(function(){
+						ChatDiretoAPI.showMinimized();
+						$j(this).text('+');						
+						},
+						function(){
+							ChatDiretoAPI.showMaximized();
+							$j(this).text('-');
+							}
+						);
+
+					$j('#topo div[name=search]').toggle(
+							function(){
+								ChatDiretoAPI.searchUser();
+								$j('#search').focus(function(){$j(this).val('');$j(this).css('font-style', 'normal');});
+							},
+
+							function(){
+									$j('#new').show();
+									$j('#search').remove();
+									//alert(ChatDiretoAPI.para());
+							}
+					);
+
+					
+					$j('#new').focus(function(){
+
+						if ($j(this).val() == 'Digite aqui'){
+							$j(this).val('');
+							$j(this).css('font-style', 'normal');
+						}
+						
+						});
+					$j('#new').blur(function(){
+
+						if (($j(this).val() == 'Digite aqui') || ($j(this).val() == '')){
+							$j(this).val('Digite aqui');
+							$j(this).css('font-style', 'italic');
+						}
+						
+						});
+						
 								
 				});
 
+				
 
 </script>
 
 		<div id="chat" class="border_radius">
-			<div id="welcome"></div>
+			<div id="topo"><div class="left border_radius" name="minimize"> - </div><div id="welcome"></div><div class="right border_radius" name="search"> p </div></div>
 			<div id="console_chat" class="border_radius">
 			
 			</div>
 			<div id="div_new">
-				<input type="text" id="new" onkeypress="ChatDiretoAPI.teclaEnter(event)" onfocus="ChatDiretoAPI.checkToUser()"></input>
+				<input type="text" id="new" value='Digite aqui' onkeypress="ChatDiretoAPI.teclaEnter(event)" onfocus="ChatDiretoAPI.checkToUser()"></input>
 			</div>
 			<div id="div_usuarios">
 				<select id="usuariosON" name="usuariosON" onchange="ChatDiretoAPI.mudaTo(this)"></select>
