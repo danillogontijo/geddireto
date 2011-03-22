@@ -11,6 +11,7 @@ function ChatDiretoAPI (userName, userID) {
 		SIZE_MESSAGES = 0,
 		TIME_TO_INACTIVE = 1; //em minutos
 	
+	var listUserSearch = new Array();
 	
 	
 	this.stop =function(e){
@@ -24,57 +25,36 @@ function ChatDiretoAPI (userName, userID) {
 		
 		chatJS.getAllUsersOn({
 			callback:function(allUsers) {
+				montaListaUsuarios(allUsers);
+				
 				var search = $j('#search').val();
 				search = search.replace(/^\s+/,'').replace(/\s+$/,''); // trim 
-				var s = '';
-				var c = 0;
 				var newList = new Array();
-				for (var i in allUsers){
-					
-					var user = allUsers[i];
-					var nameUser = (user.nameUser).toLowerCase();
 				
-					//alert(nameUser.indexOf(search));
+				$j('#usuariosON option').each(function(i){
 					
-					if (nameUser.indexOf(search) != -1){
-						//alert('removeu: '+(allUsers.splice(0, 1)).nameUser);
-						//newList.push(allUsers.splice(i, 1));
-						//allUsers.pop();
-						newList.push(user);
+					
+					
+					var id = $j(this).val();
+					var name = ($j(this).text()).toLowerCase();
+					
+					
+					
+					if (name.indexOf(' - inativo') != -1){
+						name = name.replace(' - inativo','');
+					}else if (name.indexOf(' - off') != -1) {
+						name = name.replace(' - off','');
+					}else if (name.indexOf(' - on') != -1){
+						name = name.replace(' - on','');
 					}
-				}		
-			
-				//alert(newList[0].nameUser);
-				dwr.util.removeAllOptions('usuariosON');
-				for (var i in newList){
-					//alert(allUsers.length);
-					var user = newList[i];
-					var userId = user.idUser;
-					var userStatus = user.statusUser;
 					
-					if (ID_USER != userId){
-						var selectedUser = '';
-						var disabledUser = '';
-						var status = ' - ON';
-			
-						if (PARA == userId)
-							selectedUser = 'selected';
-						if (userStatus == 0){
-							//disabledUser = 'disabled ';
-							status = ' - OFF';
-						}else if (userStatus == 2){
-							status = ' - INATIVO';
-						}
-						
-						var oOption = '<option value="'+userId+'" class="user'+user.statusUser
-							+'" '+disabledUser+selectedUser+'>'
-							+user.nameUser+status+'</option>';
-						
-						$j('#usuariosON').append(oOption);
-						
-					}	
-				}
-		
+					if (name.indexOf(search) == -1){
+						$j(this).remove();
+					}else{
+						$j(this).attr('selected','selected');
+					}
+					
+				});
 			}
 		});
 		
@@ -83,8 +63,11 @@ function ChatDiretoAPI (userName, userID) {
 	this.searchUser = function(){
 		$j('#new').hide();
 		$j('#div_new').append('<input type="text" id="search" value="Pesquisar" onkeypress="ChatDiretoAPI.search()" />');
-		
-		
+		$j('#search').live('focus',function(){$j(this).val('');$j(this).css('font-style', 'normal');});
+		$j('#search').blur(function(){
+			PARA = $j('#usuariosON option:selected').val();
+			//alert(PARA+' - blur');
+			});
 	};
 	
 	var welcomeMessage = function(status){
@@ -93,10 +76,10 @@ function ChatDiretoAPI (userName, userID) {
 		$j('#console_chat').prepend('<div>Entrou: '+USER+'</div>');
 		$j('#console_chat').find('div').addClass('welcome border_radius');*/
 		
-		var msgWelcome = 'Você entrou: '+USER;
+		var msgWelcome = 'Você entrou';
 		
 		if(status == 0)
-			msgWelcome = 'Você saiu!';
+			msgWelcome = 'Offline!';
 		
 		$j('#welcome').html(msgWelcome);
 		$j('#welcome').addClass('welcome border_radius');
@@ -181,7 +164,9 @@ function ChatDiretoAPI (userName, userID) {
 			
 				if(initialStatus == -1){
 					hideOffline(); //mostra minimizado se usuario nao existia na lista
+					$j('#topo').hide(); 
 				} else {
+					$j('#topo').show();
 					initial(initialStatus);			
 				}
 				
@@ -310,11 +295,11 @@ function ChatDiretoAPI (userName, userID) {
 			
 			var msgRec = newMsgCallback.HTMLCode;
 			var from = newMsgCallback.from.nameUser;
-			//var to = newMsgCallback.to.nameUser;
+			var to = newMsgCallback.to.nameUser;
 			var fromIdUser = newMsgCallback.from.idUser;
 			
 			if (fromIdUser == ID_USER)
-				from = "Eu:";
+				from = 'Eu para ('+to+')';
 				
 			if (isOffline){
 				from += ' disse: (Offline)';
@@ -352,14 +337,27 @@ function ChatDiretoAPI (userName, userID) {
 			alert("Nenhum destinatario selecionado!");
 			return;
 		}	
+		//alert(PARA);
 		var msgTxt = $j('#new').val();
 		chatJS.send(PARA,ID_USER,msgTxt);
 				SIZE_MESSAGES++;
 				
-				var msgHTML = '<p id="'+SIZE_MESSAGES+'" style="display:none;"><b>Eu:<b><br>'
+				var nameTo =$j('#usuariosON option:selected').text();
+				
+				if (nameTo.indexOf(' - INATIVO') != -1){
+					nameTo = nameTo.replace(' - INATIVO','');
+				}else if (nameTo.indexOf(' - OFF') != -1) {
+					nameTo = nameTo.replace(' - OFF','');
+				}else if (nameTo.indexOf(' - ON') != -1){
+					nameTo = nameTo.replace(' - ON','');
+				} 
+				
+				var msgHTML = '<p id="'+SIZE_MESSAGES+'" style="display:none;"><b>Eu para ('+nameTo+')<b><br>'
 					+msgTxt+'</p>';
 				
 				showMessage(msgHTML);
+				
+				$j('#new').val('');
 	};
 	
 	var showMessage = function (msgHTML){
@@ -404,7 +402,6 @@ function ChatDiretoAPI (userName, userID) {
 	
 		if(evento == 13){ 
 			sendNewMessage();
-			$j('#new').val('');
 		}	
 	};
 	

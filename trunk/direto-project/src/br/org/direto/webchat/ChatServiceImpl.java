@@ -2,6 +2,7 @@ package br.org.direto.webchat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import br.org.direto.util.DataTimeUtil;
 import br.org.ged.direto.model.entity.Usuario;
 
 @RemoteProxy(name = "chatJS")
@@ -158,11 +160,17 @@ public class ChatServiceImpl implements ChatService, Serializable{
 		return false;
 	}
 	
+	public String getNowDataTime(){
+		return DataTimeUtil.getBrazilFormatDataHora(new Date());
+	}
+	
 	@RemoteMethod
 	public void send(int idToUser, int idFromUser, String msgHTML){
 		UserChat to = null;
 		List<Message> listMsgUser = null;
 		Message msg = new Message();
+		
+		msgHTML = "[<i>"+getNowDataTime()+"</i>] " + msgHTML; 
 		
 		to = users.get(idToUser);
 		synchronized (to) {
@@ -179,7 +187,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 					listMsgUser.add(msg);
 				}
 			//if(to.getStatusUser()!=0)
-				to.notify();
+				to.notifyAll();
 		}
 		
 		addMessageInSession(msg);

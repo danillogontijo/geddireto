@@ -7,9 +7,9 @@ import java.util.Date;
 
 public class DataTimeUtil {
 	
-	public static DateFormat BRAZIL_FORMAT_DATA = new SimpleDateFormat("dd/mm/yyyy"); 
-	public static DateFormat BRAZIL_FORMAT_DATAHORA = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); 
-	public static DateFormat US_FORMAT_DATAHORA = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static DateFormat BRAZIL_FORMAT_DATA = new SimpleDateFormat("dd/mm/yyyy"); 
+	private static DateFormat BRAZIL_FORMAT_DATAHORA = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); 
+	private static DateFormat US_FORMAT_DATAHORA = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public static String getBrazilFormatDataHora(Date date){
 		return BRAZIL_FORMAT_DATAHORA.format(date);
