@@ -14,11 +14,15 @@ function ChatDiretoAPI (userName, userID) {
 	var listUserSearch = new Array();
 	
 	
-	this.stop =function(e){
+	this.stop = function(e){
 		if(e != null)
 			e.preventDefault();
 		changeStatus(0);
 		showInactive();
+	};
+	
+	this.activeTimer = function(){
+		doTimer();
 	};
 	
 	this.search = function(){
@@ -61,6 +65,7 @@ function ChatDiretoAPI (userName, userID) {
 	};	
 	
 	this.searchUser = function(){
+		clearTimer(USER_IS_TYPING,USER_IS_ACTIVE);
 		$j('#new').hide();
 		$j('#div_new').append('<input type="text" id="search" value="Pesquisar" onkeypress="ChatDiretoAPI.search()" />');
 		$j('#search').live('focus',function(){$j(this).val('');$j(this).css('font-style', 'normal');});

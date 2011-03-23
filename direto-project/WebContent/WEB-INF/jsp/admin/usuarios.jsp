@@ -34,7 +34,7 @@ jQuery(document).ready(function() {
 			 $j.each(data.users, function(i,user){
 	
 					table.append('<tr><td>'+user[0]+' - '+user[1]+'</td></tr>');
-					sPesquisa += user[1]+',';
+					sPesquisa += user[1]+';';
 					//alert(user[0]+" - "+user[1]);
 			       
 			 });
@@ -66,14 +66,14 @@ jQuery(document).ready(function() {
 		var search = $j('#pesquisar').val();
 
 
-		 var p = sPesquisa.split(',');
-		 alert(p);
+		 var p = sPesquisa.split(';');
+		 alert(sPesquisa);
 		 
 			for (i=0;i<p.length-1;i++){
 			 var dado = p[i];
 
-			 var text = (dado[0]).toLowerCase()
-		    alert(text)
+			 var text = (p[i]).toLowerCase();
+		    //alert(p[i]);
 
 		     if ((text.indexOf(search) == -1))
 				 	table.append('<tr><td>'+text+'</td></tr>');	

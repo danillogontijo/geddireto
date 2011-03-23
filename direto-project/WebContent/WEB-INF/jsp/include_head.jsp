@@ -674,7 +674,7 @@ function montaUsersByGrupos(listBeans){
 							function(){
 									$j('#new').show();
 									$j('#search').remove();
-									//alert(ChatDiretoAPI.para());
+									ChatDiretoAPI.activeTimer();
 							}
 					);
 

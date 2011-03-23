@@ -14,6 +14,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.springsource.json.writer.JSONArray;
 import com.springsource.json.writer.JSONObject;
@@ -30,6 +31,8 @@ public class AdminUsuariosController {
 	@Autowired
 	private UsuarioService usuarioService;
 	
+	private PrintWriter writer = null;
+	
 	@ModelAttribute("usuarios")
 	public List<Usuario> allUsers() {
 		return usuarioService.getAll(new Usuario());
@@ -43,11 +46,37 @@ public class AdminUsuariosController {
 		return "admin/usuarios";
 	}
 	
-	@RequestMapping(method=RequestMethod.GET,value="/buscaUsuarios.html")
-	public void usuariosJSON(HttpServletRequest request,
-			HttpServletResponse response,ModelMap model) throws IOException{
+	@RequestMapping(method=RequestMethod.GET,value="/admin/consultaUsuario.html")
+	public void consultaUsuario(@RequestParam("id") int idUsuario, HttpServletRequest request,HttpServletResponse response) throws IOException {
 		
-		PrintWriter writer = response.getWriter();;
+		writer = response.getWriter();;
+		
+		JSONObject result = new JSONObject();
+		JSONArray array = new JSONArray();
+		
+		Usuario usuario = usuarioService.selectById(idUsuario);
+		
+		result.append("idUsuario", usuario.getIdUsuario());
+		result.append("idPstGrad", usuario.getPstGrad().getIdPstGrad());
+		result.append("usuIdt", usuario.getUsuIdt());
+		result.append("usuNGuerra", usuario.getUsuNGuerra());
+		
+		response.setHeader("Content-Type", "application/json; charset=ISO-8859-1");
+		
+		//result.put("user", array);
+		
+		writer.print(result);
+		
+		writer.flush();
+		writer.close();
+		
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/admin/buscaUsuarios.html")
+	public void usuariosJSON(HttpServletRequest request,
+			HttpServletResponse response) throws IOException{
+		
+		writer = response.getWriter();;
 		
 		JSONObject result = new JSONObject();
 		JSONArray array = new JSONArray();
@@ -56,7 +85,7 @@ public class AdminUsuariosController {
 		
 		for(Usuario usuario : usuarios){
 			JSONArray ja = new JSONArray();
-			
+			ja.put(usuario.getIdUsuario());
 			ja.put(usuario.getPstGrad().getPstgradNome()+" "+usuario.getUsuNGuerra());
 			ja.put(usuario.getUsuLogin());
 			array.put(ja);
