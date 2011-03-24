@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../include_taglibs.jsp" %>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -12,6 +13,11 @@
 
 <script src="<%=request.getContextPath() %>/js/custom/jquery-1.4.4.min.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> 
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/engine.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/util.js"></script>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/pstgradJS.js"></script>
 
 <style type="text/css">
 #palco {width: 1024px;}
@@ -44,6 +50,31 @@
 	color: red;
 }
 
+.left_{
+	
+	width: 390px;
+	float: left;
+	
+}
+
+.right_{
+	width: 390px;
+	float: left;
+	
+}
+
+fieldset p input {
+	width: 350px;
+}
+
+fieldset p select {
+	width: 350px;
+}
+
+fieldset p {
+	padding-bottom: 30px;
+}
+
 </style>
 
 </head>
@@ -55,7 +86,10 @@ var $j = jQuery.noConflict();
 var S_USERS = "";
 var TABLE_USERS = null;
 
+
 $j(function() {
+	showAllUsers();
+	
 	$j( "#accordion" ).accordion({ active: 0 });
 	$j('a[name=users]').click(function(e){
 		e.preventDefault();
@@ -74,12 +108,103 @@ $j(function() {
 	});
 
 	function editUser(id){
+
+		removeTable();
+		
+		table = '<table id="table_users" width="100%" class="table_users">'+
+		'<tr><td colspan="10">'+
+		'</td></tr><tr><td>';
+
+		$j('#conteudo').append(table);
+		$j("#table_users tr:first").addClass('table_titulo');
+		$j('#table_users tr').eq(1).find('td').prepend('<fieldset>');
+		//$j('#table_users tr').eq(1).find('td').find('fieldset').append('<h3>Preencha os campos abaixo</h3>');	
+		
 		$j.getJSON("consultaUsuario.html?id="+id, function(data){
 			//removeTable();
-			alert(data.usuNGuerra);
+			//alert(data.usuNGuerra);
+			$j("#table_users tr:first").first().text('Edição do usuário: '+data.usuLogin);
+			
+			userForm('text','Login usuario',data.usuLogin,0);
+			userForm('text','Nome de Guerra',data.usuNGuerra,0);
+
+			userForm('text','Nome Completo',data.usuLogin,1);
+			userForm('text','Identidade',data.usuNGuerra,1);
+
+			userForm('select','Pst Grad',data.idPstGrad,2);
+			userForm('select','Papel',[data.usuNGuerra],2);
+
+			userForm('text','Senha','',3);
+
+			$j.each(data.contas, function(i,conta){
+				userForm('contas','Contas',conta,4);
+				
+			});
 		});
 
+		
+
 	};
+
+	function userForm(campo,nome,valor,linha){
+		var fieldset = $j('#table_users tr').eq(1).find('td').find('fieldset');
+		var field_name = (nome.replace(/ {1}/gi,'_')).toLowerCase();
+		var isSelect = false;
+		var isCheckbox = false;
+
+		if (campo == 'text')
+			campo = ' <input type="text" name="'+(nome.replace(/ {1}/gi,'_')).toLowerCase()+'" value="'+valor+'">';
+
+		if (campo == 'select'){
+			campo = ' <select id="'+(nome.replace(/ {1}/gi,'_')).toLowerCase()+'">';
+			isSelect = true;
+		}
+
+		if (campo == 'contas'){
+			campo = '<input type="checkbox" value="'+valor.idConta+'" checked '+(valor.isPrincipal == true ? 'disabled' : '')+'/>'+valor.cartAbr;
+			isCheckbox = true;
+		}	
+
+		if (!isCheckbox){	
+			if (fieldset.find('p').eq(linha).text() == ""){			
+				fieldset.append('<p><label class="left_">'+nome+'*'+campo+'</label></p>');
+			}else{
+				fieldset.find('p').eq(linha).append('<label class="right_">'+nome+'*'+campo+'</label>');
+			}
+		}else{
+			var principal = "";
+			if (valor.isPrincipal == true)
+				campo += ' (Principal)<br>';
+			
+			if (fieldset.find('p').eq(linha).text() == ""){
+				fieldset.append('<p><b>Contas</b> [<a hre="#" name="add">adicionar</a>]<br>'+campo+'</p>');
+				fieldset.find('p').eq(linha).css('margin-top', '30px');
+				fieldset.find('p').eq(linha).css('background-color', '#E2E4FF');
+			}else{
+				fieldset.find('p').eq(linha).append(campo);
+			}
+		}
+		
+		
+		
+		if ((isSelect) && (field_name == 'pst_grad') ){
+			pstgradJS.getAll({
+				callback:function(pstgradList) {
+				dwr.util.addOptions(field_name, pstgradList, "idPstGrad", "pstgradNome");
+
+					setTimeout(function(){
+						fieldset.find('p').eq(linha).first().first().find('option').each(function(){
+							if ($j(this).val() == valor)
+								$j(this).attr('selected','selected');
+						});
+					},1000);
+		  		}
+		  	});
+		} else if ((isSelect)) {
+			dwr.util.addOptions(field_name, valor);	
+			dwr.util.addOptions(field_name, ['ADMIN', 'USER', 'PROTOCOLISTA']);
+		} 
+	}
 
 	function removeAllUsers(all){
 		if (all){
@@ -130,7 +255,7 @@ $j(function() {
 
 		});
 
-		$j('#conteudo').append('</table>');	
+		//$j('#conteudo').append('</table>');	
 		//$j("#table_users tr:odd").css("background-color", "#E2E4FF");
 		
 		
@@ -213,7 +338,6 @@ $j(function() {
 		</div>
 	<div id="conteudo"></div>
 </div>
-
 
 
 </body>
