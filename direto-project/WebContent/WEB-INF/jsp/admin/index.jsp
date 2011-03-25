@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Administração - Direto</title>
 <link href="<%=request.getContextPath() %>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=request.getContextPath() %>/css/modals.css" rel="stylesheet" type="text/css" />
 
 <link href="<%=request.getContextPath() %>/css/custom-theme-jquery/jquery-ui-1.8.10.custom.css" rel="stylesheet" type="text/css" />
 <link href="<%=request.getContextPath() %>/css/custom-theme-jquery/jquery.alerts.css" rel="stylesheet" type="text/css" media="screen" />
@@ -18,6 +19,10 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/util.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/pstgradJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/carteiraJS.js"></script>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8""></script>
+
 
 <style type="text/css">
 #palco {width: 1024px;}
@@ -88,6 +93,20 @@ var TABLE_USERS = null;
 
 
 $j(function() {
+
+	$j('a[name=modal]').live('click',function(e) {
+		e.preventDefault();
+		js.direto.modal(this);
+		//alert('');
+			
+	});
+
+	$j('.window .close').click(function (e) {
+		e.preventDefault();
+		js.direto.close_mask();
+	});
+ 
+	
 	showAllUsers();
 	
 	$j( "#accordion" ).accordion({ active: 0 });
@@ -128,8 +147,8 @@ $j(function() {
 			userForm('text','Login usuario',data.usuLogin,0);
 			userForm('text','Nome de Guerra',data.usuNGuerra,0);
 
-			userForm('text','Nome Completo',data.usuLogin,1);
-			userForm('text','Identidade',data.usuNGuerra,1);
+			userForm('text','Nome Completo',data.usuNome,1);
+			userForm('text','Identidade',data.usuIdt,1);
 
 			userForm('select','Pst Grad',data.idPstGrad,2);
 			userForm('select','Papel',[data.usuNGuerra],2);
@@ -142,8 +161,8 @@ $j(function() {
 			});
 		});
 
-		
-
+		setTimeout(function(){$j('#table_users tr').eq(1).first().find('fieldset').append('<p><button> Salvar modificações</button></p>');
+		$j( "button", "#table_users" ).button();},3000);
 	};
 
 	function userForm(campo,nome,valor,linha){
@@ -161,7 +180,7 @@ $j(function() {
 		}
 
 		if (campo == 'contas'){
-			campo = '<input type="checkbox" value="'+valor.idConta+'" checked '+(valor.isPrincipal == true ? 'disabled' : '')+'/>'+valor.cartAbr;
+			campo = '<input type="checkbox" id="'+valor.idCarteira+'" value="'+valor.idConta+'" checked '+(valor.isPrincipal == true ? 'disabled' : '')+'/>'+valor.cartAbr;
 			isCheckbox = true;
 		}	
 
@@ -177,7 +196,7 @@ $j(function() {
 				campo += ' (Principal)<br>';
 			
 			if (fieldset.find('p').eq(linha).text() == ""){
-				fieldset.append('<p><b>Contas</b> [<a hre="#" name="add">adicionar</a>]<br>'+campo+'</p>');
+				fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">adicionar</a>]<br>'+campo+'</p>');
 				fieldset.find('p').eq(linha).css('margin-top', '30px');
 				fieldset.find('p').eq(linha).css('background-color', '#E2E4FF');
 			}else{
@@ -284,11 +303,53 @@ $j(function() {
 		
 
 	};
+
 	
 });
 
 
+function carregaCarteiras(){
 
+	carteiraJS.getAll({
+		callback:function(carteirasList) {
+			dwr.util.addOptions('slContas', carteirasList, "idCarteira", "cartAbr");
+			dwr.util.addOptions('ListaDE', carteirasList, "idCarteira", "cartAbr");
+		}
+	});
+	
+};
+
+
+function atualizaContas(){
+	
+	js.direto.close_mask();
+	var pContas = $j('#table_users tr').eq(1).first().find('fieldset').find('p').eq(4);
+	
+	//pContas.html('');
+
+	pContas.find('input:checkbox').each(function(i){
+		var id = $j(this).attr('id');
+		if (i != 0){
+			alert(id);
+			$j('#ListaPARA option').each(function(){	
+				var value = $j(this).val();
+				alert(value);
+				if(value != id){
+					pContas.append('<br><br><input type="checkbox" value="'+value+'">'+$j(this).text());		
+				}
+				
+				$j(this).remove();
+			});
+		}
+	});
+	
+	var slPrincipal = $j('#slContas option:selected');
+
+	pContas.append('<br><b>'+slPrincipal.text());
+
+	
+	
+}
 
 
 
@@ -298,6 +359,59 @@ $j(function() {
 
 
 </script>
+
+<!-- MODALS -->
+<div id="boxes">
+
+	<div id="wcontas" class="window">
+		<table width="100%">
+			<tr>
+				<td colspan="3" style="width: 720px; text-align: center;" align="center" bgcolor="red" class="titulo_notificacoes" height="20" valign="middle">Adicionar nova conta</td>
+				<td style="width: 30px;"><a href="#" class="close" style="font-weight: bold">X</a></td>
+			</tr>
+			
+			<tr>
+				<td colspan="3" align="center">
+					<b>Conta principal:</b> <select
+						name="slContas" id="slContas" style="width: 200px; margin: 20px 0 20px 0;">
+					</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td style="width: 260px;">
+					<fieldset><legend>&nbsp;<b>Todas as carteiras</b>&nbsp;</legend>
+					 <select name=ListaDE id=ListaDE multiple size=11 style="width: 250px;" disabled
+							ondblClick="mover(document.getElementById('ListaDE'), document.getElementById('ListaPARA')); return false;">
+					 </select></fieldset>
+				</td>
+				
+				<td style="text-align: center; width:50px;">
+					<input
+						type="button" value="Incluir >>" style="width: 90pt"
+						id=btParaDireita
+						onClick="mover(document.getElementById('ListaDE'), document.getElementById('ListaPARA')); return false;">
+					<input type="button" value="<< Remover" style="width: 90pt"
+						name=btExclui id=btParaEsquerda
+						onClick="remover(document.getElementById('ListaPARA'), document.getElementById('ListaDE')); return false;">
+				</td>
+	
+				<td style="width: 260px; text-align: center;">
+						<fieldset><legend>&nbsp;<b>Carteiras adicionadas</b>&nbsp;</legend>
+						<select name=ListaPARA id=ListaPARA size=11 style="width: 250px;"
+							multiple disabled
+							ondblClick="remover(document.getElementById('ListaPARA'), document.getElementById('ListaDE')); return false;">
+					</select></fieldset>
+				</td>
+			</tr>
+		</table>
+		
+		<p><button onclick="atualizaContas()">Salvar</button></p>
+		</div>
+
+  <!-- Mask para bloquear tela -->
+  <div id="mask"></div>
+</div>
 
 
 

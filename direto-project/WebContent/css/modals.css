@@ -75,6 +75,12 @@
 	-webkit-box-shadow:0 0 10px #000;
 }
 
+#boxes #wcontas {
+  width:750px; 
+  height:325px;
+  background-color: #fff;
+}
+
 #bt_conf_edicao {
 	border: 1px solid #006;
     background: #ccf
