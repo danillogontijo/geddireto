@@ -2,6 +2,8 @@ package br.org.ged.direto.model.service.impl;
 
 import java.util.List;
 
+import org.directwebremoting.annotations.RemoteMethod;
+import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -12,6 +14,7 @@ import br.org.ged.direto.model.repository.CarteiraRepository;
 import br.org.ged.direto.model.service.CarteiraService;
 
 @Service("carteiraService")
+@RemoteProxy(name = "carteiraJS")
 @Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 public class CarteiraServiceImpl implements CarteiraService {
 
@@ -23,9 +26,9 @@ public class CarteiraServiceImpl implements CarteiraService {
 	}
 
 	@Override
-	public List<Carteira> getAll(Carteira carteira) {
-		// TODO Auto-generated method stub
-		return null;
+	@RemoteMethod
+	public List<Carteira> getAll() {
+		return carteiraRepository.getAll();
 	}
 
 	@Override

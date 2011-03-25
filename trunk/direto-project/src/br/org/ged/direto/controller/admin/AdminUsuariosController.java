@@ -59,7 +59,7 @@ public class AdminUsuariosController {
 		
 		result.append("idUsuario", usuario.getIdUsuario());
 		result.append("idPstGrad", usuario.getPstGrad().getIdPstGrad());
-		result.append("usuNome", usuario.getUsername());
+		result.append("usuNome", usuario.getUsuNome());
 		result.append("usuLogin", usuario.getUsuLogin());
 		result.append("usuIdt", usuario.getUsuIdt());
 		result.append("usuNGuerra", usuario.getUsuNGuerra());

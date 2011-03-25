@@ -26,9 +26,9 @@ public class CarteiraRepositoryImpl implements CarteiraRepository {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Carteira> getAll(Carteira carteira) {
+	public List<Carteira> getAll() {
 		return (List<Carteira>) hibernateTemplate.find("from "
-				+ PstGrad.class.getName());
+				+ Carteira.class.getName());
 	}
 
 	@Override
