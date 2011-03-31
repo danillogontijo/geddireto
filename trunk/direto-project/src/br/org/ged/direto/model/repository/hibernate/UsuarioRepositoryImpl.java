@@ -20,6 +20,7 @@ import br.org.direto.util.HibernateUtil;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Usuario;
+import br.org.ged.direto.model.entity.exceptions.UsuarioException;
 import br.org.ged.direto.model.repository.UsuarioRepository;
 
 //This will make easier to autowired
@@ -133,6 +134,25 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
 		
 		//return (selectById(new Integer(userid))).getUsuLogin();
 		return query.uniqueResult().toString();
+	}
+
+	public boolean checkIfUserIsDuplicate(String usuLogin, int idUsuario){
+		Usuario user = null;
+		try {
+			user = selectByLogin(usuLogin);
+			
+			if (user.getIdUsuario() != idUsuario)
+				throw new UsuarioException("Este login de usuário já existe!");
+			
+		}catch (UsuarioException e){
+			e.printStackTrace();
+			return false;
+		}catch (Exception e) {
+			//e.printStackTrace();
+			return (user == null ? true : false);
+		}
+		
+		return true;
 	}
 
 }

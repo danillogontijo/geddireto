@@ -8,8 +8,13 @@ import br.org.ged.direto.model.entity.Usuario;
 
 public interface ContaRepository {
 	
-	public void add(Conta conta);
+	public void saveOrUpdate(Conta conta);
 	public void tieUsers(List<Usuario> usuarios);
-	//public List<Conta> getAll(Usuario usuario);
+	public void deleteAccount(int idConta);
+	public void deleteAccount(int idUsuario, int idCarteira);
+	public void updateAccount(Conta conta);
+	public void updateAccount(int idUsuario, int idCarteira);
+	public Conta getAccount(int idConta);
+	public Conta getAccount(int idUsuario, int idCarteira);
 
 }

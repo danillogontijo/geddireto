@@ -20,6 +20,8 @@
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/pstgradJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/carteiraJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/contasJS.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8""></script>
 
@@ -142,7 +144,7 @@ $j(function() {
 		$j.getJSON("consultaUsuario.html?id="+id, function(data){
 			//removeTable();
 			//alert(data.usuNGuerra);
-			$j("#table_users tr:first").first().text('Edição do usuário: '+data.usuLogin);
+			$j("#table_users tr:first").first().html('Edição do usuário: '+data.usuLogin+' - <span id="idUser">'+id+'</span>');
 			
 			userForm('text','Login usuario',data.usuLogin,0);
 			userForm('text','Nome de Guerra',data.usuNGuerra,0);
@@ -159,10 +161,83 @@ $j(function() {
 				userForm('contas','Contas',conta,4);
 				
 			});
+
+			if (data.contas.length == 0){
+				var fieldset = $j('#table_users tr').eq(1).find('td').find('fieldset');
+				fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">adicionar</a>]<br></p>');
+				fieldset.find('p').eq(4).append('<div id="contas_atuais">Sem Conta Cadastrada!</div>');
+				fieldset.find('p').eq(4).css('margin-top', '30px');
+				fieldset.find('p').eq(4).css('background-color', '#E2E4FF');
+			}	
 		});
 
-		setTimeout(function(){$j('#table_users tr').eq(1).first().find('fieldset').append('<p><button> Salvar modificações</button></p>');
-		$j( "button", "#table_users" ).button();},3000);
+		setTimeout(function(){$j('#table_users tr').eq(1).first().find('fieldset').append('<p><button id="save_user"> Salvar modificações</button></p>');
+		$j( "button", "#table_users" ).button();
+		$j('#save_user').click(saveEditUser);
+
+		},3000);
+	};
+
+	function saveEditUser(){
+
+		//var usuario = null;
+		var idUsuario = parseInt($j('#idUser').text());
+		var usuLogin = $j('#login_usuario').val();
+		var usuNome = $j('#nome_completo').val();
+		var idPstGrad = parseInt($j('#pst_grad option:selected').val());
+		var usuPapel =  $j('#papel option:selected').val();
+		var usuNGuerra = $j('#nome_de_guerra').val();
+		var usuIdt = parseInt($j('#identidade').val());
+		var usuSenha = $j('#senha').val();
+
+		if (usuLogin == ""){
+			alert('Preencha o campo login do usuário');
+			return false;
+		}else if (usuNGuerra == ""){
+			alert('Preencha o campo nome de guerra');
+			return false;
+		}else if (usuNome == ""){
+			usuNome = '-';
+		}else if (usuIdt == ""){
+			usuIdt = 0;
+		}
+
+		//var pContas = $j('#table_users tr').eq(1).first().find('fieldset').find('p').eq(4);
+		
+		usuarioJS.editUser(usuLogin, usuNGuerra, usuNome, usuPapel, usuSenha, usuIdt, idPstGrad, idUsuario,{
+			callback:function(resultado) {
+				alert(resultado);
+
+				var count = 0;
+				$j('#contas_atuais').find('input:checkbox').each(function(){
+
+					var pkConta = parseInt($j(this).val());
+					
+					if ( (i == 0) && ($j(this).attr('checked') == '') ){
+						var idCarteira = parseInt($j('#novas_contas').find('input:checkbox').first().val());
+						contasJS.updateAccount(pkConta, idCarteira, true);
+					}else if ($j(this).attr('checked') == ''){
+						contasJS.deleteAccount(pkConta);
+					}
+				});
+
+				$j('#novas_contas').find('input:checkbox').each(function(i){
+					var idCarteira = parseInt($j(this).val());
+					if ( (count == 0) && (i == 0) ){
+						contasJS.add(idUsuario, 1, idCarteira,1);
+					}else{
+						contasJS.add(idUsuario, 1, idCarteira,0);
+					}
+					
+				});
+				
+			}
+						
+		});
+
+		
+				
+		//alert('salva usuario');
 	};
 
 	function userForm(campo,nome,valor,linha){
@@ -172,7 +247,7 @@ $j(function() {
 		var isCheckbox = false;
 
 		if (campo == 'text')
-			campo = ' <input type="text" name="'+(nome.replace(/ {1}/gi,'_')).toLowerCase()+'" value="'+valor+'">';
+			campo = ' <input type="text" id="'+(nome.replace(/ {1}/gi,'_')).toLowerCase()+'" value="'+valor+'">';
 
 		if (campo == 'select'){
 			campo = ' <select id="'+(nome.replace(/ {1}/gi,'_')).toLowerCase()+'">';
@@ -196,11 +271,12 @@ $j(function() {
 				campo += ' (Principal)<br>';
 			
 			if (fieldset.find('p').eq(linha).text() == ""){
-				fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">adicionar</a>]<br>'+campo+'</p>');
+				fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">adicionar</a>]<br></p>');
+				fieldset.find('p').eq(linha).append('<div id="contas_atuais">'+campo+'</div>');
 				fieldset.find('p').eq(linha).css('margin-top', '30px');
 				fieldset.find('p').eq(linha).css('background-color', '#E2E4FF');
 			}else{
-				fieldset.find('p').eq(linha).append(campo);
+				$j('#contas_atuais').append(campo);
 			}
 		}
 		
@@ -312,6 +388,9 @@ function carregaCarteiras(){
 
 	carteiraJS.getAll({
 		callback:function(carteirasList) {
+			dwr.util.removeAllOptions('slContas');
+			dwr.util.removeAllOptions('ListaDE');
+			dwr.util.removeAllOptions('ListaPARA');
 			dwr.util.addOptions('slContas', carteirasList, "idCarteira", "cartAbr");
 			dwr.util.addOptions('ListaDE', carteirasList, "idCarteira", "cartAbr");
 		}
@@ -324,30 +403,62 @@ function atualizaContas(){
 	
 	js.direto.close_mask();
 	var pContas = $j('#table_users tr').eq(1).first().find('fieldset').find('p').eq(4);
-	
-	//pContas.html('');
 
+	//if ($j('#novas_contas').text() != '')
+		$j('#novas_contas').remove();
+	//alert($j('#novas_contas').text());
+	
+	pContas.append('<div id="novas_contas" style="margin-top: 20px;"><b>NOVAS ATUALIZAÇÕES</b></div>');
+
+	var value = '';
+
+	var count = 0;
 	pContas.find('input:checkbox').each(function(i){
 		var id = $j(this).attr('id');
-		if (i != 0){
-			alert(id);
+	
+		if (i == 0){
+			var slPrincipal = $j('#slContas option:selected');
+			value = slPrincipal.val();
+			if ( id != value ){			
+				$j('#novas_contas').append('<br><input type="checkbox" disabled checked value="'+value+'">'+slPrincipal.text()+' (Principal)');
+				$j(this).attr('checked','');
+			}	
+		}else{
+			var exists = false;
+
 			$j('#ListaPARA option').each(function(){	
-				var value = $j(this).val();
-				alert(value);
-				if(value != id){
-					pContas.append('<br><br><input type="checkbox" value="'+value+'">'+$j(this).text());		
-				}
+				value = $j(this).val();
 				
-				$j(this).remove();
+				if(id == value){
+					exists = true;
+					$j(this).remove();
+					return;
+				}
+
+				
 			});
+
+			if (!exists){
+				$j(this).attr('checked','');
+			}	
 		}
+		count++;
+		
 	});
 	
-	var slPrincipal = $j('#slContas option:selected');
 
-	pContas.append('<br><b>'+slPrincipal.text());
-
+	if (count == 0){
+		var slPrincipal = $j('#slContas option:selected');
+		value = slPrincipal.val();
+		$j('#novas_contas').append('<br><input type="checkbox" disabled checked value="'+value+'">'+slPrincipal.text()+' (Principal)');
+	}
 	
+	
+	$j('#ListaPARA option').each(function(){
+		value = $j(this).val();
+		$j('#novas_contas').append('<br><input type="checkbox" checked value="'+value+'">'+$j(this).text());
+		$j(this).remove();
+	});
 	
 }
 

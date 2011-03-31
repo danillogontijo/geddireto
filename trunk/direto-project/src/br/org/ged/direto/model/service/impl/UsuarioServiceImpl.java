@@ -2,8 +2,10 @@ package br.org.ged.direto.model.service.impl;
 
 import java.util.List;
 import br.org.direto.util.DataUtils;
+import br.org.ged.direto.model.entity.PstGrad;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.UsuarioRepository;
+import br.org.ged.direto.model.service.PstGradService;
 import br.org.ged.direto.model.service.UsuarioService;
 import br.org.ged.direto.model.service.security.IChangePassword;
 
@@ -22,6 +24,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	private UsuarioRepository usuarioRepository;
 	private MessageSource messageSource;
 	private IChangePassword changePasswordSecurity;
+	private PstGradService pstGradService;
+	
+	@Autowired
+	public void setPstGradService(PstGradService pstGradService) {
+		this.pstGradService = pstGradService;
+	}
 
 	@Autowired
 	public void setChangePasswordDao(IChangePassword changePasswordSecurity) {
@@ -50,6 +58,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@RemoteMethod
 	public void save(Usuario usuario) throws Exception {
 		try {
 			this.usuarioRepository.save(usuario);
@@ -58,9 +67,39 @@ public class UsuarioServiceImpl implements UsuarioService {
 					+ e.getMessage());
 		}
 	}
+	
+	@Override
+	@RemoteMethod
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public String editUser(String usuLogin, String usuNGuerra, String usuNome, String usuPapel, String usuSenha, int usuIdt, int idPstGrad, int idUsuario){
+		
+		if (!checkIfUserIsDuplicate(usuLogin, idUsuario))
+			return "Este login já existe, escolha outro!";
+			
+		Usuario user = this.usuarioRepository.selectById(idUsuario);
+		
+		if (user.getPstGrad().getIdPstGrad() != idPstGrad){
+			PstGrad pstGrad = pstGradService.getPstGradById(idPstGrad);
+			user.setPstGrad(pstGrad);
+		}
+		
+		user.setUsuLogin(usuLogin);
+		user.setUsuNome(usuNome);
+		user.setUsuNGuerra(usuNGuerra);
+		user.setUsuIdt(usuIdt);
+		
+		if (usuSenha != "")
+			changePassword(usuLogin,usuSenha);
+		return "Usuário atualizado com sucesso!\nAguarde verificação das contas...";
+	}
+	
+	public boolean checkIfUserIsDuplicate(String usuLogin, int idUsuario){
+		return usuarioRepository.checkIfUserIsDuplicate(usuLogin, idUsuario);
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+	@RemoteMethod
 	public Usuario selectById(Integer idUsuario) {
 		return this.usuarioRepository.selectById(idUsuario);
 	}

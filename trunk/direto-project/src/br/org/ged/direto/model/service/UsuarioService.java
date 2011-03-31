@@ -25,5 +25,10 @@ public interface UsuarioService {
 	//@PreAuthorize("hasRole('ROLE_USER')")
 	@PreAuthorize("#usuLogin == principal.usuLogin")
 	public void changePassword(String usuLogin, String usuSenha);
+	
+	public String editUser(String usuLogin, String usuNGuerra, String usuNome, 
+			String usuPapel, String usuSenha, int usuIdt, int idPstGrad, int idUsuario);
+	
+	public boolean checkIfUserIsDuplicate(String usuLogin, int idUsuario);
 
 }

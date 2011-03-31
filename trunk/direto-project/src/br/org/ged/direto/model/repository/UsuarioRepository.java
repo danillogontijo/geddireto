@@ -14,6 +14,7 @@ public interface UsuarioRepository {
 	public List<DataUtils> listActivedContas (String usuLogin);
 	public void changePassword(String usuLogin, String usuSenha);
 	public String whoUser(int userid);
+	public boolean checkIfUserIsDuplicate(String usuLogin, int idUsuario);
 	
 	//public Usuario doLogin(String login, String senha) throws Exception;
 

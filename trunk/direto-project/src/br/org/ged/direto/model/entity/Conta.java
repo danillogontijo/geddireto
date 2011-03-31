@@ -91,7 +91,7 @@ public class Conta implements Serializable {
 		this.dataContaTransf = dataContaTransf;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdUsuario", nullable = true)
 	public Usuario getUsuario() {
 		return usuario;
@@ -101,7 +101,7 @@ public class Conta implements Serializable {
 		this.usuario = usuario;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdCarteira", nullable = false)
 	@OrderBy("cartAbr asc")
 	public Carteira getCarteira() {

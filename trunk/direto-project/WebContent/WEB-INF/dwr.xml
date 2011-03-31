@@ -23,6 +23,7 @@
 		<dwr:convert type="bean" class="br.org.direto.webchat.Message" />
 		
 		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.PstGrad" />
+		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.Usuario" />
 		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.Carteira" />
 	</dwr:configuration>
 	
