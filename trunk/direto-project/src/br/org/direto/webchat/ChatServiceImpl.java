@@ -231,7 +231,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 	
 	public void notifyUser(){
 		synchronized (user) {
-			user.notify();
+			user.notifyAll();
 		}
 	}
 

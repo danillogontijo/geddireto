@@ -67,7 +67,10 @@ public class ContaServiceImpl implements ContaService {
 		conta.setDataContaTransf(new Date());
 		conta.setUsuario(usuario);
 		
-		contaRepository.saveOrUpdate(conta);
+		boolean alreadyExists = checkIfExistsAccount(idUsuario,idCarteira);
+		
+		if (!alreadyExists)
+			contaRepository.saveOrUpdate(conta);
 	}
 
 	@Override
@@ -123,10 +126,10 @@ public class ContaServiceImpl implements ContaService {
 		
 		boolean alreadyExists = checkIfExistsAccount(idUsuario, idCarteira);
 		
-		if (alreadyExists)
-			//System.out.println("Apaga a conta\n");
+		if (alreadyExists){
+			System.out.println("Apaga a conta\n");
 			deleteAccount(idUsuario, idCarteira);
-		
+		}
 		Carteira carteira = carteiraService.selectById(idCarteira);
 		conta.setCarteira(carteira);
 		

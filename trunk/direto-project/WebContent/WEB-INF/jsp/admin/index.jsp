@@ -122,6 +122,12 @@ $j(function() {
 		}
 	});
 
+	$j('a[name=addUser]').click(function(e){
+		e.preventDefault();
+		addUser();
+		}
+	);
+
 	$j('a[name=edit_user]').live('click',function(e){
 		e.preventDefault();
 		var id = $j(this).attr('href');
@@ -153,7 +159,7 @@ $j(function() {
 			userForm('text','Identidade',data.usuIdt,1);
 
 			userForm('select','Pst Grad',data.idPstGrad,2);
-			userForm('select','Papel',[data.usuNGuerra],2);
+			userForm('select','Papel',[data.usuPapel],2);
 
 			userForm('text','Senha','',3);
 
@@ -176,6 +182,86 @@ $j(function() {
 		$j('#save_user').click(saveEditUser);
 
 		},3000);
+	};
+
+	function addUser(){
+
+		removeTable();
+		
+		table = '<table id="table_users" width="100%" class="table_users">'+
+		'<tr><td colspan="10">'+
+		'</td></tr><tr><td>';
+
+		$j('#conteudo').append(table);
+		$j("#table_users tr:first").addClass('table_titulo');
+		$j('#table_users tr').eq(1).find('td').prepend('<fieldset>');
+		
+		$j("#table_users tr:first").first().html('Cadastro de novo usuário');
+			
+		userForm('text','Login usuario','',0);
+		userForm('text','Nome de Guerra','',0);
+
+		userForm('text','Nome Completo','',1);
+		userForm('text','Identidade','',1);
+
+		userForm('select','Pst Grad','',2);
+		userForm('select','Papel',['ADMIN', 'USER', 'PROTOCOLISTA'],2);
+
+		userForm('text','Senha','',3);
+
+			
+		var fieldset = $j('#table_users tr').eq(1).find('td').find('fieldset');
+		fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">adicionar</a>]<br></p>');
+		fieldset.find('p').eq(4).append('<div id="contas_atuais">Adicione a(s) conta(s)</div>');
+		fieldset.find('p').eq(4).css('margin-top', '30px');
+		fieldset.find('p').eq(4).css('background-color', '#E2E4FF');
+				
+		
+		setTimeout(function(){$j('#table_users tr').eq(1).first().find('fieldset').append('<p><button id="save_user">Cadastrar</button></p>');
+		$j( "button", "#table_users" ).button();
+		$j('#save_user').click(saveAddUser);
+
+		},3000);
+
+	};
+
+	function saveAddUser(){
+		var usuLogin = $j('#login_usuario').val();
+		var usuNome = $j('#nome_completo').val();
+		var idPstGrad = parseInt($j('#pst_grad option:selected').val());
+		var usuPapel =  $j('#papel option:selected').val();
+		var usuNGuerra = $j('#nome_de_guerra').val();
+		var usuIdt = parseInt($j('#identidade').val());
+		var usuSenha = $j('#senha').val();
+
+		if (usuLogin == ""){
+			alert('Preencha o campo login do usuário');
+			return false;
+		}else if (usuNGuerra == ""){
+			alert('Preencha o campo nome de guerra');
+			return false;
+		}else if (usuNome == ""){
+			usuNome = '-';
+		}else if (usuIdt == ""){
+			usuIdt = 0;
+		}else if (usuSenha == ""){
+			alert('Digite uma senha para o usuário');
+			return false;
+		}
+
+		usuarioJS.validateUser(usuLogin,{
+				callback:function(exists){
+					if (exists){
+						alert('Já existe um usuário cadastrado com este login.\nFavor escolha outro.');
+						return false;
+					}else{
+						alert('Usuario gravado');
+					}
+				}
+		});
+
+		
+		
 	};
 
 	function saveEditUser(){
@@ -209,7 +295,7 @@ $j(function() {
 				alert(resultado);
 
 				var count = 0;
-				$j('#contas_atuais').find('input:checkbox').each(function(){
+				$j('#contas_atuais').find('input:checkbox').each(function(i){
 
 					var pkConta = parseInt($j(this).val());
 					
@@ -219,13 +305,17 @@ $j(function() {
 					}else if ($j(this).attr('checked') == ''){
 						contasJS.deleteAccount(pkConta);
 					}
+
+					count++;
 				});
 
 				$j('#novas_contas').find('input:checkbox').each(function(i){
 					var idCarteira = parseInt($j(this).val());
-					if ( (count == 0) && (i == 0) ){
+					var isPrincipal = $j(this).attr('principal');
+					
+					if ( (count == 0) && (isPrincipal == 'true') ){
 						contasJS.add(idUsuario, 1, idCarteira,1);
-					}else{
+					}else if (isPrincipal != 'true'){
 						contasJS.add(idUsuario, 1, idCarteira,0);
 					}
 					
@@ -236,8 +326,8 @@ $j(function() {
 		});
 
 		
-				
-		//alert('salva usuario');
+		setTimeout(function(){editUser(idUsuario);},200);		
+
 	};
 
 	function userForm(campo,nome,valor,linha){
@@ -420,8 +510,9 @@ function atualizaContas(){
 			var slPrincipal = $j('#slContas option:selected');
 			value = slPrincipal.val();
 			if ( id != value ){			
-				$j('#novas_contas').append('<br><input type="checkbox" disabled checked value="'+value+'">'+slPrincipal.text()+' (Principal)');
+				$j('#novas_contas').append('<br><input type="checkbox" principal="true" disabled checked value="'+value+'">'+slPrincipal.text()+' (Principal)');
 				$j(this).attr('checked','');
+				$j(this).attr('principal','true');
 			}	
 		}else{
 			var exists = false;
@@ -533,7 +624,7 @@ function atualizaContas(){
 				<div>
 					<ul>
 						<li><a href="usuarios.html" name="users" target="palco">Listar usuários</a></li>
-						<li><a href="index.html" target="palco">Cadastro</a></li>
+						<li><a href="index.html" name="addUser" target="palco">Cadastro</a></li>
 						<li>Edição</li>
 						<li>Vincular carteira</li>
 					</ul>
