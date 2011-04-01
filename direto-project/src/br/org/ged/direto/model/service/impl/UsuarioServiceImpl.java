@@ -88,7 +88,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		user.setUsuNGuerra(usuNGuerra);
 		user.setUsuIdt(usuIdt);
 		
-		if (usuSenha != "")
+		if (!usuSenha.isEmpty())
 			changePassword(usuLogin,usuSenha);
 		return "Usuário atualizado com sucesso!\nAguarde verificação das contas...";
 	}
@@ -138,17 +138,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return this.usuarioRepository.whoUser(userid);
 	}
 
-	/*public String getValidationMessage(Errors errors, String fieldName) {
-		String message = "";
-
-		FieldError fieldError = errors.getFieldError(fieldName);
-
-		if (fieldError != null) {
-			message = messageSource.getMessage(fieldError.getCode(), null,
-					"This field is invalid", Locale.ENGLISH);
-		}
-
-		return message;
-	}*/
+	@Override
+	public String editUser(String usuLogin, String usuNGuerra, String usuNome,
+			int usuIdt, int idPstGrad, int idUsuario) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

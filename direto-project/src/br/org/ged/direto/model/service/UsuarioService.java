@@ -23,11 +23,16 @@ public interface UsuarioService {
 	public boolean validateUser(String usuLogin);
 	
 	//@PreAuthorize("hasRole('ROLE_USER')")
-	@PreAuthorize("#usuLogin == principal.usuLogin")
+	@PreAuthorize("(#usuLogin == principal.usuLogin) or (hasRole('ROLE_ADMIN'))")
 	public void changePassword(String usuLogin, String usuSenha);
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String editUser(String usuLogin, String usuNGuerra, String usuNome, 
 			String usuPapel, String usuSenha, int usuIdt, int idPstGrad, int idUsuario);
+	
+	@PreAuthorize("(#usuLogin == principal.usuLogin) and (isAuthenticated())")
+	public String editUser(String usuLogin, String usuNGuerra, String usuNome, 
+			int usuIdt, int idPstGrad, int idUsuario);
 	
 	public boolean checkIfUserIsDuplicate(String usuLogin, int idUsuario);
 
