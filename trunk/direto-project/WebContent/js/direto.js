@@ -331,6 +331,12 @@ js.direto.modal = function(obj){
 		setTimeout(function(){$j('#ListaPARA').attr('disabled','');
 		$j('#ListaDE').attr('disabled','');},2500);
 	}
+	
+	if (id == "#waddcarteira"){
+		carregaFuncoes();
+		carregaSecoes();
+		carregaOm();
+	}
 
 	var maskHeight = $j(document).height();
 	var maskWidth = $j(window).width();
