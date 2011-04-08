@@ -74,6 +74,10 @@ fieldset p input {
 	width: 350px;
 }
 
+fieldset p input[type="checkbox"] {
+	max-width: 15px;
+}
+
 fieldset p select {
 	width: 350px;
 }
@@ -170,7 +174,7 @@ $j(function() {
 
 			if (data.contas.length == 0){
 				var fieldset = $j('#table_users tr').eq(1).find('td').find('fieldset');
-				fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">adicionar</a>]<br></p>');
+				fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">Adicionar</a>] | [<a href="#waddcarteira" name="modal">Cadastrar Carteira</a>]<br></p>');
 				fieldset.find('p').eq(4).append('<div id="contas_atuais">Sem Conta Cadastrada!</div>');
 				fieldset.find('p').eq(4).css('margin-top', '30px');
 				fieldset.find('p').eq(4).css('background-color', '#E2E4FF');
@@ -205,13 +209,13 @@ $j(function() {
 		userForm('text','Identidade','',1);
 
 		userForm('select','Pst Grad','',2);
-		userForm('select','Papel',['ADMIN', 'USER', 'PROTOCOLISTA'],2);
+		userForm('select','Papel','',2);
 
 		userForm('text','Senha','',3);
 
 			
 		var fieldset = $j('#table_users tr').eq(1).find('td').find('fieldset');
-		fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">adicionar</a>]<br></p>');
+		fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">Adicionar</a>] | [<a href="#waddcarteira" name="modal">Cadastrar Carteira</a>]<br></p>');
 		fieldset.find('p').eq(4).append('<div id="contas_atuais">Adicione a(s) conta(s)</div>');
 		fieldset.find('p').eq(4).css('margin-top', '30px');
 		fieldset.find('p').eq(4).css('background-color', '#E2E4FF');
@@ -240,13 +244,13 @@ $j(function() {
 		}else if (usuNGuerra == ""){
 			alert('Preencha o campo nome de guerra');
 			return false;
+		}else if (usuSenha == ""){
+			alert('Digite uma senha para o usuário');
+			return false;
 		}else if (usuNome == ""){
 			usuNome = '-';
 		}else if (usuIdt == ""){
 			usuIdt = 0;
-		}else if (usuSenha == ""){
-			alert('Digite uma senha para o usuário');
-			return false;
 		}
 
 		usuarioJS.validateUser(usuLogin,{
@@ -301,7 +305,13 @@ $j(function() {
 					
 					if ( (i == 0) && ($j(this).attr('checked') == '') ){
 						var idCarteira = parseInt($j('#novas_contas').find('input:checkbox').first().val());
-						contasJS.updateAccount(pkConta, idCarteira, true);
+						if (isNaN(idCarteira)){
+							contasJS.deleteAccount(pkConta);
+						}else{
+							contasJS.updateAccount(pkConta, idCarteira, true);
+						}
+							
+						
 					}else if ($j(this).attr('checked') == ''){
 						contasJS.deleteAccount(pkConta);
 					}
@@ -345,7 +355,7 @@ $j(function() {
 		}
 
 		if (campo == 'contas'){
-			campo = '<input type="checkbox" id="'+valor.idCarteira+'" value="'+valor.idConta+'" checked '+(valor.isPrincipal == true ? 'disabled' : '')+'/>'+valor.cartAbr;
+			campo = '<input type="checkbox" id="'+valor.idCarteira+'" value="'+valor.idConta+'" checked '+(valor.isPrincipal == true ? 'disabled' : '')+'/>';
 			isCheckbox = true;
 		}	
 
@@ -361,12 +371,13 @@ $j(function() {
 				campo += ' (Principal)<br>';
 			
 			if (fieldset.find('p').eq(linha).text() == ""){
-				fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">adicionar</a>]<br></p>');
-				fieldset.find('p').eq(linha).append('<div id="contas_atuais">'+campo+'</div>');
+				fieldset.append('<p><b>Contas</b> [<a href="#wcontas" name="modal">Adicionar</a>] | [<a href="#waddcarteira" name="modal">Cadastrar Carteira</a>]<br></p>');
+				fieldset.find('p').eq(linha).append('<div id="contas_atuais"><label>'+valor.cartAbr+'</label>'+campo+'</div>');
 				fieldset.find('p').eq(linha).css('margin-top', '30px');
 				fieldset.find('p').eq(linha).css('background-color', '#E2E4FF');
+				fieldset.find('p').eq(linha).css('text-align', 'center');
 			}else{
-				$j('#contas_atuais').append(campo);
+				$j('#contas_atuais').append('(<label>'+valor.cartAbr+'</label>'+campo+')');
 			}
 		}
 		
@@ -483,6 +494,39 @@ function carregaCarteiras(){
 			dwr.util.removeAllOptions('ListaPARA');
 			dwr.util.addOptions('slContas', carteirasList, "idCarteira", "cartAbr");
 			dwr.util.addOptions('ListaDE', carteirasList, "idCarteira", "cartAbr");
+		}
+	});
+	
+};
+
+function carregaFuncoes(){
+
+	carteiraJS.getAll({
+		callback:function(carteirasList) {
+			dwr.util.removeAllOptions('slFuncao');
+			dwr.util.addOptions('slFuncao', carteirasList, "idCarteira", "cartAbr");
+		}
+	});
+	
+};
+
+function carregaSecoes(){
+
+	carteiraJS.getAll({
+		callback:function(carteirasList) {
+			dwr.util.removeAllOptions('slSecao');
+			dwr.util.addOptions('slSecao', carteirasList, "idCarteira", "cartAbr");
+		}
+	});
+	
+};
+
+function carregaOm(){
+
+	carteiraJS.getAll({
+		callback:function(carteirasList) {
+			dwr.util.removeAllOptions('slOm');
+			dwr.util.addOptions('slOm', carteirasList, "idCarteira", "cartAbr");
 		}
 	});
 	
@@ -610,6 +654,64 @@ function atualizaContas(){
 		
 		<p><button onclick="atualizaContas()">Salvar</button></p>
 		</div>
+		
+		<style type="text/css">
+		#waddcarteira fieldset { border:1px solid #000 }
+
+
+  
+  #waddcarteira input {
+  	margin-bottom: 10px;
+  	width: 300px;
+  }
+  
+  #waddcarteira select {
+  	margin-bottom: 10px;
+  	width: 300px;
+  }
+		</style>
+	<div id="waddcarteira" class="window">
+	<table width="100%">
+			<tr>
+				<td colspan="3" style="width: 720px; text-align: center;" align="center" bgcolor="red" class="titulo_notificacoes" height="20" valign="middle">Adicionar nova carteira</td>
+				<td style="width: 30px;"><a href="#" class="close" style="font-weight: bold">X</a></td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+					<fieldset>
+  						
+  							
+    						<label for="cartDesc">Descrição:</label>
+    							<input type="text" name="cartDesc" id="cartDesc" />
+    						<br>
+    						
+    						<label for="cartAbr">Abreviatura:</label>
+    							<input type="text" name="cartAbr" id="cartAbr" />
+    						<br>
+    						
+    						<label for="slFuncao">Função:</label>
+    							<select name="slFuncao" id="slFuncao">
+    							</select>
+    						<br>
+    						
+    						<label for="slSecao">Seção:</label>
+    							<select name="slSecao" id="slSecao">
+    							</select>
+    						<br>
+    						
+    						<label for="slOm">OM:</label>
+    							<select name="slOm" id="slOm">
+    							</select>
+    							
+    						<input type="button" value="Salvar" style="width: 50px;" />		
+    						
+  					</fieldset>
+				</td>
+			</tr>
+	</table>		
+	
+	
+	</div>	
 
   <!-- Mask para bloquear tela -->
   <div id="mask"></div>

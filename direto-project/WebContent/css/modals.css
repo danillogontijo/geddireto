@@ -77,9 +77,16 @@
 
 #boxes #wcontas {
   width:750px; 
-  height:325px;
+  height:365px;
   background-color: #fff;
 }
+
+#boxes #waddcarteira{
+  width:350px; 
+  height:345px;
+  background-color: #fff;
+}
+
 
 #bt_conf_edicao {
 	border: 1px solid #006;
