@@ -6,10 +6,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import br.org.ged.direto.model.entity.Carteira;
-import br.org.ged.direto.model.entity.PstGrad;
 import br.org.ged.direto.model.repository.CarteiraRepository;
 
 //This will make easier to autowired

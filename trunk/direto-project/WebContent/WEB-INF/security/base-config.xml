@@ -70,7 +70,7 @@
 	</bean> 
 	
 	<bean id="protocolo" class="br.org.direto.util.Protocolo">
-		<property name="docProt" ref="documentoProtocolo"></property>
+		<property name="documentoProtocolo" ref="documentoProtocolo"></property>
 	</bean> 
 	
 	<!--  -->

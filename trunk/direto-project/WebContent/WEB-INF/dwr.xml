@@ -14,7 +14,6 @@
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
 	"> 
 	
-	
 
 	<dwr:configuration>
 		<dwr:convert type="bean" class="br.org.direto.util.DataUtils" />
@@ -25,15 +24,13 @@
 		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.PstGrad" />
 		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.Usuario" />
 		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.Carteira" />
+		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.Funcao" />
+		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.Secao" />
+		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.OM" />
 	</dwr:configuration>
 	
-	
-
 	<dwr:annotation-config />
 	<dwr:url-mapping />
 	<dwr:controller id="dwrController" debug="true" />
 
-	
-
-	
 </beans>

@@ -10,21 +10,32 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.ged.direto.model.entity.Carteira;
+import br.org.ged.direto.model.entity.Funcao;
+import br.org.ged.direto.model.entity.OM;
+import br.org.ged.direto.model.entity.Secao;
 import br.org.ged.direto.model.repository.CarteiraRepository;
 import br.org.ged.direto.model.service.CarteiraService;
+import br.org.ged.direto.model.service.FuncaoService;
+import br.org.ged.direto.model.service.OMService;
+import br.org.ged.direto.model.service.SecaoService;
 
 @Service("carteiraService")
 @RemoteProxy(name = "carteiraJS")
 @Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 public class CarteiraServiceImpl implements CarteiraService {
 
+	@Autowired
 	private CarteiraRepository carteiraRepository;
 	
 	@Autowired
-	public void setCarteiraRepository(CarteiraRepository carteiraRepository) {
-		this.carteiraRepository = carteiraRepository;
-	}
-
+	private FuncaoService funcaoService;
+	
+	@Autowired
+	private SecaoService secaoService;
+	
+	@Autowired
+	private OMService omService;
+	
 	@Override
 	@RemoteMethod
 	public List<Carteira> getAll() {
@@ -40,6 +51,27 @@ public class CarteiraServiceImpl implements CarteiraService {
 	@Override
 	public Carteira selectById(Integer primaryKey) {
 		return carteiraRepository.selectById(primaryKey);
+	}
+
+	@Override
+	@RemoteMethod
+	public void save(String descricao, String abreviatura, int idFuncao,
+			int idSecao, int idOM) {
+		Carteira carteira = new Carteira();
+		Funcao funcao = funcaoService.getFuncaoByPkId(idFuncao);
+		Secao secao = secaoService.getSecaoByPkId(idSecao);
+		OM om = omService.getOMByPkId(idOM);
+		carteira.setFuncao(funcao);
+		carteira.setSecao(secao);
+		carteira.setOm(om);
+		carteira.setCartDesc(descricao);
+		carteira.setCartAbr(abreviatura);	
+		try{
+			carteiraRepository.save(carteira);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

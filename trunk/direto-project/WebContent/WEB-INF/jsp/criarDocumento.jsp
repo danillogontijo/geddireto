@@ -464,7 +464,7 @@ function fEnviar(){
 
 		this.documentoFormJS.destinatarios = sDestinatarios;
 		this.documentoFormJS.tipoDocumento = $j('#tipoDocumento').val();
-		this.documentoFormJS.remetente = '${usuario.usuNGuerra}';
+		this.documentoFormJS.remetente = '${usuario.usuLogin}';
 
 		sendAndSaveFormToNewDocumentoJS(this.documentoFormJS);
 	}	

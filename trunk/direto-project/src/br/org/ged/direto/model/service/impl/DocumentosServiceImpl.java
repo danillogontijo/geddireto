@@ -218,20 +218,23 @@ public class DocumentosServiceImpl implements DocumentosService {
 	public boolean sendAndSaveFormToNewDocumento(DocumentoForm form){
 		
 		try {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			protocolo.setUser((Usuario) auth.getPrincipal());
 			protocolo.setFormulario(form);
 			
-			/*Thread threadSingleton = new Thread(protocolo);
-			threadSingleton.setName("threadTo"+form.getRemetente());
-			threadSingleton.start();*/
+			Thread threadSingleton = new Thread(protocolo);
+			threadSingleton.setName(form.getRemetente());
+			threadSingleton.start();
 			
 			
-			Thread[] t = new Thread[10];
+			
+			/*Thread[] t = new Thread[10];
 			
 			for (int i=0;i<t.length;i++){
 				t[i] = new Thread(protocolo);
 				t[i].setName("t"+(i+1)+form.getRemetente());
 				t[i].start();
-			}
+			}*/
 			
 		}catch (Exception e) {
 			e.printStackTrace();
