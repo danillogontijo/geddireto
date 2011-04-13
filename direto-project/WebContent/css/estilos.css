@@ -247,6 +247,7 @@ input.field_inputs_active:active { background-color:red; }
 	max-width: 20px;
 	font-weight: bold;
 	color: #fff;
+	cursor: pointer;
 }	
 
 #topo .right {

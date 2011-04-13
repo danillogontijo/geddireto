@@ -22,6 +22,9 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/carteiraJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/contasJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/funcaoJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/omJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/secaoJS.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8""></script>
 
@@ -240,13 +243,13 @@ $j(function() {
 
 		if (usuLogin == ""){
 			alert('Preencha o campo login do usuário');
-			return false;
+			return;
 		}else if (usuNGuerra == ""){
 			alert('Preencha o campo nome de guerra');
-			return false;
+			return;
 		}else if (usuSenha == ""){
 			alert('Digite uma senha para o usuário');
-			return false;
+			return;
 		}else if (usuNome == ""){
 			usuNome = '-';
 		}else if (usuIdt == ""){
@@ -257,7 +260,7 @@ $j(function() {
 				callback:function(exists){
 					if (exists){
 						alert('Já existe um usuário cadastrado com este login.\nFavor escolha outro.');
-						return false;
+						return;
 					}else{
 						alert('Usuario gravado');
 					}
@@ -486,7 +489,6 @@ $j(function() {
 
 
 function carregaCarteiras(){
-
 	carteiraJS.getAll({
 		callback:function(carteirasList) {
 			dwr.util.removeAllOptions('slContas');
@@ -496,44 +498,40 @@ function carregaCarteiras(){
 			dwr.util.addOptions('ListaDE', carteirasList, "idCarteira", "cartAbr");
 		}
 	});
-	
 };
 
 function carregaFuncoes(){
-
-	carteiraJS.getAll({
-		callback:function(carteirasList) {
+	funcaoJS.getAll({
+		callback:function(funcoesList) {
 			dwr.util.removeAllOptions('slFuncao');
-			dwr.util.addOptions('slFuncao', carteirasList, "idCarteira", "cartAbr");
+			dwr.util.addOptions('slFuncao', funcoesList, "idFuncao", "funcAbr");
 		}
 	});
-	
 };
 
 function carregaSecoes(){
-
-	carteiraJS.getAll({
-		callback:function(carteirasList) {
+	secaoJS.getAll({
+		callback:function(secoesList) {
 			dwr.util.removeAllOptions('slSecao');
-			dwr.util.addOptions('slSecao', carteirasList, "idCarteira", "cartAbr");
+			dwr.util.addOptions('slSecao', secoesList, "idSecao", "secaoAbr");
 		}
 	});
-	
 };
 
 function carregaOm(){
-
-	carteiraJS.getAll({
-		callback:function(carteirasList) {
+	omJS.getAll({
+		callback:function(omList) {
 			dwr.util.removeAllOptions('slOm');
-			dwr.util.addOptions('slOm', carteirasList, "idCarteira", "cartAbr");
+			dwr.util.addOptions('slOm', omList, "idOM", "omAbr");
 		}
 	});
-	
 };
 
 
 function atualizaContas(){
+
+	if (checkContasCadastradas()) 
+		return;
 	
 	js.direto.close_mask();
 	var pContas = $j('#table_users tr').eq(1).first().find('fieldset').find('p').eq(4);
@@ -598,11 +596,50 @@ function atualizaContas(){
 }
 
 
+function checkContasCadastradas(){
+	var exists = false;
+	
+	var principalValue = $j('#slContas option:selected').val();
 
+	$j('#ListaPARA option').each(function(){
+		var listaParaValue = $j(this).val();
 
+		if (listaParaValue == principalValue){
+			alert('A conta selecionada como principal está selecionada\n\tcomo conta secundária.\nFavor remova-a primeiro da box Carteiras Adicionadas.');
+			exists = true;
+		}
+	});
 
+	return exists;
+	
+};
 
+function saveCarteira(){
 
+	if(confirm("Todos os dados estão corretos?"))
+	{
+		var idFuncao = parseInt($j('#slFuncao').val());
+		var idSecao = parseInt($j('#slSecao').val());
+		var idOM = parseInt($j('#slOm').val());
+		
+		var descricao = $j('#cartDesc').val();
+		var abreviatura = $j('#cartAbr').val();
+		
+		if (descricao == ""){
+			alert('Preencha o campo Descrição');
+			return;
+		}else if (abreviatura == ""){
+			alert('Preencha o campo Abreviatura');
+			return;
+		}
+
+		carteiraJS.save(descricao, abreviatura, idFuncao,
+				idSecao, idOM);
+
+		alert('Carteira Cadastrada');
+	}
+	
+};
 
 </script>
 
@@ -619,7 +656,7 @@ function atualizaContas(){
 			<tr>
 				<td colspan="3" align="center">
 					<b>Conta principal:</b> <select
-						name="slContas" id="slContas" style="width: 200px; margin: 20px 0 20px 0;">
+						name="slContas" id="slContas" style="width: 200px; margin: 20px 0 20px 0;" onchange="checkContasCadastradas()">
 					</select>
 				</td>
 			</tr>
@@ -656,19 +693,19 @@ function atualizaContas(){
 		</div>
 		
 		<style type="text/css">
-		#waddcarteira fieldset { border:1px solid #000 }
-
-
-  
-  #waddcarteira input {
-  	margin-bottom: 10px;
-  	width: 300px;
-  }
-  
-  #waddcarteira select {
-  	margin-bottom: 10px;
-  	width: 300px;
-  }
+			  #waddcarteira fieldset { border:1px solid #000 }
+			
+			
+			  
+			  #waddcarteira input {
+			  	margin-bottom: 10px;
+			  	width: 300px;
+			  }
+			  
+			  #waddcarteira select {
+			  	margin-bottom: 10px;
+			  	width: 300px;
+			  }
 		</style>
 	<div id="waddcarteira" class="window">
 	<table width="100%">
@@ -682,11 +719,11 @@ function atualizaContas(){
   						
   							
     						<label for="cartDesc">Descrição:</label>
-    							<input type="text" name="cartDesc" id="cartDesc" />
+    							<input type="text" name="cartDesc" id="cartDesc" maxlength="60"/>
     						<br>
     						
     						<label for="cartAbr">Abreviatura:</label>
-    							<input type="text" name="cartAbr" id="cartAbr" />
+    							<input type="text" name="cartAbr" id="cartAbr" maxlength="30"/>
     						<br>
     						
     						<label for="slFuncao">Função:</label>
@@ -703,7 +740,7 @@ function atualizaContas(){
     							<select name="slOm" id="slOm">
     							</select>
     							
-    						<input type="button" value="Salvar" style="width: 50px;" />		
+    						<input type="button" value="Salvar" style="width: 50px;" onclick="saveCarteira()" />		
     						
   					</fieldset>
 				</td>

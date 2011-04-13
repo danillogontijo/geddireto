@@ -6,8 +6,8 @@ import br.org.ged.direto.model.entity.Funcao;
 
 public interface FuncaoRepository {
 	
-	public List<Funcao> getAll(Funcao funcao);
-	public Funcao getPstGradById(Integer id);
+	public List<Funcao> getAll();
+	public Funcao getFuncaoByPkId(Integer pkId);
 
 
 }
