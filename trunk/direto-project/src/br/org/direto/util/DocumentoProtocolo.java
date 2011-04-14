@@ -39,12 +39,15 @@ public class DocumentoProtocolo {
 	public static int idCount = 101;
 	
 	
+	
+	
 	@RemoteMethod
 	public String getsRetorno() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario userRequesting = (Usuario) auth.getPrincipal();
 		
 		System.out.println("getsRetorno: "+userRequesting.getIdUsuario());
+		System.out.println(userList.indexOf(userRequesting) + " usuário(s) na fila");
 		
 		try {
 			synchronized (user) {
@@ -58,7 +61,16 @@ public class DocumentoProtocolo {
 		if (user == userRequesting)
 			return sRetorno;
 		
-		return userList.indexOf(userRequesting) + "usuário(s) na fila";
+		int userNumberInList = userList.indexOf(userRequesting);
+		
+		if (userNumberInList == -1){
+			return "Finalizado";
+		}else if (userNumberInList == 0) {
+			return "Você é o próximo, aguarde...";
+		}else{
+			return (userNumberInList+1) + " usuário(s) na fila";
+		}
+		
 	}
 	
 	public DocumentoForm getFormulario() {
@@ -69,9 +81,9 @@ public class DocumentoProtocolo {
 		this.documentosService = documentosService;
 	}
 
-	public synchronized void start(DocumentoForm formulario, Usuario user){
+	public void start(DocumentoForm formulario, Usuario user){
 		try{
-			System.out.println("Iniciando envio para o user: "+Thread.currentThread().getName());
+			System.out.println("\nSTART - Iniciando envio para o user: "+Thread.currentThread().getName());
 			userList.add(user);
 			lastIdFromDataBase(formulario);
 			
@@ -87,16 +99,21 @@ public class DocumentoProtocolo {
 			this.formulario = formulario;
 			sRetorno = "";
 			
-			Thread.sleep(500);
-			System.out.println("\nFormulario: "+this.formulario.getRemetente());
+			System.out.println("\nLAST_ID_FROM_Formulario: "+this.formulario.getRemetente());
 			System.out.println("Buscando ultimo id para.... "+Thread.currentThread().getName());
 	        
-			sRetorno += "Iniciando envio...<br />Usuário: "+Thread.currentThread().getName()+" - Aguarde..<br>";
-	        
-			this.lastID = documentosService.getLastId()+1;
+			
+			synchronized (user) {
+				sRetorno += "Iniciando envio...<br />Usuário: "+Thread.currentThread().getName()+" - Aguarde..<br>";
+				user.notifyAll();
+			}
+			
+			//Thread.sleep(5000);
+			
+	  		this.lastID = documentosService.getLastId()+1;
 	        System.out.println("IDCount = "+lastID);
 	        
-	        Thread.sleep(10000);
+	        //Thread.sleep(10000);
 	        saveOnList();
 	        wait();
 		}catch (Exception e) {
@@ -107,14 +124,13 @@ public class DocumentoProtocolo {
 	private synchronized void saveOnList(){
 		try{
 			Thread.sleep(500);  
-	        System.out.println("\nGravando documento na lista statica.... "+Thread.currentThread().getName());
+	        System.out.println("\nSAVE_ON_LIST_Gravando documento na lista statica.... "+Thread.currentThread().getName());
 	        
 	        DocumentoDetalhes documento = new DocumentoDetalhes();
 	        
 			documento.setIdDocumentoDetalhes(lastID);
 			documento.setNrProtocolo("201103"+lastID);
 			documento.setAssunto(Thread.currentThread().getName());
-			documento.setAssinadoPor(formulario.getAssinadoPor());
 			documento.setNrDocumento(formulario.getNrDocumento());
 			
 			this.documento = documento;
@@ -129,11 +145,9 @@ public class DocumentoProtocolo {
 		
 	private synchronized void saveOnDataBase(){
 		try{
-			Thread.sleep(5000);  
+			//Thread.sleep(5000);  
 			
-			sRetorno += ("Gravando documento no BD: "+Thread.currentThread().getName()+"<br />");
-			
-	        System.out.println("\nGravando documento no Banco de Dados.... "+Thread.currentThread().getName());
+			System.out.println("\nSAVE_ON_DATA_Gravando documento no Banco de Dados.... "+Thread.currentThread().getName());
 			int index = DocumentosUtil.listaProtocolo.indexOf(documento);
 			
 			
@@ -145,11 +159,14 @@ public class DocumentoProtocolo {
 			System.out.println("Thread Gravada: " +DocumentosUtil.listaProtocolo.get(index).getTipoDocumento());*/
 			//mostraLista();
 			//Thread.sleep(5000);
-			sRetorno += ("Finalizado");
+			
 			synchronized (user) {
-				userList.remove(0);
-				notify();
+				sRetorno += ("Gravando documento no BD: "+Thread.currentThread().getName()+"<br />");
+				sRetorno += ("Finalizado");
+				user.wait(1000);
 				user.notifyAll();
+				userList.remove(0);
+				notifyAll();
 				System.out.println("\nNotificado\n");
 			}
 			

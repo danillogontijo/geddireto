@@ -291,7 +291,7 @@ public class TesteController extends BaseController {
 		
 			//DocumentoForm f = new DocumentoForm();
 			//f.setNrDocumento("0000");
-			f.setAssinadoPor("assindoPor Teste");
+			//f.setAssinadoPor("assindoPor Teste");
 			
 			System.out.println(f.getDestinatarios());
 			System.out.println(f.getDataDocumento());

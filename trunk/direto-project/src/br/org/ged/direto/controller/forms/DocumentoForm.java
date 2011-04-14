@@ -20,10 +20,18 @@ public class DocumentoForm {
 	private String referencia;
 	private int idCarteiraRemetente;
 	private String nrProtocol;
-	private int assinatura;
-	private String assinadoPor;
+	private int assinatura = 0;
+	//private String assinadoPor;
 	private char origem;
+	//private int enviadoPor;
 	
+	
+	/*public int getEnviadoPor() {
+		return enviadoPor;
+	}
+	public void setEnviadoPor(int enviadoPor) {
+		this.enviadoPor = enviadoPor;
+	}*/
 	
 	
 	public String getDestinatarios() {
@@ -116,12 +124,12 @@ public class DocumentoForm {
 	public void setAssinatura(int assinatura) {
 		this.assinatura = assinatura;
 	}
-	public String getAssinadoPor() {
+	/*public String getAssinadoPor() {
 		return assinadoPor;
 	}
 	public void setAssinadoPor(String assinadoPor) {
 		this.assinadoPor = assinadoPor;
-	}
+	}*/
 	
 	
 

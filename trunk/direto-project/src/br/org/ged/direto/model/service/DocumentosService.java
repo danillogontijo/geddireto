@@ -32,7 +32,7 @@ public interface DocumentosService {
 	public Documento selectById(Integer idDocumentoDetalhes, Integer idCarteira) throws DocumentNotFoundException;
 	
 	@PostAuthorize("(returnObject == null) or (returnObject.granted)")
-	public Documento getDocumento(Integer primaryKey);
+	public Documento getDocumento(Integer primaryKey) throws DocumentNotFoundException;
 	
 	public Long counterDocumentsByBox(String box, int idCarteira, String filtro);
 	
@@ -40,7 +40,7 @@ public interface DocumentosService {
 	
 	public List<Anexo> getAllAnexos(Integer idDocumentoDetalhes);
 	
-	public void setDataNotificacao(Date data,Integer id,Integer idCarteira);
+	public void setDataNotificacao(Date data, int primaryKey);
 	//public Documento selectById(Integer id) throws DocumentNotFoundException;
 	public Integer getLastId();
 	
@@ -55,5 +55,5 @@ public interface DocumentosService {
 	
 	public void saveNewDocumento(DocumentoDetalhes documentoDetalhes);
 	
-	public boolean sendAndSaveFormToNewDocumento(DocumentoForm form);
+	public Documento sendAndSaveFormToNewDocumento(DocumentoForm form);
 }

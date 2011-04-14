@@ -29,9 +29,7 @@ public class NotificacoesController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String show(@RequestParam("id") int id, ModelMap model, HttpServletRequest request, HttpServletResponse response) {
 		
-		Integer idCarteira = this.getIdCarteiraFromSession(request);
-		
-		Documento doc_cart = documentosService.selectById(id, idCarteira);
+		Documento doc_cart = documentosService.getDocumento(id);
 		
 		String notificacoes = "";
 		
@@ -50,9 +48,8 @@ public class NotificacoesController extends BaseController {
 		}
 		
 		Date now = new Date();
-		documentosService.setDataNotificacao(now, id, idCarteira);
+		documentosService.setDataNotificacao(now, id);
 		
-
 		model.addAttribute("id", id);
 		model.addAttribute("notificacoes", notificacoes);
 		

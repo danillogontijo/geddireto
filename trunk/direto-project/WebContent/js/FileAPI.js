@@ -259,7 +259,7 @@ function FileAPI (t, d, f) {
         if (!erro){
         	//setTimeout("document.getElementById('documentoForm').submit()",1000);
         	//alert('enviado');
-        	fEnviar();        	
+        	//fEnviar();        	
         }
     }
     
@@ -391,7 +391,8 @@ function FileAPI (t, d, f) {
             );
             xhr.setRequestHeader("Cache-Control", "no-cache");
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-            xhr.setRequestHeader("X-File-Name", count+file.name);
+            //xhr.setRequestHeader("X-File-Name", count+'_'+file.name);
+            xhr.setRequestHeader("X-File-Name", count+'_'+ID_DOCUMENTO);
             xhr.send(file);
         }
     }
@@ -400,6 +401,7 @@ function FileAPI (t, d, f) {
 
 window.onload = function () {
     if (typeof FileReader == "undefined") alert ("Sorry your browser does not support the File API and this demo will not work for you");
+    var ID_DOCUMENTO = 0;
     FileAPI = new FileAPI(
         document.getElementById("fileList"),
         document.getElementById("fileDrop"),
