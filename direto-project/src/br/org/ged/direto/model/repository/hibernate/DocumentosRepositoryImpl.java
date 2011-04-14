@@ -1,17 +1,14 @@
 package br.org.ged.direto.model.repository.hibernate;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -21,20 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.security.core.SpringSecurityMessageSource;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import br.org.direto.util.DataTimeUtil;
 import br.org.direto.util.DataUtils;
-import br.org.direto.util.DocumentosUtil;
-import br.org.direto.util.UsuarioUtil;
 import br.org.ged.direto.controller.forms.PesquisaForm;
 import br.org.ged.direto.controller.utils.DocumentoCompleto;
 import br.org.ged.direto.model.entity.Anexo;
@@ -42,8 +32,6 @@ import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Notificacao;
-import br.org.ged.direto.model.entity.Pastas;
-import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.repository.DocumentosRepository;
 import br.org.ged.direto.model.service.UsuarioService;
@@ -181,7 +169,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		
 		System.out.println(box);
 		
-		int limitePorPagina = DocumentosUtil.LIMITE_POR_PAGINA;
+		int limitePorPagina = Integer.parseInt(messages.getMessage("limitByPage")); //DocumentosUtil.LIMITE_POR_PAGINA;
 		
 		String sql = "from Documento as doc inner join doc.documentoDetalhes details " +
 		"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")"+filtro+
@@ -568,5 +556,11 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 	public void saveNewDocumento(DocumentoDetalhes documentoDetalhes) {
 		hibernateTemplate.save(documentoDetalhes);
 	}
+
+	@Override
+	public void saveOrUpdateDocumento(Documento documento) {
+		hibernateTemplate.saveOrUpdate(documento);
+	}
+
 
 }

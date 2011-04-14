@@ -346,10 +346,13 @@ $j("#documentoForm").validator({
 	var form = document.getElementById("documentoForm");
 
 	if (!e.isDefaultPrevented()) {
-		
-		FileAPI.uploadQueue(e);
 		e.preventDefault();
-		}
+
+		fEnviar(e);
+
+	}
+	
+		
 	});
 
 $j.tools.validator.localize("pt-BR", {
@@ -398,7 +401,7 @@ $j("#documentoForm").bind("onFail", function(e, errors)  {
 });
 
 
-function fEnviar(){
+function fEnviar(e){
 
 	var documentoFormJS = null;
 
@@ -432,15 +435,19 @@ function fEnviar(){
 
 		function retorno(dados){
 			txt = dados;
-			var t = $j("#console").text();
 			$j("#console").html(txt);
-	
-			if (t.indexOf("Finalizado") == -1){
-				setTimeout(function (){protocoloJS.getsRetorno(retorno);},300);
+			var TIMER;
+			
+			if ( (txt.indexOf("Finalizado") == -1) && (txt.indexOf("-1") == -1) ){
+				TIMER = setTimeout(function (){protocoloJS.getsRetorno(retorno);},300);
 			}else{
 				//alert('ok');
-				//js.direto.close_mask();
+				setTimeout(function (){js.direto.close_mask();},3000);
+				
+				$j("#console").html();
 				//return false;
+
+				//clearTimeout(TIMER);
 			}
 		}
 
@@ -464,17 +471,35 @@ function fEnviar(){
 
 		this.documentoFormJS.destinatarios = sDestinatarios;
 		this.documentoFormJS.tipoDocumento = $j('#tipoDocumento').val();
-		this.documentoFormJS.remetente = '${usuario.usuLogin}';
+		this.documentoFormJS.nrDocumento = $j('#nrDocumento').val();
+		this.documentoFormJS.dataDocumento = $j('#data').val();
+		this.documentoFormJS.remetente = $j('#remetente').val();
+		this.documentoFormJS.prioridade = $j('#prioridade').val();
+		this.documentoFormJS.assunto = $j('#assunto').val();
+		this.documentoFormJS.destinatario = $j('#destinatario').val();
+		this.documentoFormJS.referencia = $j('#referencia').val();
+		this.documentoFormJS.origem = $j('#origem').val();
+		this.documentoFormJS.idCarteiraRemetente = ${contaAtual};
+		if ( $j('input[name=assinatura]').is(':checked') )
+			this.documentoFormJS.assinatura = 1;
 
-		sendAndSaveFormToNewDocumentoJS(this.documentoFormJS);
+		//for (var i=0;i<10;i++)
+			sendAndSaveFormToNewDocumentoJS(this.documentoFormJS);
 	}	
 
 	function sendAndSaveFormToNewDocumentoJS(documentoForm){
 
 		documentosJS.sendAndSaveFormToNewDocumento(documentoForm,{
-			callback:function(dataFromServer) {
-				var resposta = (dataFromServer ? 'enviado com sucesso' : 'nao enviado')
-				//alert(resposta);
+			callback:function(documentoRetorno) {
+				//alert(dataFromServer);
+				
+				if(documentoRetorno == null)
+					alert("O documento não pode ser enviado");
+				
+				ID_DOCUMENTO = documentoRetorno.documentoDetalhes.idDocumentoDetalhes;
+				alert(documentoRetorno.idDocumento);
+
+				FileAPI.uploadQueue(e);
 	  		}
 	  	});
 

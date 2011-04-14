@@ -269,7 +269,7 @@ jQuery(document).ready(function($) {
 	$('a[name=notificacoes]').click(function(e) {
 		e.preventDefault();
 
-		var id = $(this).attr('href');
+		var id = $(this).attr('id');
 		
 		//javascript:getNotificacoes("+doc.getIdDocumentoDetalhes()+",this);
 		

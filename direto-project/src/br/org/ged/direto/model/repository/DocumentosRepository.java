@@ -28,4 +28,5 @@ public interface DocumentosRepository {
 	public Collection<DocumentoCompleto> returnSearch(PesquisaForm form);
 	public int returnTotalSearch(PesquisaForm form);
 	public void saveNewDocumento(DocumentoDetalhes documentoDetalhes);
+	public void saveOrUpdateDocumento(Documento documento);
 }

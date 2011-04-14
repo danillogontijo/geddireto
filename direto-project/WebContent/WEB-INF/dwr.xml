@@ -27,6 +27,8 @@
 		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.Funcao" />
 		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.Secao" />
 		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.OM" />
+		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.Documento" />
+		<dwr:convert type="bean" class="br.org.ged.direto.model.entity.DocumentoDetalhes" />
 	</dwr:configuration>
 	
 	<dwr:annotation-config />

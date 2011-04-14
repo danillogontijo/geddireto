@@ -42,14 +42,17 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import br.org.ged.direto.model.entity.UploadItem;
+import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.entity.exceptions.FileUploadLimitExceededException;
 import br.org.ged.direto.model.service.impl.UploadServiceImpl;
 import br.org.ged.direto.model.upload.UploadProgressListener;
@@ -135,6 +138,12 @@ public class FileUploadController {
    
     }
 	
+	@ExceptionHandler(RuntimeException.class)
+	public ModelAndView handlerDocumentNotFoundException(RuntimeException ex){
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("error", ex.getMessage());
+		return mav;
+	}
 	
 	
 	@SuppressWarnings("static-access")
@@ -143,10 +152,31 @@ public class FileUploadController {
 			HttpServletResponse response) throws ServletException {
 
 		System.out.println("upload.html");
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String usuLogin = auth.getName();
+		String USER_DIRECTORY = BASE_USER_DIRECTORY+usuLogin+"/"; 
+		
+		
+		System.out.println(USER_DIRECTORY);
+		
+		File diretorioUsuario = new File(USER_DIRECTORY);
+		boolean diretorioCriado = false;
+		
+		if(!diretorioUsuario.exists()){
+			diretorioCriado = diretorioUsuario.mkdir();
+			
+			if (!diretorioCriado)
+				throw new RuntimeException("Não foi possível criar o diretório do usuário");
+		}
+		
+		
+		
 		PrintWriter writer = null;
 		InputStream is = null;
 		FileOutputStream fos = null;
-
+		
+		
 		try {
 			writer = response.getWriter();
 		} catch (IOException ex) {
@@ -156,7 +186,7 @@ public class FileUploadController {
 		String filename = request.getHeader("X-File-Name");
 		try {
 			is = request.getInputStream();
-			fos = new FileOutputStream(new File(BASE_USER_DIRECTORY + filename));
+			fos = new FileOutputStream(new File(USER_DIRECTORY + filename));
 			IOUtils.copy(is, fos);
 			response.setStatus(response.SC_OK);
 			writer.print("{success: true}");
