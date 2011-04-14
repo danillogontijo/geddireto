@@ -28,9 +28,7 @@ public class DocumentoProtocolo {
 	
 	private Map<Integer,String> documentsMessage = new Hashtable<Integer,String>();
 	
-	private List<Integer> list = new LinkedList<Integer>();
-	
-	private Integer key;
+	private List<Usuario> userList = new LinkedList<Usuario>();
 	
 	private String sRetorno;
 	
@@ -45,23 +43,22 @@ public class DocumentoProtocolo {
 	public String getsRetorno() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario userRequesting = (Usuario) auth.getPrincipal();
-		int key = userRequesting.getIdUsuario();
 		
-		System.out.println("getsRetorno: "+key);
-		
-		if (list.indexOf(key) == 0)
-			return sRetorno;
+		System.out.println("getsRetorno: "+userRequesting.getIdUsuario());
 		
 		try {
-			synchronized (list) {
-				list.wait();
+			synchronized (user) {
+				user.wait();
 			}
 		} catch (InterruptedException e) {
 			System.out.println("Deu pau!");
 			return null;
 		}
 		
-		return list.indexOf(key) + "usuário(s) na fila";
+		if (user == userRequesting)
+			return sRetorno;
+		
+		return userList.indexOf(userRequesting) + "usuário(s) na fila";
 	}
 	
 	public DocumentoForm getFormulario() {
@@ -75,40 +72,33 @@ public class DocumentoProtocolo {
 	public synchronized void start(DocumentoForm formulario, Usuario user){
 		try{
 			System.out.println("Iniciando envio para o user: "+Thread.currentThread().getName());
+			userList.add(user);
+			lastIdFromDataBase(formulario);
 			
-			this.user = user;
-			
-			key = this.user.getIdUsuario();
-			
-			list.add(key);
-			
-			this.formulario = formulario;
-			
-			sRetorno = "";
-			
-			Thread.sleep(10000);
-			
-			lastIdFromDataBase();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
-	private synchronized void lastIdFromDataBase(){
+	private synchronized void lastIdFromDataBase(DocumentoForm formulario){
 		try{
+			this.user = userList.get(0);
+			this.formulario = formulario;
+			sRetorno = "";
+			
 			Thread.sleep(500);
 			System.out.println("\nFormulario: "+this.formulario.getRemetente());
 			System.out.println("Buscando ultimo id para.... "+Thread.currentThread().getName());
 	        
 			sRetorno += "Iniciando envio...<br />Usuário: "+Thread.currentThread().getName()+" - Aguarde..<br>";
-	        //idCount++;
-	        //System.out.println("IDCount = "+idCount);
-	        //this.lastID = idCount;
-	        this.lastID = documentosService.getLastId()+1;
+	        
+			this.lastID = documentosService.getLastId()+1;
 	        System.out.println("IDCount = "+lastID);
-	        //Thread.sleep(5000);
+	        
+	        Thread.sleep(10000);
 	        saveOnList();
+	        wait();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -137,7 +127,7 @@ public class DocumentoProtocolo {
 		}
 	}
 		
-	public synchronized void saveOnDataBase(){
+	private synchronized void saveOnDataBase(){
 		try{
 			Thread.sleep(5000);  
 			
@@ -156,15 +146,11 @@ public class DocumentoProtocolo {
 			//mostraLista();
 			//Thread.sleep(5000);
 			sRetorno += ("Finalizado");
-			
-			if (list.size() > 1){
-			
-				synchronized (list) {
-					list.remove(0);
-					list.notifyAll();
-					System.out.println("\nNotificado");
-				}
-				
+			synchronized (user) {
+				userList.remove(0);
+				notify();
+				user.notifyAll();
+				System.out.println("\nNotificado\n");
 			}
 			
 		}catch (Exception e) {
