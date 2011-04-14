@@ -1,9 +1,14 @@
 package br.org.direto.webchat;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class UserChat {
+public class UserChat implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1741853602802046523L;
 	private int idUser;
 	private String nameUser;
 	private List<Message> messages;

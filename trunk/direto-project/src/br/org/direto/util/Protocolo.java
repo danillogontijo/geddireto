@@ -1,8 +1,5 @@
 package br.org.direto.util;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import br.org.ged.direto.controller.forms.DocumentoForm;
 import br.org.ged.direto.model.entity.Usuario;
 
