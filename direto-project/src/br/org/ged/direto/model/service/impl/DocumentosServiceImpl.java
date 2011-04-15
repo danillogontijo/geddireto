@@ -6,13 +6,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSourceAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,7 +17,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.direto.util.DataUtils;
-import br.org.direto.util.Protocolo;
 import br.org.ged.direto.controller.forms.DocumentoForm;
 import br.org.ged.direto.controller.forms.PesquisaForm;
 import br.org.ged.direto.controller.utils.DocumentoCompleto;
@@ -49,9 +45,6 @@ public class DocumentosServiceImpl implements DocumentosService {
 	
 	@Autowired
 	private UsuarioService usuarioService;
-	
-	@Autowired
-	private Protocolo protocolo;
 	
 	@Override
 	@RemoteMethod
@@ -328,6 +321,11 @@ public class DocumentosServiceImpl implements DocumentosService {
 		}
 		
 		 return sendedDocument;
+	}
+
+	@Override
+	public DocumentoDetalhes getDocumentoDetalhes(int primaryKey) {
+		return documentosRepository.getDocumentoDetalhes(primaryKey);
 	}
 
 }

@@ -34,6 +34,8 @@ public interface DocumentosService {
 	@PostAuthorize("(returnObject == null) or (returnObject.granted)")
 	public Documento getDocumento(Integer primaryKey) throws DocumentNotFoundException;
 	
+	public DocumentoDetalhes getDocumentoDetalhes(int primaryKey);
+	
 	public Long counterDocumentsByBox(String box, int idCarteira, String filtro);
 	
 	public List<Documento> getAllById(Integer id);

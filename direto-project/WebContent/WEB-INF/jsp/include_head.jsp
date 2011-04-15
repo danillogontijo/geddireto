@@ -86,6 +86,9 @@
 var $j = jQuery.noConflict();
 var DESTINATARIOS = new Array();
 var PAGE = '';
+var TAMANHO_MAX_UPLOAD = <spring:message code="TAMANHO_MAX_UPLOAD"/>; //Em Mb
+var ID_DOCUMENTO = 0;
+var IS_ASSIGN = false;
 
 function init(page){
 	PAGE = page;

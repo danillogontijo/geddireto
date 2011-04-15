@@ -38,10 +38,9 @@ public class Anexo {
 	private String assinaturaHash;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "IdMensagem", nullable = true, insertable = false, updatable= false)
+	@JoinColumn(name = "IdMensagem", nullable = false, insertable = true, updatable= false)
     private DocumentoDetalhes documentoDetalhes;
 	
-
 	public Integer getIdAnexo() {
 		return idAnexo;
 	}

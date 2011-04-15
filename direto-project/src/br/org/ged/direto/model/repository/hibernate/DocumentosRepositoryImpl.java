@@ -562,5 +562,10 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		hibernateTemplate.saveOrUpdate(documento);
 	}
 
+	@Override
+	public DocumentoDetalhes getDocumentoDetalhes(int primaryKey) {
+		return (DocumentoDetalhes)hibernateTemplate.get(DocumentoDetalhes.class, primaryKey);
+	}
+
 
 }
