@@ -156,18 +156,18 @@ function FileAPI (t, d, f) {
              
         });   
     	
-    }
+    };
     
     this.addFiles = function () {
         addFileListItems(this.files);
-    }
+    };
 
     this.showDroppedFiles = function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
         var files = ev.dataTransfer.files;
         addFileListItems(files);
-    }
+    };
 
     this.clearList = function (ev) {
         ev.preventDefault();
@@ -192,7 +192,7 @@ function FileAPI (t, d, f) {
         
         size--;
                 
-    }
+    };
 
     /*this.dragOver = function (ev) {
         ev.stopPropagation();
@@ -233,6 +233,10 @@ function FileAPI (t, d, f) {
         ev.preventDefault();
         //dropZone.style.display = 'block'; 
     }*/
+    
+    this.fileQueueSize = function () {
+    	return fileQueue.length;
+    };
 
     this.uploadQueue = function (ev) {
     	//alert('u');
@@ -276,7 +280,15 @@ function FileAPI (t, d, f) {
 
     var showFileInList = function (ev) {
         var file = ev.target.file;
+        
         if (file) {
+        	
+        	if ( file.size > (10*1024*1024) ){
+        		alert('\tTamanho excedido!\nTamanho máximo permitido: '+10+'Mb');
+        		return;
+        	}
+        		
+        	
             var li = document.createElement("li");
             li.fileId = size;
             if (file.type.search(/image\/.*/) != -1) {
@@ -402,6 +414,7 @@ function FileAPI (t, d, f) {
 window.onload = function () {
     if (typeof FileReader == "undefined") alert ("Sorry your browser does not support the File API and this demo will not work for you");
     var ID_DOCUMENTO = 0;
+    var MAX = 10; //em mb
     FileAPI = new FileAPI(
         document.getElementById("fileList"),
         document.getElementById("fileDrop"),
