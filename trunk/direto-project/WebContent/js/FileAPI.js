@@ -251,7 +251,7 @@ function FileAPI (t, d, f) {
             var pText = document.createTextNode("Enviando...");
             p.appendChild(pText);
             item.li.appendChild(p);
-            if (item.file.size < 10485760) {
+            if (item.file.size < (TAMANHO_MAX_UPLOAD*1024*1024)) {
                 uploadFile(item.file, item.li, count);
                 count--;
             } else {
@@ -282,12 +282,11 @@ function FileAPI (t, d, f) {
         var file = ev.target.file;
         
         if (file) {
-        	
-        	if ( file.size > (10*1024*1024) ){
-        		alert('\tTamanho excedido!\nTamanho máximo permitido: '+10+'Mb');
+        	if ( file.size > (TAMANHO_MAX_UPLOAD*1024*1024) ){
+        		//alert('\tTamanho excedido!\nTamanho máximo permitido: '+10+'Mb');
+        		errorAlert('Tamanho excedido!<br>Tamanho máximo permitido: '+TAMANHO_MAX_UPLOAD+'Mb');
         		return;
         	}
-        		
         	
             var li = document.createElement("li");
             li.fileId = size;
@@ -406,6 +405,10 @@ function FileAPI (t, d, f) {
             //xhr.setRequestHeader("X-File-Name", count+'_'+file.name);
             xhr.setRequestHeader("X-File-Name", count+'_'+ID_DOCUMENTO);
             xhr.send(file);
+            
+            var caminhoNome = count+'_'+ID_DOCUMENTO;
+            alert(caminhoNome+IS_ASSIGN);
+            anexoJS.saveAnexo(file.name,caminhoNome,ID_DOCUMENTO,IS_ASSIGN);
         }
     }
     
@@ -413,8 +416,7 @@ function FileAPI (t, d, f) {
 
 window.onload = function () {
     if (typeof FileReader == "undefined") alert ("Sorry your browser does not support the File API and this demo will not work for you");
-    var ID_DOCUMENTO = 0;
-    var MAX = 10; //em mb
+    
     FileAPI = new FileAPI(
         document.getElementById("fileList"),
         document.getElementById("fileDrop"),

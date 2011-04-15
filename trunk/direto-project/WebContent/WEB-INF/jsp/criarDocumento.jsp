@@ -6,6 +6,7 @@
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/formulariosJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/protocoloJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anexoJS.js"></script>
 
 <div style="width: 822px; text-align:left; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
 		
@@ -378,16 +379,8 @@ $j("#documentoForm").bind("onFail", function(e, errors)  {
 		});
 
 		//alert('verifique os erros');
-
-		$j( "#error-message" ).dialog({
-			modal: true,
-			buttons: {
-				Ok: function() {
-					$j( this ).dialog( "close" );
-				}
-			}
-		});
 		
+		errorAlert('Existem campos no formulário que não foram preenchidos corretamente.');		
 		
 	}
 });
@@ -401,6 +394,23 @@ $j("#documentoForm").bind("onFail", function(e, errors)  {
 
 });
 
+
+function errorAlert(error){
+
+	$j( "#error-message" ).html('<span style="position: absolute; top: 37px;" class="ui-icon ui-icon-alert"></span>'+
+			'<p style="float: left; padding-left: 30px; padding-top: 15px;">'+error+
+			'</p>');
+
+	$j( "#error-message" ).dialog({
+		modal: true,
+		buttons: {
+			Ok: function() {
+				$j( this ).dialog( "close" );
+			}
+		}
+	});
+	
+}
 
 function fEnviar(e){
 
@@ -483,9 +493,10 @@ function fEnviar(e){
 		this.documentoFormJS.referencia = $j('#referencia').val();
 		this.documentoFormJS.origem = $j('#origem').val();
 		this.documentoFormJS.idCarteiraRemetente = ${contaAtual};
-		if ( $j('input[name=assinatura]').is(':checked') )
+		if ( $j('input[name=assinatura]').is(':checked') ){
 			this.documentoFormJS.assinatura = 1;
-
+			IS_ASSIGN = true;
+		}
 		//for (var i=0;i<10;i++)
 			sendAndSaveFormToNewDocumentoJS(this.documentoFormJS);
 	}	
@@ -525,10 +536,7 @@ function fEnviar(e){
 
 <div id="error-message" title="Error" class="ui-state-error ui-corner-all" style="display: none;">
 	
-	<span style="position: absolute; top: 37px;" class="ui-icon ui-icon-alert"></span>
-	<p style="float: left; padding-left: 30px; padding-top: 15px;">
-		Existem campos no formulário que não foram preenchidos corretamente.
-	</p>
+	
 </div>
 
 
