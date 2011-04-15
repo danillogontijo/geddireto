@@ -345,6 +345,7 @@ $j("#documentoForm").validator({
 
 	var form = document.getElementById("documentoForm");
 
+	
 	if (!e.isDefaultPrevented()) {
 		e.preventDefault();
 
@@ -430,9 +431,11 @@ function fEnviar(e){
 	
 		$j(id).fadeIn(100); 
 
-		setTimeout(function (){protocoloJS.getsRetorno(retorno);},100);
+		//setTimeout(function (){protocoloJS.getsRetorno(retorno);},100);
 	
-
+		$j("#console").html('<p><img src="imagens/ajax-loader.gif" /></p>');
+		
+		
 		function retorno(dados){
 			txt = dados;
 			$j("#console").html(txt);
@@ -497,9 +500,17 @@ function fEnviar(e){
 					alert("O documento não pode ser enviado");
 				
 				ID_DOCUMENTO = documentoRetorno.documentoDetalhes.idDocumentoDetalhes;
-				alert(documentoRetorno.idDocumento);
+				//alert(documentoRetorno.idDocumento);
 
 				FileAPI.uploadQueue(e);
+
+				var stayInLoop = true;
+				while (stayInLoop){
+					if (FileAPI.fileQueueSize() == 0){
+						stayInLoop = false;
+						$j("#console").html(documentoRetorno.idDocumento);	
+					}
+				}
 	  		}
 	  	});
 
@@ -803,7 +814,7 @@ function fEnviar(e){
 </div>
 
 </form:form>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/FileAPI.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/FileAPI.js" charset="UTF-8"></script>
 
 
 
