@@ -515,7 +515,11 @@ function montaUsersByGrupos(listBeans){
 <body onload="init('${pageName}')">
 
 
+<div id="error-message" title="Error" class="ui-state-error ui-corner-all" style="display: none;">
+</div>
 
+<div id="dialog-message" title="Caixa de Diálogo" style="display: none;">
+</div>
 
 <!-- MODALS -->
 <div id="boxes">

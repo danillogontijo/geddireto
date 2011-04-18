@@ -280,8 +280,9 @@ function FileAPI (t, d, f) {
 
     var showFileInList = function (ev) {
         var file = ev.target.file;
-        
+        	
         if (file) {
+        	
         	if ( file.size > (TAMANHO_MAX_UPLOAD*1024*1024) ){
         		//alert('\tTamanho excedido!\nTamanho máximo permitido: '+10+'Mb');
         		errorAlert('Tamanho excedido!<br>Tamanho máximo permitido: '+TAMANHO_MAX_UPLOAD+'Mb');
@@ -407,7 +408,6 @@ function FileAPI (t, d, f) {
             xhr.send(file);
             
             var caminhoNome = count+'_'+ID_DOCUMENTO;
-            alert(caminhoNome+IS_ASSIGN);
             anexoJS.saveAnexo(file.name,caminhoNome,ID_DOCUMENTO,IS_ASSIGN);
         }
     }

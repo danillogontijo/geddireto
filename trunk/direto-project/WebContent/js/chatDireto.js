@@ -436,7 +436,7 @@ function ChatDiretoAPI (userName, userID) {
 dwr.engine.setErrorHandler(errh);
 
 function errh(msg, exc) {
-	 //alert("O erro é: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));
+	 alert("O erro é: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));
 	
 	/*
 	 * Tratamento de execção quando DWR request é enviado deopois que deu timeout na sessao
