@@ -395,23 +395,6 @@ $j("#documentoForm").bind("onFail", function(e, errors)  {
 });
 
 
-function errorAlert(error){
-
-	$j( "#error-message" ).html('<span style="position: absolute; top: 37px;" class="ui-icon ui-icon-alert"></span>'+
-			'<p style="float: left; padding-left: 30px; padding-top: 15px;">'+error+
-			'</p>');
-
-	$j( "#error-message" ).dialog({
-		modal: true,
-		buttons: {
-			Ok: function() {
-				$j( this ).dialog( "close" );
-			}
-		}
-	});
-	
-}
-
 function fEnviar(e){
 
 	var documentoFormJS = null;
@@ -421,7 +404,7 @@ function fEnviar(e){
 	function getDocumentoFormJS()
 	{
 
-		var winH = '800';//e.pageX;
+	/*	var winH = '800';//e.pageX;
 		var winW = 1002;
 		//e.preventDefault();
 		var id = '#wnovo_documento';
@@ -439,12 +422,13 @@ function fEnviar(e){
 		$j(id).css('top',  pos.top-$j(id).height());
 		$j(id).css('left', (167+winW-$j(id).width())/2);
 	
-		$j(id).fadeIn(100); 
+		$j(id).fadeIn(100); */
 
 		//setTimeout(function (){protocoloJS.getsRetorno(retorno);},100);
 	
-		$j("#console").html('<p><img src="imagens/ajax-loader.gif" /></p>');
+		//$j("#console").html('<p><img src="imagens/ajax-loader.gif" /></p>');
 		
+		dialogMessage('Enviando documento...','<p style="text-align: center"><img src="imagens/ajax-loader.gif" /></p>',true);
 		
 		function retorno(dados){
 			txt = dados;
@@ -519,7 +503,19 @@ function fEnviar(e){
 				while (stayInLoop){
 					if (FileAPI.fileQueueSize() == 0){
 						stayInLoop = false;
-						$j("#console").html(documentoRetorno.idDocumento);	
+
+						var message = 'Foi gerado um protocolo sob o número '+
+							'<b>'+documentoRetorno.documentoDetalhes.nrProtocolo+
+							'</b><br /><a href="documento.html?pk='+documentoRetorno.idDocumento+
+							'">Abrir documento</a>';
+	
+
+						dialogMessage('Novo documento enviado',message,false);
+							
+						/*$j("#console").html('Foi gerado um protocolo sob o número:'+
+								'<br /><a href=""><b>'+documentoRetorno.nrProtocolo+'</b></a>'+
+								'<br />Clique no link acima para visualizar o documento ou em fechar para finalizar.'+
+								'<br />');*/	
 					}
 				}
 	  		}
@@ -533,12 +529,6 @@ function fEnviar(e){
 	
 }
 </script>
-
-<div id="error-message" title="Error" class="ui-state-error ui-corner-all" style="display: none;">
-	
-	
-</div>
-
 
 <div style="width:100%; text-align:center; float: left; position: static; width: 822px; vertical-align: middle;">
 <!--<form action="/direto-project/upload/upload.html" method="post" enctype="multipart/form-data">-->

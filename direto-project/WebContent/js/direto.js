@@ -355,3 +355,72 @@ js.direto.modal = function(obj){
 	$j(id).fadeIn(100); 
 
 };
+
+
+function errorAlert(error){
+
+	$j( "#error-message" ).html('<span style="position: absolute; top: 37px;" class="ui-icon ui-icon-alert"></span>'+
+			'<p style="float: left; padding-left: 30px; padding-top: 15px;">'+error+
+			'</p>');
+
+	$j( "#error-message" ).dialog({
+		modal: true,
+		buttons: {
+			Ok: function() {
+				$j( this ).dialog( "close" );
+			}
+		}
+	});
+	
+}
+
+function alertMessage(title,message,isOwnFormat){
+	
+	var ele = $j( "#dialog-message" );
+
+	if (isOwnFormat){
+		ele.html(message);
+	}else{
+		ele.html('<p><span class="ui-icon ui-icon-circle-check" '+ 
+				'style="float:left; margin:0 7px 50px 0;"></span>'+
+				message+'</p>');
+	}
+	
+	if (ele.css('display') == 'none'){
+		ele.attr('title',title);
+		ele.dialog({
+			modal: true,
+			buttons: {
+				Ok: function() {
+					$j( this ).dialog( "close" );
+				}
+			}
+		});
+	}else{
+		$j( '#ui-dialog-title-dialog-message' ).html(title);
+	}
+		
+}
+
+
+function dialogMessage(title,message,isOwnFormat){
+	
+	var ele = $j( "#dialog-message" );
+
+	if (isOwnFormat){
+		ele.html(message);
+	}else{
+		ele.html('<p><span class="ui-icon ui-icon-circle-check" '+ 
+				'style="float:left; margin:0 7px 50px 0;"></span>'+
+				message+'</p>');
+	}
+	
+	if (ele.css('display') == 'none'){
+		ele.attr('title',title);
+		ele.dialog({
+			modal: true
+		});
+	}else{
+		$j( '#ui-dialog-title-dialog-message' ).html(title);
+	}
+}
