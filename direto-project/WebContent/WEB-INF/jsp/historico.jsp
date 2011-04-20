@@ -4,13 +4,13 @@
 
 <json:object>
 
-  <json:array name="dados" var="d" items="${despachos}">
+  <json:array name="dados" var="d" items="${historico}">
     <json:object>
       <json:property name="carteira" value="${d.carteira.cartAbr}"/>
       <json:property name="usuNGuerra" value="${d.usuario.pstGrad.pstgradNome} ${d.usuario.usuNGuerra}"/>
-      <json:property name="acao" value="${d.despacho}"/>
+      <json:property name="acao" value="${d.historico}"/>
       <json:property name="dataHora">
-        <fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${d.dataHoraDespacho}" />
+        <fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${d.dataHoraHistorico}" />
       </json:property>
     </json:object>
   </json:array>

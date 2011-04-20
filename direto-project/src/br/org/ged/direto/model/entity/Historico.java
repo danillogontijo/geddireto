@@ -34,11 +34,11 @@ public class Historico implements Serializable {
 	private String historico;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "IdMensagem", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "IdMensagem", nullable = false, updatable = false)
 	private DocumentoDetalhes documentoDetalhes;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "IdUsuario", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "IdUsuario", nullable = false, updatable = false)
 	private Usuario usuario;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -46,9 +46,8 @@ public class Historico implements Serializable {
 	private Date dataHoraHistorico;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "IdCarteira", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "IdCarteira", nullable = false, updatable = false)
 	private Carteira carteira;
-
 
 	
 	public Integer getIdHistorico() {

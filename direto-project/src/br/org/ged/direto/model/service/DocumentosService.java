@@ -29,10 +29,10 @@ public interface DocumentosService {
 	
 	//@PostAuthorize("(returnObject == null) or (returnObject.carteira.idCarteira == principal.idCarteira)")
 	@PostAuthorize("(returnObject == null) or (returnObject.granted)")
-	public Documento selectById(Integer idDocumentoDetalhes, Integer idCarteira) throws DocumentNotFoundException;
+	public Documento selectById(int primaryKey) throws DocumentNotFoundException;
 	
-	@PostAuthorize("(returnObject == null) or (returnObject.granted)")
-	public Documento getDocumento(Integer primaryKey) throws DocumentNotFoundException;
+	/*@PostAuthorize("(returnObject == null) or (returnObject.granted)")
+	public Documento getDocumento(Integer primaryKey) throws DocumentNotFoundException;*/
 	
 	public DocumentoDetalhes getDocumentoDetalhes(int primaryKey);
 	

@@ -7,7 +7,7 @@ import br.org.ged.direto.model.entity.Despacho;
 
 public interface DespachoService {
 
-	public void save(Despacho despacho);
+	public void save(int idDocumentoDetalhes, String despacho);
 	public List<Despacho> getDespachoByDocumento(Integer idDocumentoDetalhes);
 	public List<Despacho> getDespachoByUsuario(Integer idUsuario);
 }

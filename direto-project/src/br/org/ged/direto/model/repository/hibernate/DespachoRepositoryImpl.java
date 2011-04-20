@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
-import br.org.ged.direto.model.entity.Anotacao;
 import br.org.ged.direto.model.entity.Despacho;
 import br.org.ged.direto.model.repository.DespachoRepository;
 
@@ -34,16 +33,21 @@ public class DespachoRepositoryImpl implements DespachoRepository {
 		return (List<Despacho>) query.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Despacho> getDespachoByUsuario(Integer idUsuario) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "from Despacho as despacho where despacho.usuario.idUsuario = ?";
+		
+		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
+		
+		query.setInteger(0, idUsuario);
+		
+		return query.list();
 	}
 
 	@Override
 	public void save(Despacho despacho) {
-		// TODO Auto-generated method stub
-		
+		hibernateTemplate.save(despacho);
 	}
 
 }

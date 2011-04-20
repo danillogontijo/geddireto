@@ -49,8 +49,7 @@ public class HistoricoRepositoryImpl implements HistoricoRepository {
 
 	@Override
 	public void save(Historico historico) {
-		// TODO Auto-generated method stub
-		
+		hibernateTemplate.save(historico);
 	}
 
 }

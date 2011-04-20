@@ -50,51 +50,37 @@ $j(function(){
 		//alert($j(this).text());
 		
 
-	setTimeout(function (){
+	addLinks();
 
-		//$j(".dataTables_filter input").addClass("field_inputs");
-		//$j(".dataTables_length select").addClass("field_inputs");
+	function addLinks(){
+
+		setTimeout(function (){
 		
-
-		$j(oTable.fnSettings().aoData).each(function (){
-			var nTr = $j(this.nTr);
-			var nTds = $j('td', nTr);
-
-			var nrProtocolo = $j(nTds[1]).text();
-			var id = nrProtocolo.substring(6);
-
-			$j(nTds).each( function(i) {
-				var text = $j(nTds[i]).text();;
-				$j(nTds[i]).html('<a href="documento.html?id='+id+'">'+text+'</a>');
-			});	
-			
-		});
-
-
-		$j(".dataTables_paginate span").click(function(event) {
-			setTimeout(function (){	
-
-				$j(oTable.fnSettings().aoData).each(function (){
-					var nTr = $j(this.nTr);
-					var nTds = $j('td', nTr);
-
-					var nrProtocolo = $j(nTds[1]).text();
-					var id = nrProtocolo.substring(6);
-
-					$j(nTds).each( function(i) {
-						var text = $j(nTds[i]).text();;
-						$j(nTds[i]).html('<a href="documento.html?id='+id+'">'+text+'</a>');
-					});	
-					
-				});
-		},100);
-				
-		});	
-		
-	},500);
-
+			$j(oTable.fnSettings().aoData).each(function (){
+				var nTr = $j(this.nTr);
+				var nTds = $j('td', nTr);
 	
+				var nrProtocolo = $j(nTds[1]).text();
+				var id = nrProtocolo.substring(6);
+	
+				$j(nTds).each( function(i) {
+					var text = $j(nTds[i]).text();;
+					$j(nTds[i]).html('<a href="view.html?id='+id+'">'+text+'</a>');
+				});	
+				
+			});
 
+			$j("#pesquisaDataTables_paginate span").click(function() {
+				setTimeout(function (){addLinks();},100);
+			});
+
+			$j('select[name=pesquisaDataTables_length]').click(function() {
+				setTimeout(function (){addLinks();},100);
+			});
+
+		},500);
+
+	};
 		
 		
 //	});

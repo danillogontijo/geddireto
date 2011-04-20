@@ -20,8 +20,8 @@
 <div id="wacao" class="window">
 	<table width="100%">
 		<tr>
-			<td align="center" bgcolor="#1E90FF" width="96%" class="titulo_confirmacao" height="20" valign="middle" id="titulo"></td>
-			<td width="4%"><a href="#" class="close" style="font-weight: bold">X</a></td>
+			<td align="center" bgcolor="#1E90FF" width="690" class="titulo_confirmacao" height="20" valign="middle" id="titulo"></td>
+			<td width="10"><a href="#" class="close" style="font-weight: bold">X</a></td>
 		</tr>
 		
 		<tr>
@@ -36,13 +36,13 @@
 				<option value="Providências em andamento.">Providências em andamento</option>
 				<option value="Encaminhar.">Encaminhar</option></select>
 				<br>Digite aqui seu texto: <br>
-				<textarea onkeypress="return js.direto.charProibido(event)" cols="76" rows="2" onkeyup="" id="Tdespachar"></textarea>
+				<textarea onkeypress="return js.direto.charProibido(event)" cols="76" rows="2" onkeyup="" id="texto_acao"></textarea>
 				<div id="progdespachar">(0 / 500)</div>
 			</td>
 		</tr>
 		
 		<tr>
-			<td height="35" valign="bottom" colspan="2"><input type="button" id="bt_conf_edicao" value="Salvar" name="bt_editar_sim"></td>
+			<td height="35" valign="bottom" colspan="2"><input type="button" id="bt_acao_salvar" value="Salvar" name="bt_acao_salvar"></td>
 		</tr>
 	</table>
 </div>
