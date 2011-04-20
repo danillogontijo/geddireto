@@ -243,7 +243,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			}
 			
 			String assunto = doc.getAssunto();
-			assunto = assunto + assunto + assunto + assunto + assunto;
+			//assunto = assunto + assunto + assunto + assunto + assunto;
 			
 			if (assunto.length() > 60){
 				assunto = assunto.substring(0, 49)+"...";

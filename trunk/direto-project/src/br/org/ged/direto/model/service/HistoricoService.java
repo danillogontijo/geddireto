@@ -6,6 +6,7 @@ import br.org.ged.direto.model.entity.Historico;
 
 public interface HistoricoService {
 	
+	public void save(int idDocumentoDetalhes, String txtHistorico);
 	public void save(Historico historico);
 	public List<Historico> getHistoricoByDocumento(Integer idDocumentoDetalhes);
 	public List<Historico> getHistoricoByUsuario(Integer idUsuario);

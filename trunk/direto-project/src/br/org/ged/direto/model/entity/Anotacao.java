@@ -34,11 +34,11 @@ public class Anotacao implements Serializable {
 	private String anotacao;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "IdMensagem", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "IdMensagem", nullable = false)
 	private DocumentoDetalhes documentoDetalhes;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "IdUsuario", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "IdUsuario", nullable = false)
 	private Usuario usuario;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -46,7 +46,7 @@ public class Anotacao implements Serializable {
 	private Date dataHoraAnotacao;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "IdCarteira", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "IdCarteira", nullable = false)
 	private Carteira carteira;
 
 

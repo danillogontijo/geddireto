@@ -75,45 +75,8 @@ public class DocumentosServiceImpl implements DocumentosService {
 	}
 
 	@Override
-	public Documento selectById(Integer id,Integer idCarteira) {
+	public Documento selectById(int primaryKey) {
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Usuario obj = (Usuario)auth.getPrincipal();
-		Usuario usuario = usuarioService.selectByLogin(auth.getName());
-		usuario.setIdCarteira(obj.getIdCarteira());
-		//Documento documento = getDocumento(id); 
-		
-		//Documento documento = documentosRepository.selectByIdCarteira(idCarteira);//documentosRepository.selectById(idDocumentoDetalhes);
-		Documento documento = documentosRepository.getByIdPKey(id);
-		
-		int secaoDocumento = documento.getCarteira().getSecao().getIdSecao();
-		int omDocumento = documento.getCarteira().getOm().getIdOM();
-		
-		Iterator<Conta> ite = usuario.getContas().iterator();
-		
-		while(ite.hasNext()){
-			
-			Carteira carteiraUsuarioLogado = ite.next().getCarteira();
-			
-			if (usuario.getIdCarteira() == carteiraUsuarioLogado.getIdCarteira()){
-			
-				int secaoUsuarioLogado = carteiraUsuarioLogado.getSecao().getIdSecao();
-				int omUsuarioLogado = carteiraUsuarioLogado.getOm().getIdOM();
-				
-				if (secaoUsuarioLogado == secaoDocumento && omUsuarioLogado == omDocumento)
-					documento.setGranted(true);
-			}
-			
-		}
-		
-		if (!documento.isGranted()) 
-			throw new DocumentNotFoundException("Você não tem permissão para acessar este documento.");
-		
-		return documento;
-	}	
-	
-	@Override
-	public Documento getDocumento(Integer primaryKey) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario obj = (Usuario)auth.getPrincipal();
 		Usuario usuario = usuarioService.selectByLogin(auth.getName());
@@ -144,8 +107,8 @@ public class DocumentosServiceImpl implements DocumentosService {
 			throw new DocumentNotFoundException("Você não tem permissão para acessar este documento.");
 		
 		return documento;
-	}
-
+	}	
+	
 	@Override
 	public List<Documento> getAllById(Integer id) {
 		return documentosRepository.getAllById(id);

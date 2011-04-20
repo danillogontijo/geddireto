@@ -4,6 +4,9 @@
 <%@ include file="include_taglibs.jsp" %>
 <%@ include file="include_head.jsp" %>
 
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anotacaoJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/despachoJS.js"></script>
+
 <script type="text/javascript">
 
 /*Eventos MouseOver de atualização histórico,anotaçoes e despachos */
@@ -67,13 +70,52 @@ $j(function(){
 	});
 
 	
-		
-
-
 });
 
 
+function salvarAcao(acao){
 
+	var texto = $j('#texto_acao').val();
+
+	if (texto == ""){
+		alert('Para '+acao.toLowerCase()+' digite um texto.');
+		return;
+	}
+
+	if(acao == "Despachar"){
+		despachoJS.save(${idDocumento},texto,{
+			callback:function() {
+			if ( $j('#div_despachos').length == 0 ){
+				setTimeout(function(){
+					window.location.reload();
+					},300);
+			}else{
+				js.direto.close_mask();
+				js.direto.show_updates(${idDocumento},'despachos');
+			}	
+		}
+		});
+		
+	}else if(acao == "Anotar"){
+		anotacaoJS.save(${idDocumento},texto,{
+			callback:function() {
+				if ( $j('#div_anotacoes').length == 0 ){
+					setTimeout(function(){
+						window.location.reload();
+						},300);
+				}else{
+					js.direto.show_updates(${idDocumento},'anotacoes');
+					js.direto.close_mask();
+				}	
+  			}
+  		});
+		
+		
+
+		
+	}
+	
+}
 
 /*Função de confirmação da edição do documento*/
 function confirma_edicao(resposta,nome_anexo){
@@ -190,8 +232,8 @@ function confirma_edicao(resposta,nome_anexo){
 		<div style="position: relative" id="despachos">
 			<c:forEach var="d" items="${despachos}">
 				<div id="div_despachos" class="celula despacho">
-					<strong>[${d.carteira.cartAbr }] [${d.usuario.pstGrad.pstgradNome} ${d.usuario.usuNGuerra}]</strong> - ${d.despacho} - 
-					<span id="data_despacho"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${d.dataHoraDespacho}" /></span> 
+					<p><strong>[${d.carteira.cartAbr }] [${d.usuario.pstGrad.pstgradNome} ${d.usuario.usuNGuerra}]</strong> - ${d.despacho} - 
+					<span id="data_despacho"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${d.dataHoraDespacho}" /></span> </p>
 				</div>
 			 </c:forEach>
 		 </div>
@@ -214,7 +256,7 @@ function confirma_edicao(resposta,nome_anexo){
 		<div style="position: relative" id="historico">
 			<c:forEach var="h" items="${historico}">
 				<div id="div_historico" class="celula historico">
-					<strong>[${h.carteira.cartAbr }] [${h.usuario.pstGrad.pstgradNome} ${h.usuario.usuNGuerra}]</strong> - ${h.historico} - 
+					<strong>[${h.carteira.cartAbr }]</strong> - ${h.historico} - 
 					<span id="data_historico"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${h.dataHoraHistorico}" /></span> 
 				</div>
 			 </c:forEach>

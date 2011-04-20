@@ -143,12 +143,17 @@ js.direto.sel_chkbox_doc = function(id) {
 /*Função Update histórico,anotaçoes e despachos */
 js.direto.show_updates = function(id,type){
 	var singular = type;
+	
 
 	if (type == "anotacoes") {
 		singular = "anotacao";
 	} else if (type == "despachos") {
 		singular = "despacho";
-	} else singular = "unknow";	
+	} else if (type == "historico"){
+		singular = "historico";
+	} else {
+		singular = "unknow";
+	}
 
 	var txt_date = $j('#'+type+' span:last').text();
 	var last_date = js.direto.parseDate(txt_date);

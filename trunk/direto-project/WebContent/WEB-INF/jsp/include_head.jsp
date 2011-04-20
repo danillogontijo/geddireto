@@ -134,7 +134,7 @@ jQuery(document).ready(function($) {
 		//offset: [30, 0]
 	});*/
 
-	ChatDiretoAPI = new ChatDiretoAPI('${usuario.usuNGuerra}',${usuario.idUsuario});
+	ChatDiretoAPI = new ChatDiretoAPI('${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}',${usuario.idUsuario});
 	ChatDiretoAPI.start(null);
 	
 
@@ -162,6 +162,9 @@ jQuery(document).ready(function($) {
 			//var winH = $(id).position();
 			var txt = $(this).text();
 			$(id+' .titulo_confirmacao').html(txt);
+			$(id+' #bt_acao_salvar').click(function(){
+				salvarAcao(txt);
+			});
 		}else{	
 			var anexoCaminho = $(this).attr('id');
 			$('#hn_nome_anexo').val(anexoCaminho);
@@ -615,7 +618,7 @@ function montaUsersByGrupos(listBeans){
       	
  		</c:forEach>
 		
-		<div style="margin-top: 30px; height: 25px; font-weight: bold; font-size: 13px;">
+		<div style="margin-top: 15px; height: 25px; font-weight: bold; font-size: 13px;">
 		
 			Alternar entre contas:
 		
@@ -639,13 +642,7 @@ function montaUsersByGrupos(listBeans){
 			</c:forEach>
 		</ul>
 		
-		    
-		    <br>
-		    Conta Atual: <c:out value="${contaAtual}"></c:out>
-		    
-		 
-		  
-		   <br>${numUsers} usuário(s) no sistema!
+		<br />${numUsers} usuário(s) no sistema!
 		
 		<script type="text/javascript">
 		   

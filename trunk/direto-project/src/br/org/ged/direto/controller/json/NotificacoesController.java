@@ -27,9 +27,9 @@ public class NotificacoesController extends BaseController {
 	private DocumentosService documentosService;
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String show(@RequestParam("id") int id, ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+	public String show(@RequestParam("id") int pk, ModelMap model, HttpServletRequest request, HttpServletResponse response) {
 		
-		Documento doc_cart = documentosService.getDocumento(id);
+		Documento doc_cart = documentosService.selectById(pk);
 		
 		String notificacoes = "";
 		
@@ -48,9 +48,9 @@ public class NotificacoesController extends BaseController {
 		}
 		
 		Date now = new Date();
-		documentosService.setDataNotificacao(now, id);
+		documentosService.setDataNotificacao(now, pk);
 		
-		model.addAttribute("id", id);
+		model.addAttribute("id", pk);
 		model.addAttribute("notificacoes", notificacoes);
 		
 		return "notificacoes";
