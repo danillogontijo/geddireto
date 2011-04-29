@@ -163,9 +163,9 @@ jQuery(document).ready(function($) {
 			//var winH = $(id).position();
 			var acao = $(this).attr('id').split('_');
 			$(id+' .titulo_confirmacao').html(acao[1]);
-			$(id+' #bt_acao_salvar').click(function(){
-				//alert(parseInt(acao[0]));
-				salvarAcao(acao[1],parseInt(acao[0]));
+			$(id+' #bt_acao_salvar').bind('click', function() {
+				alert(acao[1]);
+				salvarAcao(acao[1],parseInt(acao[0]),$(this));
 			});
 		}else{	
 			var anexoCaminho = $(this).attr('id');

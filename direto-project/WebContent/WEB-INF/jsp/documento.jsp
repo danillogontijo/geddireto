@@ -74,8 +74,10 @@ $j(function(){
 });
 
 
-function salvarAcao(acao,id){
+function salvarAcao(acao,id,ele){
 
+	$j(ele).unbind('click');
+	
 	var texto = $j('#texto_acao').val();
 	acao = acao.toLowerCase();
 
