@@ -26,7 +26,7 @@
 		
 		<tr>
 			<td colspan="2">Padronizados: 
-				<select onchange="TrocaTexto(this.value,&quot;Tdespachar&quot;);" style="width: 327pt;" name="slPreDespacho">
+				<select onchange="padronizado(this.value)" style="width: 327pt;" name="slPreDespacho">
 				<option value="0"></option>
 				<option value="Arquivar.">Arquivar</option>
 				<option value="Ciente.">Ciente</option>

@@ -31,7 +31,7 @@ public class Notificacao implements Serializable {
 	private Integer idNotificacao;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "IdMensausu", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "IdMensausu", nullable = false, insertable = true, updatable = false)
 	private Documento documento;
 	
 	@Temporal(TemporalType.TIMESTAMP)

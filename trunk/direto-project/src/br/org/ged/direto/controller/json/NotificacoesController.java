@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import br.org.direto.util.DataTimeUtil;
 import br.org.ged.direto.controller.BaseController;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.Notificacao;
@@ -41,7 +42,7 @@ public class NotificacoesController extends BaseController {
 			while(ite.hasNext()){
 				Notificacao not = ite.next();
 				if (not.getDataHoraNotificacao().after(ultimaVerificacaoNotificacao)){
-					notificacoes = notificacoes+not.getNotificacao()+"<br>";
+					notificacoes += not.getNotificacao()+" - "+DataTimeUtil.getBrazilFormatDataHora(not.getDataHoraNotificacao())+"<br>";
 	 			}
 			}
 			

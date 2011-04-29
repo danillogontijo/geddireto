@@ -6,6 +6,7 @@
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anotacaoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/despachoJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/notificacaoJS.js"></script>
 
 <script type="text/javascript">
 
@@ -73,16 +74,21 @@ $j(function(){
 });
 
 
-function salvarAcao(acao){
+function salvarAcao(acao,id){
 
 	var texto = $j('#texto_acao').val();
+	acao = acao.toLowerCase();
 
 	if (texto == ""){
-		alert('Para '+acao.toLowerCase()+' digite um texto.');
+		alert('Para '+acao+' digite um texto.');
 		return;
 	}
 
-	if(acao == "Despachar"){
+	if(id == 1){
+
+		var textoParaNotificacao = "Despacho - ${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}";
+		notificacaoJS.save(${idDocumento},textoParaNotificacao);
+			
 		despachoJS.save(${idDocumento},texto,{
 			callback:function() {
 			if ( $j('#div_despachos').length == 0 ){
@@ -96,7 +102,12 @@ function salvarAcao(acao){
 		}
 		});
 		
-	}else if(acao == "Anotar"){
+	}else if(id == 2){
+
+		var textoParaNotificacao = "Anotacao - ${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}";
+		notificacaoJS.save(${idDocumento},textoParaNotificacao);
+		
+		
 		anotacaoJS.save(${idDocumento},texto,{
 			callback:function() {
 				if ( $j('#div_anotacoes').length == 0 ){
@@ -124,6 +135,13 @@ function confirma_edicao(resposta,nome_anexo){
 	} else {
 		alert(nome_anexo+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.");
 	}
+}
+
+function padronizado(valor){
+
+	var textArea = $('texto_acao');
+	textArea.value += " " + valor;
+	
 }
 
 </script>
@@ -227,25 +245,25 @@ function confirma_edicao(resposta,nome_anexo){
 		</c:forEach>
 	
 		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
-			<a href="javascript:show_updates(${idDocumento},'despachos')" id="link_titulo" name="link_despachos">Despachos</a> [<a href="#wacao" name="modal">Despachar</a>]
+			<a href="javascript:show_updates(${idDocumento},'despachos')" id="link_titulo" name="link_despachos">Despachos</a> [<a href="#wacao" name="modal" id="1_Despachar">Despachar</a>]
 		</div>
 		<div style="position: relative" id="despachos">
 			<c:forEach var="d" items="${despachos}">
 				<div id="div_despachos" class="celula despacho">
 					<p><strong>[${d.carteira.cartAbr }] [${d.usuario.pstGrad.pstgradNome} ${d.usuario.usuNGuerra}]</strong> - ${d.despacho} - 
-					<span id="data_despacho"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${d.dataHoraDespacho}" /></span> </p>
+					<span id="data_despacho"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${d.dataHoraDespacho}" /></span> </p>
 				</div>
 			 </c:forEach>
 		 </div>
 		
 		<div id="line" class="div_title_anotacoes" style="">
-			<a href="javascript:show_updates(${idDocumento},'anotacoes')" id="link_titulo" name="link_anotacoes">Anotações</a> [<a href="#wacao" name="modal">Anotar</a>]
+			<a href="javascript:show_updates(${idDocumento},'anotacoes')" id="link_titulo" name="link_anotacoes">Anotações</a> [<a href="#wacao" name="modal" id="2_Anotar">Anotar</a>]
 		</div>
 		<div style="position: relative" id="anotacoes">
 			<c:forEach var="a" items="${anotacoes}">
 				<div id="div_anotacoes" class="celula anotacao">
 					<strong>[${a.carteira.cartAbr }] [${a.usuario.pstGrad.pstgradNome} ${a.usuario.usuNGuerra}]</strong> - ${a.anotacao} - 
-					<span id="data_anotacao"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${a.dataHoraAnotacao}" /></span> 
+					<span id="data_anotacao"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${a.dataHoraAnotacao}" /></span> 
 				</div>
 			 </c:forEach>
 		 </div>	
@@ -257,7 +275,7 @@ function confirma_edicao(resposta,nome_anexo){
 			<c:forEach var="h" items="${historico}">
 				<div id="div_historico" class="celula historico">
 					<strong>[${h.carteira.cartAbr }]</strong> - ${h.historico} - 
-					<span id="data_historico"><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${h.dataHoraHistorico}" /></span> 
+					<span id="data_historico"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${h.dataHoraHistorico}" /></span> 
 				</div>
 			 </c:forEach>
 		</div>

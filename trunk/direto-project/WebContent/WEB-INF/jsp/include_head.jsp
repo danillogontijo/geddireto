@@ -146,6 +146,7 @@ jQuery(document).ready(function($) {
 	//select all the a tag with name equal to modal
 	$('a[name=modal]').click(function(e) {
 
+		alert($(this).attr('id'));
 		//var winH = e.pageX;
 		var winW = 1002;
 	
@@ -160,10 +161,11 @@ jQuery(document).ready(function($) {
 			getGrupos();
 		}else if(id == '#wacao'){
 			//var winH = $(id).position();
-			var txt = $(this).text();
-			$(id+' .titulo_confirmacao').html(txt);
+			var acao = $(this).attr('id').split('_');
+			$(id+' .titulo_confirmacao').html(acao[1]);
 			$(id+' #bt_acao_salvar').click(function(){
-				salvarAcao(txt);
+				//alert(parseInt(acao[0]));
+				salvarAcao(acao[1],parseInt(acao[0]));
 			});
 		}else{	
 			var anexoCaminho = $(this).attr('id');

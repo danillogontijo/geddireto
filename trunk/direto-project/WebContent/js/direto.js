@@ -65,6 +65,7 @@ js.direto.parseDate = function(txt_date) {
 	var ano = txt_date.substr(6,4);
 	var hora = txt_date.substr(11,2);
 	var min = txt_date.substr(14,2);
+	var seg = txt_date.substr(17,2);
 	
 	var date = new Date();
 	date.setDate(dia);
@@ -72,7 +73,7 @@ js.direto.parseDate = function(txt_date) {
 	date.setFullYear(ano);
 	date.setHours(hora,min);
 	date.setMilliseconds(0);
-	date.setSeconds(0);
+	date.setSeconds(seg);
 	  
 	return date;
 };
@@ -156,6 +157,7 @@ js.direto.show_updates = function(id,type){
 	}
 
 	var txt_date = $j('#'+type+' span:last').text();
+	
 	var last_date = js.direto.parseDate(txt_date);
 	//alert(last_date);
 	var retorno = 0;
@@ -165,8 +167,10 @@ js.direto.show_updates = function(id,type){
 			//alert(i);
 	        //$j("#anotacoes div:last").after('div');
 	        var date_json_return = js.direto.parseDate(d.dataHora);
+	        //alert(date_json_return);
 	        
 			retorno = js.direto.compareDate(date_json_return,last_date);
+			//alert(retorno);
 	        if( retorno == 1){
 				var txt = "";
 				txt = txt + "<strong>["+d.carteira+"] ["+d.usuNGuerra+"]</strong> - ";
