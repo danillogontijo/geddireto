@@ -78,7 +78,6 @@ public class DocumentoController extends BaseController {
 		if (doc_conta.getStatus() == '0')
 			documentosService.setDocumentoStatus(doc_conta.getIdDocumento(), '1');
 		
-		
 		model.addAttribute("idDocumento",documentoDetalhes.getIdDocumentoDetalhes());
 		model.addAttribute("documento",documentoDetalhes);
 		//model.addAttribute("doc_conta",doc_conta);
@@ -118,12 +117,13 @@ public class DocumentoController extends BaseController {
 		return "documento";
 	}
 	
+		
 	@RequestMapping(value="/view.html",method = RequestMethod.GET)
 	public String showByIdDocumentoDetalhes(@RequestParam("id")Integer id, ModelMap model){
 	
 		documentoDetalhes = documentosService.getDocumentoDetalhes(id);
 		
-		model.addAttribute("idDocumento",id);
+		model.addAttribute("idDocumento",documentoDetalhes.getIdDocumentoDetalhes());
 		model.addAttribute("documento",documentoDetalhes);
 		model.addAttribute("usuarioElaborador",documentoDetalhes.getUsuarioElaborador());
 		

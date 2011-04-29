@@ -84,7 +84,7 @@ public class DocumentoDetalhes implements Serializable {
 	private Usuario usuarioElaborador;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "Id", nullable = true)
+	@JoinColumn(name = "IdMensagem", nullable = true)
 	private Set<Documento> documentosByCarteira = new HashSet<Documento>(0);
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
