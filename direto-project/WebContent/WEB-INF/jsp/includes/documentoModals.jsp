@@ -46,4 +46,46 @@
 		</tr>
 	</table>
 </div>
+
+<!-- Adicionar anexo -->
+<div id="wanexar" class="window">
+	<table width="100%">
+		<tr>
+			<td align="center" bgcolor="#1E90FF" width="690" class="titulo_confirmacao" height="20" valign="middle" id="titulo">Anexar novo documento</td>
+			<td width="10"><a href="#" style="font-weight: bold" id="close_attach">X</a></td>
+		</tr>
+		
+		<tr>
+			<td colspan="2">
+			
+			<form enctype="multipart/form-data" method="post" name="fileinfo" id="fileinfo">
+  			<!--<label>Selecione o arquivo:</label>  -->
+  			
+  			<div class="upload-button" style="position: relative; overflow: hidden; direction: ltr;">
+     	Clique aqui para adicionar o anexo
+        <input type="file" id="fileToUpload" name="fileToUpload" onchange="fileSelected();" style="position: absolute; right: 0pt; top: 0pt; font-family: Arial; font-size: 118px; margin: 0pt; padding: 0pt; cursor: pointer; opacity: 0;" />
+    </div>
+  			
+  			
+			</form>
+			</td>
+		</tr>
+		
+		<tr>
+			<td colspan="2" id="information">
+		
+			<div id="output"></div>
+			<div id="progressbar"></div>
+			<div id="progressNumber"></div>
+			
+			</td>
+		</tr>
+		
+		
+		<tr>
+			<td height="35" valign="bottom" colspan="2" id="rodape_anexo"><input type="button" onclick="javascript:uploadFile()" id="bt_acao_anexar" value="Anexar" name="bt_acao_salvar"></td>
+		</tr>
+	</table>
+	
+</div>
     

@@ -7,23 +7,37 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anotacaoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/despachoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/notificacaoJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anexoJS.js"></script>
 
 <script type="text/javascript">
 
-/*Eventos MouseOver de atualização histórico,anotaçoes e despachos */
+var IS_UPDATES_ACTIONS = false; //Para execucao de uma atualizacao por vez
+var PROXIMO_ANEXO = ${proximoAnexo};
+var ID_ANEXO = ${idDocumento};
+var NAME,CAMINHO_NOME;
+
+
+/*
+ **** Eventos MouseOver de atualização histórico,anotaçoes e despachos **** 
+ */
 $j(function(){
 
 	$j('#despachos').mouseenter(function(e) {
-	
+		
 		var tipo = $j(this).attr('id');
-		js.direto.show_updates(${idDocumento},tipo);
+		if (!IS_UPDATES_ACTIONS)
+			js.direto.show_updates(${idDocumento},tipo);
+		//alert(IS_UPDATES_ACTIONS+" - mousenter");
 	
 	 });
 	
 	$j('#anotacoes').mouseenter(function(e) {
 	
 		var tipo = $j(this).attr('id');
-		js.direto.show_updates(${idDocumento},tipo);
+		if (!IS_UPDATES_ACTIONS)
+			js.direto.show_updates(${idDocumento},tipo);
+
+		//alert(IS_UPDATES_ACTIONS+" - mousenter");
 	
 	 });
 	
@@ -31,7 +45,8 @@ $j(function(){
 	$j('#historico').mouseenter(function(e) {
 	
 		var tipo = $j(this).attr('id');
-		js.direto.show_updates(${idDocumento},tipo);
+		if (!IS_UPDATES_ACTIONS)
+			js.direto.show_updates(${idDocumento},tipo);
 	
 	 });
 
@@ -70,11 +85,15 @@ $j(function(){
 		}	
 	});
 
-	
+	$j('#close_attach').click(function(e) {
+		js.direto.close_mask();
+	});
+		
 });
 
 
 function salvarAcao(acao,id,ele){
+	IS_UPDATES_ACTIONS = true;
 
 	$j(ele).unbind('click');
 	
@@ -122,10 +141,6 @@ function salvarAcao(acao,id,ele){
 				}	
   			}
   		});
-		
-		
-
-		
 	}
 	
 }
@@ -146,7 +161,189 @@ function padronizado(valor){
 	
 }
 
+function uploadFile() {
+
+	$j('#close_attach').unbind('click');
+	
+	var ele = document.getElementById('fileToUpload');
+	var file = ele.files[0];
+	  
+
+	  if (file == null){
+		  alert('file');
+		  return;  
+	  }
+
+	//var fd = new FormData();
+	    //fd.append("fileToUpload", document.getElementById('fileToUpload').files[0]);
+		//var ele = document.getElementById('fileToUpload');
+	    //var fd = ele.files[0];
+	    
+	    //var fd = document.getElementById('fileToUpload').files[0];
+	    
+	    /*var fr = new FileReader();
+	    fr.file = file;
+	    fr.onloadend = uploadComplete;
+	    fr.readAsDataURL(file);*/
+	    
+	    
+	    var xhr = new XMLHttpRequest();
+	    xhr.upload.addEventListener("progress", uploadProgress, false);
+	    xhr.addEventListener("load", uploadComplete, false);
+	    xhr.addEventListener("error", uploadFailed, false);
+	    xhr.addEventListener("abort", uploadCanceled, false);
+	    xhr.open(
+	            "POST",
+	            "/direto-project/upload/upload.html"
+	        );
+
+	    var path = ele.value.split("\\"); // Retira as barras
+        NAME = (path[path.length-1]);
+
+		var arExtensaoArquivo = NAME.split(".");
+	    var extensao = arExtensaoArquivo[arExtensaoArquivo.length-1];
+
+	    CAMINHO_NOME = PROXIMO_ANEXO+'_'+ID_ANEXO+'.'+extensao;
+
+	    xhr.setRequestHeader("Cache-Control", "no-cache");
+	    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+	    xhr.setRequestHeader("X-File-Name", CAMINHO_NOME);
+	      
+	    xhr.send(file);
+
+      
+      
+      
+      
+
+/*var reader = new FileReader();
+
+reader.onload = function(e) {
+
+var bin = e.target.result;
+
+xhr.sendAsBinary(bin);
+alert('enviado');
+};
+reader.readAsBinaryString(file); 
+*/      
+
+      
+	 /*if (xhr.status == 200) {
+	   // $j('#rodape_anexo').html('<p style="text-align: center">Enviado!</p>');  //.innerHTML += "Uploaded!<br />";
+	   anexoJS.saveAnexo(name,caminhoNome,id,false);
+	  } else {
+	    output.innerHTML += "Error " + xhr.status + " occurred uploading your file.<br />";
+	  }*/
+}
+
+function uploadProgress(evt) {
+    if (evt.lengthComputable) {
+      var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+      document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+
+      $j( "#progressbar" ).progressbar({
+			value: percentComplete
+	  });
+
+      $j( "#progressbar span" ).text(percentComplete.toString() + '%');
+      
+    }
+    else {
+      document.getElementById('output').innerHTML = 'Tamanho desconhecido.';
+    }
+}
+
+function uploadComplete(evt) {
+    /* This event is raised when the server send back a response */
+   // alert(evt.target.responseText);
+	document.getElementById('progressNumber').innerHTML = 'Completado!';  
+	$j('#progressNumber').css('color','#3DD13F');
+	anexoJS.saveAnexo(NAME,CAMINHO_NOME,ID_ANEXO,false,true);
+	PROXIMO_ANEXO++;
+
+	 $j( "#progressbar" ).progressbar({
+			value: 100
+	  });
+
+	$j('#close_attach').click(function(e) {
+		setTimeout(function(){
+			window.location.reload();
+			},300);
+	});
+}
+
+function uploadFailed(evt) {
+    alert("There was an error attempting to upload the file.");
+}
+
+function uploadCanceled(evt) {
+    alert("A transferência foi cancelada pelo usuário ou devido uma falha de conexão.");
+}
+
+
+function fileSelected() {
+    var file = document.getElementById('fileToUpload').files[0];
+    var output = document.getElementById("output");
+    var progressNumber = document.getElementById("progressNumber");
+    
+    if (file) {
+      var fileSize = 0;
+      if (file.size > 1024 * 1024)
+        fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+      else
+        fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+
+      progressNumber.innerHTML = '';
+      output.innerHTML = 'Arquivo: <i>' + file.name + '</i>';
+      output.innerHTML += ' (' + fileSize + ')';
+      //document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
+
+      $j( "#progressbar" ).progressbar({
+			value: 0
+	  });
+
+	  //$j('#information').css('background-color','#B8C9DD');
+    }
+  }
+
 </script>
+
+<style type="text/css">
+
+#progressNumber {
+    /*position: relative;
+    bottom: 10px;
+    right: 0;
+    color: orange;*/
+}
+
+.loadingIndicator {
+    width: 0%;
+    height: 2px;
+    background-color: orange;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+#progressbar {
+
+height: 15px;
+
+}
+
+.upload-button {
+    display:block; /* or inline-block */
+    width: 350px; 
+    padding: 2px 0; 
+    text-align:center;    
+    background:red; 
+    border-bottom:1px solid #ddd;
+    color:#fff;
+}
+
+</style>
 
 <div style="width: 822px; text-align:left; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
 		
@@ -155,7 +352,7 @@ function padronizado(valor){
 			<a href="" style="margin-left: 5px;" class="menu2">Responder</a> |
 			<a href="" style="margin-left: 5px;" class="menu2">Despachar</a> |
 			<a href="" style="margin-left: 5px;" class="menu2">Anotar</a> |
-			<a href="" style="margin-left: 5px;" class="menu2">Anexar</a> |
+			<a href="#wanexar" name="modal" style="margin-left: 5px;" class="menu2">Anexar</a> |
 			
 		
 </div>
@@ -237,7 +434,7 @@ function padronizado(valor){
 				<c:choose>
 					<c:when test="${documento.assinatura == 0}">
 						<c:if test="${anexo.assinado == 0}">
-							<a href="#editar" name="modal" id="${anexo.anexoCaminho}" class="l_edicao_vis">Editar</a> |
+							<a href="#weditar" name="modal" id="${anexo.anexoCaminho}" class="l_edicao_vis">Editar</a> |
 						</c:if>
 					</c:when>
 				</c:choose>

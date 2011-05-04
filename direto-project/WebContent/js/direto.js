@@ -143,6 +143,7 @@ js.direto.sel_chkbox_doc = function(id) {
 
 /*Função Update histórico,anotaçoes e despachos */
 js.direto.show_updates = function(id,type){
+	
 	var singular = type;
 	
 
@@ -186,8 +187,13 @@ js.direto.show_updates = function(id,type){
 	       }
 			//$j('<div>teste</div>').insertAfter($('#div_anotacoes div:last'));
 	      });
+	    
+	    setTimeout(function(){
+	    	IS_UPDATES_ACTIONS = false;
+			},300);
+	    
 	    });
-}
+};
 
 
 var lbUsuarios_len = "";

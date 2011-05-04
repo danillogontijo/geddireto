@@ -401,14 +401,17 @@ function FileAPI (t, d, f) {
                 "POST",
                 "/direto-project/upload/upload.html"
             );
+            
+            var extensaoArquivo = file.name.split(".");
+            var extensao = extensaoArquivo[extensaoArquivo.length-1];
+            var caminhoNome = count+'_'+ID_DOCUMENTO+'.'+extensao;
+                   
             xhr.setRequestHeader("Cache-Control", "no-cache");
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-            //xhr.setRequestHeader("X-File-Name", count+'_'+file.name);
-            xhr.setRequestHeader("X-File-Name", count+'_'+ID_DOCUMENTO);
+            xhr.setRequestHeader("X-File-Name", caminhoNome);
             xhr.send(file);
             
-            var caminhoNome = count+'_'+ID_DOCUMENTO;
-            anexoJS.saveAnexo(file.name,caminhoNome,ID_DOCUMENTO,IS_ASSIGN);
+            anexoJS.saveAnexo(file.name,caminhoNome,ID_DOCUMENTO,IS_ASSIGN,true);
         }
     }
     

@@ -60,6 +60,14 @@
 	-webkit-box-shadow:0 0 10px #fff;
 }
 
+#boxes #wanexar {
+  width:370px; 
+  height:155px;
+  /* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #fff;
+	-webkit-box-shadow:0 0 10px #fff;
+}
+
 #boxes #notificacoes {
   	font-size:12px;
 	position: absolute;
