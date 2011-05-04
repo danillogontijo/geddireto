@@ -25,11 +25,13 @@ import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
+import br.org.ged.direto.model.entity.Historico;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.repository.DocumentosRepository;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DocumentosService;
+import br.org.ged.direto.model.service.HistoricoService;
 import br.org.ged.direto.model.service.UsuarioService;
 
 @Service("documentosService")
@@ -45,6 +47,9 @@ public class DocumentosServiceImpl implements DocumentosService {
 	
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private HistoricoService historicoService;
 	
 	@Override
 	@RemoteMethod
@@ -202,11 +207,22 @@ public class DocumentosServiceImpl implements DocumentosService {
 		int idDocumentoDetalhes = documentoDetalhes.getIdDocumentoDetalhes();
 		Documento documentoToSaveOrUpdate;
 		
+		/*Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario usuario = (Usuario) auth.getPrincipal();
+		Carteira carteiraUsuarioLogado = carteiraService.selectById(usuario.getIdCarteira());*/
+		
+		//String txtHistorico = "";
+		Date data = new Date();
+
 		try {
 			documentoToSaveOrUpdate = documentosRepository.selectById(idDocumentoDetalhes, idCarteira);
 			documentoToSaveOrUpdate.setStatus(status);
 			
 			documentosRepository.saveOrUpdateDocumento(documentoToSaveOrUpdate);
+			
+			/*txtHistorico = "(Encaminhado) - Do: ";
+			txtHistorico += usuario.getPstGrad().getPstgradNome()+" "+usuario.getUsuNGuerra();
+			txtHistorico += " - Para: "+to.getCartAbr();*/
 		
 		}catch(DocumentNotFoundException ex){
 		
@@ -214,15 +230,28 @@ public class DocumentosServiceImpl implements DocumentosService {
 			
 			documentoToSaveOrUpdate = new Documento();
 			documentoToSaveOrUpdate.setCarteira(to);
-			documentoToSaveOrUpdate.setDataHora(new Date());
-			documentoToSaveOrUpdate.setDataHoraNotificacao(new Date());
+			documentoToSaveOrUpdate.setDataHora(data);
+			documentoToSaveOrUpdate.setDataHoraNotificacao(data);
 			documentoToSaveOrUpdate.setDocumentoDetalhes(documentoDetalhes);
 			documentoToSaveOrUpdate.setNotificar(new Integer(0));
 			documentoToSaveOrUpdate.setStatus(status);
 			
 			documentosRepository.saveOrUpdateDocumento(documentoToSaveOrUpdate);
 			
+			/*txtHistorico = "(Enviado) - Do: ";
+			txtHistorico += usuario.getPstGrad().getPstgradNome()+" "+usuario.getUsuNGuerra();
+			txtHistorico += " - Para: "+to.getCartAbr();*/
+			
 		}
+		
+		/*Historico historico = new Historico();
+		historico.setCarteira(carteiraUsuarioLogado);
+		historico.setDataHoraHistorico(data);
+		historico.setDocumentoDetalhes(documentoDetalhes);
+		historico.setUsuario(usuario);
+		historico.setHistorico(txtHistorico);
+		
+		historicoService.save(historico);*/
 		
 		System.out.println("Enviado documento: "+documentoToSaveOrUpdate.getDocumentoDetalhes().getNrProtocolo()+" para "+documentoToSaveOrUpdate.getCarteira().getCartAbr());
 	}

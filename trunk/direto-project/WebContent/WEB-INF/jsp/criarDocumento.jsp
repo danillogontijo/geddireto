@@ -7,6 +7,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/formulariosJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/protocoloJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anexoJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/historicoJS.js"></script>
 
 <div style="width: 822px; text-align:left; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
 		
@@ -430,7 +431,7 @@ function fEnviar(e){
 		
 		dialogMessage('Enviando documento...','<p style="text-align: center"><img src="imagens/ajax-loader.gif" /></p>',true);
 		
-		function retorno(dados){
+		/*function retorno(dados){
 			txt = dados;
 			$j("#console").html(txt);
 			var TIMER;
@@ -446,7 +447,7 @@ function fEnviar(e){
 
 				//clearTimeout(TIMER);
 			}
-		}
+		}*/
 
 		
 		formulariosJS.getDocumentoForm({
@@ -493,9 +494,25 @@ function fEnviar(e){
 				
 				if(documentoRetorno == null)
 					alert("O documento não pode ser enviado");
+
+
+				var list = "";
+				for (var i = 0; i < DESTINATARIOS.length-1 ; i++) {
+					var item = DESTINATARIOS[i];
+					list += item.user+", ";
+				}
+				
+				if(DESTINATARIOS.length > 1)
+					list += (DESTINATARIOS[DESTINATARIOS.length-1]).user;
+				
+				var txtHistorico = "(Enviado) - Do: ";
+				txtHistorico += '${usuario.pstGrad.pstgradNome}	${usuario.usuNGuerra}';
+				txtHistorico += " - Para: "+list;
 				
 				ID_DOCUMENTO = documentoRetorno.documentoDetalhes.idDocumentoDetalhes;
 				//alert(documentoRetorno.idDocumento);
+				
+				historicoJS.save(ID_DOCUMENTO,txtHistorico);
 
 				FileAPI.uploadQueue(e);
 
@@ -506,7 +523,7 @@ function fEnviar(e){
 
 						var message = 'Foi gerado um protocolo sob o número '+
 							'<b>'+documentoRetorno.documentoDetalhes.nrProtocolo+
-							'</b><br /><a href="documento.html?pk='+documentoRetorno.idDocumento+
+							'</b><br /><a href="documento.html?pk='+documentoRetorno.idDocumento+'&id='+ID_DOCUMENTO+
 							'">Abrir documento</a>';
 	
 

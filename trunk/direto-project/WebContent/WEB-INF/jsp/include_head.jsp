@@ -40,6 +40,7 @@
 <script src="<%=request.getContextPath() %>/js/custom/external/tooltip.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/external/validator.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/external/jquery.alerts.js"></script>
+<script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.datepicker-pt-BR.js"></script>
 
 <!--
 <script src="<%=request.getContextPath() %>/js/custom/external/jquery.bgiframe-2.1.2.js"></script>
@@ -47,7 +48,7 @@
 <script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.core.min.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.widget.min.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.datepicker.min.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.datepicker-pt-BR.js"></script>
+
 
 <script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.effects.core.min.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.effects.clip.min.js"></script>
@@ -146,7 +147,7 @@ jQuery(document).ready(function($) {
 	//select all the a tag with name equal to modal
 	$('a[name=modal]').click(function(e) {
 
-		alert($(this).attr('id'));
+		//alert($(this).attr('id'));
 		//var winH = e.pageX;
 		var winW = 1002;
 	
@@ -164,10 +165,10 @@ jQuery(document).ready(function($) {
 			var acao = $(this).attr('id').split('_');
 			$(id+' .titulo_confirmacao').html(acao[1]);
 			$(id+' #bt_acao_salvar').bind('click', function() {
-				alert(acao[1]);
+				//alert(acao[1]);
 				salvarAcao(acao[1],parseInt(acao[0]),$(this));
 			});
-		}else{	
+		}else if(id=='#weditar'){	
 			var anexoCaminho = $(this).attr('id');
 			$('#hn_nome_anexo').val(anexoCaminho);
 			alert("abrir documento: "+anexoCaminho);

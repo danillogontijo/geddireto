@@ -84,12 +84,14 @@ public class DocumentoController extends BaseController {
 		model.addAttribute("usuarioElaborador",documentoDetalhes.getUsuarioElaborador());
 		
 		Set<Anexo> listAnexos = documentoDetalhes.getAnexos();
-		Iterator<Anexo> iteAnexos = listAnexos.iterator();
 		
 		Anexo principal = null;
 		
-		if(iteAnexos.hasNext())
-			principal = iteAnexos.next();
+		for(Anexo anexo : listAnexos){
+			String[] nome = anexo.getAnexoCaminho().split("_");
+			if (nome[0].equals("1"))
+				principal = anexo;
+		}
 		
 		
 		if (principal == null){
@@ -100,6 +102,7 @@ public class DocumentoController extends BaseController {
 		}
 		
 		model.addAttribute("anexos",listAnexos);
+		model.addAttribute("proximoAnexo",listAnexos.size()+1);
 		
 		String sha1 = "Ocorreu erro";
 		
@@ -117,7 +120,6 @@ public class DocumentoController extends BaseController {
 		return "documento";
 	}
 	
-		
 	@RequestMapping(value="/view.html",method = RequestMethod.GET)
 	public String showByIdDocumentoDetalhes(@RequestParam("id")Integer id, ModelMap model){
 	
@@ -128,13 +130,14 @@ public class DocumentoController extends BaseController {
 		model.addAttribute("usuarioElaborador",documentoDetalhes.getUsuarioElaborador());
 		
 		Set<Anexo> listAnexos = documentoDetalhes.getAnexos();
-		Iterator<Anexo> iteAnexos = listAnexos.iterator();
 		
 		Anexo principal = null;
 		
-		if(iteAnexos.hasNext())
-			principal = iteAnexos.next();
-		
+		for(Anexo anexo : listAnexos){
+			String[] nome = anexo.getAnexoCaminho().split("_");
+			if (nome[0].equals("1"))
+				principal = anexo;
+		}
 		
 		if (principal == null){
 			model.addAttribute("documento_principal", "Sem documento");
@@ -144,6 +147,7 @@ public class DocumentoController extends BaseController {
 		}
 		
 		model.addAttribute("anexos",listAnexos);
+		model.addAttribute("proximoAnexo",listAnexos.size()+1);
 		
 		String sha1 = "Ocorreu erro";
 		

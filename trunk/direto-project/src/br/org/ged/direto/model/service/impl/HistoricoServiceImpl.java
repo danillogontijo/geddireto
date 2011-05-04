@@ -3,6 +3,8 @@ package br.org.ged.direto.model.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.directwebremoting.annotations.RemoteMethod;
+import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,7 @@ import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.HistoricoService;
 
 @Service("historicoService")
+@RemoteProxy(name = "historicoJS")
 @Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 public class HistoricoServiceImpl implements HistoricoService {
 
@@ -50,6 +53,7 @@ public class HistoricoServiceImpl implements HistoricoService {
 	}
 
 	@Override
+	@RemoteMethod
 	@Transactional(readOnly=false)
 	public void save(int idDocumentoDetalhes, String txtHistorico) {
 		try{
