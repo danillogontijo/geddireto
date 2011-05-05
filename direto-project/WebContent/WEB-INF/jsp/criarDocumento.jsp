@@ -295,7 +295,7 @@ $j(function(){
 
 	//$j('span').click(function(e) {
 
-		
+		$j('#documentoForm').attr('novalidate',''); //bug validator
 		
 		
 	//});

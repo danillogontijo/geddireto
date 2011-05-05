@@ -403,8 +403,13 @@ function FileAPI (t, d, f) {
             );
             
             var extensaoArquivo = file.name.split(".");
-            var extensao = extensaoArquivo[extensaoArquivo.length-1];
-            var caminhoNome = count+'_'+ID_DOCUMENTO+'.'+extensao;
+            var extensao = '.'; 
+            extensao += extensaoArquivo[extensaoArquivo.length-1];
+            
+            if (extensaoArquivo.length == 1)
+            	extensao = '';
+            
+            var caminhoNome = count+'_'+ID_DOCUMENTO+extensao;
                    
             xhr.setRequestHeader("Cache-Control", "no-cache");
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");

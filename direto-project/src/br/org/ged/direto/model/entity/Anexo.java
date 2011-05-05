@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 @Entity
@@ -41,6 +42,17 @@ public class Anexo {
 	@JoinColumn(name = "IdMensagem", nullable = false, insertable = true, updatable= false)
     private DocumentoDetalhes documentoDetalhes;
 	
+	@Transient
+	private String hash;
+	
+	public String getHash() {
+		return hash;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+
 	public Integer getIdAnexo() {
 		return idAnexo;
 	}
