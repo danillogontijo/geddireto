@@ -86,8 +86,32 @@ $j(function(){
 	});
 
 	$j('#close_attach').click(function(e) {
+		e.preventDefault();
 		js.direto.close_mask();
 	});
+
+	$j("#div_anexos span[name=ui_anexo]").toggle(
+
+		function(){
+			var id = $j(this).attr('id');
+			$j('#hash_'+id).fadeIn(1000);
+			$j('#hash_'+id).css('display','block');
+			var div_parent = $j(this).parent();
+			div_parent.css('height','50px');
+			div_parent.css('line-height','');
+			},
+
+		function(){
+			var id = $j(this).attr('id');
+			$j('#hash_'+id).fadeOut('slow');
+			var div_parent = $j(this).parent();
+			setTimeout(function(){
+				div_parent.css('height','25px');
+				div_parent.css('line-height','25px');
+			},500);
+		}
+
+	);
 		
 });
 
@@ -170,7 +194,7 @@ function uploadFile() {
 	  
 
 	  if (file == null){
-		  alert('file');
+		  alert('Você não selecionou nenhum arquivo!');
 		  return;  
 	  }
 
@@ -201,9 +225,14 @@ function uploadFile() {
         NAME = (path[path.length-1]);
 
 		var arExtensaoArquivo = NAME.split(".");
-	    var extensao = arExtensaoArquivo[arExtensaoArquivo.length-1];
+	    var extensao = '.'; 
+	    extensao += arExtensaoArquivo[arExtensaoArquivo.length-1];
+			
+	    if (arExtensaoArquivo.length == 1)
+        	extensao = '';
+        
 
-	    CAMINHO_NOME = PROXIMO_ANEXO+'_'+ID_ANEXO+'.'+extensao;
+	    CAMINHO_NOME = PROXIMO_ANEXO+'_'+ID_ANEXO+extensao;
 
 	    xhr.setRequestHeader("Cache-Control", "no-cache");
 	    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
@@ -335,7 +364,7 @@ height: 15px;
 
 .upload-button {
     display:block; /* or inline-block */
-    width: 350px; 
+    width: 352px; 
     padding: 2px 0; 
     text-align:center;    
     background:red; 
@@ -428,8 +457,8 @@ height: 15px;
 		
 		
 		<c:forEach var="anexo" items="${anexos}">
-			<div id="div_anexos" style="border-bottom: 1px solid gray; background-color: #FFFFCC; position: relative; width: 822px; height: 25px; text-align: center; line-height: 25px;">
-				${anexo.anexoNome}
+			<div id="div_anexos" class="anexos">
+				<span id="${anexo.idAnexo}" name="ui_anexo">${anexo.anexoNome}</span>
 				(
 				<c:choose>
 					<c:when test="${documento.assinatura == 0}">
@@ -440,6 +469,7 @@ height: 15px;
 				</c:choose>
 				<a href="" class="l_edicao_vis">Visualizar</a>
 				)
+				<span id="hash_${anexo.idAnexo}" style="background-color: red; width: 100%; display: none;">SHA-1: 32f45b23cde152f39020b4677bdb32c2eebd0c57</span>
 			</div>
 		</c:forEach>
 	

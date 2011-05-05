@@ -91,8 +91,19 @@ public class DocumentoController extends BaseController {
 			String[] nome = anexo.getAnexoCaminho().split("_");
 			if (nome[0].equals("1"))
 				principal = anexo;
+			
+			String sha1 = "Ocorreu erro";
+			try {
+				File file = new File("/home/danillo/users/sgt.danillo/"+anexo.getAnexoCaminho());
+				sha1 = segurancaService.sh1withRSA(file);
+				anexo.setHash(sha1);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+
 		}
 		
+		model.addAttribute("proximoAnexo",listAnexos.size()+1);
 		
 		if (principal == null){
 			model.addAttribute("documento_principal", "Sem documento");
@@ -102,20 +113,8 @@ public class DocumentoController extends BaseController {
 		}
 		
 		model.addAttribute("anexos",listAnexos);
-		model.addAttribute("proximoAnexo",listAnexos.size()+1);
 		
-		String sha1 = "Ocorreu erro";
-		
-		try {
-			File file = new File("/home/danillo/teste.odt");
-			
-			sha1 = segurancaService.sh1withRSA(file);
-			
-		}catch(Exception e){
-			
-		}
-		
-		model.addAttribute("sha1", sha1);
+		model.addAttribute("sha1", principal.getHash());
 		
 		return "documento";
 	}
@@ -139,6 +138,8 @@ public class DocumentoController extends BaseController {
 				principal = anexo;
 		}
 		
+		model.addAttribute("proximoAnexo",listAnexos.size()+1);
+		
 		if (principal == null){
 			model.addAttribute("documento_principal", "Sem documento");
 		}else{
@@ -147,12 +148,12 @@ public class DocumentoController extends BaseController {
 		}
 		
 		model.addAttribute("anexos",listAnexos);
-		model.addAttribute("proximoAnexo",listAnexos.size()+1);
+		
 		
 		String sha1 = "Ocorreu erro";
 		
 		try {
-			File file = new File("/home/danillo/teste.odt");
+			File file = new File("/home/danillo/users/sgt.danillo/"+principal.getAnexoCaminho());
 			
 			sha1 = segurancaService.sh1withRSA(file);
 			

@@ -136,6 +136,17 @@ background-color: black;}
 
 #historico {display: none;}
 
+.anexos {
+	border-bottom: 1px solid gray; 
+	background-color: #FFFFCC; 
+	position: relative; 
+	width: 822px; 
+	height: 25px; 
+	text-align: center; 
+	line-height: 25px;	
+	cursor: pointer;
+}
+
 
 /**
  * ESTILO PAGINA DE PESQUISA (pesquisar.html)
