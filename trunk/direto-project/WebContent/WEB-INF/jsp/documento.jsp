@@ -8,6 +8,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/despachoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/notificacaoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anexoJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/segurancaJS.js"></script>
 
 <script type="text/javascript">
 
@@ -73,6 +74,24 @@ $j(function(){
 		$j('#despachos').toggle("slow");
 	});
 
+	$j('a[name=assinar_arquivo]').live('click',function(e) {
+		e.preventDefault();
+		segurancaJS.signFile('1_4.properties', 'sgtdanillo', '96287358',48);
+	});
+
+
+	$j('#checar_assinatura').live('click',function(e) {
+		e.preventDefault();
+		var file = document.getElementById('fileToCheck');
+		alert(file.value);
+		var fullpath = file.value;
+		segurancaJS.checkSignature('/home/danillo/users/sgt.danillo/1_4.properties',48,{
+			callback:function(ok) {
+				alert(ok);
+			}
+
+		});
+	});
 
 	/*Evento do botão de confirmação da edição do documento*/
 	$j('input[type=button]').click(function(e) {
@@ -115,6 +134,10 @@ $j(function(){
 		
 });
 
+
+function checkSignature(){
+	
+}
 
 function salvarAcao(acao,id,ele){
 	IS_UPDATES_ACTIONS = true;
@@ -315,6 +338,8 @@ function fileSelected() {
     var file = document.getElementById('fileToUpload').files[0];
     var output = document.getElementById("output");
     var progressNumber = document.getElementById("progressNumber");
+
+    alert(file.path);
     
     if (file) {
       var fileSize = 0;
@@ -435,6 +460,7 @@ height: 15px;
 		<c:choose>
 			<c:when test="${documento.assinatura == 0}">
 				<c:if test="${documento_principal.assinado == 0}">
+				<span id="s_editar"><a href="#" id="${documento_principal.idAnexo}" name="assinar_arquivo" class="l_edicao_vis">Assinar</a></span> |
 				 <span id="s_editar"><a href="#weditar" id="${documento_principal.anexoCaminho}" name="modal" class="l_edicao_vis">Editar</a></span> |
 				</c:if>
 			</c:when>
@@ -443,7 +469,7 @@ height: 15px;
 			</c:otherwise>
 		</c:choose>
 		
-		<span id="s_visualizar"><a href="" class="l_edicao_vis">Visualizar</a></span>
+		<span id="s_visualizar"><a href="#wchecar" name="modal" id="checar_assinatura" class="l_edicao_vis">Visualizar</a></span>
 		
 		<br>
 		<font color="#666666">SHA-1: </font><b>${sha1}</b><br>
