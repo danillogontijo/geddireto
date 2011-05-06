@@ -42,9 +42,20 @@ public class Anexo {
 	@JoinColumn(name = "IdMensagem", nullable = false, insertable = true, updatable= false)
     private DocumentoDetalhes documentoDetalhes;
 	
+	@Column(name = "IdAssinadoPor")
+	private int idAssinadoPor;
+	
 	@Transient
 	private String hash;
 	
+	public int getIdAssinadoPor() {
+		return idAssinadoPor;
+	}
+
+	public void setIdAssinadoPor(int idAssinadoPor) {
+		this.idAssinadoPor = idAssinadoPor;
+	}
+
 	public String getHash() {
 		return hash;
 	}

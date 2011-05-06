@@ -4,27 +4,41 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.math.BigInteger;
 import java.security.cert.Certificate;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
 import java.io.FileInputStream;
 
+import org.directwebremoting.annotations.RemoteMethod;
+import org.directwebremoting.annotations.RemoteProxy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import br.org.direto.util.Base64Utils;
+import br.org.ged.direto.model.entity.Anexo;
+import br.org.ged.direto.model.entity.Usuario;
+import br.org.ged.direto.model.service.AnexoService;
 import br.org.ged.direto.model.service.SegurancaService;
-
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
+import br.org.ged.direto.model.service.UsuarioService;
 
 import java.security.*;
 
 @Service("segurancaService")
+@RemoteProxy(name = "segurancaJS")
 public class SegurancaServiceImpl implements SegurancaService {
 
 	private static final String signatureAlgorithm = "MD5withRSA";	
+	private final File jks = new File("/home/danillo/springsource/tc-server-6.0.20.C/truststore.jks");
+	private final String pwd = "ZDE0M3Qw";
+	
+	@Autowired
+	private AnexoService anexoService;
+	
+	@Autowired
+	private UsuarioService usuarioService;
 	
 	@Override
 	public String md5(File arquivo) {
@@ -134,7 +148,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 	 * Extrai a chave pública do arquivo.
 	 */
 	public PublicKey getPublicKeyFromFile( File cert, String alias, String password ) throws Exception {
-		KeyStore ks = KeyStore.getInstance ("PKCS12");
+		KeyStore ks = KeyStore.getInstance (KeyStore.getDefaultType());
 		char[] pwd = password.toCharArray();
 		InputStream is = new FileInputStream( cert );
 		ks.load( is, pwd );
@@ -142,15 +156,6 @@ public class SegurancaServiceImpl implements SegurancaService {
 		Certificate c = (Certificate) ks.getCertificate( alias );
 		PublicKey p = c.getPublicKey();
 		return p;
-	}
-	
-	public PublicKey getChavePublicFromFile(File certificado) throws Exception {
-		InputStream is = new FileInputStream(certificado);
-		CertificateFactory certF = CertificateFactory.getInstance("X.509"); 
-		X509Certificate cert = (X509Certificate)certF.generateCertificate(is); 
-		PublicKey puk = cert.getPublicKey(); 
-		System.out.println(puk.getAlgorithm());
-		return puk;
 	}
 	
 	/**
@@ -165,13 +170,6 @@ public class SegurancaServiceImpl implements SegurancaService {
 		return sig.sign();
 	}
 	
-	public byte[] decripto( PublicKey key, byte[] signed ) throws Exception {
-		Signature sig = Signature.getInstance(signatureAlgorithm);
-		sig.initVerify(key);
-		sig.update(signed, 0, signed.length);
-		return sig.sign();
-	}
-
 	/**
 	 * Verifica a assinatura para o buffer de bytes, usando a chave pública.
 	 * @param key PublicKey
@@ -202,12 +200,102 @@ public class SegurancaServiceImpl implements SegurancaService {
 	}
 	
 	
-	public PublicKey carregaChavePublica (File fPub) throws IOException, ClassNotFoundException {
-	        ObjectInputStream ois = new ObjectInputStream (new FileInputStream (fPub));
-	        PublicKey ret = (PublicKey) ois.readObject();
-	        ois.close();
-	        return ret;
+	@Override
+	@RemoteMethod
+	public void signFile(String file, String alias, String password, int idAnexo){
+		try{
+			Anexo anexoToSign = anexoService.selectById(idAnexo);
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			Usuario signer = (Usuario)auth.getPrincipal();
+			
+			File certificado = new File("/home/danillo/springsource/tc-server-6.0.20.C/"+formatFileName(signer.getUsuIdt())+".p12");
+			
+			File fileToSing = new File("/home/danillo/users/sgt.danillo/"+file);
+			FileInputStream fis = new FileInputStream(fileToSing);
+			byte fileContent[] = new byte[(int)fileToSing.length()];
+			fis.read(fileContent);
+		
+			PrivateKey privateKey = getPrivateKeyFromFile( certificado, alias, password );
+									
+			byte[] fileSigned = createSignature(privateKey, fileContent);
+			String fileSignedHexa = txt2Hexa(fileSigned);
+			
+			System.out.println(fileSignedHexa);
+			
+			anexoToSign.setAssinado(1);
+			anexoToSign.setAssinadoPor(signer.getUsuLogin());
+			anexoToSign.setIdAssinadoPor(signer.getIdUsuario());
+			anexoToSign.setAssinaturaHash(fileSignedHexa);
+			
+			anexoService.saveAnexo(anexoToSign);
+			
+		
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			System.err.println("Arquivo nao encontrado.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 
+	@Override
+	@RemoteMethod
+	public boolean checkSignature(String path, int idAnexo) {
+		try{
+			Anexo anexo = anexoService.selectById(idAnexo);
+			//if (anexo.getAssinado() == 0)
+				//return false;
+			
+			Usuario signerUser =  usuarioService.selectById(anexo.getIdAssinadoPor());
+			byte[] hash = new BigInteger(anexo.getAssinaturaHash(), 16).toByteArray();
+			
+			byte pwdDecripto[] = Base64Utils.decode(pwd.getBytes());
+	          
+			File fileToCheck = new File(path);
+			FileInputStream fis = new FileInputStream(fileToCheck);
+			byte fileContent[] = new byte[(int)fileToCheck.length()];
+			fis.read(fileContent);
+		
+			PublicKey publicKey = getPublicKeyFromFile( jks, formatFileName(signerUser.getUsuIdt()), new String(pwdDecripto) );
+			
+			if( verifySignature( publicKey, fileContent, hash ) ) {
+				System.out.println("Assinatura OK!");
+				return true; 
+			} else {
+				System.out.println("Assinatura NOT OK!");
+				return false;
+			}
+		
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			System.err.println("Arquivo nao encontrado.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+		
+	}
+
+	public String formatFileName(int idt){
+		String fileName = String.valueOf(idt);
+		int sizeFileName = 10-fileName.length();
+		
+		if(sizeFileName != 0){
+			String zeros = "";
+			for (int i = 0; i<sizeFileName; i++)
+				zeros += "0";
+			fileName = zeros+fileName;
+		}
+		
+		return fileName;
+	}
 	
 }

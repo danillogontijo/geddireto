@@ -92,4 +92,26 @@ public class AnexoServiceImpl implements AnexoService {
 	public void saveAnexo(Anexo anexo) {
 		anexoRepository.saveAnexo(anexo);
 	}
+
+	@Override
+	public Anexo selectById(int idAnexo) {
+		return anexoRepository.selectById(idAnexo);
+	}
+	
+	@Override
+	@Transactional(readOnly = false)
+	public void signAnexo(int idAnexo, String hash){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario usuario = (Usuario)auth.getPrincipal();
+		Anexo anexo = selectById(idAnexo);
+		anexo.setAssinado(1);
+		anexo.setAssinadoPor(usuario.getUsuLogin());
+		anexo.setIdAssinadoPor(usuario.getIdUsuario());
+		anexo.setAssinaturaHash(hash);
+	}
+
+	@Override
+	public void signAnexo(Anexo anexo) {
+		anexoRepository.updateAnexo(anexo);
+	}
 }

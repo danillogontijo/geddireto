@@ -14,11 +14,14 @@ public interface SegurancaService {
 	public String md5(File arquivo);
 	public String md5(String texto);
 
-	public PrivateKey getPrivateKeyFromFile( File cert, String alias, String password ) throws Exception;
+	/*public PrivateKey getPrivateKeyFromFile( File cert, String alias, String password ) throws Exception;
 	public PublicKey getPublicKeyFromFile( File cert, String alias, String password ) throws Exception;
 	public PublicKey getChavePublicFromFile(File certificado) throws Exception;
 	public byte[] createSignature( PrivateKey key, byte[] buffer ) throws Exception;
 	public byte[] decripto( PublicKey key, byte[] signed ) throws Exception;
-	public boolean verifySignature( PublicKey key, byte[] buffer, byte[] signed ) throws Exception;
+	public boolean verifySignature( PublicKey key, byte[] buffer, byte[] signed ) throws Exception;*/
+	
+	public void signFile(String nameFile, String alias, String password, int idAnexo);
+	public boolean checkSignature(String path, int idAnexo);
 	
 }

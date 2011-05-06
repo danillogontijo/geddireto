@@ -23,4 +23,14 @@ public class AnexoRepositoryImpl implements AnexoRepository {
 		hibernateTemplate.save(anexo);
 	}
 
+	@Override
+	public Anexo selectById(int idAnexo) {
+		return (Anexo)hibernateTemplate.get(Anexo.class, idAnexo);
+	}
+
+	@Override
+	public void updateAnexo(Anexo anexo) {
+		hibernateTemplate.update(anexo);
+	}
+
 }
