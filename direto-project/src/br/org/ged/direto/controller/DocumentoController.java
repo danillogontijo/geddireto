@@ -89,8 +89,16 @@ public class DocumentoController extends BaseController {
 		
 		for(Anexo anexo : listAnexos){
 			String[] nome = anexo.getAnexoCaminho().split("_");
+			String nomeCompleto = anexo.getAnexoNome();
+			if (nomeCompleto.length() > 60){
+				nomeCompleto = nomeCompleto.substring(0, 50)+"..."+nomeCompleto.substring(nomeCompleto.length()-10, nomeCompleto.length());
+				anexo.setAnexoNome(nomeCompleto);
+			}
+			
 			if (nome[0].equals("1"))
 				principal = anexo;
+			
+			
 			
 			String sha1 = "Ocorreu erro";
 			try {

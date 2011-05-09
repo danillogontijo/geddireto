@@ -54,6 +54,7 @@ import org.springframework.web.servlet.ModelAndView;
 import br.org.ged.direto.model.entity.UploadItem;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.entity.exceptions.FileUploadLimitExceededException;
+import br.org.ged.direto.model.service.SegurancaService;
 import br.org.ged.direto.model.service.impl.UploadServiceImpl;
 import br.org.ged.direto.model.upload.UploadProgressListener;
 
@@ -73,6 +74,9 @@ public class FileUploadController {
 	private String charset;
 	//private Map<String,String[]> parameters;
 	//private Map<String,FileItem> files;
+	
+	@Autowired
+	private SegurancaService segurancaService;
 	
 	
 	@RequestMapping(value = "/upload/sucesso.html",method = RequestMethod.GET)
@@ -190,6 +194,73 @@ public class FileUploadController {
 			IOUtils.copy(is, fos);
 			response.setStatus(response.SC_OK);
 			writer.print("{success: true}");
+		} catch (FileNotFoundException ex) {
+			response.setStatus(response.SC_INTERNAL_SERVER_ERROR);
+			writer.print("{success: false}");
+			System.err.println(FileUploadController.class.getName() + "has thrown an exception: "
+					+ ex.getMessage());
+		} catch (IOException ex) {
+			response.setStatus(response.SC_INTERNAL_SERVER_ERROR);
+			writer.print("{success: false}");
+			System.err.println(FileUploadController.class.getName() + "has thrown an exception: "
+					+ ex.getMessage());
+		} finally {
+			try {
+				fos.close();
+				is.close();
+			} catch (IOException ignored) {
+			}
+		}
+
+		writer.flush();
+		writer.close();
+	}
+	
+	@SuppressWarnings("static-access")
+	@RequestMapping(value = "/upload/check.html", method = RequestMethod.POST)
+	protected void checkSign(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException {
+
+		System.out.println("check.html");
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String usuLogin = auth.getName();
+		String USER_DIRECTORY = "/home/danillo/users/check/"+usuLogin+"/"; 
+		
+		System.out.println(USER_DIRECTORY);
+		
+		File diretorioUsuario = new File(USER_DIRECTORY);
+		boolean diretorioCriado = false;
+		
+		if(!diretorioUsuario.exists()){
+			diretorioCriado = diretorioUsuario.mkdirs();
+			
+			if (!diretorioCriado)
+				throw new RuntimeException("Não foi possível criar o diretório do usuário");
+		}
+		
+		PrintWriter writer = null;
+		InputStream is = null;
+		FileOutputStream fos = null;
+		
+		try {
+			writer = response.getWriter();
+		} catch (IOException ex) {
+			System.err.println(FileUploadController.class.getName() + "has thrown an exception: "	+ ex.getMessage());
+		}
+		
+		int idAnexo = Integer.parseInt(request.getHeader("X-File-Name"));
+
+		try {
+			is = request.getInputStream();
+			fos = new FileOutputStream(new File(USER_DIRECTORY + idAnexo));
+			IOUtils.copy(is, fos);
+			
+			File fileToCheck = new File(USER_DIRECTORY + idAnexo);
+			boolean match = segurancaService.checkSignature(fileToCheck, idAnexo);
+			fileToCheck.delete();
+			response.setStatus(response.SC_OK);
+			writer.print("{success: "+match+"}");
 		} catch (FileNotFoundException ex) {
 			response.setStatus(response.SC_INTERNAL_SERVER_ERROR);
 			writer.print("{success: false}");

@@ -172,6 +172,8 @@ jQuery(document).ready(function($) {
 			var anexoCaminho = $(this).attr('id');
 			$('#hn_nome_anexo').val(anexoCaminho);
 			alert("abrir documento: "+anexoCaminho);
+		}else if (id=='#wchecar'){
+			ID_ANEXO = $(this).attr('anexo');
 		}
 		
 		//Get the screen height and width

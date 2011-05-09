@@ -10,4 +10,5 @@ public interface AnexoService {
 	public Anexo selectById(int idAnexo);
 	public void signAnexo(int idAnexo,String hash);
 	public void signAnexo(Anexo anexo);
+	public String getAssinaturaHash(int idAnexo);
 }

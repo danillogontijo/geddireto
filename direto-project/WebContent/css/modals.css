@@ -45,7 +45,7 @@
 }
 
 #boxes #weditar {
-  width:300px; 
+  width:330px; 
   height:70px;
   /* outline radius for mozilla/firefox only */
 	-moz-box-shadow:0 0 10px #fff;
@@ -63,6 +63,14 @@
 #boxes #wanexar {
   width:370px; 
   height:155px;
+  /* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #fff;
+	-webkit-box-shadow:0 0 10px #fff;
+}
+
+#boxes #wchecar {
+  width:370px; 
+  height:225px;
   /* outline radius for mozilla/firefox only */
 	-moz-box-shadow:0 0 10px #fff;
 	-webkit-box-shadow:0 0 10px #fff;

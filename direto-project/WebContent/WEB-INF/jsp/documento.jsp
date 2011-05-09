@@ -14,14 +14,99 @@
 
 var IS_UPDATES_ACTIONS = false; //Para execucao de uma atualizacao por vez
 var PROXIMO_ANEXO = ${proximoAnexo};
-var ID_ANEXO = ${idDocumento};
-var NAME,CAMINHO_NOME;
+var ID_DOCUMENTO = ${idDocumento};
+var NAME,CAMINHO_NOME,ID_ANEXO;
 
 
 /*
  **** Eventos MouseOver de atualização histórico,anotaçoes e despachos **** 
  */
 $j(function(){
+
+
+	//$( "#dialog:ui-dialog" ).dialog( "destroy" );
+	
+	
+	
+	var password = $j( "#password" ),
+		allFields = $j( [] ).add( password ),
+		tips = $j( ".validateTips" );
+
+	function updateTips( t ) {
+		tips
+			.text( t )
+			.addClass( "ui-state-highlight" );
+		setTimeout(function() {
+			tips.removeClass( "ui-state-highlight", 1500 );
+		}, 500 );
+	}
+
+	function checkRegexp( o, regexp, n ) {
+		if ( !( regexp.test( o.val() ) ) ) {
+			o.addClass( "ui-state-error" );
+			updateTips( n );
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	$j( "#form-sign" ).dialog({
+		autoOpen: false,
+		maxHeight: 200,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Assinar": function() {
+				var bValid = true;
+				allFields.removeClass( "ui-state-error" );
+
+				bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+
+				if ( bValid ) {
+
+					/*$( "#users tbody" ).append( "<tr>" +
+						"<td>" + name.val() + "</td>" + 
+						"<td>" + email.val() + "</td>" + 
+						"<td>" + password.val() + "</td>" +
+					"</tr>" );*/
+
+					segurancaJS.signFile(CAMINHO_NOME, 'sgtdanillo', password.val(),ID_ANEXO,{
+							callback:function(retorno) { 
+								alert(retorno);
+							}
+					});
+
+					 
+					$j( this ).dialog( "close" );
+				}
+			},
+			'Cancelar': function() {
+				$j( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			allFields.val( "" ).removeClass( "ui-state-error" );
+		}
+	});
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 
 	$j('#despachos').mouseenter(function(e) {
 		
@@ -80,19 +165,6 @@ $j(function(){
 	});
 
 
-	$j('#checar_assinatura').live('click',function(e) {
-		e.preventDefault();
-		var file = document.getElementById('fileToCheck');
-		alert(file.value);
-		var fullpath = file.value;
-		segurancaJS.checkSignature('/home/danillo/users/sgt.danillo/1_4.properties',48,{
-			callback:function(ok) {
-				alert(ok);
-			}
-
-		});
-	});
-
 	/*Evento do botão de confirmação da edição do documento*/
 	$j('input[type=button]').click(function(e) {
 		var bt_name = $j(this).attr('name');
@@ -102,7 +174,27 @@ $j(function(){
 			alert("fecha esse trem");
 			js.direto.close_mask();
 		}	
+
+		if(bt_name == 'bt_editar_sim_assinar'){
+			confirma_edicao(2,nome_anexo);
+			alert("fecha esse trem");
+			js.direto.close_mask();
+
+			$j( "#form-sign" ).dialog( "open" );
+
+			
+		}
+
+		if(bt_name == 'bt_editar_sim'){
+			confirma_edicao(1,nome_anexo);
+			alert("fecha esse trem");
+			js.direto.close_mask();
+		}
+
+		
 	});
+
+	
 
 	$j('#close_attach').click(function(e) {
 		e.preventDefault();
@@ -134,9 +226,101 @@ $j(function(){
 		
 });
 
+/*Função de confirmação da edição do documento*/
+function confirma_edicao(resposta,nome_anexo){
+	if (resposta == 0) {
+		alert(nome_anexo+" - Apaga arquivo temp servidor e cancela operação");
+	} else if (resposta == 1) {
+		alert(nome_anexo+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.");
+	} else {
+		var ele = $(nome_anexo);
+		ID_ANEXO = $j(ele).parent().find('span:first').attr('id');
+		CAMINHO_NOME = nome_anexo;
+		alert(ID_ANEXO);
+		//segurancaJS.signFile('1_4.properties', 'sgtdanillo', '96287358',48);
+	}
+}
+
 
 function checkSignature(){
+
+	var ele = document.getElementById('fileToCheck');
+	var file = ele.files[0];
+	  
+
+	  if (file == null){
+		  alert('Você não selecionou nenhum arquivo!');
+		  return;  
+	  }
+
+	var xhr = new XMLHttpRequest();
+	xhr.upload.addEventListener("progress", uploadProgress, false);
+	xhr.addEventListener("load", checkComplete, false);
+	xhr.addEventListener("error", uploadFailed, false);
+	xhr.addEventListener("abort", uploadCanceled, false);
+	xhr.open(
+	            "POST",
+	            "/direto-project/upload/check.html"
+	        );
+
+	xhr.setRequestHeader("Cache-Control", "no-cache");
+	xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+	xhr.setRequestHeader("X-File-Name", ID_ANEXO);
+	      
+	xhr.send(file);
 	
+}
+
+function fileSelectedToCheck() {
+    var file = document.getElementById('fileToCheck').files[0];
+    var output = document.getElementById("file_information");
+
+    //alert(file.name);
+    
+    if (file) {
+      var fileSize = 0;
+      if (file.size > 1024 * 1024)
+        fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+      else
+        fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+
+      output.innerHTML = 'Arquivo: <i>' + file.name + '</i>';
+      output.innerHTML += ' (' + fileSize + ')';
+      //document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
+
+      anexoJS.getAssinaturaHash(ID_ANEXO,{
+			callback:function(hashAssinado) {
+
+			var tam = hashAssinado.length;
+			var block = tam/50;
+			var newHash = '';
+
+			var start = 0;
+			for(var i = 1; i<block+1; i++){
+				newHash += hashAssinado.slice(start, eval((i*50)-1))+' ';
+				start = eval((i*50)-1);
+			}
+
+			newHash += hashAssinado.slice(start, eval((((block+1)*50)-tam)-1));
+
+			output.innerHTML += '<br /><b>Code:</b> ';
+    	  	output.innerHTML += newHash;
+
+      		}
+      });
+    }
+  }
+
+function checkComplete(evt) {
+	var output = document.getElementById("check_output");
+	var response = eval("(" + evt.target.responseText + ")");
+	var result = 'ASSINATURA NÃO É VÁLIDA!';
+
+    if(response.success)
+		result = 'ASSINATURA VÁLIDA!'	
+    
+   output.innerHTML = '<font color="'+(response.success ? 'green' : 'red')+'">'+result+'</font>';
+    
 }
 
 function salvarAcao(acao,id,ele){
@@ -190,15 +374,6 @@ function salvarAcao(acao,id,ele){
   		});
 	}
 	
-}
-
-/*Função de confirmação da edição do documento*/
-function confirma_edicao(resposta,nome_anexo){
-	if (resposta == 0) {
-		alert(nome_anexo+" - Apaga arquivo temp servidor e cancela operação");
-	} else {
-		alert(nome_anexo+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.");
-	}
 }
 
 function padronizado(valor){
@@ -255,7 +430,7 @@ function uploadFile() {
         	extensao = '';
         
 
-	    CAMINHO_NOME = PROXIMO_ANEXO+'_'+ID_ANEXO+extensao;
+	    CAMINHO_NOME = PROXIMO_ANEXO+'_'+ID_DOCUMENTO+extensao;
 
 	    xhr.setRequestHeader("Cache-Control", "no-cache");
 	    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
@@ -311,7 +486,7 @@ function uploadComplete(evt) {
    // alert(evt.target.responseText);
 	document.getElementById('progressNumber').innerHTML = 'Completado!';  
 	$j('#progressNumber').css('color','#3DD13F');
-	anexoJS.saveAnexo(NAME,CAMINHO_NOME,ID_ANEXO,false,true);
+	anexoJS.saveAnexo(NAME,CAMINHO_NOME,ID_DOCUMENTO,false,true);
 	PROXIMO_ANEXO++;
 
 	 $j( "#progressbar" ).progressbar({
@@ -339,8 +514,6 @@ function fileSelected() {
     var output = document.getElementById("output");
     var progressNumber = document.getElementById("progressNumber");
 
-    alert(file.path);
-    
     if (file) {
       var fileSize = 0;
       if (file.size > 1024 * 1024)
@@ -469,7 +642,11 @@ height: 15px;
 			</c:otherwise>
 		</c:choose>
 		
-		<span id="s_visualizar"><a href="#wchecar" name="modal" id="checar_assinatura" class="l_edicao_vis">Visualizar</a></span>
+		<span id="s_visualizar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Visualizar</a></span>
+		
+		<c:if test="${documento_principal.assinado == 1}">
+			| <span id="s_editar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
+		</c:if>
 		
 		<br>
 		<font color="#666666">SHA-1: </font><b>${sha1}</b><br>
@@ -494,6 +671,9 @@ height: 15px;
 					</c:when>
 				</c:choose>
 				<a href="" class="l_edicao_vis">Visualizar</a>
+				<c:if test="${anexo.assinado == 1}">
+			| 		<span id="s_editar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${anexo.idAnexo}" class="l_edicao_vis">Checar</a></span>
+				</c:if>
 				)
 				<span id="hash_${anexo.idAnexo}" style="background-color: red; width: 100%; display: none;">SHA-1: 32f45b23cde152f39020b4677bdb32c2eebd0c57</span>
 			</div>
