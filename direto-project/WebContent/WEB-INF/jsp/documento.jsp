@@ -41,6 +41,16 @@ $j(function(){
 		}, 500 );
 	}
 
+	function checkEmpty( o ) {
+		if ( o.val().length < 1  ) {
+			o.addClass( "ui-state-error" );
+			updateTips( "Este campo não pode ser vazio." );
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	function checkRegexp( o, regexp, n ) {
 		if ( !( regexp.test( o.val() ) ) ) {
 			o.addClass( "ui-state-error" );
@@ -60,7 +70,7 @@ $j(function(){
 			"Assinar": function() {
 				var bValid = true;
 				allFields.removeClass( "ui-state-error" );
-
+				bValid = bValid && checkEmpty(password);
 				bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
 
 				if ( bValid ) {
