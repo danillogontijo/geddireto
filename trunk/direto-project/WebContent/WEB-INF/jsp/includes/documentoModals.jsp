@@ -4,10 +4,11 @@
 <div id="weditar" class="window">
 	<table width="100%">
 		<tr>
-			<td colspan="2" align="center" bgcolor="#1E90FF" class="titulo_confirmacao" height="20" valign="middle">Confirmar edição do documento?</td>
+			<td colspan="3" align="center" bgcolor="#1E90FF" class="titulo_confirmacao" height="20" valign="middle">Confirmar edição do documento?</td>
 		</tr>
 		<tr>
 			<td height="35" valign="bottom"><input type="button" id="bt_conf_edicao" value="Sim" name="bt_editar_sim"></td>
+			<td height="35" valign="bottom"><input type="button" id="bt_conf_edicao" value="Sim e assinar" name="bt_editar_sim_assinar"></td>
 			<td valign="bottom"><input type="button" id="bt_conf_edicao" value="Não" name="bt_editar_nao"></td>
 		</tr>
 		
@@ -90,12 +91,12 @@
 </div>
 
 
-<!-- Adicionar anexo -->
+<!-- check assinatura anexo -->
 <div id="wchecar" class="window">
-	<table width="100%">
+	<table width="370">
 		<tr>
-			<td align="center" bgcolor="#1E90FF" width="690" class="titulo_confirmacao" height="20" valign="middle" id="titulo">Anexar novo documento</td>
-			<td width="10"><a href="#" style="font-weight: bold" id="close_attach">X</a></td>
+			<td align="center" bgcolor="#1E90FF" width="690" class="titulo_confirmacao" height="20" valign="middle" id="titulo">Checar assinatura</td>
+			<td width="10"><a href="#" style="font-weight: bold" class="close">X</a></td>
 		</tr>
 		
 		<tr>
@@ -106,7 +107,7 @@
   			
   			<div class="upload-button" style="position: relative; overflow: hidden; direction: ltr;">
      			Clique aqui para selecionar o arquivo
-        	<input type="file" id="fileToCheck" name="fileToCheck" onchange="fileSelected();" style="position: absolute; right: 0pt; top: 0pt; font-family: Arial; font-size: 118px; margin: 0pt; padding: 0pt; cursor: pointer; opacity: 0;" />
+        	<input type="file" id="fileToCheck" name="fileToCheck" onchange="fileSelectedToCheck();" style="position: absolute; right: 0pt; top: 0pt; font-family: Arial; font-size: 118px; margin: 0pt; padding: 0pt; cursor: pointer; opacity: 0;" />
     		</div>
   			
   			</form>
@@ -114,19 +115,38 @@
 		</tr>
 		
 		<tr>
-			<td colspan="2" id="information">
+			<td colspan="2" id="check_information">
 		
-			<div id="output"></div>
-			<div id="progressbar"></div>
-			<div id="progressNumber"></div>
+			<div id="file_information" style="max-width: 370px;"></div>
+			<div id="check_output" style="max-width: 370px;"></div>
 			
 			</td>
 		</tr>
 		
 		<tr>
-			<td height="35" valign="bottom" colspan="2" id="rodape_anexo"><input type="button" onclick="javascript:checkSignature()" id="bt_acao_assinatura" value="Checar" name="bt_acao_salvar"></td>
+			<td height="35" valign="bottom" colspan="2" id="rodape_anexo"><input type="button" onclick="javascript:checkSignature()" id="bt_acao_assinatura" value="Checar" name="bt_acao_assinatura"></td>
 		</tr>
 	</table>
 	
 </div>
+
+
+
+<div id="form-sign" title="Assinar documento">
+	<p class="validateTips"></p>
+	<form>
+	<fieldset>
+		<label for="password">Digite sua senha do certificado</label>
+		<input type="password" name="password" id="password" onfocus="javascript:this.value=''" value="" class="text ui-widget-content ui-corner-all" />
+	</fieldset>
+	</form>
+</div>
+
+<style>
+		label { display:block; }
+		fieldset { padding:0; border:0; margin-top:5px; }
+		h1 { font-size: 1.2em; margin: .6em 0; }
+		.ui-dialog .ui-state-error { padding: .3em; }
+		.validateTips { border: 1px solid transparent; padding: 0.3em; }
+</style>
     

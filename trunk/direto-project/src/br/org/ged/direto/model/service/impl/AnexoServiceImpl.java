@@ -27,7 +27,6 @@ import br.org.ged.direto.model.service.HistoricoService;
 @Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 public class AnexoServiceImpl implements AnexoService {
 
-	
 	@Autowired
 	private AnexoRepository anexoRepository;
 	
@@ -113,5 +112,16 @@ public class AnexoServiceImpl implements AnexoService {
 	@Override
 	public void signAnexo(Anexo anexo) {
 		anexoRepository.updateAnexo(anexo);
+	}
+
+	@Override
+	@RemoteMethod
+	public String getAssinaturaHash(int idAnexo) {
+		Anexo anexo = selectById(idAnexo);
+		
+		if(anexo.getAssinaturaHash() == null)
+			return "Documento não assinado";
+		
+		return anexo.getAssinaturaHash();
 	}
 }

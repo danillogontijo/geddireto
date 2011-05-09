@@ -202,7 +202,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 	
 	@Override
 	@RemoteMethod
-	public void signFile(String file, String alias, String password, int idAnexo){
+	public String signFile(String file, String alias, String password, int idAnexo){
 		try{
 			Anexo anexoToSign = anexoService.selectById(idAnexo);
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -229,14 +229,18 @@ public class SegurancaServiceImpl implements SegurancaService {
 			
 			anexoService.saveAnexo(anexoToSign);
 			
+			return "Documento assinado com sucesso!";
 		
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			System.err.println("Arquivo nao encontrado.");
+			return "Certificado digital nao encontrado!";
 		} catch (IOException e) {
 			e.printStackTrace();
+			return "Erro de I/O!";
 		} catch (Exception e) {
 			e.printStackTrace();
+			return "Não foi possível assinar o documento!";
 		}
 		
 		
@@ -245,7 +249,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 
 	@Override
 	@RemoteMethod
-	public boolean checkSignature(String path, int idAnexo) {
+	public boolean checkSignature(File fileToCheck, int idAnexo) {
 		try{
 			Anexo anexo = anexoService.selectById(idAnexo);
 			//if (anexo.getAssinado() == 0)
@@ -256,7 +260,6 @@ public class SegurancaServiceImpl implements SegurancaService {
 			
 			byte pwdDecripto[] = Base64Utils.decode(pwd.getBytes());
 	          
-			File fileToCheck = new File(path);
 			FileInputStream fis = new FileInputStream(fileToCheck);
 			byte fileContent[] = new byte[(int)fileToCheck.length()];
 			fis.read(fileContent);

@@ -21,7 +21,7 @@ public interface SegurancaService {
 	public byte[] decripto( PublicKey key, byte[] signed ) throws Exception;
 	public boolean verifySignature( PublicKey key, byte[] buffer, byte[] signed ) throws Exception;*/
 	
-	public void signFile(String nameFile, String alias, String password, int idAnexo);
-	public boolean checkSignature(String path, int idAnexo);
+	public String signFile(String nameFile, String alias, String password, int idAnexo);
+	public boolean checkSignature(File fileToCheck, int idAnexo);
 	
 }
