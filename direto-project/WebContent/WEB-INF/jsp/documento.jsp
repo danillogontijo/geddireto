@@ -23,11 +23,6 @@ var NAME,CAMINHO_NOME,ID_ANEXO;
  */
 $j(function(){
 
-
-	//$( "#dialog:ui-dialog" ).dialog( "destroy" );
-	
-	
-	
 	var password = $j( "#password" ),
 		allFields = $j( [] ).add( password ),
 		tips = $j( ".validateTips" );
@@ -75,20 +70,14 @@ $j(function(){
 
 				if ( bValid ) {
 
-					/*$( "#users tbody" ).append( "<tr>" +
-						"<td>" + name.val() + "</td>" + 
-						"<td>" + email.val() + "</td>" + 
-						"<td>" + password.val() + "</td>" +
-					"</tr>" );*/
-
-					segurancaJS.signFile(CAMINHO_NOME, 'sgtdanillo', password.val(),ID_ANEXO,{
+					segurancaJS.signFile(CAMINHO_NOME, '${usuario.usuLogin}', password.val(),ID_ANEXO,{
 							callback:function(retorno) { 
-								alert(retorno);
+								updateTips(retorno);
+								setTimeout(function(){
+									$j( this ).dialog( "close" );}
+								,500);
 							}
 					});
-
-					 
-					$j( this ).dialog( "close" );
 				}
 			},
 			'Cancelar': function() {
@@ -101,51 +90,25 @@ $j(function(){
 	});
 
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-
 	$j('#despachos').mouseenter(function(e) {
-		
 		var tipo = $j(this).attr('id');
 		if (!IS_UPDATES_ACTIONS)
 			js.direto.show_updates(${idDocumento},tipo);
-		//alert(IS_UPDATES_ACTIONS+" - mousenter");
-	
 	 });
 	
 	$j('#anotacoes').mouseenter(function(e) {
-	
 		var tipo = $j(this).attr('id');
 		if (!IS_UPDATES_ACTIONS)
 			js.direto.show_updates(${idDocumento},tipo);
-
-		//alert(IS_UPDATES_ACTIONS+" - mousenter");
-	
 	 });
 	
 	
 	$j('#historico').mouseenter(function(e) {
-	
 		var tipo = $j(this).attr('id');
 		if (!IS_UPDATES_ACTIONS)
 			js.direto.show_updates(${idDocumento},tipo);
 	
 	 });
-
 
 	/*Efeitos histórico,anotaçoes e despachos */		
 	$j('a[name=link_historico]').toggle(function() {
@@ -165,15 +128,8 @@ $j(function(){
 
 	$j('a[name=link_despachos]').click(function(e) {
 		e.preventDefault();
-		//alert('');
 		$j('#despachos').toggle("slow");
 	});
-
-	$j('a[name=assinar_arquivo]').live('click',function(e) {
-		e.preventDefault();
-		segurancaJS.signFile('1_4.properties', 'sgtdanillo', '96287358',48);
-	});
-
 
 	/*Evento do botão de confirmação da edição do documento*/
 	$j('input[type=button]').click(function(e) {
@@ -181,23 +137,18 @@ $j(function(){
 		var nome_anexo = $j('#hn_nome_anexo').val();
 		if(bt_name == 'bt_editar_nao'){
 			confirma_edicao(0,nome_anexo);
-			alert("fecha esse trem");
 			js.direto.close_mask();
 		}	
 
 		if(bt_name == 'bt_editar_sim_assinar'){
 			confirma_edicao(2,nome_anexo);
-			alert("fecha esse trem");
 			js.direto.close_mask();
 
 			$j( "#form-sign" ).dialog( "open" );
-
-			
 		}
 
 		if(bt_name == 'bt_editar_sim'){
 			confirma_edicao(1,nome_anexo);
-			alert("fecha esse trem");
 			js.direto.close_mask();
 		}
 
@@ -239,18 +190,32 @@ $j(function(){
 /*Função de confirmação da edição do documento*/
 function confirma_edicao(resposta,nome_anexo){
 	if (resposta == 0) {
-		alert(nome_anexo+" - Apaga arquivo temp servidor e cancela operação");
+		//alert(nome_anexo+" - Apaga arquivo temp servidor e cancela operação");
+
+		anexoJS.deleteAnexoFromTemp(ID_ANEXO,{
+			callback:function(ok) { 
+				if (!ok)
+					alert('O arquivo não pode ser deletado da pasta temporária.');
+			}
+
+			});
+		
 	} else if (resposta == 1) {
-		alert(nome_anexo+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.");
+		//alert(nome_anexo+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.");
+		anexoJS.copy(ID_ANEXO,{
+			callback:function(ok) { 
+				if (!ok)
+					alert('O arquivo não foi editado.');
+			}
+		});
 	} else {
-		var ele = $(nome_anexo);
-		ID_ANEXO = $j(ele).parent().find('span:first').attr('id');
+		/*var ele = $(nome_anexo);
+		ID_ANEXO = $j(ele).parent().find('span:first').attr('id');*/
 		CAMINHO_NOME = nome_anexo;
 		alert(ID_ANEXO);
 		//segurancaJS.signFile('1_4.properties', 'sgtdanillo', '96287358',48);
 	}
 }
-
 
 function checkSignature(){
 
@@ -643,8 +608,7 @@ height: 15px;
 		<c:choose>
 			<c:when test="${documento.assinatura == 0}">
 				<c:if test="${documento_principal.assinado == 0}">
-				<span id="s_editar"><a href="#" id="${documento_principal.idAnexo}" name="assinar_arquivo" class="l_edicao_vis">Assinar</a></span> |
-				 <span id="s_editar"><a href="#weditar" id="${documento_principal.anexoCaminho}" name="modal" class="l_edicao_vis">Editar</a></span> |
+				 <span id="s_editar"><a href="#weditar" id="${documento_principal.anexoCaminho}" anexo="${documento_principal.idAnexo}" name="modal" class="l_edicao_vis">Editar</a></span> |
 				</c:if>
 			</c:when>
 			<c:otherwise>
@@ -655,7 +619,7 @@ height: 15px;
 		<span id="s_visualizar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Visualizar</a></span>
 		
 		<c:if test="${documento_principal.assinado == 1}">
-			| <span id="s_editar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
+			| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
 		</c:if>
 		
 		<br>
@@ -676,13 +640,13 @@ height: 15px;
 				<c:choose>
 					<c:when test="${documento.assinatura == 0}">
 						<c:if test="${anexo.assinado == 0}">
-							<a href="#weditar" name="modal" id="${anexo.anexoCaminho}" class="l_edicao_vis">Editar</a> |
+							<a href="#weditar" name="modal" id="${anexo.anexoCaminho}" anexo="${anexo.idAnexo}" class="l_edicao_vis">Editar</a> |
 						</c:if>
 					</c:when>
 				</c:choose>
-				<a href="" class="l_edicao_vis">Visualizar</a>
+				<a href="fileview.html?id=${anexo.idAnexo}" target="_blank" class="l_edicao_vis">Visualizar</a>
 				<c:if test="${anexo.assinado == 1}">
-			| 		<span id="s_editar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${anexo.idAnexo}" class="l_edicao_vis">Checar</a></span>
+			| 		<span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${anexo.idAnexo}" class="l_edicao_vis">Checar</a></span>
 				</c:if>
 				)
 				<span id="hash_${anexo.idAnexo}" style="background-color: red; width: 100%; display: none;">SHA-1: 32f45b23cde152f39020b4677bdb32c2eebd0c57</span>

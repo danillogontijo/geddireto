@@ -131,7 +131,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 	 * Extrai a chave pública do arquivo.
 	 */
 	public PrivateKey getPrivateKeyFromFile( File cert, String alias, String password ) throws Exception {
-		//System.out.println(KeyStore.getDefaultType ());
+		System.out.println(alias);
 		KeyStore ks = KeyStore.getInstance ("PKCS12");
 		char[] pwd = password.toCharArray();
 		InputStream is = new FileInputStream( cert );
@@ -297,7 +297,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 				zeros += "0";
 			fileName = zeros+fileName;
 		}
-		
+		System.out.println(fileName);
 		return fileName;
 	}
 	

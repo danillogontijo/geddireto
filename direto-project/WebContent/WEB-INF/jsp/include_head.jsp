@@ -87,9 +87,6 @@
 var $j = jQuery.noConflict();
 var DESTINATARIOS = new Array();
 var PAGE = '';
-var TAMANHO_MAX_UPLOAD = <spring:message code="TAMANHO_MAX_UPLOAD"/>; //Em Mb
-var ID_DOCUMENTO = 0;
-var IS_ASSIGN = false;
 
 function init(page){
 	PAGE = page;
@@ -171,7 +168,12 @@ jQuery(document).ready(function($) {
 		}else if(id=='#weditar'){	
 			var anexoCaminho = $(this).attr('id');
 			$('#hn_nome_anexo').val(anexoCaminho);
-			alert("abrir documento: "+anexoCaminho);
+			//alert("abrir documento: "+anexoCaminho);
+			ID_ANEXO = $(this).attr('anexo');
+			caminho = "verdocumentoFisico.html?id="+ID_ANEXO;
+			//alert(caminho);
+			window.open(caminho, '', ''); 
+			
 		}else if (id=='#wchecar'){
 			ID_ANEXO = $(this).attr('anexo');
 		}

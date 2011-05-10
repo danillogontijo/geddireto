@@ -111,18 +111,24 @@ public class DocumentoController extends BaseController {
 
 		}
 		
-		model.addAttribute("proximoAnexo",listAnexos.size()+1);
+		int proximoAnexo = 1;
+		
+		if (listAnexos != null)
+			proximoAnexo = listAnexos.size()+1;
+		
 		
 		if (principal == null){
 			model.addAttribute("documento_principal", "Sem documento");
+			//model.addAttribute("sha1", "Sem hash");
+			model.addAttribute("proximoAnexo",1);
 		}else{
 			model.addAttribute("documento_principal", principal);
 			listAnexos.remove(principal);
+			model.addAttribute("sha1", principal.getHash());
+			model.addAttribute("anexos",listAnexos);
+			model.addAttribute("proximoAnexo",proximoAnexo);
 		}
 		
-		model.addAttribute("anexos",listAnexos);
-		
-		model.addAttribute("sha1", principal.getHash());
 		
 		return "documento";
 	}
