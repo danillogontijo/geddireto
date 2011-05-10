@@ -79,7 +79,7 @@ public class HistoricoServiceImpl implements HistoricoService {
 	}
 
 	@Override
-	@Transactional(readOnly=false)
+	@Transactional(readOnly=false,propagation=Propagation.SUPPORTS)
 	public void save(Historico historico) {
 		historicoRepository.save(historico);
 	}

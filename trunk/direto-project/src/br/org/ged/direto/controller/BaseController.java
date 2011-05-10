@@ -13,14 +13,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import br.org.direto.util.DocumentosUtil;
 import br.org.direto.webchat.ChatService;
 import br.org.direto.webchat.Message;
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
+import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.entity.menus.MenuTopo;
 import br.org.ged.direto.model.service.PastasService;
 import br.org.ged.direto.model.service.UsuarioService;
@@ -100,6 +103,13 @@ public abstract class BaseController {
 		//System.out.println(menu.toString());
 		
 		return menu;
+	}
+	
+	@ExceptionHandler(Exception.class)
+	public ModelAndView handlerDocumentNotFoundException(Exception ex){
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("error", ex.getMessage());
+		return mav;
 	}
 		
 }

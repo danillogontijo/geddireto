@@ -1,7 +1,6 @@
 package br.org.ged.direto.model.service;
 
 import br.org.ged.direto.model.entity.Anexo;
-import br.org.ged.direto.model.entity.Usuario;
 
 public interface AnexoService {
 	
@@ -11,4 +10,6 @@ public interface AnexoService {
 	public void signAnexo(int idAnexo,String hash);
 	public void signAnexo(Anexo anexo);
 	public String getAssinaturaHash(int idAnexo);
+	public boolean deleteAnexoFromTemp(int idAnexo);
+	public boolean copy(int idAnexo);
 }

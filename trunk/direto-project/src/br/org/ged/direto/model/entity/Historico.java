@@ -37,7 +37,7 @@ public class Historico implements Serializable {
 	@JoinColumn(name = "IdMensagem", nullable = false, updatable = false)
 	private DocumentoDetalhes documentoDetalhes;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdUsuario", nullable = false, updatable = false)
 	private Usuario usuario;
 	

@@ -291,6 +291,10 @@ function setInputFieldStatus(elementId, message)
 
 <script type="text/javascript">
 
+var TAMANHO_MAX_UPLOAD = <spring:message code="TAMANHO_MAX_UPLOAD"/>; //Em Mb
+var ID_DOCUMENTO = 0;
+var IS_ASSIGN = false;
+
 $j(function(){
 
 	//$j('span').click(function(e) {
@@ -405,56 +409,12 @@ function fEnviar(e){
 	function getDocumentoFormJS()
 	{
 
-	/*	var winH = '800';//e.pageX;
-		var winW = 1002;
-		//e.preventDefault();
-		var id = '#wnovo_documento';
-
-		var maskHeight = $j(document).height();
-		var maskWidth = $j(window).width();
-	
-		$j('#mask').css({'width':maskWidth,'height':maskHeight});
-		
-		$j('#mask').fadeIn(1000);	
-		$j('#mask').fadeTo("slow",0.8);	
-
-		var pos = $j('#upload').offset();
-		
-		$j(id).css('top',  pos.top-$j(id).height());
-		$j(id).css('left', (167+winW-$j(id).width())/2);
-	
-		$j(id).fadeIn(100); */
-
-		//setTimeout(function (){protocoloJS.getsRetorno(retorno);},100);
-	
-		//$j("#console").html('<p><img src="imagens/ajax-loader.gif" /></p>');
-		
 		dialogMessage('Enviando documento...','<p style="text-align: center"><img src="imagens/ajax-loader.gif" /></p>',true);
-		
-		/*function retorno(dados){
-			txt = dados;
-			$j("#console").html(txt);
-			var TIMER;
-			
-			if ( (txt.indexOf("Finalizado") == -1) && (txt.indexOf("-1") == -1) ){
-				TIMER = setTimeout(function (){protocoloJS.getsRetorno(retorno);},300);
-			}else{
-				//alert('ok');
-				setTimeout(function (){js.direto.close_mask();},3000);
-				
-				$j("#console").html();
-				//return false;
-
-				//clearTimeout(TIMER);
-			}
-		}*/
-
 		
 		formulariosJS.getDocumentoForm({
 			callback:function(dataFromServer) {
 				setDocumentoFormJS(dataFromServer);
-				
-	  		}
+			}
 	  	});
 	 	  	
 	}
@@ -482,19 +442,19 @@ function fEnviar(e){
 			this.documentoFormJS.assinatura = 1;
 			IS_ASSIGN = true;
 		}
-		//for (var i=0;i<10;i++)
-			sendAndSaveFormToNewDocumentoJS(this.documentoFormJS);
+		
+		sendAndSaveFormToNewDocumentoJS(this.documentoFormJS);
 	}	
 
 	function sendAndSaveFormToNewDocumentoJS(documentoForm){
 
 		documentosJS.sendAndSaveFormToNewDocumento(documentoForm,{
 			callback:function(documentoRetorno) {
-				//alert(dataFromServer);
 				
-				if(documentoRetorno == null)
+				if(documentoRetorno == null){
 					alert("O documento não pode ser enviado");
-
+					return;
+				}
 
 				var list = "";
 				for (var i = 0; i < DESTINATARIOS.length-1 ; i++) {
@@ -502,8 +462,7 @@ function fEnviar(e){
 					list += item.user+", ";
 				}
 				
-				if(DESTINATARIOS.length > 1)
-					list += (DESTINATARIOS[DESTINATARIOS.length-1]).user;
+				list += (DESTINATARIOS[DESTINATARIOS.length-1]).user;
 				
 				var txtHistorico = "(Enviado) - Do: ";
 				txtHistorico += '${usuario.pstGrad.pstgradNome}	${usuario.usuNGuerra}';
@@ -526,13 +485,8 @@ function fEnviar(e){
 							'</b><br /><a href="documento.html?pk='+documentoRetorno.idDocumento+'&id='+ID_DOCUMENTO+
 							'">Abrir documento</a>';
 	
-
 						dialogMessage('Novo documento enviado',message,false);
 							
-						/*$j("#console").html('Foi gerado um protocolo sob o número:'+
-								'<br /><a href=""><b>'+documentoRetorno.nrProtocolo+'</b></a>'+
-								'<br />Clique no link acima para visualizar o documento ou em fechar para finalizar.'+
-								'<br />');*/	
 					}
 				}
 	  		}
