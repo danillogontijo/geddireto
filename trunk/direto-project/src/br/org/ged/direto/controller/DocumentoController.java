@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import br.org.direto.util.Config;
 import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Anotacao;
 import br.org.ged.direto.model.entity.Conta;
@@ -45,6 +46,9 @@ public class DocumentoController extends BaseController {
 	
 	@Autowired
 	private DocumentosService documentosService;
+	
+	@Autowired
+	private Config config;
 	
 	/*@Autowired
 	private MessageSource messageSource;*/
@@ -102,7 +106,7 @@ public class DocumentoController extends BaseController {
 			
 			String sha1 = "Ocorreu erro";
 			try {
-				File file = new File("/home/danillo/users/sgt.danillo/"+anexo.getAnexoCaminho());
+				File file = new File(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
 				sha1 = segurancaService.sh1withRSA(file);
 				anexo.setHash(sha1);
 			}catch(Exception e){

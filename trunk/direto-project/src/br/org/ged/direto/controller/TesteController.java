@@ -56,8 +56,8 @@ import br.org.ged.direto.model.service.UsuarioService;
 @Controller
 public class TesteController extends BaseController {
 	
-	@Autowired
-	Protocolo p1;
+	/*@Autowired
+	Protocolo p1;*/
 	
 	@Autowired
 	ChatService chatService;
@@ -297,15 +297,15 @@ public class TesteController extends BaseController {
 			System.out.println(f.getDataDocumento());
 			System.out.println(f.getNrDocumento());
 			
-			p1.setFormulario(f);
+			//p1.setFormulario(f);
 			
 			Usuario user = super.getUsuarioLogado();
 			
 			//Protocolo p1 = new Protocolo();
 			
-			Thread t1 = new Thread(p1);
+			/*Thread t1 = new Thread(p1);
 			t1.setName("threadTo"+user.getUsuLogin());
-			t1.start(); 
+			t1.start();*/ 
 			
 			
 			/*Thread[] t = new Thread[5];

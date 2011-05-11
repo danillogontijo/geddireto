@@ -65,12 +65,11 @@
 	-->
 	
 	<!-- BEANS PARA CRIACAO PROTOCOLO E ENVIO DE CADASTRO DE NOVO DOCUMENTO -->
-	<bean id="documentoProtocolo" class="br.org.direto.util.DocumentoProtocolo">
-		<property name="documentosService" ref="documentosService"></property>
-	</bean> 
-	
-	<bean id="protocolo" class="br.org.direto.util.Protocolo">
-		<property name="documentoProtocolo" ref="documentoProtocolo"></property>
+	<bean id="config" class="br.org.direto.util.Config">
+		<constructor-arg value="${util.baseDir}"></constructor-arg>
+		<constructor-arg value="${util.tempDir}"></constructor-arg>
+		<constructor-arg value="${util.certificatesDir}"></constructor-arg>
+		<constructor-arg value="${util.fileMaxSize}"></constructor-arg>
 	</bean> 
 	
 	<!--  -->
