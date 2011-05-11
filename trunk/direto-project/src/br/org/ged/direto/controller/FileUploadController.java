@@ -52,9 +52,12 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.org.direto.util.Config;
+import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.UploadItem;
+import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.entity.exceptions.FileUploadLimitExceededException;
+import br.org.ged.direto.model.service.AnexoService;
 import br.org.ged.direto.model.service.SegurancaService;
 import br.org.ged.direto.model.service.impl.UploadServiceImpl;
 import br.org.ged.direto.model.upload.UploadProgressListener;
@@ -81,6 +84,9 @@ public class FileUploadController {
 	
 	@Autowired
 	private SegurancaService segurancaService;
+	
+	@Autowired
+	private AnexoService anexoService;
 	
 	
 	@RequestMapping(value = "/upload/sucesso.html",method = RequestMethod.GET)
@@ -228,6 +234,7 @@ public class FileUploadController {
 		System.out.println("check.html");
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario usuario = (Usuario)auth.getPrincipal();
 		String usuLogin = auth.getName();
 		String USER_DIRECTORY = "/home/danillo/users/check/"+usuLogin+"/"; 
 		
@@ -261,10 +268,23 @@ public class FileUploadController {
 			IOUtils.copy(is, fos);
 			
 			File fileToCheck = new File(USER_DIRECTORY + idAnexo);
-			boolean match = segurancaService.checkSignature(fileToCheck, idAnexo);
-			fileToCheck.delete();
-			response.setStatus(response.SC_OK);
-			writer.print("{success: "+match+"}");
+			
+			Anexo anexo = anexoService.selectById(idAnexo);
+			boolean match = false;
+			if( segurancaService.haveCertificate(usuario.getUsuIdt()) && anexo.getAssinaturaHash().length() > 40){
+				match = segurancaService.checkSignature(fileToCheck, idAnexo);
+				System.out.println("tem certificado"+match);
+				fileToCheck.delete();
+				response.setStatus(response.SC_OK);
+				writer.print("{success: "+match+"}");
+			}else{
+				String fileHash = segurancaService.sh1withRSA(fileToCheck);
+				match = fileHash.equals(anexo.getAssinaturaHash()) ? true : false;
+				System.out.println("pode ter mas hash eh assinado certificado"+match);
+				response.setStatus(response.SC_OK);
+				writer.print("{success: "+match+"}");
+			}
+			
 		} catch (FileNotFoundException ex) {
 			response.setStatus(response.SC_INTERNAL_SERVER_ERROR);
 			writer.print("{success: false}");

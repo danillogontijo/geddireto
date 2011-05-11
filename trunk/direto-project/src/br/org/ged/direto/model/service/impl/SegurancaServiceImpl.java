@@ -20,21 +20,22 @@ import org.springframework.stereotype.Service;
 import br.org.direto.util.Base64Utils;
 import br.org.direto.util.Config;
 import br.org.ged.direto.model.entity.Anexo;
+import br.org.ged.direto.model.entity.Carteira;
+import br.org.ged.direto.model.entity.Historico;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.service.AnexoService;
+import br.org.ged.direto.model.service.CarteiraService;
+import br.org.ged.direto.model.service.HistoricoService;
 import br.org.ged.direto.model.service.SegurancaService;
 import br.org.ged.direto.model.service.UsuarioService;
 
 import java.security.*;
+import java.util.Date;
 
 @Service("segurancaService")
 @RemoteProxy(name = "segurancaJS")
 public class SegurancaServiceImpl implements SegurancaService {
 
-	private static final String signatureAlgorithm = "MD5withRSA";	
-	private final File jks = new File("/home/danillo/springsource/tc-server-6.0.20.C/truststore.jks");
-	private final String pwd = "ZDE0M3Qw";
-	
 	@Autowired
 	private AnexoService anexoService;
 	
@@ -43,6 +44,17 @@ public class SegurancaServiceImpl implements SegurancaService {
 	
 	@Autowired
 	private Config config;
+	
+	@Autowired
+	private CarteiraService carteiraService;
+	
+	@Autowired
+	private HistoricoService historicoService;
+	
+	private static final String signatureAlgorithm = "MD5withRSA";	
+	private final File jks = new File("/home/danillo/springsource/tc-server-6.0.20.C/truststore.jks");
+	private final String pwd = "ZDE0M3Qw";
+	
 	
 	@Override
 	public String md5(File arquivo) {
@@ -98,7 +110,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 	
 	
 	
-	public static byte[] getBytesFromFile(File file) throws IOException {
+	public static byte[] getBytesFromFile(File file) throws IOException,FileNotFoundException {
         InputStream is = new FileInputStream(file);
     
         // Get the size of the file
@@ -142,6 +154,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 		ks.load( is, pwd );
 		is.close();
 		Key key = ks.getKey( alias, pwd );
+		System.out.println(cert.exists());
 		if( key instanceof PrivateKey ) {
 			return (PrivateKey) key;
 		}
@@ -206,9 +219,8 @@ public class SegurancaServiceImpl implements SegurancaService {
 	
 	@Override
 	@RemoteMethod
-	public String signFile(String file, String alias, String password, int idAnexo){
+	public String signFile(String alias, String password, int idAnexo){
 		try{
-			System.out.println(config.baseDir);
 			Anexo anexoToSign = anexoService.selectById(idAnexo);
 			if (anexoToSign.getAssinado() == 1)
 				return "Arquivo já assinado.";
@@ -218,7 +230,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 			
 			File certificado = new File(config.certificatesDir+formatFileName(signer.getUsuIdt())+".p12");
 			
-			File fileToSing = new File(config.baseDir+"sgt.danillo/"+file);
+			File fileToSing = new File(config.baseDir+"sgt.danillo/"+anexoToSign.getAnexoCaminho());
 			FileInputStream fis = new FileInputStream(fileToSing);
 			byte fileContent[] = new byte[(int)fileToSing.length()];
 			fis.read(fileContent);
@@ -250,14 +262,12 @@ public class SegurancaServiceImpl implements SegurancaService {
 			e.printStackTrace();
 			return "Não foi possível assinar o documento!";
 		}
-		
-		
-		
 	}
 
 	@Override
 	@RemoteMethod
 	public boolean checkSignature(File fileToCheck, int idAnexo) {
+		FileInputStream fis;
 		try{
 			Anexo anexo = anexoService.selectById(idAnexo);
 			if (anexo.getAssinado() == 0)
@@ -268,12 +278,13 @@ public class SegurancaServiceImpl implements SegurancaService {
 			
 			byte pwdDecripto[] = Base64Utils.decode(pwd.getBytes());
 	          
-			FileInputStream fis = new FileInputStream(fileToCheck);
+			fis = new FileInputStream(fileToCheck);
 			byte fileContent[] = new byte[(int)fileToCheck.length()];
 			fis.read(fileContent);
 		
 			PublicKey publicKey = getPublicKeyFromFile( jks, formatFileName(signerUser.getUsuIdt()), new String(pwdDecripto) );
 			
+			fis.close();
 			if( verifySignature( publicKey, fileContent, hash ) ) {
 				System.out.println("Assinatura OK!");
 				return true; 
@@ -281,6 +292,8 @@ public class SegurancaServiceImpl implements SegurancaService {
 				System.out.println("Assinatura NOT OK!");
 				return false;
 			}
+			
+			
 		
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
@@ -307,6 +320,85 @@ public class SegurancaServiceImpl implements SegurancaService {
 		}
 		System.out.println(fileName);
 		return fileName;
+	}
+
+	@Override
+	@RemoteMethod
+	public boolean haveCertificate(int usuIdt) {
+		
+		File certificado = new File(config.certificatesDir+formatFileName(usuIdt)+".p12");
+		
+		if (certificado.exists())
+			return true;
+
+		return false;
+	}
+
+	@Override
+	@RemoteMethod
+	public String blockEditDocument(int idAnexo) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario signer = (Usuario)auth.getPrincipal();
+		
+		Anexo anexoToSign = anexoService.selectById(idAnexo);
+		if (anexoToSign.getAssinado() == 1)
+			return "Documento já assinado.";
+		
+		String sha1;
+		try {
+			File file = new File(config.baseDir+"sgt.danillo/"+anexoToSign.getAnexoCaminho());
+			sha1 = sh1withRSA(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return "Arquivo não encontrado";
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "erro";
+		}
+		
+		anexoToSign.setAssinado(1);
+		anexoToSign.setAssinadoPor(signer.getUsuLogin());
+		anexoToSign.setIdAssinadoPor(signer.getIdUsuario());
+		anexoToSign.setAssinaturaHash(sha1);
+		
+		anexoService.saveAnexo(anexoToSign);
+		
+		return "1";
+		
+	}
+
+	@Override
+	@RemoteMethod
+	public String releaseDocumentEdition(int idAnexo) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario usuario = (Usuario)auth.getPrincipal();
+		Carteira carteira = carteiraService.selectById(usuario.getIdCarteira());
+		
+		Anexo anexo = anexoService.selectById(idAnexo);
+		if(anexo.getIdAssinadoPor() != usuario.getIdUsuario())
+			return "Você não tem permissão para liberar a edição deste documento.";
+		
+		anexo.setAssinado(0);
+		anexo.setAssinadoPor("");
+		anexo.setIdAssinadoPor(0);
+		
+		anexoService.saveAnexo(anexo);
+		
+		String txtHistorico = "(Edição Liberada)-"+anexo.getAnexoNome()+"-";
+		txtHistorico += usuario.getUsuLogin();
+		
+		Historico historico = new Historico();
+		historico.setCarteira(carteira);
+		historico.setDataHoraHistorico(new Date());
+		historico.setHistorico(txtHistorico);
+		historico.setDocumentoDetalhes(anexo.getDocumentoDetalhes());
+		historico.setUsuario(usuario);
+		
+		historicoService.save(historico);
+		
+		return "Documento com edição liberada!";
+		
 	}
 	
 }

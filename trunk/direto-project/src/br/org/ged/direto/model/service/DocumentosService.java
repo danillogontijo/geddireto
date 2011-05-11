@@ -58,4 +58,6 @@ public interface DocumentosService {
 	public void saveNewDocumento(DocumentoDetalhes documentoDetalhes);
 	
 	public Documento sendAndSaveFormToNewDocumento(DocumentoForm form);
+	
+	public String encaminharDocumento(String destinatarios, int idDocumentoDetalhes);
 }

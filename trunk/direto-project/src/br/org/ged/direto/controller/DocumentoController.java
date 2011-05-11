@@ -34,6 +34,7 @@ import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Historico;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
+import br.org.ged.direto.model.service.AnexoService;
 import br.org.ged.direto.model.service.AnotacaoService;
 import br.org.ged.direto.model.service.DespachoService;
 import br.org.ged.direto.model.service.DocumentosService;
@@ -68,6 +69,9 @@ public class DocumentoController extends BaseController {
 	@Autowired
 	private HistoricoService historicoService;
 	
+	@Autowired
+	private AnexoService anexoService;
+	
 	private DocumentoDetalhes documentoDetalhes;
 	
 	
@@ -90,6 +94,7 @@ public class DocumentoController extends BaseController {
 		Set<Anexo> listAnexos = documentoDetalhes.getAnexos();
 		
 		Anexo principal = null;
+		String sha1 = "Ocorreu erro";
 		
 		for(Anexo anexo : listAnexos){
 			String[] nome = anexo.getAnexoCaminho().split("_");
@@ -102,15 +107,27 @@ public class DocumentoController extends BaseController {
 			if (nome[0].equals("1"))
 				principal = anexo;
 			
+			if (anexo.getAssinaturaHash() == null){
+				try {
+					File file = new File(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
+					sha1 = segurancaService.sh1withRSA(file);
+					System.out.println(sha1.length()+"=====================");
+					anexo.setHash(sha1);
+					anexoService.setAssinaturaHash(sha1, anexo.getIdAnexo());
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			
-			
-			String sha1 = "Ocorreu erro";
-			try {
-				File file = new File(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
-				sha1 = segurancaService.sh1withRSA(file);
-				anexo.setHash(sha1);
-			}catch(Exception e){
-				e.printStackTrace();
+			}else if (anexo.getAssinaturaHash().length() > 40){
+				try {
+					File file = new File(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
+					sha1 = segurancaService.sh1withRSA(file);
+					anexo.setHash(sha1);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			} else {
+				anexo.setHash(anexo.getAssinaturaHash());
 			}
 
 		}
@@ -123,7 +140,6 @@ public class DocumentoController extends BaseController {
 		
 		if (principal == null){
 			model.addAttribute("documento_principal", "Sem documento");
-			//model.addAttribute("sha1", "Sem hash");
 			model.addAttribute("proximoAnexo",1);
 		}else{
 			model.addAttribute("documento_principal", principal);
@@ -132,7 +148,6 @@ public class DocumentoController extends BaseController {
 			model.addAttribute("anexos",listAnexos);
 			model.addAttribute("proximoAnexo",proximoAnexo);
 		}
-		
 		
 		return "documento";
 	}
@@ -170,20 +185,62 @@ public class DocumentoController extends BaseController {
 		
 		String sha1 = "Ocorreu erro";
 		
-		try {
-			File file = new File("/home/danillo/users/sgt.danillo/"+principal.getAnexoCaminho());
+		for(Anexo anexo : listAnexos){
+			String[] nome = anexo.getAnexoCaminho().split("_");
+			String nomeCompleto = anexo.getAnexoNome();
+			if (nomeCompleto.length() > 60){
+				nomeCompleto = nomeCompleto.substring(0, 50)+"..."+nomeCompleto.substring(nomeCompleto.length()-10, nomeCompleto.length());
+				anexo.setAnexoNome(nomeCompleto);
+			}
 			
-			sha1 = segurancaService.sh1withRSA(file);
+			if (nome[0].equals("1"))
+				principal = anexo;
 			
-		}catch(Exception e){
+			System.out.println(anexo.getAssinaturaHash()+" - hash");
 			
+			if (anexo.getAssinaturaHash() == null){
+				try {
+					File file = new File(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
+					sha1 = segurancaService.sh1withRSA(file);
+					System.out.println(sha1.length()+"=====================");
+					anexo.setHash(sha1);
+					anexoService.setAssinaturaHash(sha1, anexo.getIdAnexo());
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			
+			}else if (anexo.getAssinaturaHash().length() > 40){
+				try {
+					File file = new File(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
+					sha1 = segurancaService.sh1withRSA(file);
+					anexo.setHash(sha1);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			} else {
+				anexo.setHash(anexo.getAssinaturaHash());
+			}
+
 		}
 		
-		model.addAttribute("sha1", sha1);
+		int proximoAnexo = 1;
+		
+		if (listAnexos != null)
+			proximoAnexo = listAnexos.size()+1;
+		
+		
+		if (principal == null){
+			model.addAttribute("documento_principal", "Sem documento");
+			model.addAttribute("proximoAnexo",1);
+		}else{
+			model.addAttribute("documento_principal", principal);
+			listAnexos.remove(principal);
+			model.addAttribute("sha1", principal.getHash());
+			model.addAttribute("anexos",listAnexos);
+			model.addAttribute("proximoAnexo",proximoAnexo);
+		}
 		
 		return "documento";
-
-	
 	}
 	
 		

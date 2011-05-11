@@ -9,12 +9,14 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/notificacaoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anexoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/segurancaJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/historicoJS.js"></script>
 
 <script type="text/javascript">
 
 var IS_UPDATES_ACTIONS = false; //Para execucao de uma atualizacao por vez
 var PROXIMO_ANEXO = ${proximoAnexo};
 var ID_DOCUMENTO = ${idDocumento};
+var USER_NAME = '${usuario.pstGrad.pstgradNome}	${usuario.usuNGuerra}';
 var NAME,CAMINHO_NOME,ID_ANEXO;
 
 
@@ -66,11 +68,11 @@ $j(function(){
 				var bValid = true;
 				allFields.removeClass( "ui-state-error" );
 				bValid = bValid && checkEmpty(password);
-				bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+				bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Campo senha permitido somente : a-z 0-9" );
 
 				if ( bValid ) {
 
-					segurancaJS.signFile(CAMINHO_NOME, '${usuario.usuLogin}', password.val(),ID_ANEXO,{
+					segurancaJS.signFile('${usuario.usuLogin}', password.val(),ID_ANEXO,{
 							callback:function(retorno) { 
 								updateTips(retorno);
 								setTimeout(function(){
@@ -131,24 +133,54 @@ $j(function(){
 		$j('#despachos').toggle("slow");
 	});
 
+	$j('a[name=liberar_edicao]').click(function(e) {
+		e.preventDefault();
+
+		segurancaJS.releaseDocumentEdition($j(this).attr('anexo'),{
+			callback:function(retorno) { 
+				//retorno = eval(retorno);
+				//(retorno == -1) ? errorAlert('Documento já está assinado.') : alertMessage('Bloquear edição do documento',retorno,false);
+				alertMessage('Liberar edição do documento',retorno,false); 
+
+				window.location.reload();	
+			}						
+		});
+		
+	});
+
 	/*Evento do botão de confirmação da edição do documento*/
 	$j('input[type=button]').click(function(e) {
 		var bt_name = $j(this).attr('name');
-		var nome_anexo = $j('#hn_nome_anexo').val();
+		//var nome_anexo = $j('#hn_nome_anexo').val();
 		if(bt_name == 'bt_editar_nao'){
-			confirma_edicao(0,nome_anexo);
+			confirma_edicao(0);
 			js.direto.close_mask();
 		}	
 
 		if(bt_name == 'bt_editar_sim_assinar'){
-			confirma_edicao(2,nome_anexo);
+			confirma_edicao(2);
 			js.direto.close_mask();
+			
+			segurancaJS.haveCertificate(${usuario.usuIdt},{
+				callback:function(ok) { 
+					if (ok){
+						$j( "#form-sign" ).dialog( "open" );
+					}else{
+						segurancaJS.blockEditDocument(ID_ANEXO,{
+							callback:function(retorno) {
+								(retorno != '1') ? errorAlert(retorno) : alertMessage('Bloquear edição do documento','Documento bloqueado para edição!',false); 
+								if (retorno == '1')
+									window.location.reload();	
+							}						
+						});
+					}
+				}
 
-			$j( "#form-sign" ).dialog( "open" );
+			});
 		}
 
 		if(bt_name == 'bt_editar_sim'){
-			confirma_edicao(1,nome_anexo);
+			confirma_edicao(1);
 			js.direto.close_mask();
 		}
 
@@ -186,30 +218,31 @@ $j(function(){
 });
 
 /*Função de confirmação da edição do documento*/
-function confirma_edicao(resposta,nome_anexo){
+function confirma_edicao(resposta){
 	if (resposta == 0) {
 		//alert(nome_anexo+" - Apaga arquivo temp servidor e cancela operação");
-
 		anexoJS.deleteAnexoFromTemp(ID_ANEXO,{
 			callback:function(ok) { 
 				if (!ok)
 					alert('O arquivo não pode ser deletado da pasta temporária.');
 			}
-
-			});
+		});
 		
 	} else if (resposta == 1) {
 		//alert(nome_anexo+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.");
 		anexoJS.copy(ID_ANEXO,{
 			callback:function(ok) { 
 				if (!ok)
-					alert('O arquivo não foi editado.');
+					alert('Você não tem permissão para editar o documento.');
 			}
 		});
 	} else {
-		CAMINHO_NOME = nome_anexo;
-		
-		//segurancaJS.signFile('1_4.properties', 'sgtdanillo', '96287358',48);
+		anexoJS.copy(ID_ANEXO,{
+			callback:function(ok) { 
+				if (!ok)
+					alert('Você não tem permissão para editar o documento.');
+			}
+		});
 	}
 }
 
@@ -257,7 +290,7 @@ function fileSelectedToCheck() {
 
       output.innerHTML = 'Arquivo: <i>' + file.name + '</i>';
       output.innerHTML += ' (' + fileSize + ')';
-      //document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
+      document.getElementById('check_output').innerHTML = '';
 
       anexoJS.getAssinaturaHash(ID_ANEXO,{
 			callback:function(hashAssinado) {
@@ -614,7 +647,11 @@ height: 15px;
 		
 		<span id="s_visualizar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Visualizar</a></span>
 		
-		<c:if test="${documento_principal.assinado == 1}">
+		<c:if test="${documento_principal.assinado == 1 && documento_principal.idAssinadoPor == usuario.idUsuario}">
+			| <span id="s_checar"><a href="#" name="liberar_edicao" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Liberar</a></span> 
+		</c:if>
+		
+		<c:if test="${documento_principal.assinado == 1 || documento.assinatura == 1}">
 			| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
 		</c:if>
 		
@@ -641,8 +678,11 @@ height: 15px;
 					</c:when>
 				</c:choose>
 				<a href="fileview.html?id=${anexo.idAnexo}" target="_blank" class="l_edicao_vis">Visualizar</a>
-				<c:if test="${anexo.assinado == 1}">
-			| 		<span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${anexo.idAnexo}" class="l_edicao_vis">Checar</a></span>
+				<c:if test="${anexo.assinado == 1 || documento.assinatura == 1}">
+				| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${anexo.idAnexo}" class="l_edicao_vis">Checar</a></span>
+				</c:if>
+				<c:if test="${anexo.assinado == 1 && anexo.idAssinadoPor == usuario.idUsuario}">
+				| <span id="s_checar"><a href="#" name="liberar_edicao" anexo="${anexo.idAnexo}" class="l_edicao_vis">Liberar</a></span> 
 				</c:if>
 				)
 				<span id="hash_${anexo.idAnexo}" style="background-color: red; width: 100%; display: none;">SHA-1: 32f45b23cde152f39020b4677bdb32c2eebd0c57</span>

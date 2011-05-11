@@ -166,8 +166,8 @@ jQuery(document).ready(function($) {
 				salvarAcao(acao[1],parseInt(acao[0]),$(this));
 			});
 		}else if(id=='#weditar'){	
-			var anexoCaminho = $(this).attr('id');
-			$('#hn_nome_anexo').val(anexoCaminho);
+			//var anexoCaminho = $(this).attr('id');
+			//$('#hn_nome_anexo').val(anexoCaminho);
 			//alert("abrir documento: "+anexoCaminho);
 			ID_ANEXO = $(this).attr('anexo');
 			caminho = "verdocumentoFisico.html?id="+ID_ANEXO;

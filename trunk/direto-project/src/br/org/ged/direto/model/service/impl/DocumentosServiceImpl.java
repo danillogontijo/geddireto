@@ -200,6 +200,32 @@ public class DocumentosServiceImpl implements DocumentosService {
 
 	}
 	
+	@RemoteMethod
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	public String encaminharDocumento(String destinatarios, int idDocumentoDetalhes){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario user = (Usuario) auth.getPrincipal();
+		
+		DocumentoDetalhes documentoDetalhes = getDocumentoDetalhes(idDocumentoDetalhes);
+		String arDestinatarios[] = destinatarios.split("\\,");
+		
+		for (int i = 0; i < arDestinatarios.length; i++){
+			int idCarteira = Integer.parseInt(arDestinatarios[i]);
+			sendDocument(documentoDetalhes,idCarteira,'0');
+		}
+		
+		try{
+			Documento ownDocument = documentosRepository.selectById(idDocumentoDetalhes, user.getIdCarteira());
+			ownDocument.setStatus('2'); //Envia documento para caixa de arquivado caso tenha o dco na cart
+			
+		}catch (DocumentNotFoundException e) {
+			System.out.println("Documento pertencente a seção/om, " +
+					"não existe este documento nesta carteira. "+documentoDetalhes.getNrProtocolo());	
+		}
+		
+		return "";
+	}
+	
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
 	public synchronized void sendDocument(DocumentoDetalhes documentoDetalhes, int idCarteira, char status){
 		
@@ -207,9 +233,9 @@ public class DocumentosServiceImpl implements DocumentosService {
 		int idDocumentoDetalhes = documentoDetalhes.getIdDocumentoDetalhes();
 		Documento documentoToSaveOrUpdate;
 		
-		/*Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario usuario = (Usuario) auth.getPrincipal();
-		Carteira carteiraUsuarioLogado = carteiraService.selectById(usuario.getIdCarteira());*/
+		Carteira carteiraUsuarioLogado = carteiraService.selectById(usuario.getIdCarteira());
 		
 		//String txtHistorico = "";
 		Date data = new Date();
@@ -217,6 +243,9 @@ public class DocumentosServiceImpl implements DocumentosService {
 		try {
 			documentoToSaveOrUpdate = documentosRepository.selectById(idDocumentoDetalhes, idCarteira);
 			documentoToSaveOrUpdate.setStatus(status);
+			documentoToSaveOrUpdate.setEncaminhadoPor(usuario.getIdUsuario());
+			documentoToSaveOrUpdate.setObservacao(carteiraUsuarioLogado.getCartAbr());
+			documentoToSaveOrUpdate.setDataHora(data);
 			
 			documentosRepository.saveOrUpdateDocumento(documentoToSaveOrUpdate);
 			
@@ -235,6 +264,8 @@ public class DocumentosServiceImpl implements DocumentosService {
 			documentoToSaveOrUpdate.setDocumentoDetalhes(documentoDetalhes);
 			documentoToSaveOrUpdate.setNotificar(new Integer(0));
 			documentoToSaveOrUpdate.setStatus(status);
+			documentoToSaveOrUpdate.setEncaminhadoPor(usuario.getIdUsuario());
+			documentoToSaveOrUpdate.setObservacao(carteiraUsuarioLogado.getCartAbr());
 			
 			documentosRepository.saveOrUpdateDocumento(documentoToSaveOrUpdate);
 			
