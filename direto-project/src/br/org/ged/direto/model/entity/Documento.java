@@ -46,6 +46,12 @@ public class Documento implements Serializable
 	@Column(name="Status")
 	private char status;
 	
+	@Column(name="Observacao",nullable=true)
+	private String observacao;
+	
+	@Column(name="UsuObs",nullable=true)
+	private Integer encaminhadoPor;
+	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdCarteira", nullable = true)
 	private Carteira carteira;
@@ -88,6 +94,25 @@ public class Documento implements Serializable
 		this.documentoDetalhes = documentoDetalhes;
 		this.status = status;
 		this.carteira = carteira;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
+
+
+	public Integer getEncaminhadoPor() {
+		return encaminhadoPor;
+	}
+
+
+	public void setEncaminhadoPor(Integer encaminhadoPor) {
+		this.encaminhadoPor = encaminhadoPor;
 	}
 
 

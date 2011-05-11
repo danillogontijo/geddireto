@@ -12,4 +12,5 @@ public interface AnexoService {
 	public String getAssinaturaHash(int idAnexo);
 	public boolean deleteAnexoFromTemp(int idAnexo);
 	public boolean copy(int idAnexo);
+	public void setAssinaturaHash(String hash, int idAnexo);
 }

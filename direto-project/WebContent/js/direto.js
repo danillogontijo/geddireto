@@ -39,17 +39,28 @@ js.direto.enviarPara = function(){
 js.direto.atualiza = function(page){
 	var list = "";
 	for (var i = 0; i < DESTINATARIOS.length ; i++) {
-		var item = DESTINATARIOS[i];
-		list += item.user+",";
+			var item = DESTINATARIOS[i];
+			list += item.user+",";
 	}
 	
 	if(page=="principal"){
 		alert(list);
  	}else if(page=="documento"){
  		alert(list+'documento');
- 		}else{
- 			$j('#destinatarios').val(list);
- 		}	
+ 		var sDestinatarios = "";
+ 		for (var i = 0; i < DESTINATARIOS.length ; i++) {
+			var item = DESTINATARIOS[i];
+			sDestinatarios += item.id+",";
+		}
+ 		documentosJS.encaminharDocumento(sDestinatarios,ID_DOCUMENTO);
+ 		var txtHistorico = "(Encaminhado)-Do:";
+		txtHistorico += USER_NAME;
+		txtHistorico += "-Para:"+list;
+		historicoJS.save(ID_DOCUMENTO,txtHistorico);
+ 		
+ 	}else{
+ 		$j('#destinatarios').val(list);
+ 	}	
 	
 };
 

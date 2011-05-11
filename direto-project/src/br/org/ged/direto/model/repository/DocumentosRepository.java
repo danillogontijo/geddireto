@@ -19,7 +19,7 @@ public interface DocumentosRepository {
 	public List<Documento> listByLimited(Integer idCarteira);
 	public Documento selectByIdCarteira(Integer idCarteira);
 	public Long counterDocumentsByBox(String box, int idCarteira, String filtro);
-	public Documento selectById(Integer id, Integer idCarteira);
+	public Documento selectById(Integer idDocumentoDetalhes, Integer idCarteira);
 	public Documento selectById(Integer idDocumentoDetalhes);
 	public List<Documento> getAllById(Integer id);
 	public List<Anexo> getAllAnexos(Integer idDocumentoDetalhes);

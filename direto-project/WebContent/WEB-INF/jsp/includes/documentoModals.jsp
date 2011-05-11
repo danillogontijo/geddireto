@@ -13,7 +13,6 @@
 		</tr>
 		
 	</table>
-	<input type="hidden" id="hn_nome_anexo">
 </div>
 
 

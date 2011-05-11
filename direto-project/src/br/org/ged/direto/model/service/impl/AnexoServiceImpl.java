@@ -51,9 +51,6 @@ public class AnexoServiceImpl implements AnexoService {
 	@Autowired
 	private HistoricoService historicoService;
 	
-	@Autowired
-	private UsuarioService usuarioService;
-	
 	@Override
 	@RemoteMethod
 	@Transactional(readOnly = false)
@@ -171,24 +168,26 @@ public class AnexoServiceImpl implements AnexoService {
 	@Override
 	@RemoteMethod
 	public boolean copy(int idAnexo) {
-		System.out.println("COPY ANEXO");
+		
 		Anexo anexo = selectById(idAnexo);
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario usuario = (Usuario) auth.getPrincipal();
+		
+		if(anexo.getAssinado() == 1 && anexo.getIdAssinadoPor() != usuario.getIdUsuario()){
+			deleteAnexoFromTemp(anexo);
+			return false;
+		}
+		
 		Carteira carteira = carteiraService.selectById(usuario.getIdCarteira());
-		System.out.println(carteira.getCartAbr());
 		Secao secao = carteira.getSecao();
 		OM om = carteira.getOm();
 		
 		DocumentoDetalhes documentoDetalhes = anexo.getDocumentoDetalhes();
-		System.out.println(documentoDetalhes.getNrProtocolo());
 		Set<Documento> documentos = documentoDetalhes.getDocumentosByCarteira();
-		System.out.println(documentos.size());
+		
 		boolean havePermission = false;
 		for(Documento documento : documentos){
-			
 			Carteira carteiraDocumento = documento.getCarteira(); 
-			
 			if ( carteiraDocumento.getOm() == om && carteiraDocumento.getSecao() == secao){
 				havePermission = true;
 				break;
@@ -207,7 +206,6 @@ public class AnexoServiceImpl implements AnexoService {
 			
 			String txtHistorico = "(Edição) -"+anexo.getAnexoNome()+"-";
 			txtHistorico += usuario.getUsuLogin();
-			System.out.println(txtHistorico);
 			
 			Historico historico = new Historico();
 			historico.setCarteira(carteira);
@@ -231,5 +229,12 @@ public class AnexoServiceImpl implements AnexoService {
 			return false;
 		}
 		
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void setAssinaturaHash(String hash, int idAnexo) {
+		Anexo anexo = anexoRepository.selectById(idAnexo);
+		anexo.setAssinaturaHash(hash);
 	}
 }
