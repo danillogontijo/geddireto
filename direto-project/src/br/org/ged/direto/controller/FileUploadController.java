@@ -51,6 +51,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import br.org.direto.util.Config;
 import br.org.ged.direto.model.entity.UploadItem;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.entity.exceptions.FileUploadLimitExceededException;
@@ -68,6 +69,9 @@ public class FileUploadController {
 	private int MAX_MEMO = 999999999;//524288000;
 	
 	protected HttpSession session;
+	
+	@Autowired
+	private Config config;
 	
 //	private Charset charset = Charset.forName("UTF-8");
 	

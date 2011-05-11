@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import br.org.direto.util.Base64Utils;
+import br.org.direto.util.Config;
 import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.service.AnexoService;
@@ -39,6 +40,9 @@ public class SegurancaServiceImpl implements SegurancaService {
 	
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private Config config;
 	
 	@Override
 	public String md5(File arquivo) {
@@ -204,13 +208,17 @@ public class SegurancaServiceImpl implements SegurancaService {
 	@RemoteMethod
 	public String signFile(String file, String alias, String password, int idAnexo){
 		try{
+			System.out.println(config.baseDir);
 			Anexo anexoToSign = anexoService.selectById(idAnexo);
+			if (anexoToSign.getAssinado() == 1)
+				return "Arquivo já assinado.";
+			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Usuario signer = (Usuario)auth.getPrincipal();
 			
-			File certificado = new File("/home/danillo/springsource/tc-server-6.0.20.C/"+formatFileName(signer.getUsuIdt())+".p12");
+			File certificado = new File(config.certificatesDir+formatFileName(signer.getUsuIdt())+".p12");
 			
-			File fileToSing = new File("/home/danillo/users/sgt.danillo/"+file);
+			File fileToSing = new File(config.baseDir+"sgt.danillo/"+file);
 			FileInputStream fis = new FileInputStream(fileToSing);
 			byte fileContent[] = new byte[(int)fileToSing.length()];
 			fis.read(fileContent);
@@ -252,8 +260,8 @@ public class SegurancaServiceImpl implements SegurancaService {
 	public boolean checkSignature(File fileToCheck, int idAnexo) {
 		try{
 			Anexo anexo = anexoService.selectById(idAnexo);
-			//if (anexo.getAssinado() == 0)
-				//return false;
+			if (anexo.getAssinado() == 0)
+				return false;
 			
 			Usuario signerUser =  usuarioService.selectById(anexo.getIdAssinadoPor());
 			byte[] hash = new BigInteger(anexo.getAssinaturaHash(), 16).toByteArray();

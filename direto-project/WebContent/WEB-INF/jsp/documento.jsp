@@ -74,7 +74,7 @@ $j(function(){
 							callback:function(retorno) { 
 								updateTips(retorno);
 								setTimeout(function(){
-									$j( this ).dialog( "close" );}
+									$j( "#form-sign" ).dialog( "close" );}
 								,500);
 							}
 					});
@@ -155,8 +155,6 @@ $j(function(){
 		
 	});
 
-	
-
 	$j('#close_attach').click(function(e) {
 		e.preventDefault();
 		js.direto.close_mask();
@@ -209,10 +207,8 @@ function confirma_edicao(resposta,nome_anexo){
 			}
 		});
 	} else {
-		/*var ele = $(nome_anexo);
-		ID_ANEXO = $j(ele).parent().find('span:first').attr('id');*/
 		CAMINHO_NOME = nome_anexo;
-		alert(ID_ANEXO);
+		
 		//segurancaJS.signFile('1_4.properties', 'sgtdanillo', '96287358',48);
 	}
 }
