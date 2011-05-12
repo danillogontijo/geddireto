@@ -21,6 +21,17 @@ $j(function(){
 			"sUrl": "js/dataTable/pt_BR.txt"
 		},
 
+		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+
+			var nrProtocolo = $j('td:eq(1)', nRow).text();
+			var id = nrProtocolo.substring(6);
+			var text = $j('td:eq(1)', nRow).text();
+			
+			$j('td:eq(1)', nRow).html('<a href="view.html?id='+id+'">'+text+'</a>');
+			
+			return nRow;
+		},
+
 		"aoColumns": [ 
 					/* ID */   { "bSearchable": false,
 			              			"bVisible":    false },
@@ -50,12 +61,18 @@ $j(function(){
 		//alert($j(this).text());
 		
 
-	addLinks();
+	//addLinks();
+
+	/* Apply the tooltips */
+	
+
+
+	
 
 	function addLinks(){
 
 		setTimeout(function (){
-		
+			//alert('links');
 			$j(oTable.fnSettings().aoData).each(function (){
 				var nTr = $j(this.nTr);
 				var nTds = $j('td', nTr);
@@ -64,7 +81,7 @@ $j(function(){
 				var id = nrProtocolo.substring(6);
 	
 				$j(nTds).each( function(i) {
-					var text = $j(nTds[i]).text();;
+					var text = $j(nTds[i]).text();
 					$j(nTds[i]).html('<a href="view.html?id='+id+'">'+text+'</a>');
 				});	
 				
@@ -78,7 +95,7 @@ $j(function(){
 				setTimeout(function (){addLinks();},100);
 			});
 
-		},500);
+		},5000);
 
 	};
 		
