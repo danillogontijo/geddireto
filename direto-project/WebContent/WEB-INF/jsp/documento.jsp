@@ -597,7 +597,9 @@ height: 15px;
 		<font size="+2">[${documento.tipoDocumento.tipoDocumentoNome}] ${documento.assunto}</font>		
 			
 		<br><br>
-		
+		<c:if test="${encaminhadoPor != ''}">
+			<font color="#666666">Carteira que encaminhou: </font><b>${encaminhadoPor}</b><br>
+		</c:if>
 		<font color="#666666">Nr. Prototocolo: </font><b>${documento.nrProtocolo}</b><br>
 		<font color="#666666">Nr. Documento: </font><b>${documento.nrDocumento}</b><br>	
 		<font color="#666666">Documento elaborado por: </font><b>${usuarioElaborador.pstGrad.pstgradNome}
@@ -611,10 +613,10 @@ height: 15px;
 			    					    			
 			    	<c:choose> 
 	  					<c:when test="${doc_cart.status == '0'}" > 
-	  						<font color="red" style="font-size: 10px;" title="${conta.carteira.cartAbr}"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font> 
+	  						<font color="black" style="font-size: 10px;" title="${conta.carteira.cartAbr}"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font> 
 	  					</c:when> 
 	  					<c:otherwise> 
-	  						<font title="${conta.carteira.cartAbr}" style="font-size: 10px;"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font> 
+	  						<font title="${conta.carteira.cartAbr}" color="blue" style="font-size: 10px;"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font> 
 	  					</c:otherwise> 
 					</c:choose>
 			    			
