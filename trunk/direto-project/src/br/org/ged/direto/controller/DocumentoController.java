@@ -78,6 +78,16 @@ public class DocumentoController extends BaseController {
 	public String showDocument(@RequestParam("pk")Integer pk, ModelMap model){
 		
 		Documento doc_conta = this.documentosService.selectById(pk);
+		try{
+		String encaminhadoPor = "";
+		if(doc_conta.getEncaminhadoPor() != 0 && doc_conta.getEncaminhadoPor() != null)
+			encaminhadoPor = doc_conta.getObservacao();
+		model.addAttribute("encaminhadoPor",encaminhadoPor);
+		}catch (Exception e) {
+			model.addAttribute("encaminhadoPor","");
+			e.printStackTrace();
+		}
+		System.out.println(doc_conta.getEncaminhadoPor());
 		
 		DocumentoDetalhes documentoDetalhes = doc_conta.getDocumentoDetalhes();
 		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));
@@ -156,7 +166,7 @@ public class DocumentoController extends BaseController {
 	
 		DocumentoDetalhes documentoDetalhes = documentosService.getDocumentoDetalhes(id);
 		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));
-		
+		model.addAttribute("encaminhadoPor","");
 		model.addAttribute("idDocumento",documentoDetalhes.getIdDocumentoDetalhes());
 		model.addAttribute("documento",documentoDetalhes);
 		model.addAttribute("usuarioElaborador",documentoDetalhes.getUsuarioElaborador());
