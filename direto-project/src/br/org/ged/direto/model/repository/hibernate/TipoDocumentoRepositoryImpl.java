@@ -51,4 +51,9 @@ public class TipoDocumentoRepositoryImpl implements TipoDocumentoRepository {
 				+ TipoDocumento.class.getName() + " order by tipoDocumentoAbr asc");
 	}
 
+	@Override
+	public TipoDocumento getTipoDocumento(int idTipoDocumento) {
+		return hibernateTemplate.get(TipoDocumento.class, idTipoDocumento);
+	}
+
 }

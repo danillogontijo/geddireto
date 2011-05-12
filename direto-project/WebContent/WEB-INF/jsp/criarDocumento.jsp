@@ -5,7 +5,6 @@
 <%@ include file="include_head.jsp" %>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/formulariosJS.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/protocoloJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anexoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/historicoJS.js"></script>
 
@@ -190,30 +189,6 @@ h3 {
 	}
 
 </style>
-
-<script type="text/javascript">
-
-function validateDocumentInputField(element)
-{
-
-	documentoValidatorJS.getMessageValidator('DocumentoForm',element.id, element.value, {
-		callback:function(dataFromServer) {
-			/*if (dataFromServer == "")
-				usuarioJS.listActivedContas(element.value,montaContas);*/
-			setInputFieldStatus(element.id, dataFromServer);
-  		}
-  	});
- 	  	
-}
-
-function setInputFieldStatus(elementId, message)
-{
-	//document.getElementById("error").innerHTML = message;
-	//document.getElementById("#"+elementId).innerHTML = message;
-	$j("#"+elementId).attr("data-message", message);
-}
-
-</script>
 
 <style type="text/css">
 
@@ -449,10 +424,10 @@ function fEnviar(e){
 	function sendAndSaveFormToNewDocumentoJS(documentoForm){
 
 		documentosJS.sendAndSaveFormToNewDocumento(documentoForm,{
-			callback:function(documentoRetorno) {
+			callback:function(data) {
 				
-				if(documentoRetorno == null){
-					alert("O documento não pode ser enviado");
+				if(data.id == "" || data == null){
+					alertMessage("Error","O documento não pode ser enviado",false);
 					return;
 				}
 
@@ -468,7 +443,7 @@ function fEnviar(e){
 				txtHistorico += '${usuario.pstGrad.pstgradNome}	${usuario.usuNGuerra}';
 				txtHistorico += " - Para: "+list;
 				
-				ID_DOCUMENTO = documentoRetorno.documentoDetalhes.idDocumentoDetalhes;
+				ID_DOCUMENTO = data.id;
 				//alert(documentoRetorno.idDocumento);
 				
 				historicoJS.save(ID_DOCUMENTO,txtHistorico);
@@ -481,8 +456,8 @@ function fEnviar(e){
 						stayInLoop = false;
 
 						var message = 'Foi gerado um protocolo sob o número '+
-							'<b>'+documentoRetorno.documentoDetalhes.nrProtocolo+
-							'</b><br /><a href="documento.html?pk='+documentoRetorno.idDocumento+'&id='+ID_DOCUMENTO+
+							'<b>'+data.texto+
+							'</b><br /><a href="view.html?id='+ID_DOCUMENTO+
 							'">Abrir documento</a>';
 	
 						dialogMessage('Novo documento enviado',message,false);

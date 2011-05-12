@@ -23,18 +23,20 @@ $j(function(){
 
 		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 
-			var nrProtocolo = $j('td:eq(1)', nRow).text();
-			var id = nrProtocolo.substring(6);
-			var text = $j('td:eq(1)', nRow).text();
+			var id = $j('td:eq(0)', nRow).text();
 			
-			$j('td:eq(1)', nRow).html('<a href="view.html?id='+id+'">'+text+'</a>');
+			$j('td', nRow).each(function (){
+				var text = $j(this).text();
+				$j(this).html('<a href="view.html?id='+id+'">'+text+'</a>');
+			});
+			
 			
 			return nRow;
 		},
 
 		"aoColumns": [ 
 					/* ID */   { "bSearchable": false,
-			              			"bVisible":    false },
+			              			"bVisible":    true },
 		  			/* Tipo */   null,
 		  			/* Protocolo */  null,
 		  			/* NrDoc */ 	null,
@@ -52,71 +54,12 @@ $j(function(){
 	} );
 
 
-
-	//function inicializa(){
-	//$j("#example tbody").each( function (i) {
-
-		
-
-		//alert($j(this).text());
-		
-
-	//addLinks();
-
-	/* Apply the tooltips */
-	
-
-
-	
-
-	function addLinks(){
-
-		setTimeout(function (){
-			//alert('links');
-			$j(oTable.fnSettings().aoData).each(function (){
-				var nTr = $j(this.nTr);
-				var nTds = $j('td', nTr);
-	
-				var nrProtocolo = $j(nTds[1]).text();
-				var id = nrProtocolo.substring(6);
-	
-				$j(nTds).each( function(i) {
-					var text = $j(nTds[i]).text();
-					$j(nTds[i]).html('<a href="view.html?id='+id+'">'+text+'</a>');
-				});	
-				
-			});
-
-			$j("#pesquisaDataTables_paginate span").click(function() {
-				setTimeout(function (){addLinks();},100);
-			});
-
-			$j('select[name=pesquisaDataTables_length]').click(function() {
-				setTimeout(function (){addLinks();},100);
-			});
-
-		},5000);
-
-	};
-		
-		
-//	});
-	
-	/*$j('#example').dataTable( {
-		"bProcessing": true,
-		//"bServerSide": true,
-		"oLanguage": {
-			"sUrl": "js/dataTable/pt_BR.txt"
-		},
-		"sPaginationType": "full_numbers",
-		"sAjaxSource": "http://localhost:8080/direto-project/resultado.html"
-	} );*/
-
-	//$j('#example').dataTable();
-
 	$j("tfoot input").keyup( function () {
+		var subtrai = 0;
+		if(${bServerSide})
+			subtrai = 1;
 		/* Filter on the column (the index) of this element */
-		oTable.fnFilter( this.value, $j("tfoot input").index(this) );
+		oTable.fnFilter( this.value, eval($j("tfoot input").index(this)-subtrai) ); //subtraia -1 caso exista um input nao searchable
 	} );
 	
 	
@@ -146,61 +89,6 @@ $j(function(){
 		asInitVals[i] = this.value;
 		$j(this).addClass("field_inputs_shadow");
 	});
-	
-	
-	/*$j('#example tbody tr').each( function() {
-		var sTitle;
-		var nTds = $j('td', this);
-
-		var sBrowser = $j(nTds[1]).text();
-		var sGrade = $j(nTds[4]).text();
-
-		//alert($j(this.nTr).children().eq(0).text());
-
-		//$j(this.nTr).children().eq(0).add('href');
-		
-		//alert($j(nTds[0]).text());
-		//append
-		
-		//this.setAttribute( 'title', sTitle );
-	} );*/
-	
-	//$j("#example tbody").hover(function(event) {
-		/*$j(oTable.fnSettings().aoData).each(function (){
-			//alert($j(this.nTd).text());
-			//$j(this.nTd).append("<b>danillo</b>");
-			var nTr = $j(this.nTr);
-			var nTds = $j('td', nTr);
-			alert($j(nTds[0]).text());
-			
-		});*/
-	//});	
-
-	
-
-
-	
-
-	$j("#example tbody").click(function(event) {
-		$j(oTable.fnSettings().aoData).each(function (){
-			//$(this.nTr).removeClass('row_selected');
-
-			//alert($j(this.nTr).text());
-			//alert($j(this.nTr).children().eq(0).text());
-
-			//$j(this.nTr).children().eq(0).add('href');
-			
-		});
-		//$j(event.target.parentNode).addClass('row_selected');
-
-		//alert($j(event.target).text());
-
-
-		//alert($j(event.target.parentNode).children().eq(1).text());
-		
-	});
-	
-	//$j( "span", "#corpo" ).button();
 	
 
 } );

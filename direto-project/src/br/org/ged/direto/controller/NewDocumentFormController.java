@@ -41,10 +41,10 @@ public class NewDocumentFormController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String showLoginForm(ModelMap model) {
 		
-		Integer protocolo = DocumentosUtil.geraProtocolo(documentoService.getLastId());
+		//Integer protocolo = DocumentosUtil.geraProtocolo(documentoService.getLastId());
 		
 		model.addAttribute("documentoForm",documentoForm);
-		model.addAttribute("protocolo",protocolo);
+		//model.addAttribute("protocolo",protocolo);
 		
 		return "criarDocumento";
 	}

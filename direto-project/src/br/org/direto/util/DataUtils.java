@@ -2,7 +2,7 @@ package br.org.direto.util;
 
 public class DataUtils {
 	
-	private String id;
+	private String id = "";
 	private String texto;
 	
 	public String getId() {

@@ -26,4 +26,9 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
 		return tipoDocumentoRepository.getAllList();
 	}
 
+	@Override
+	public TipoDocumento getTipoDocumento(int idTipoDocumento) {
+		return tipoDocumentoRepository.getTipoDocumento(idTipoDocumento);
+	}
+
 }

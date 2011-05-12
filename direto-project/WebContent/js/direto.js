@@ -13,24 +13,16 @@ js.direto.charProibido = function (e){
 };
 
 js.direto.enviarPara = function(){
+	DESTINATARIOS = null; //Limpa o Array primeiro;
+	DESTINATARIOS = new Array();
 	
 	$j("#ListaPARA option").each(function () {
           var id = $j(this).val();
 		  var user = $j(this).text();
-		  var insert = true;
-
-		  for (var i = 0; i < DESTINATARIOS.length ; i++) {
-				if(DESTINATARIOS[i].id == id){
-					insert = false;
-				}
-			}
-
-		  if(insert){
-	          DESTINATARIOS.push({
+		  DESTINATARIOS.push({
 	        	  id : id,
 	        	  user : user
-	          });
-		  }   
+	      });
      });
 
 };
@@ -46,12 +38,17 @@ js.direto.atualiza = function(page){
 	if(page=="principal"){
 		alert(list);
  	}else if(page=="documento"){
- 		alert(list+'documento');
+ 		//alert(list+'documento'+DESTINATARIOS.length);
+ 		
+ 		if (DESTINATARIOS.length == 0)
+ 			return;
+ 		
  		var sDestinatarios = "";
  		for (var i = 0; i < DESTINATARIOS.length ; i++) {
 			var item = DESTINATARIOS[i];
 			sDestinatarios += item.id+",";
 		}
+ 		
  		documentosJS.encaminharDocumento(sDestinatarios,ID_DOCUMENTO);
  		var txtHistorico = "(Encaminhado)-Do:";
 		txtHistorico += USER_NAME;

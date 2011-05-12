@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.org.direto.util.Config;
+import br.org.direto.util.Utils;
 import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Anotacao;
 import br.org.ged.direto.model.entity.Conta;
@@ -72,16 +73,14 @@ public class DocumentoController extends BaseController {
 	@Autowired
 	private AnexoService anexoService;
 	
-	private DocumentoDetalhes documentoDetalhes;
-	
 	
 	@RequestMapping(value="/documento.html",method = RequestMethod.GET)
 	public String showDocument(@RequestParam("pk")Integer pk, ModelMap model){
 		
 		Documento doc_conta = this.documentosService.selectById(pk);
-		//DocumentoDetalhes documento = doc_conta.getDocumentoDetalhes();
 		
-		documentoDetalhes = doc_conta.getDocumentoDetalhes();
+		DocumentoDetalhes documentoDetalhes = doc_conta.getDocumentoDetalhes();
+		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));
 		
 		if (doc_conta.getStatus() == '0')
 			documentosService.setDocumentoStatus(doc_conta.getIdDocumento(), '1');
@@ -155,7 +154,8 @@ public class DocumentoController extends BaseController {
 	@RequestMapping(value="/view.html",method = RequestMethod.GET)
 	public String showByIdDocumentoDetalhes(@RequestParam("id")Integer id, ModelMap model){
 	
-		documentoDetalhes = documentosService.getDocumentoDetalhes(id);
+		DocumentoDetalhes documentoDetalhes = documentosService.getDocumentoDetalhes(id);
+		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));
 		
 		model.addAttribute("idDocumento",documentoDetalhes.getIdDocumentoDetalhes());
 		model.addAttribute("documento",documentoDetalhes);

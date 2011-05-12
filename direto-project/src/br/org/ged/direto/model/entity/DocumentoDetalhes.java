@@ -58,9 +58,6 @@ public class DocumentoDetalhes implements Serializable {
 	@Column(name = "Data", nullable = false)
 	private Date dataEntSistema;
 	
-	@Column(name = "TipoDoc")
-	private String tipoDocumento;
-	
 	@Column(name = "Destinatario")
 	private String destinatario;
 	
@@ -82,6 +79,10 @@ public class DocumentoDetalhes implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdUsuRem", nullable = false)
 	private Usuario usuarioElaborador;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "IdTipoDocumento", nullable = false)
+	private TipoDocumento tipoDocumento;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdMensagem", nullable = true)
@@ -149,14 +150,6 @@ public class DocumentoDetalhes implements Serializable {
 
 	public void setDataEntSistema(Date dataEntSistema) {
 		this.dataEntSistema = dataEntSistema;
-	}
-
-	public String getTipoDocumento() {
-		return tipoDocumento;
-	}
-
-	public void setTipoDocumento(String tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
 	}
 
 	public String getDestinatario() {
@@ -247,6 +240,14 @@ public class DocumentoDetalhes implements Serializable {
 		this.anexos = anexos;
 	}
 	
+	public TipoDocumento getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(TipoDocumento tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
 	@Override
 	public String toString(){
 		return "Documento: [id: "+this.idDocumentoDetalhes+", assunto: "+this.assunto+",nrDoc: "+this.nrDocumento+"]";

@@ -450,7 +450,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		List<String> sArray = new ArrayList<String>();
 		
 		if (!tipo.equals("")) {
-			String sTipo = " details.tipoDocumento like '%" + tipo + "%'";
+			String sTipo = " details.tipoDocumento.tipoDocumentoNome like '%" + tipo + "%'";
 			sArray.add(sTipo);
 		}
 		if (!protocolo.equals("")) {
@@ -486,7 +486,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		String searchTerm = form.getSearchTerm();
 		
 		String globeSearch =  " where (" 
-									+ "details.tipoDocumento like '%"+searchTerm+"%'"
+									+ "details.tipoDocumento.tipoDocumentoNome like '%"+searchTerm+"%'"
 									+ " or details.nrProtocolo like '%"+searchTerm+"%'"
 									+ " or details.nrDocumento like '%"+searchTerm+"%'"
 									+ " or details.assunto like '%"+searchTerm+"%'"
@@ -565,6 +565,17 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 	@Override
 	public DocumentoDetalhes getDocumentoDetalhes(int primaryKey) {
 		return (DocumentoDetalhes)hibernateTemplate.get(DocumentoDetalhes.class, primaryKey);
+	}
+
+	@Override
+	public int getAmountDocumentoByYear(String year) {
+		
+		String sqlCount = "select count(doc.idDocumentoDetalhes) from DocumentoDetalhes as doc" +
+			" where doc.dataEntSistema like '"+year+"%'";
+		
+		int total = ((Long)getSession().createQuery(sqlCount).uniqueResult()).intValue();
+		
+		return total;
 	}
 
 

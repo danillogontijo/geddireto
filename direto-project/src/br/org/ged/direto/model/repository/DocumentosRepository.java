@@ -30,4 +30,5 @@ public interface DocumentosRepository {
 	public void saveNewDocumento(DocumentoDetalhes documentoDetalhes);
 	public void saveOrUpdateDocumento(Documento documento);
 	public DocumentoDetalhes getDocumentoDetalhes(int primaryKey);
+	public int getAmountDocumentoByYear(String year);
 }

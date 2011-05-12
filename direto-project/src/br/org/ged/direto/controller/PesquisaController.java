@@ -81,7 +81,7 @@ public class PesquisaController extends BaseController {
 		
 		
 		
-		boolean bServerSide = (total > 2 ? true : false);
+		boolean bServerSide = (total > 2000 ? true : false);
 		model.addAttribute("bServerSide",bServerSide);
 		model.addAttribute("total",total);
 		
@@ -134,7 +134,7 @@ public class PesquisaController extends BaseController {
 			System.err.println(PesquisaController.class.getName() + "ocorreu uma exceção: "	+ ex.getMessage());
 		}
 		
-		String[] cols = { "details.idDocumentoDetalhes", "details.tipoDocumento", "details.nrProtocolo", "details.nrDocumento", "details.assunto", "details.dataEntSistema" };
+		String[] cols = { "details.idDocumentoDetalhes", "details.tipoDocumento.tipoDocumentoNome", "details.nrProtocolo", "details.nrDocumento", "details.assunto", "details.dataEntSistema" };
 		
 		JSONObject result = new JSONObject();
 		JSONArray array = new JSONArray();
@@ -235,7 +235,7 @@ public class PesquisaController extends BaseController {
 			
 			JSONArray ja = new JSONArray();
 			ja.put(String.valueOf(dc.getDocumentoDetalhes().getIdDocumentoDetalhes()));
-			ja.put(dc.getDocumentoDetalhes().getTipoDocumento());
+			ja.put(dc.getDocumentoDetalhes().getTipoDocumento().getTipoDocumentoNome());
 			ja.put(dc.getDocumentoDetalhes().getNrProtocolo());
 			ja.put(dc.getDocumentoDetalhes().getNrDocumento());
 			ja.put(dc.getDocumentoDetalhes().getAssunto());

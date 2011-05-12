@@ -26,12 +26,14 @@ import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Historico;
+import br.org.ged.direto.model.entity.OM;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.repository.DocumentosRepository;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.HistoricoService;
+import br.org.ged.direto.model.service.TipoDocumentoService;
 import br.org.ged.direto.model.service.UsuarioService;
 
 @Service("documentosService")
@@ -49,7 +51,7 @@ public class DocumentosServiceImpl implements DocumentosService {
 	private UsuarioService usuarioService;
 	
 	@Autowired
-	private HistoricoService historicoService;
+	private TipoDocumentoService tipoDocumentoService;
 	
 	@Override
 	@RemoteMethod
@@ -200,6 +202,47 @@ public class DocumentosServiceImpl implements DocumentosService {
 
 	}
 	
+	public int multiplica(String s, int c){
+		int n = Character.getNumericValue(s.charAt(s.length()-1));
+		if (s.length() == 1) return (n*c);
+		return (n*c) + multiplica(s.substring(0, s.length()-1),++c);
+	}
+	
+	public synchronized String createProtocolNumber(String year){
+				
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario usuario = (Usuario) auth.getPrincipal();
+		int omCode = carteiraService.selectById(usuario.getIdCarteira()).getOm().getOmCode();
+		
+		StringBuffer sb = new StringBuffer(String.valueOf(documentosRepository.getAmountDocumentoByYear(year)+1));
+		
+		System.out.println(sb.toString()+" QUANTIDADE ANO: "+year);
+		
+		while(sb.length() != 6)
+			sb.insert(0, 0);
+		
+		sb.insert(0, omCode);
+		sb.append(year);
+		
+		while(sb.length() != 15)
+			sb.insert(0, 0);
+		
+		int dv = multiplica(sb.toString(),2);
+		int resto = dv%11;
+		int nDv = (11-resto) >= 10 ? (11-resto)/10 : (11-resto);
+		
+		sb.append(nDv); //primeiro dv
+		
+		dv = multiplica(sb.toString(),2);
+		resto = dv%11;
+		nDv = (11-resto) >= 10 ? (11-resto)/10 : (11-resto);
+		
+		sb.append(nDv); //segundo dv
+		
+		return sb.toString();
+
+	}
+	
 	@RemoteMethod
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
 	public String encaminharDocumento(String destinatarios, int idDocumentoDetalhes){
@@ -216,7 +259,8 @@ public class DocumentosServiceImpl implements DocumentosService {
 		
 		try{
 			Documento ownDocument = documentosRepository.selectById(idDocumentoDetalhes, user.getIdCarteira());
-			ownDocument.setStatus('2'); //Envia documento para caixa de arquivado caso tenha o dco na cart
+			if(ownDocument.getStatus() != '3')
+				ownDocument.setStatus('2'); //Envia documento para caixa de arquivado caso tenha o dco na cart
 			
 		}catch (DocumentNotFoundException e) {
 			System.out.println("Documento pertencente a seção/om, " +
@@ -289,17 +333,23 @@ public class DocumentosServiceImpl implements DocumentosService {
 	
 	@RemoteMethod
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
-	public synchronized Documento sendAndSaveFormToNewDocumento(DocumentoForm form){
+	public synchronized DataUtils sendAndSaveFormToNewDocumento(DocumentoForm form){
 		
-		Documento sendedDocument = null;
+		DataUtils retorno = null;
 		
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Usuario user = (Usuario) auth.getPrincipal();
 			
+			String y = "yyyy";
+			String year;
+			java.util.Date now = new java.util.Date();
+			SimpleDateFormat format = new SimpleDateFormat(y);
+			year = format.format(now);
+			
 			int idDocumentoDetalhes = getLastId()+1;
 			String sDestinatarios[] = form.getDestinatarios().split("\\,");
-			String protocolNumber = createProtocolNumber(idDocumentoDetalhes);
+			String protocolNumber = createProtocolNumber(year);
 			
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
 			Date dateDocument = (Date)formatter.parse(form.getDataDocumento()); 
@@ -312,7 +362,7 @@ public class DocumentosServiceImpl implements DocumentosService {
 			documento.setAssinatura(form.getAssinatura());
 			
 			documento.setIdDocumentoDetalhes(idDocumentoDetalhes);
-			documento.setTipoDocumento(form.getTipoDocumento());
+			documento.setTipoDocumento(tipoDocumentoService.getTipoDocumento(form.getTipoDocumento()));
 			documento.setPrioridade(form.getPrioridade());
 			documento.setDataDocumento(dateDocument);
 			documento.setNrDocumento(form.getNrDocumento());
@@ -321,11 +371,13 @@ public class DocumentosServiceImpl implements DocumentosService {
 			documento.setDestinatario(form.getDestinatario());
 			documento.setReferencia(form.getReferencia());
 			documento.setTipo(form.getOrigem());
+			documento.setDataEntSistema(now);
+			documento.setUsuarioElaborador(user);
 			
 			documento.setNrProtocolo(protocolNumber);
 			
-			System.out.println("Salvando documento "+documento.getNrProtocolo()+" no BD");
-			saveNewDocumento(documento);
+			System.out.println("Salvando documento "+documento.getNrProtocolo()+" no BD- "+documento.getDataEntSistema());
+			documentosRepository.saveNewDocumento(documento);
 			
 			for (int i = 0; i < sDestinatarios.length; i++){
 				int idCarteira = Integer.parseInt(sDestinatarios[i]);
@@ -336,14 +388,18 @@ public class DocumentosServiceImpl implements DocumentosService {
 			
 			sendDocument(documento,form.getIdCarteiraRemetente(),'3'); //Envia o documento para caixa de saída do remetente
 			
-			sendedDocument = documentosRepository.selectById(idDocumentoDetalhes, form.getIdCarteiraRemetente());
+			//sendedDocument = documentosRepository.selectById(idDocumentoDetalhes, form.getIdCarteiraRemetente());
+			retorno = new DataUtils();
+			retorno.setId(String.valueOf(idDocumentoDetalhes));
+			retorno.setTexto(protocolNumber);
+			
 			
 		}catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 		
-		 return sendedDocument;
+		 return retorno;
 	}
 
 	@Override
