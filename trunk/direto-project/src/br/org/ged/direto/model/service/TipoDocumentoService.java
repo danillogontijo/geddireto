@@ -9,5 +9,6 @@ public interface TipoDocumentoService {
 
 	public Map<Integer,String> getAll();
 	public List<TipoDocumento> getAllList();
+	public TipoDocumento getTipoDocumento(int idTipoDocumento);
 	
 }

@@ -9,4 +9,5 @@ public interface TipoDocumentoRepository {
 
 	public Map<Integer,String> getAll();
 	public List<TipoDocumento> getAllList();
+	public TipoDocumento getTipoDocumento(int idTipoDocumento);
 }

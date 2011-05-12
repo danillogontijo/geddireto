@@ -23,7 +23,6 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/gruposJS.js"></script>    
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/loginValidatorJS.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentoValidatorJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentosJS.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/chatJS.js"></script>

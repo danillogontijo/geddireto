@@ -21,7 +21,7 @@ public class TipoDocumento implements Serializable {
 
 	@Id
 	@GeneratedValue
-	@Column(name="Id")
+	@Column(name="Id",length = 4)
 	private Integer idTipoDocumento;
 	
 	@Column(name="TipoAbr")

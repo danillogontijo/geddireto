@@ -594,7 +594,7 @@ height: 15px;
 	
 	<div style="float: left; text-align: left; margin-top: 10px; margin-left: 7px">
 	
-		<font size="+2">[${documento.tipoDocumento}] ${documento.assunto}</font>		
+		<font size="+2">[${documento.tipoDocumento.tipoDocumentoNome}] ${documento.assunto}</font>		
 			
 		<br><br>
 		

@@ -21,6 +21,7 @@ public class OM implements Serializable {
 	private Integer idOM;
 	private String omDesc;
 	private String omAbr;
+	private Integer omCode;
 	
 	@Id
 	@GeneratedValue
@@ -46,6 +47,14 @@ public class OM implements Serializable {
 	}
 	public void setOmAbr(String omAbr) {
 		this.omAbr = omAbr;
+	}
+	
+	@Column(name = "OMCode", nullable = false, length = 5)
+	public Integer getOmCode() {
+		return omCode;
+	}
+	public void setOmCode(Integer omCode) {
+		this.omCode = omCode;
 	}
 	
 	

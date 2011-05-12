@@ -1,7 +1,5 @@
 package br.org.ged.direto.controller.forms;
 
-import java.util.Date;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -9,7 +7,7 @@ public class DocumentoForm {
 	
 	//private int[] destinatarios;
 	private String destinatarios;
-	private String tipoDocumento;
+	private int tipoDocumento;
 	private String nrDocumento;
 	//private Date dataDocumento;
 	private String dataDocumento;
@@ -58,10 +56,10 @@ public class DocumentoForm {
 	public void setDestinatarios(int[] destinatarios) {
 		this.destinatarios = destinatarios;
 	}*/
-	public String getTipoDocumento() {
+	public int getTipoDocumento() {
 		return tipoDocumento;
 	}
-	public void setTipoDocumento(String tipoDocumento) {
+	public void setTipoDocumento(int tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
 	public String getNrDocumento() {
