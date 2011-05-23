@@ -29,7 +29,7 @@ public class DocumentoValidator extends FormsValidator {
 	@Override
 	public void validate(Object obj, Errors errors) {
 		DocumentoForm docForm = (DocumentoForm)obj;
-		validateTipoDocumento(docForm.getTipoDocumento(), errors);
+		//validateTipoDocumento(docForm.getTipoDocumento(), errors);
 		validateNrDocumento(docForm.getNrDocumento(), errors);
 		
 	}
