@@ -50,4 +50,9 @@ public class DespachoRepositoryImpl implements DespachoRepository {
 		hibernateTemplate.save(despacho);
 	}
 
+	@Override
+	public Despacho selectDespacho(int idDespacho) {
+		return hibernateTemplate.get(Despacho.class, idDespacho);
+	}
+
 }
