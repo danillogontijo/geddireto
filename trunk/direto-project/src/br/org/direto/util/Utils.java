@@ -3,6 +3,11 @@ package br.org.direto.util;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import br.org.ged.direto.model.entity.Usuario;
+
 public class Utils {
 
 	private static HttpSession session;
@@ -24,4 +29,23 @@ public class Utils {
 		return nup;
 	}
 	
+	public static String formatHexa(String hexa){
+		String hexaFormated = "";
+		
+		char[] c = hexa.toCharArray();
+		int i;
+		
+		for(i=0;i<c.length;i++){
+			hexaFormated+=c[i];
+			if(i%2==1)
+				hexaFormated+=" ";
+		}
+		
+		return hexaFormated;
+	}
+	
+	public static Usuario userLogon(){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return (Usuario)auth.getPrincipal();
+	}
 }

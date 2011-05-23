@@ -10,6 +10,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anexoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/segurancaJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/historicoJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioJS.js"></script>
 
 <script type="text/javascript">
 
@@ -18,6 +19,8 @@ var PROXIMO_ANEXO = ${proximoAnexo};
 var ID_DOCUMENTO = ${idDocumento};
 var USER_NAME = '${usuario.pstGrad.pstgradNome}	${usuario.usuNGuerra}';
 var NAME,CAMINHO_NOME,ID_ANEXO;
+var CRIPTOGRAFAR = false;
+var USER_LOGIN_CRIPTO_DEST;
 
 
 /*
@@ -26,7 +29,8 @@ var NAME,CAMINHO_NOME,ID_ANEXO;
 $j(function(){
 
 	var password = $j( "#password" ),
-		allFields = $j( [] ).add( password ),
+	    usulogin = $j("#usulogin");
+		allFields = $j( [] ).add( password,usulogin ),
 		tips = $j( ".validateTips" );
 
 	function updateTips( t ) {
@@ -42,6 +46,16 @@ $j(function(){
 		if ( o.val().length < 1  ) {
 			o.addClass( "ui-state-error" );
 			updateTips( "Este campo não pode ser vazio." );
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	function checkExists( o , b ) {
+		if ( !b  ) {
+			o.addClass( "ui-state-error" );
+			updateTips( "Login de usuário não encontrado." );
 			return false;
 		} else {
 			return true;
@@ -91,6 +105,43 @@ $j(function(){
 		}
 	});
 
+
+	$j( "#user-cripto" ).dialog({
+		autoOpen: false,
+		maxHeight: 200,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Validar": function() {
+				var bValid = true;
+				allFields.removeClass( "ui-state-error" );
+
+				usuarioJS.validateUser(usulogin.val(),{
+					callback:function(ok) {
+						bValid = bValid && checkEmpty(usulogin);
+						bValid = bValid && checkExists(usulogin,ok);
+						
+						if ( bValid ) {
+							USER_LOGIN_CRIPTO_DEST = usulogin.val();
+							CRIPTOGRAFAR = true;
+							alert(USER_LOGIN_CRIPTO_DEST);
+							//$j('#mask').hide();
+						}
+		  			}
+				});
+				
+				
+			},
+			'Cancelar': function() {
+				$j( this ).dialog( "close" );
+				$j('#mask').show();
+				$j('#chk_criptografar').attr('checked', false);
+			}
+		},
+		close: function() {
+			allFields.val( "" ).removeClass( "ui-state-error" );
+		}
+	});
 	
 	$j('#despachos').mouseenter(function(e) {
 		var tipo = $j(this).attr('id');
@@ -132,6 +183,40 @@ $j(function(){
 		e.preventDefault();
 		$j('#despachos').toggle("slow");
 	});
+
+	$j('#chk_criptografar').click(function() {
+		if($j(this).is(':checked')){
+			$j( "#user-cripto" ).dialog( "open" );
+			$j("#wacao").css('z-index','1000');
+			$j("#mask").css('z-index','999');
+			$j('#mask').hide();
+		}else{
+
+		}
+	});
+
+	$j('#crypto').click(function(e) {
+		e.preventDefault();
+		segurancaJS.encryptMessage('mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste ', 1,{
+			callback:function(encHexa) {
+				//alert(retorno);
+				errorAlert(encHexa);
+
+				//despachoJS.save(4,retorno,1,{
+					//callback:function() {
+					
+						segurancaJS.decryptMessage(encHexa,'96287358',2296,{
+							callback:function(dec) {
+							alert(dec);
+							}
+							
+						});
+					//}
+				//});
+			}
+		});
+	});
+	
 
 	$j('a[name=liberar_edicao]').click(function(e) {
 		e.preventDefault();
@@ -345,7 +430,7 @@ function salvarAcao(acao,id,ele){
 		var textoParaNotificacao = "Despacho - ${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}";
 		notificacaoJS.save(${idDocumento},textoParaNotificacao);
 			
-		despachoJS.save(${idDocumento},texto,{
+		despachoJS.save(${idDocumento},texto,0,{
 			callback:function() {
 			if ( $j('#div_despachos').length == 0 ){
 				setTimeout(function(){
@@ -656,6 +741,9 @@ height: 15px;
 		<c:if test="${documento_principal.assinado == 1 || documento.assinatura == 1}">
 			| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
 		</c:if>
+		
+		| <span id="s_visualizar"><a href="#crypto" id="crypto" class="l_edicao_vis">crypto</a></span>
+		
 		
 		<br>
 		<font color="#666666">SHA-1: </font><b>${sha1}</b><br>

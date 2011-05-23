@@ -34,6 +34,7 @@ import br.org.ged.direto.model.entity.Despacho;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Historico;
+import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.service.AnexoService;
 import br.org.ged.direto.model.service.AnotacaoService;
@@ -281,8 +282,18 @@ public class DocumentoController extends BaseController {
 	
 	@ModelAttribute("despachos")
 	public Collection<Despacho> despachos(@RequestParam("id")Integer id) {
+		Usuario usuario = Utils.userLogon();
+		List<Despacho> despachos = this.despachoService.getDespachoByDocumento(id);
+		for(Despacho despacho : despachos){
+			if(despacho.getIdUsuarioDestinatario() != 0 && despacho.getIdUsuarioDestinatario() != usuario.getIdUsuario()){
+				despachos.remove(despacho);
+				continue;
+			}
+			if(despacho.getIdUsuarioDestinatario() == usuario.getIdUsuario())
+				despacho.setDespacho(Utils.formatHexa(despacho.getDespacho()));
+		}
     	
-        return (List<Despacho>)this.despachoService.getDespachoByDocumento(id);
+        return despachos;
         
     }
 	

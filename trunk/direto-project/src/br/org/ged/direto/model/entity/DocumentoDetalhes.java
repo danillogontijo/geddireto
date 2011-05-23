@@ -32,9 +32,6 @@ public class DocumentoDetalhes implements Serializable {
 	private static final long serialVersionUID = 8737487864886359495L;
 
 	@Id 
-	@GeneratedValue(generator="lastId")
-	@GenericGenerator(name="lastId", strategy = "select", 
-			parameters = { @Parameter(name = "key", value = "nrProtocolo") })
 	@Column(name = "Id")
 	private Integer idDocumentoDetalhes;
 	

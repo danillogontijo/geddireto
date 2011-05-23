@@ -1,35 +1,13 @@
 package br.org.ged.direto.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-
 import java.util.List;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreFilter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -38,21 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-
-
 import br.org.direto.util.DataUtils;
-import br.org.direto.util.DocumentosUtil;
 import br.org.ged.direto.model.entity.Documento;
-import br.org.ged.direto.model.entity.Pastas;
 
-import br.org.ged.direto.model.entity.Usuario;
-import br.org.ged.direto.model.entity.menus.MenuTopo;
 import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.GruposService;
-import br.org.ged.direto.model.service.PastasService;
-import br.org.ged.direto.model.service.UsuarioService;
-import br.org.ged.direto.model.service.menus.IMenuTopo;
-import br.org.ged.direto.model.service.menus.MenuTopoImpl;
 
 @Controller
 @RequestMapping("/principal.html")
@@ -152,10 +120,24 @@ public class PrincipalController extends BaseController {
 	
 	@ModelAttribute("DocDWR")
 	public Collection<DataUtils> docDWR(@RequestParam("box") String box,@RequestParam("filtro") String filtro,@RequestParam("pr")int pr, HttpServletRequest request, ModelMap model) {
+		
+		String url = "?pr="+pr+"&box="+box+"&"+"filtro="+filtro+"&"+"ordenacao=";
+		
+		model.addAttribute("url", url);
+		
+		int ordenacao = 0;
+		try{
+			ordenacao = Integer.parseInt(request.getParameter("ordenacao"));
+			System.out.println(ordenacao+" ORDENACAO"+url);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("ordenacao", ordenacao);
+		
 		Integer idCarteira = this.getIdCarteiraFromSession(request);
 		
-		List<DataUtils> docList = documentosService.listDocumentsFromAccount(idCarteira,0,pr,box,filtro);
-		
+		List<DataUtils> docList = documentosService.listDocumentsFromAccount(idCarteira,ordenacao,pr,box,filtro);
 		
 		long totalregs = this.documentosService.counterDocumentsByBox(box, idCarteira,filtro);
 		int totalpgs = Math.round(totalregs / LIMITE_POR_PAGINA);
@@ -210,60 +192,13 @@ public class PrincipalController extends BaseController {
 	
 	@ModelAttribute("documentos")
 	public Collection<Documento> todosDocumentos(HttpServletRequest request) {
-		
-		
 		this.session = request.getSession(true);
-		
 		Integer idCarteira = new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
-		
-		//String usuLogin = (String)session.getAttribute("usuLogin");
-		
-		//System.out.println("j_conta DOCUMENTOS: "+session.getAttribute("j_usuario_conta"));
-		
-		//Integer idCarteira = new Integer(2);
-		
 		List<Documento> docsByConta = new ArrayList<Documento>();
-		
 		docsByConta = this.documentosService.listByLimited(idCarteira);
-		
-		//System.out.println(documentosService.listDocumentsFromAccount(new Integer(2)).toString());
-		
-		
 		return docsByConta;
 	}
 	
-	
-	public static byte[] getBytesFromFile(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
-    
-        // Get the size of the file
-        long length = file.length();
-    
-        if (length > Integer.MAX_VALUE) {
-            // File is too large
-        }
-    
-        // Create the byte array to hold the data
-        byte[] bytes = new byte[(int)length];
-    
-        // Read in the bytes
-        int offset = 0;
-        int numRead = 0;
-        while (offset < bytes.length
-               && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
-            offset += numRead;
-        }
-    
-        // Ensure all the bytes have been read in
-        if (offset < bytes.length) {
-            throw new IOException("Could not completely read file "+file.getName());
-        }
-    
-        // Close the input stream and return bytes
-        is.close();
-        return bytes;
-    }
-
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String showPrincipal(@RequestParam("box") int box, ModelMap model, HttpServletRequest request, HttpServletResponse response) {
@@ -279,7 +214,6 @@ public class PrincipalController extends BaseController {
 	
 	
 }
-
 
 
 

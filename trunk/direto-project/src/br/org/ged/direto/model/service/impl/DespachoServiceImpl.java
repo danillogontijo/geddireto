@@ -59,7 +59,7 @@ public class DespachoServiceImpl implements DespachoService {
 	@Override
 	@RemoteMethod
 	@Transactional(readOnly=false)
-	public void save(int idDocumentoDetalhes, String txtDespacho) {
+	public void save(int idDocumentoDetalhes, String txtDespacho, int idUsuarioDestinatario) {
 		try{
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Usuario usuarioLogado = (Usuario) auth.getPrincipal();
@@ -77,6 +77,7 @@ public class DespachoServiceImpl implements DespachoService {
 			despacho.setDespacho(txtDespacho);
 			despacho.setDocumentoDetalhes(documento);
 			despacho.setUsuario(usuario);
+			despacho.setIdUsuarioDestinatario(idUsuarioDestinatario);
 			
 			despachoRepository.save(despacho);
 			
@@ -96,5 +97,10 @@ public class DespachoServiceImpl implements DespachoService {
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public Despacho selectDespacho(int idDespacho) {
+		return despachoRepository.selectDespacho(idDespacho);
 	}
 }
