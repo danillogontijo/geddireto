@@ -47,7 +47,17 @@ public class Despacho implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdCarteira", nullable = false)
 	private Carteira carteira;
+	
+	@Column(name = "IdUsuarioDestinatario")
+	private int idUsuarioDestinatario;
 
+	public int getIdUsuarioDestinatario() {
+		return idUsuarioDestinatario;
+	}
+
+	public void setIdUsuarioDestinatario(int idUsuarioDestinatario) {
+		this.idUsuarioDestinatario = idUsuarioDestinatario;
+	}
 
 	public Carteira getCarteira() {
 		return carteira;

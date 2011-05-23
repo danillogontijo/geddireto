@@ -9,6 +9,19 @@ $j(function(){
 	$j(".div_docs:odd").css("background-color", "#E2E4FF");
 });	
 
+//alert(${pageContext.servletContext.contextPath});
+
+function ordenacao(){
+	var listaOrdenacao = $("slOrdenacao");
+			
+	for (var i=0; i < listaOrdenacao.options.length; i++){
+		if (listaOrdenacao.options[i].selected){
+			window.location.href = "principal.html${url}"+listaOrdenacao.options[i].value;
+		}
+	}
+	
+}
+
 </script>
 		
 		<c:url value="principal.html" var="mostrarURL">
@@ -42,9 +55,9 @@ $j(function(){
 			<div style="position: relative; float: right">
 				Ordernação:
 				<select	name=slOrdenacao id="slOrdenacao" style="width: 100pt; font-style: normal; font-size: 12px; color: black; margin-right: 3px;" onchange="ordenacao()">
-					<option value=0>Prioridade</option>
-					<option value=1>Data decrescente</option>
-					<option value=2>Data crescente</option>
+					<option value=0 <c:if test="${ordenacao == 0}">selected</c:if>>Prioridade</option>
+					<option value=1 <c:if test="${ordenacao == 1}">selected</c:if>>Data decrescente</option>
+					<option value=2 <c:if test="${ordenacao == 2}">selected</c:if>>Data crescente</option>
 				</select>
 			</div>
 		

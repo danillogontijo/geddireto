@@ -19,7 +19,7 @@
 
 	<c:if test="${not empty param.login_error}">
       <font color="red">
-        Your login attempt was not successful, try again.<br/><br/>
+        Sua tentativa de login falhou, tente novamente.<br/><br/>
         Reason: <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>.
       </font>
     </c:if>

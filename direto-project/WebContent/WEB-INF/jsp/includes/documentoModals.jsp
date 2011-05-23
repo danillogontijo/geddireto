@@ -38,6 +38,7 @@
 				<br>Digite aqui seu texto: <br>
 				<textarea onkeypress="return js.direto.charProibido(event)" cols="76" rows="2" onkeyup="" id="texto_acao"></textarea>
 				<div id="progdespachar">(0 / 500)</div>
+				<div><input type="checkbox" id="chk_criptografar" value="1">Criptografar</input></div>
 			</td>
 		</tr>
 		
@@ -137,6 +138,16 @@
 	<fieldset>
 		<label for="password">Digite sua senha do certificado</label>
 		<input type="password" name="password" id="password" onfocus="javascript:this.value=''" value="" class="text ui-widget-content ui-corner-all" />
+	</fieldset>
+	</form>
+</div>
+
+<div id="user-cripto" title="Destinatário">
+	<p class="validateTips"></p>
+	<form>
+	<fieldset>
+		<label for="password">Digite o login do destinatário</label>
+		<input type="text" name="usulogin" id="usulogin" onfocus="javascript:this.value=''" value="" class="text ui-widget-content ui-corner-all" />
 	</fieldset>
 	</form>
 </div>
