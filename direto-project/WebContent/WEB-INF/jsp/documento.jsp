@@ -21,6 +21,7 @@ var USER_NAME = '${usuario.pstGrad.pstgradNome}	${usuario.usuNGuerra}';
 var NAME,CAMINHO_NOME,ID_ANEXO;
 var CRIPTOGRAFAR = false;
 var USER_LOGIN_CRIPTO_DEST;
+var ID_DESPACHO = 0;
 
 
 /*
@@ -78,7 +79,7 @@ $j(function(){
 		width: 350,
 		modal: true,
 		buttons: {
-			"Assinar": function() {
+			"Validar": function() {
 				var bValid = true;
 				allFields.removeClass( "ui-state-error" );
 				bValid = bValid && checkEmpty(password);
@@ -86,21 +87,35 @@ $j(function(){
 
 				if ( bValid ) {
 
-					segurancaJS.signFile('${usuario.usuLogin}', password.val(),ID_ANEXO,{
-							callback:function(retorno) { 
-								updateTips(retorno);
-								setTimeout(function(){
-									$j( "#form-sign" ).dialog( "close" );}
-								,500);
+					if(ID_DESPACHO == 0){
+
+						segurancaJS.signFile('${usuario.usuLogin}', password.val(),ID_ANEXO,{
+								callback:function(retorno) { 
+									updateTips(retorno);
+									setTimeout(function(){
+										$j( "#form-sign" ).dialog( "close" );}
+									,500);
+								}
+						});
+
+					}else{
+
+						segurancaJS.decryptMessage(password.val(),ID_DESPACHO,{
+							callback:function(dec) {
+								alert(dec);
 							}
-					});
+						});
+						
+					}
 				}
 			},
 			'Cancelar': function() {
+				ID_DESPACHO = 0;
 				$j( this ).dialog( "close" );
 			}
 		},
 		close: function() {
+			ID_DESPACHO = 0;
 			allFields.val( "" ).removeClass( "ui-state-error" );
 		}
 	});
@@ -124,8 +139,8 @@ $j(function(){
 						if ( bValid ) {
 							USER_LOGIN_CRIPTO_DEST = usulogin.val();
 							CRIPTOGRAFAR = true;
-							alert(USER_LOGIN_CRIPTO_DEST);
-							//$j('#mask').hide();
+							$j( "#user-cripto" ).dialog( "close" );
+							$j('#mask').show();
 						}
 		  			}
 				});
@@ -191,30 +206,16 @@ $j(function(){
 			$j("#mask").css('z-index','999');
 			$j('#mask').hide();
 		}else{
-
+			CRIPTOGRAFAR = false;
 		}
 	});
 
-	$j('#crypto').click(function(e) {
+	$j('a[name=decrypto]').click(function(e) {
 		e.preventDefault();
-		segurancaJS.encryptMessage('mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste mensagem teste mensgaem teste ', 1,{
-			callback:function(encHexa) {
-				//alert(retorno);
-				errorAlert(encHexa);
-
-				//despachoJS.save(4,retorno,1,{
-					//callback:function() {
-					
-						segurancaJS.decryptMessage(encHexa,'96287358',2296,{
-							callback:function(dec) {
-							alert(dec);
-							}
-							
-						});
-					//}
-				//});
-			}
-		});
+		ID_DESPACHO = $j(this).attr('id');
+		$j( "#form-sign" ).dialog( "option", "title", 'Descriptografar despacho' );
+		$j( "#form-sign" ).dialog( "open" );
+		
 	});
 	
 
@@ -429,20 +430,40 @@ function salvarAcao(acao,id,ele){
 
 		var textoParaNotificacao = "Despacho - ${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}";
 		notificacaoJS.save(${idDocumento},textoParaNotificacao);
-			
-		despachoJS.save(${idDocumento},texto,0,{
-			callback:function() {
-			if ( $j('#div_despachos').length == 0 ){
-				setTimeout(function(){
-					window.location.reload();
-					},300);
-			}else{
-				js.direto.close_mask();
-				js.direto.show_updates(${idDocumento},'despachos');
-			}	
+
+		if(CRIPTOGRAFAR){
+			CRIPTOGRAFAR = false;
+			segurancaJS.encryptMessage(texto, USER_LOGIN_CRIPTO_DEST,{
+				callback:function(encHexa) {
+				var array = encHexa.split(',');
+				//alert(encHexa);
+					despachoJS.save(${idDocumento},array[1],array[0],{
+						callback:function() {
+							setTimeout(function(){
+								window.location.reload();
+								},300);							
+					    }
+					});
+				}
+			});
+
+		}else{
+			despachoJS.save(${idDocumento},texto,0,{
+				callback:function() {
+				if ( $j('#div_despachos').length == 0 ){
+					setTimeout(function(){
+						window.location.reload();
+						},300);
+				}else{
+					js.direto.close_mask();
+					js.direto.show_updates(${idDocumento},'despachos');
+				}	
+			  }
+			});
 		}
-		});
+
 		
+				
 	}else if(id == 2){
 
 		var textoParaNotificacao = "Anotacao - ${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}";
@@ -786,7 +807,9 @@ height: 15px;
 			<c:forEach var="d" items="${despachos}">
 				<div id="div_despachos" class="celula despacho">
 					<p><strong>[${d.carteira.cartAbr }] [${d.usuario.pstGrad.pstgradNome} ${d.usuario.usuNGuerra}]</strong> - ${d.despacho} - 
-					<span id="data_despacho"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${d.dataHoraDespacho}" /></span> </p>
+					<span id="data_despacho"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${d.dataHoraDespacho}" /></span> 
+					<c:if test="${d.idUsuarioDestinatario != 0}"> (<a href="#decrypto" name="decrypto" id="${d.idDespacho}" style="color: red;">Descripto</a>)</c:if>
+					</p>
 				</div>
 			 </c:forEach>
 		 </div>

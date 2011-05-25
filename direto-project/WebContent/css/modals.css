@@ -81,7 +81,7 @@
 	position: absolute;
 	z-index: 9999;
 	text-align: center;
-	width: 200px;
+	min-width: 200px;
 	display: none;
 	border:1px solid #000;
 	background-color: white;

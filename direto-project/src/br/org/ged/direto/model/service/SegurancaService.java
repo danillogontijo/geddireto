@@ -3,8 +3,6 @@ package br.org.ged.direto.model.service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.*;
-
 
 public interface SegurancaService {
 	
@@ -28,7 +26,7 @@ public interface SegurancaService {
 	public String releaseDocumentEdition(int idAnexo);
 	public boolean encrypt(int idAnexo);
 	public boolean decrypt(int idAnexo);
-	public String encryptMessage(String message, int idUserTo);
-	public String decryptMessage(String hexa, String password, int idDespacho);
+	public String encryptMessage(String message, String usuLogin);
+	public String decryptMessage(String password, int idDespacho);
 	
 }
