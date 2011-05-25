@@ -5,10 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.cert.Certificate;
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.MessageDigest;
@@ -41,7 +39,6 @@ import br.org.ged.direto.model.service.HistoricoService;
 import br.org.ged.direto.model.service.SegurancaService;
 import br.org.ged.direto.model.service.UsuarioService;
 
-
 import java.util.Date;
 
 import javax.crypto.BadPaddingException;
@@ -50,7 +47,6 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.ShortBufferException;
 import javax.crypto.spec.SecretKeySpec;
 
 @Service("segurancaService")
@@ -84,8 +80,6 @@ public class SegurancaServiceImpl implements SegurancaService {
 	private SecretKeySpec aeskeySpec;
 	
 	
-	
-	
 	public SegurancaServiceImpl() throws NoSuchAlgorithmException, NoSuchPaddingException {
 		aes = Cipher.getInstance("AES");
 		rsa = Cipher.getInstance("RSA");
@@ -97,12 +91,21 @@ public class SegurancaServiceImpl implements SegurancaService {
 		
 	}
 	
+	public void createSecretKey() throws Exception{
+		String senha = "d143t0";
+		PublicKey pk = getPublicKeyFromFile(new File("/home/danillo/springsource/tc-server-6.0.20.C/direto.p12"), "direto", new String(Base64Utils.decode(pwd.getBytes())));
+		rsa.init(Cipher.ENCRYPT_MODE, pk);
+		CipherOutputStream cos = new CipherOutputStream(new FileOutputStream("/home/danillo/springsource/tc-server-6.0.20.C/direto.pk"), rsa);
+		cos.write(senha.getBytes());
+		cos.close();
+	}
+	
 	private SecretKeySpec getSecretKey() throws Exception{
-		File cert = new File("/home/danillo/users/direto.p12");
-		PrivateKey pk = getPrivateKeyFromFile(cert, "direto", new String(Base64Utils.decode(pwd.getBytes()))); 
+		File cert = new File("/home/danillo/springsource/tc-server-6.0.20.C/direto.p12");
+		PrivateKey pk = getPrivateKeyFromFile(cert, "direto.bdaopesp.eb.mil.br", new String(Base64Utils.decode(pwd.getBytes()))); 
 		rsa.init(Cipher.DECRYPT_MODE, pk);
 	    byte[] aesKey = new byte[32];
-	    CipherInputStream cis = new CipherInputStream(new FileInputStream("/home/danillo/users/direto.sk"), rsa);
+	    CipherInputStream cis = new CipherInputStream(new FileInputStream("/home/danillo/springsource/tc-server-6.0.20.C/direto.sk"), rsa);
 	    cis.read(aesKey);
 	    String senha = new String(aesKey);
 	    System.out.println(senha);
@@ -149,9 +152,9 @@ public class SegurancaServiceImpl implements SegurancaService {
 	
 	@Override
 	@RemoteMethod
-	public String encryptMessage(String message, int idUserTo) {
+	public String encryptMessage(String message, String usuLogin) {
 		try {
-			Usuario destinatario = usuarioService.selectById(idUserTo);
+			Usuario destinatario = usuarioService.selectByLogin(usuLogin);
 
 			PublicKey publicKey = getPublicKeyFromFile(jks,
 					formatFileName(destinatario.getUsuIdt()), new String(
@@ -163,7 +166,10 @@ public class SegurancaServiceImpl implements SegurancaService {
 			byte[] encrypted = blockCipher(bytes,Cipher.ENCRYPT_MODE);
 
 			char[] encryptedTranspherable = Hex.encode(encrypted);
-			return new String(encryptedTranspherable);
+			
+			String hexa = new String(encryptedTranspherable);
+			
+			return destinatario.getIdUsuario()+","+hexa;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -174,13 +180,15 @@ public class SegurancaServiceImpl implements SegurancaService {
 	
 	@Override
 	@RemoteMethod
-	public String decryptMessage(String hexa, String password, int idDespacho){
+	public String decryptMessage(String password, int idDespacho){
 		try {
+			
 			Authentication auth = SecurityContextHolder.getContext()
 					.getAuthentication();
 			Usuario decrypter = (Usuario) auth.getPrincipal();
-
+			
 			Despacho despacho = despachoService.selectDespacho(idDespacho);
+			
 			if (despacho.getIdUsuarioDestinatario() != decrypter.getIdUsuario())
 				return "Você não tem permissão para descriptografar essa mensagem.";
 
@@ -189,8 +197,10 @@ public class SegurancaServiceImpl implements SegurancaService {
 			PrivateKey privateKey = getPrivateKeyFromFile(certificado,
 					decrypter.getUsuLogin(), password);
 			rsa.init(Cipher.DECRYPT_MODE, privateKey);
+			
+			System.out.println(despacho.getDespacho());
 
-			byte[] bts = new BigInteger(hexa, 16).toByteArray();
+			byte[] bts = new BigInteger(despacho.getDespacho(), 16).toByteArray();
 
 			byte[] decrypted = blockCipher(bts,Cipher.DECRYPT_MODE);
 
@@ -351,7 +361,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 	 * Extrai a chave pública do arquivo.
 	 */
 	public PrivateKey getPrivateKeyFromFile( File cert, String alias, String password ) throws Exception {
-		System.out.println(alias);
+		System.out.println(alias+"-getPrivateKey");
 		KeyStore ks = KeyStore.getInstance ("PKCS12");
 		char[] pwd = password.toCharArray();
 		InputStream is = new FileInputStream( cert );
