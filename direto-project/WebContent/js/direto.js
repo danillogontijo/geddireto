@@ -36,7 +36,13 @@ js.direto.atualiza = function(page){
 	}
 	
 	if(page=="principal"){
-		alert(list);
+		if (DESTINATARIOS.length == 0)
+ 			return;
+		
+		//alert(list);
+		
+		dialogMessage('Enviando documento...','<p style="text-align: center"><img src="imagens/ajax-loader.gif" /></p>',true);
+		encaminharSelecionados(list);
  	}else if(page=="documento"){
  		//alert(list+'documento'+DESTINATARIOS.length);
  		
