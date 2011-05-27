@@ -4,7 +4,11 @@
 
 <%@ include file="include_head.jsp" %>
 
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/historicoJS.js"></script>
+
 <script type="text/javascript">
+var USER_NAME = '${usuario.pstGrad.pstgradNome}	${usuario.usuNGuerra}';
+
 $j(function(){
 	$j(".div_docs:odd").css("background-color", "#E2E4FF");
 });	
@@ -20,6 +24,44 @@ function ordenacao(){
 		}
 	}
 	
+}
+
+
+function encaminharSelecionados(list){
+
+	$j( "#dialog-message" ).bind( "dialogclose", function(event, ui) {
+		window.location.reload();
+	});
+
+	var qtde = $j(".chkbox:checked").length;
+	var count = 0;
+	$j(".chkbox").each(function(i){
+		var chkbox = $j(this);
+
+		if(chkbox.is(':checked')){
+			var ID_DOCUMENTO = chkbox.val(); 
+
+			var sDestinatarios = "";
+	 		for (var i = 0; i < DESTINATARIOS.length ; i++) {
+				var item = DESTINATARIOS[i];
+				sDestinatarios += item.id+",";
+			}
+	 		
+	 		documentosJS.encaminharDocumento(sDestinatarios,ID_DOCUMENTO);
+	 		var txtHistorico = "(Encaminhado)-Do:";
+			txtHistorico += USER_NAME;
+			txtHistorico += "-Para:"+list;
+			historicoJS.save(ID_DOCUMENTO,txtHistorico);
+
+			count++;
+			
+		}
+
+		if(qtde == count){
+			var message = 'Encaminhado(s) '+count+' documento(s)';
+			dialogMessage('Documentos encaminhados',message,false);
+		}
+	});
 }
 
 </script>

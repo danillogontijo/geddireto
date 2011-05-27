@@ -132,27 +132,6 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			}
 		}
 		
-		/*Long count =  (Long) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("SELECT count(distinct doc.documentoDetalhes.idDocumentoDetalhes) FROM Documento as doc " +
-				"WHERE doc.carteira.idCarteira = ? " +
-				"").setInteger(0, idCarteira).uniqueResult();
-		*/
-		
-		//Long count = counterDocumentsByBox("0", idCarteira);
-		
-		//Long count =  (Long)hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("select count(*) from Usuario").uniqueResult();
-		
-		
-		//System.out.println("count: "+count);
-		
-		/*for(int i=0;i<count.size();i++){
-			
-			Object o = (Object)count.iterator().next();
-			System.out.println(o.toString());
-			
-		}*/
-		
-		System.out.println(filtro);
-		
 		if(filtro == "" || filtro == null || filtro.equals("todas")){
 			box = ((box.equals("1") || box.equals("0")) ? "0,1" : box);
 			filtro = "";
@@ -166,56 +145,20 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			}
 		}
 		
-		
-		System.out.println(box);
-		
 		int limitePorPagina = Integer.parseInt(messages.getMessage("limitByPage")); //DocumentosUtil.LIMITE_POR_PAGINA;
 		
 		String sql = "from Documento as doc inner join doc.documentoDetalhes details " +
 		"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")"+filtro+
 		"GROUP BY details.idDocumentoDetalhes ORDER BY "+textoOrdenacao;
 		
-		//Query query;
-		/*String sql = "SELECT {dc.*}, {d.*} FROM idmensausu dc, mensagens d " +
-				"WHERE dc.IdMensagem = d.Id AND dc.IdCarteira = ? " +
-				"GROUP BY d.Id ORDER BY "+textoOrdenacao;//+" LIMIT 1,2";
-		*///String sql = "from Documento doc_cart inner join doc_cart.documentoDetalhes as doc"; 
-		/*Query query = sessionFactory.openSession().createSQLQuery(sql);
-		query.setInteger(0, idCarteira);
-		*/
-		//query.setString(1, "0");
-		//query.setEntity(DocumentoDetalhes.class);
-		//query.setEntity("doc_cart",Documento.class);
-		
-		/*Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createSQLQuery(sql)
-		.addEntity("dc", Documento.class)
-		.addEntity("d", DocumentoDetalhes.class);*/
-		
 		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
-		
-	/*	Query query = sessionFactory.openSession().createSQLQuery(sql)
-		.addEntity("dc", Documento.class)
-		.addEntity("d", DocumentoDetalhes.class);
-	*/	
 		query.setInteger(0, idCarteira);
-		
 		query.setFirstResult(inicio);
 		query.setMaxResults(limitePorPagina);
-		
 		
 		List results = query.list();
 					
 		List<DataUtils> documentos = new LinkedList<DataUtils>();
-		
-		//DocumentoDetalhes doc = (DocumentoDetalhes) results.get(0); 
-		
-		//System.out.println("ListDoc: "+results.size());
-		
-		//DataUtils total = new DataUtils();
-		//total.setId("0");
-		//total.setTexto("Total de registros: "+ count);
-		
-		//r.add(total);
 		
 		for(int i=0; i<results.size(); i++){
 			DataUtils data = new DataUtils();
@@ -223,9 +166,6 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			Object[] objects = (Object[]) results.get(i);
 			DocumentoDetalhes doc = (DocumentoDetalhes) objects[1];
 			Documento doc_cart = (Documento) objects[0];
-			System.out.println("Hash Code doc: "+doc.hashCode());
-			//DocumentosUtil.documentos.put(doc.getIdDocumentoDetalhes(), doc);
-			
 			data.setId(Integer.toString(doc.getIdDocumentoDetalhes()));
 			String pri = "";
 			if (doc.getPrioridade() == '0') {
@@ -243,13 +183,14 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			}
 			
 			String assunto = doc.getAssunto();
-			//assunto = assunto + assunto + assunto + assunto + assunto;
 			
 			if (assunto.length() > 60){
 				assunto = assunto.substring(0, 49)+"...";
 			}
 			
-			String url = "documento.html?id="+doc.getIdDocumentoDetalhes()+"&pk="+doc_cart.getIdDocumento()+"&carteira="+idCarteira;
+			int idDocumentoDetalhes = doc.getIdDocumentoDetalhes();
+			
+			String url = "documento.html?id="+idDocumentoDetalhes+"&pk="+doc_cart.getIdDocumento()+"&carteira="+idCarteira;
 			
 			String notificar = "";
 			if (doc_cart.getNotificar() == 1){
@@ -265,12 +206,12 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 					}
 				}
 				
-				notificar = "<a href='"+doc.getIdDocumentoDetalhes()+"' class='notificacao' name='notificacoes' id='"+doc_cart.getIdDocumento()+"'>("+c+") </a>";
+				notificar = "<a href='"+idDocumentoDetalhes+"' class='notificacao' name='notificacoes' id='"+doc_cart.getIdDocumento()+"'>("+c+") </a>";
 				
 			}
 			
 			String texto = "<div class='div_docs'"+(doc_cart.getStatus() == '0' ? " style='font-weight: bold;'" : "")+" id='div_doc"+(i)+"'>";
-			texto = texto + "<input type='checkbox' class='chkbox' value='"+doc_cart.getIdDocumento()+"' id='chk"+i+"' "+
+			texto = texto + "<input type='checkbox' class='chkbox' value='"+idDocumentoDetalhes+"' id='chk"+i+"' "+
 						"onClick='js.direto.sel_chkbox_doc("+(i)+");' />";
 			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
 			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
@@ -280,52 +221,13 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			texto = texto + ("<font class='data_docs'>"+DataTimeUtil.getBrazilFormatDataHora(doc_cart.getDataHora())+"</font>");
 			texto = texto + "</div>"; 
 			
-			//doc_cart.getCarteira().getContas().
-			
-			System.out.println(this.usuarioService.whoUser(1));
-					
 			data.setTexto(texto);
 			
 			documentos.add(data);
 		}
 		
 		return documentos;
-
 		
-		//data.setId(query.)
-		
-		//List list = query.list();
-	
-		
-		
-		/*String sql = "SELECT * FROM mensagens doc,idmensausu doc_cart WHERE doc_cart.IdCarteira = ?";
-		
-		System.out.println(sql);
-
-		final List<DataUtils> myResults = new ArrayList<DataUtils>();
-		
-		jdbcTemplate.query(sql, new Object[] {idCarteira}, 
-			    new RowCallbackHandler() {
-			      public void processRow(ResultSet rs) throws SQLException {
-			        // do something with the rowdata - like create a new
-			        // object and add it to the List in the enclosing code
-			    	DataUtils data = new DataUtils();
-			    	data.setId(rs.getString("IdMensagem"));
-			    	data.setTexto(rs.getString("Status")+" - "+rs.getString("IdSecao"));
-			        myResults.add(data);
-			      }
-			    }
-			  );
-*/		
-		/*DataUtils d = new DataUtils();
-		d.setId("id");
-		d.setTexto("texto");
-		myResults.add(d);*/
-		
-			
-		/*System.out.println(myResults.toString());
-		
-		return myResults;*/
 	}
 	
 	@Override
