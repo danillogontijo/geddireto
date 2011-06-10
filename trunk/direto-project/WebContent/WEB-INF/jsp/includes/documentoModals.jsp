@@ -1,4 +1,21 @@
+<script type="text/javascript">
 
+/*function charCount(val){
+	var max = 50;
+	var length = val.length+1;
+
+	if (length > max){
+		//alert('excedeu');
+		if (event.keyCode != 8)
+     		$j('#texto_acao').attr("disabled","disabled");
+		return false;
+	}
+
+	$j('#textCount').html("("+length+" / "+max+")");
+	return true;
+}*/
+
+</script>
 
 <!-- Confirmação da edição documento -->
 <div id="weditar" class="window">
@@ -36,8 +53,8 @@
 				<option value="Providências em andamento.">Providências em andamento</option>
 				<option value="Encaminhar.">Encaminhar</option></select>
 				<br>Digite aqui seu texto: <br>
-				<textarea onkeypress="return js.direto.charProibido(event)" cols="76" rows="2" onkeyup="" id="texto_acao"></textarea>
-				<div id="progdespachar">(0 / 500)</div>
+				<textarea onkeypress="return js.direto.charProibido(event)" cols="76" rows="2" id="texto_acao"></textarea>
+				<div id="textCount">Resta(m) <span id=charsLeft></span> caracter(es) a ser(em) digitado(s)</div>
 				<div><input type="checkbox" id="chk_criptografar" value="1">Criptografar</input></div>
 			</td>
 		</tr>

@@ -1,4 +1,4 @@
-body {margin: 0px 0px 0px 0px; font: 13px "Trebuchet MS", sans-serif; font-weight: normal;}
+body {margin: 0px 0px 0px 0px; font: 13px "Trebuchet MS", sans-serif; font-weight: normal; background-color: #fff;}
 a {text-decoration: none; color: black;}
 a:hover {text-decoration: underline;}
 
@@ -18,8 +18,8 @@ background-color: black;}
 /**
  * DIV PARA CRIAR TABELAS
  */
-#table {margin: 0 auto;	left: 501px; top: 50%;}
-#line {vertical-align: middle; overflow:hidden;}
+#table {margin: 0 auto;	}
+#line {vertical-align: middle; }
 #column{float: left; height: 100%;}
 
 /**

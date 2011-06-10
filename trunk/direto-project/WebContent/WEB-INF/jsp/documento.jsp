@@ -11,6 +11,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/segurancaJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/historicoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/custom/jquery.limit-1.2.source.js"></script>
 
 <script type="text/javascript">
 
@@ -278,6 +279,41 @@ $j(function(){
 		js.direto.close_mask();
 	});
 
+	
+
+	/*$j('#texto_acao').keyup(function() {
+
+		//return charCount($j(this).val());
+		
+		if (event.keyCode == 8)
+	     		$j('#texto_acao').attr("disabled","");
+			  
+		var maxText = 5;
+		var numChar = $j(this).val().length;
+
+		$j('#left').text(numChar);
+
+		if (numChar > maxText){
+			//alert('excedeu');
+			if (event.keyCode != 8)
+	     		$j('#texto_acao').attr("disabled","disabled");
+		}
+
+		$j('#left').text(numChar);
+	
+		
+		  
+	});
+
+	$j('#texto_acao').blur(function() {
+
+		//$j('#texto_acao').attr("disabled","");
+		  
+	});*/
+
+	$j('#texto_acao').limit('14','#charsLeft');
+	
+
 	$j("#div_anexos span[name=ui_anexo]").toggle(
 
 		function(){
@@ -489,6 +525,14 @@ function salvarAcao(acao,id,ele){
 function padronizado(valor){
 
 	var textArea = $('texto_acao');
+	
+	var textAcao = textArea.value + " " + valor;
+	
+	//var bcharCount = charCount(textAcao);
+
+	//if (!bcharCount)
+		//return;
+
 	textArea.value += " " + valor;
 	
 }
@@ -763,7 +807,7 @@ height: 15px;
 			| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
 		</c:if>
 		
-		| <span id="s_visualizar"><a href="#crypto" id="crypto" class="l_edicao_vis">crypto</a></span>
+		| <span id="s_checar"><a href="#crypto" id="crypto" class="l_edicao_vis">Cripto</a></span>
 		
 		
 		<br>
