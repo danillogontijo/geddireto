@@ -10,6 +10,7 @@
 <!-- Inicio Folha de Estilos -->
 <link href="css/estilos.css" rel="stylesheet" type="text/css" />
 <link href="css/modals.css" rel="stylesheet" type="text/css" />
+
 <!-- <link href="css/dateinput.css" rel="stylesheet" type="text/css" /> -->
 
 <link href="css/custom-theme-jquery/jquery-ui-1.8.10.custom.css" rel="stylesheet" type="text/css" />
@@ -280,7 +281,7 @@ jQuery(document).ready(function($) {
 
 	$('a[name=notificacoes]').click(function(e) {
 		e.preventDefault();
-
+		
 		var id = $(this).attr('id');
 		
 		//javascript:getNotificacoes("+doc.getIdDocumentoDetalhes()+",this);
@@ -347,10 +348,18 @@ jQuery(document).ready(function($) {
 
 var first_click_notification = true;
 var no_notifications;
+var id_notificacao_elemento = 0;
 
 function getNotificacoes(id,ele){
 
+	if(id_notificacao_elemento == 0 || id_notificacao_elemento != $j(ele).attr('href')){
+		first_click_notification = true;
+	}else{
+		first_click_notification = false;
+	}
+
 	//alert(first_click_notification);
+	//alert("ele = "+($j(notificacao_elemento) == $j(ele)));
 	//ele.style.backgroundColor="#dddddd"; 
 
 	$j.getJSON("notificacoes.html?id="+id, function(json){
@@ -362,6 +371,12 @@ function getNotificacoes(id,ele){
 			//divN.innerHTML = "teste: "+id;
 		
 		if (first_click_notification){
+
+			$j("#p_notificacoes").text('');
+
+			id_notificacao_elemento = $(ele).attr('href');
+			//alert(first_click_notification);
+			//alert($j(notificacao_elemento).text());
 
 			$j("#s_sem_notificacoes").hide();
 
@@ -377,13 +392,13 @@ function getNotificacoes(id,ele){
 			(no_notifications == true ? $j("#s_sem_notificacoes").show() : $j("#p_notificacoes").append(json.notificacoes)); 
 		 	
 		 	first_click_notification = false;
-			
-
+	
 		}else{
 
 			$j("#s_sem_notificacoes").hide()	
 			
 			var qtde_notificacoes = $j(ele).text();
+			//alert(qtde_notificacoes);
 			qtde_notificacoes = qtde_notificacoes.replace("(","");
 			qtde_notificacoes = qtde_notificacoes.replace(")","");
 			qtde_notificacoes = parseInt(qtde_notificacoes);
@@ -554,46 +569,31 @@ function montaUsersByGrupos(listBeans){
 
 <div id="#tela_apresentacao" class="tela_apresentacao"></div> 
 
-<div id="table" style="position: absolute; width: 1002px; top: 0; left: 0;">
+<div id="table" style="position: absolute; width: 100%;">
 		 
 
-<div id="table" style="position: relative; width: 1002px; top: 0; left: 0;">
+<div id="table" style="position: relative; width: 100%; top: 0; left: 0;">
 
-	<div id="line" style="width: 1002px;float: left; height: 43px;">
-		<div style="float: left;"><img name="direto_r1_c1" src="imagens/direto_r1_c1.jpg" width="189" height="43" border="0" id="direto_r1_c1" usemap="#m_direto_r1_c1" alt="" /></div>
-		<div style="float: left; line-height:43px; background-image: url('imagens/direto_r1_c2.jpg'); width: 813px; height:43px; text-align: center;" class="menu_titulo">
-			
-			<c:forEach var="mt" items="${menuTopo}">
- 				<c:set value="${mt.name}" var="name"/>
- 				<c:set value="${mt.value}" var="value"/>
- 				
- 				<c:url value="${value}" var="mtURL">
-				  <c:param name="box" value="${box}" />
-				</c:url>
-				
-				<c:if test="${name != 'Admin'}">| </c:if>
-				
-				<a href="<c:out value="${mtURL}" />" class="menu_titulo">${name}</a> 
-			</c:forEach>
-			
- 			 			
- 			</div>
-   		<div style="float: left;"><img src="imagens/spacer.gif" width="1" height="43" border="0" alt="" /></div>
+	<div id="line" style="background-image: url('imagens/fundo.jpg'); height:43px; width: 100%">
+	
+		<div style="width: 1002px; height: 43px; margin: 0 auto;">
+			<div style="float: left; width: 189; height: 43px;"><img name="direto_r1_c1" src="imagens/direto_r1_c1.jpg" width="189" height="43" border="0" id="direto_r1_c1" usemap="#m_direto_r1_c1" alt="" /></div>
+			<div style="float: left; background-image: url('imagens/direto_r1_c2.jpg'); width: 813px; height:43px;"></div>
+		</div>
+	
 	</div>
 
 
-	<div id="line" style="width: 1002px; float: left; height: 29px;">
-   		<div style="float: left;"><img name="direto_r2_c1" src="imagens/head_complemento.jpg" width="117" height="29" border="0" id="direto_r2_c1" usemap="#m_direto_r2_c1" alt="" /></div>
-   		<div style="float: left; background-image: url('imagens/head_complemento.jpg');width: 72px;height:29px;"></div>
-   		<div style="float: left;"><img name="direto_r2_c2" src="imagens/direto_r2_c2.jpg" width="813" height="29" border="0" id="direto_r2_c2" alt=""  /></div>
+	
+	<div id="line" style="width: 100%; height: 29px;">
    		<!--<div style="float: left; background-image: url('imagens/head_complemento.jpg');width: 72px;height:29px;"></div>-->
-   		</div>
+   	</div>
 
 </div>
 
     
-<div id="table" style="position: relative; width: 1002px; text-align: center; top: 75px; left: 0px; height: 700px; background-color: white; border-bottom: 1px solid #ccc">
-	<div id="line" style="width: 167px; height: 715px; position: absolute; text-align: left; background-color: #ffffff; top: -27px; left: 5px" class="menuLado">
+<div id="table" style="position: relative; width: 1002px; text-align: center; top: 0px; left: 0px; height: 700px; background-color: white; border-bottom: 1px solid #ccc; border-left: 1px solid #fff; border-right: 1px solid #fff;">
+	<div id="line" style="width: 167px; height: 715px; position: absolute; text-align: left; background-color: #ffffff; top: -24px; left: 5px" class="menuLado">
 		
 		<div style="height: 30px; font-size: 14px; font-weight: bold;">
 			<spring:message code="welcome"/>
@@ -733,7 +733,24 @@ function montaUsersByGrupos(listBeans){
 		
 	</div>
 	
-	<div id="line" style="width: 822px; position: absolute; margin: 0 0 0 2px; text-align: center; left: 178px">
+	<div id="line" style="width: 822px; position: absolute; margin: 0 0 0 2px; text-align: center; left: 178px; overflow: visible;">
+		
+		<div style="text-align: center; position: absolute; width: 100%; top: -60px;">
+			<c:forEach var="mt" items="${menuTopo}">
+ 				<c:set value="${mt.name}" var="name"/>
+ 				<c:set value="${mt.value}" var="value"/>
+ 				
+ 				<c:url value="${value}" var="mtURL">
+				  <c:param name="box" value="${box}" />
+				</c:url>
+				
+				<c:if test="${name != 'Admin'}">| </c:if>
+				
+				<a href="<c:out value="${mtURL}" />" class="menu_titulo">${name}</a> 
+			</c:forEach>
+		</div>
+		
+		<div style="font-size: 18px; text-align: center; position: absolute; width: 100%; top: -25px;">Brigada de Operações Especiais</div>
 		
 		<div style="width:100%; text-align:left; background-color: #1E90FF; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu1">
 	

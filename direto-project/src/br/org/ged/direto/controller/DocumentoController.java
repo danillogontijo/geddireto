@@ -286,8 +286,8 @@ public class DocumentoController extends BaseController {
 		List<Despacho> despachos = this.despachoService.getDespachoByDocumento(id);
 		for(Despacho despacho : despachos){
 			if(despacho.getIdUsuarioDestinatario() != 0 && despacho.getIdUsuarioDestinatario() != usuario.getIdUsuario()){
-				despachos.remove(despacho);
-				continue;
+				//despachos.remove(despacho);
+				//continue;
 			}
 			if(despacho.getIdUsuarioDestinatario() == usuario.getIdUsuario())
 				despacho.setDespacho(Utils.formatHexa(despacho.getDespacho()));

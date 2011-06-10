@@ -16,6 +16,7 @@
 	
 <!-- Inicio Folha de Estilos -->
 <link href="css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="" rel="stylesheet" type="text/css" />
 <!-- Fim Folha de Estilos -->
     
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioJS.js"></script>
@@ -111,7 +112,7 @@ function montaContas(listBeans){
 </div>
 
     
-<div id="table" style="position: absolute; width: 330px; text-align: center; margin-left: -165px; left: 501px; margin-top: -160px;">
+<div id="table" style="position: absolute; width: 330px; text-align: center; margin-left: -165px; left: 501px; margin-top: -160px; top: 50%;">
 	<spring:bind path="loginForm.j_username">
 	  	<span id="<c:out value="${status.expression}"/>Error" class="error">
 		  	<c:if test="${not empty param.login_error}">
@@ -134,7 +135,7 @@ function montaContas(listBeans){
 </div>
 
 <form name="f" action="<c:url value='j_spring_security_filter'/>" id="form_login" method="POST">
-<div id="table" style="position: absolute; width: 330px; margin-left: -165px; left: 501px; margin-top: -83px;">
+<div id="table" style="position: absolute; width: 330px; margin-left: -165px; left: 501px; margin-top: -83px; top: 50%;">
 	<div class="bordaBox">
 		<b class="b1"></b><b class="b2"></b><b class="b3"></b><b class="b4"></b>
 			<div class="conteudo">
