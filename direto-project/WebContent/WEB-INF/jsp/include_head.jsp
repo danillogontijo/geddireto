@@ -574,7 +574,7 @@ function montaUsersByGrupos(listBeans){
 
 <div id="table" style="position: relative; width: 100%; top: 0; left: 0;">
 
-	<div id="line" style="background-image: url('imagens/fundo.jpg'); height:43px; width: 100%">
+	<div id="line" style="background-image: url('imagens/fundo.jpg'); height:43px; width: 100%;">
 	
 		<div style="width: 1002px; height: 43px; margin: 0 auto;">
 			<div style="float: left; width: 189; height: 43px;"><img name="direto_r1_c1" src="imagens/direto_r1_c1.jpg" width="189" height="43" border="0" id="direto_r1_c1" usemap="#m_direto_r1_c1" alt="" /></div>

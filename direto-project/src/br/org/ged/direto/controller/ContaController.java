@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.org.ged.direto.model.entity.Usuario;
 
 @Controller
-public class ContaController {
+public class ContaController extends BaseController {
 	
 	@RequestMapping(value="/alternar.html",method=RequestMethod.GET)
 	public String alternarConta(@RequestParam("id") int idCarteira, HttpServletRequest request) {
@@ -28,6 +28,12 @@ public class ContaController {
 		
 		return "redirect:principal.html?box=1&pr=0&filtro=todas";
 		//return "alternar";
+	}
+	
+	@RequestMapping(value="/passarConta.html",method=RequestMethod.GET)
+	public String passarConta(HttpServletRequest request){
+		
+		return "passarConta";
 	}
 
 }

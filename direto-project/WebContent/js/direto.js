@@ -82,9 +82,9 @@ js.direto.parseDate = function(txt_date) {
 	var seg = txt_date.substr(17,2);
 	
 	var date = new Date();
-	date.setDate(dia);
-	date.setMonth(parseInt(mes)-1);
-	date.setFullYear(ano);
+	date.setFullYear(parseInt(ano), parseInt(mes)-1, parseInt(dia))
+	//date.setMonth(parseInt(mes)-1);
+	//date.setFullYear(ano);
 	date.setHours(hora,min);
 	date.setMilliseconds(0);
 	date.setSeconds(seg);
@@ -93,9 +93,9 @@ js.direto.parseDate = function(txt_date) {
 };
 
 js.direto.compareDate = function(data1,data2){
-	milliSegundos1 = data1.getTime();
-    milliSegundos2 = data2.getTime();
-
+	var milliSegundos1 = data1.getTime();
+    var milliSegundos2 = data2.getTime();
+   
     if(milliSegundos1 == milliSegundos2){
         return 0;
     } else if(milliSegundos1 > milliSegundos2){
@@ -103,11 +103,67 @@ js.direto.compareDate = function(data1,data2){
     } else if(milliSegundos1 < milliSegundos2){
         return -1;
     } else return -1;
+    
+    
+};
+
+
+/*Função Update histórico,anotaçoes e despachos */
+js.direto.show_updates = function(id,type){
+	
+	var singular = type;
+	
+
+	if (type == "anotacoes") {
+		singular = "anotacao";
+	} else if (type == "despachos") {
+		singular = "despacho";
+	} else if (type == "historico"){
+		singular = "historico";
+	} else {
+		singular = "unknow";
+	}
+
+	var txt_date = $j('#'+type+' span:last').text();
+	//alert(txt_date);
+	var last_date = js.direto.parseDate(txt_date);
+	//alert(last_date);
+	var retorno = 0;
+		$j.getJSON(type+".html?id="+id, function(data) {
+			
+	    $j.each(data.dados, function(i,d){
+			//alert(i);
+	        //$j("#anotacoes div:last").after('div');
+	        var date_json_return = js.direto.parseDate(d.dataHora);
+	        //alert(date_json_return);
+	        
+			retorno = js.direto.compareDate(date_json_return,last_date);
+			//alert(retorno);
+	        if( retorno == 1){
+				var txt = "";
+				txt = txt + "<strong>["+d.carteira+"] ["+d.usuNGuerra+"]</strong> - ";
+				txt = txt + d.acao;
+				txt = txt + " - <span id='data_despacho'>"+d.dataHora+"</span>";
+		        
+		        $j('#'+type+' div:last').after("<div id='div_despachos'></div>");
+		        $j('#'+type+' div').last().hide();
+		        $j('#'+type+' div').last().html(txt);
+		        $j('#'+type+' div').last().addClass('celula '+singular);
+		        //$j('#'+type+' div').last().remove();
+		        $j('#'+type+' div').last().fadeIn("slow");
+	       }
+			//$j('<div>teste</div>').insertAfter($('#div_anotacoes div:last'));
+	      });
+	    
+	    setTimeout(function(){
+	    	IS_UPDATES_ACTIONS = false;
+			},300);
+	    
+	    });
 };
 
 
 js.direto.sel_chkbox_doc = function(id) {
-	
 	
 	if (id < 16){
 	
@@ -151,62 +207,6 @@ js.direto.sel_chkbox_doc = function(id) {
 		}
 
 	}	
-};
-
-
-
-/*Função Update histórico,anotaçoes e despachos */
-js.direto.show_updates = function(id,type){
-	
-	var singular = type;
-	
-
-	if (type == "anotacoes") {
-		singular = "anotacao";
-	} else if (type == "despachos") {
-		singular = "despacho";
-	} else if (type == "historico"){
-		singular = "historico";
-	} else {
-		singular = "unknow";
-	}
-
-	var txt_date = $j('#'+type+' span:last').text();
-	
-	var last_date = js.direto.parseDate(txt_date);
-	//alert(last_date);
-	var retorno = 0;
-		$j.getJSON(type+".html?id="+id, function(data) {
-			
-	    $j.each(data.dados, function(i,d){
-			//alert(i);
-	        //$j("#anotacoes div:last").after('div');
-	        var date_json_return = js.direto.parseDate(d.dataHora);
-	        //alert(date_json_return);
-	        
-			retorno = js.direto.compareDate(date_json_return,last_date);
-			//alert(retorno);
-	        if( retorno == 1){
-				var txt = "";
-				txt = txt + "<strong>["+d.carteira+"] ["+d.usuNGuerra+"]</strong> - ";
-				txt = txt + d.acao;
-				txt = txt + " - <span id='data_despacho'>"+d.dataHora+"</span>";
-		        
-		        $j('#'+type+' div:last').after("<div id='div_despachos'></div>");
-		        $j('#'+type+' div').last().hide();
-		        $j('#'+type+' div').last().html(txt);
-		        $j('#'+type+' div').last().addClass('celula '+singular);
-		        //$j('#'+type+' div').last().remove();
-		        $j('#'+type+' div').last().fadeIn("slow");
-	       }
-			//$j('<div>teste</div>').insertAfter($('#div_anotacoes div:last'));
-	      });
-	    
-	    setTimeout(function(){
-	    	IS_UPDATES_ACTIONS = false;
-			},300);
-	    
-	    });
 };
 
 

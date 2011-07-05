@@ -19,7 +19,7 @@ public class MenuTopoImpl implements IMenuTopo{
 	public MenuTopoImpl(){
 		this.menuTopo.add(new MenuTopo("Admin", "/admin/index.html", true, false));
 		this.menuTopo.add(new MenuTopo("Relatorios", "admin.jsp", false, true));
-		this.menuTopo.add(new MenuTopo("Passar Conta", "passar_conta.jsp", false, false));
+		this.menuTopo.add(new MenuTopo("Passar Conta", "passarConta.html", false, false));
 		this.menuTopo.add(new MenuTopo("Dados Cadastrais", "dados_cadastro.jsp?modo=ver", false, false));
 		this.menuTopo.add(new MenuTopo("Configurações", "configuracao.jsp", false, false));
 		this.menuTopo.add(new MenuTopo("Sair", "j_spring_security_logout", false, false));
