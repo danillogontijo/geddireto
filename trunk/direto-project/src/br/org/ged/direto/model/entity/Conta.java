@@ -3,7 +3,6 @@ package br.org.ged.direto.model.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
@@ -35,6 +34,8 @@ public class Conta implements Serializable {
 	
 	private Usuario usuario;
 	private Carteira carteira;
+	
+	private Integer idUsuarioProprietario;
 	
 	public Conta(){}
 		
@@ -112,14 +113,24 @@ public class Conta implements Serializable {
 		this.carteira = carteira;
 	}
 	
+	@Column(name = "IdUsuarioProprietario", nullable = true)
+	public Integer getIdUsuarioProprietario() {
+		return idUsuarioProprietario;
+	}
+
+	public void setIdUsuarioProprietario(Integer idUsuarioProprietario) {
+		this.idUsuarioProprietario = idUsuarioProprietario;
+	}
+
 	@Transient
 	public boolean isPrincipal() {
-		
-		//isContaPrincipal = (this.getContaPrincipal() == 1) ? true : false; 
-		
 		return (this.getContaPrincipal() == 1) ? true : false; 
 	}
 	
+	@Transient
+	public boolean isAtivada() {
+		return (this.getAtivado() == 1) ? true : false; 
+	}
 	
 	
 	

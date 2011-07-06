@@ -410,12 +410,23 @@ function alertMessage(title,message,isOwnFormat){
 	if (isOwnFormat){
 		ele.html(message);
 	}else{
-		ele.html('<p><span class="ui-icon ui-icon-circle-check" '+ 
+		ele.html('<p style="text-align:center;" class="ui-state-error ui-corner-all"><span class="ui-icon ui-icon-alert" '+ 
 				'style="float:left; margin:0 7px 50px 0;"></span>'+
 				message+'</p>');
 	}
 	
-	if (ele.css('display') == 'none'){
+	ele.dialog({
+		modal: true,
+		buttons: {
+			Ok: function() {
+				$j( this ).dialog( "close" );
+			}
+		}
+	});
+	
+	ele.dialog( "option", "title", title );
+	
+	/*if (ele.css('display') == 'none'){
 		ele.attr('title',title);
 		ele.dialog({
 			modal: true,
@@ -427,7 +438,7 @@ function alertMessage(title,message,isOwnFormat){
 		});
 	}else{
 		$j( '#ui-dialog-title-dialog-message' ).html(title);
-	}
+	}*/
 		
 }
 

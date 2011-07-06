@@ -4,36 +4,116 @@
 
 <%@ include file="include_head.jsp" %>
 
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/contasJS.js"></script>
 
-		<div style="width:100%; text-align:left; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
-		
-			<input name="checkbox" type="checkbox" id="sel_tudo"
-				onClick="js.direto.sel_chkbox_doc('16')" value="16" style="position: relative; top: 2px;" /> 
+<script type="text/javascript">
+
+$j(function(){
+
+	//$j.ui.dialog.defaults.bgiframe = true;
+
+	$j("#usuLogin").focus(function() {
+        $j("#btPassarContas").fadeOut(1000);
+	});
+
+	$j("#conta_principal").bind('click',function(){
+		if($j(this).is(':checked')){
+			var message = "Você selecionou sua conta principal.\n"+
+					"Todas as outras contas também serão\nautomaticamente transferidas.\n"+
+					"Para trocar sua conta principal\ncontate o administrador do sistema.";
+
+					alertMessage("ATENÇÃO!",message,false);
+
+			$j('input:checkbox[name=contas]').attr('checked','checked');
+			$j('input:checkbox[name=contas]').attr('disabled','disabled');
+			$j("#conta_principal").attr('disabled','');
 			
-			Mostrar: 
-			
-			<a href="<c:out value="${mostrarURL}todas" />" style="margin-left: 5px;" class="menu2">Todas</a> |
-			
-			<a href="<c:out value="${mostrarURL}naolidas" />" style="margin-left: 5px;" class="menu2">Não lidas</a> |
-			
-			<a href="<c:out value="${mostrarURL}urgentes" />" style="margin-left: 5px;" class="menu2">Urgentes</a> |
+		}else{
+			$j('input:checkbox[name=contas]').attr('checked','');
+			$j('input:checkbox[name=contas]').attr('disabled','');
+		}
+	});
+
+	$j("#btPassarContas").click(function(){
+
+		var sContasTransferidas = "";
+
+		$j('input:checked[name=contas]').each(function(index) {
+		    //alert($j(this).val());
+		    var usuLogin = $j('#usuLogin').val();
+		    contasJS.transferAccount($j(this).val(),usuLogin,{
+				callback:function(sRetorno) {
+
+				var arRetorno = sRetorno.split(',');
+
+		    	if(eval(arRetorno[1]))
+		    		sContasTransferidas += arRetorno[0]+' <span style="color:green;">(transferida)</span><br/>';
+		    	else
+		    		sContasTransferidas += arRetorno[0]+' <span style="color:red;">(não transferida)</span><br/>';
+
+		    	dialogMessage('Transferindo contas...','<p style="text-align: center;">'+sContasTransferidas+'</p>',true);
+
+		    	$j( "#dialog-message" ).dialog( "option", "buttons", { "Ok": function() { 
+
+			    	//$(this).dialog("close");
+
+			    	alert('fazendo logoff'); 
+
+			    	} 
+		    	});
+
+		    	$j( '.ui-icon' ).click(function() { 
+
+			    	//$(this).dialog("close");
+
+			    	alert('fazendo logoff'); 
+
+			    	});
+		    	
+		    	}
+		    });
+
+
+		});
+
+	});
+	
+});
+
+function validateUser(usuLogin)
+{
+	usuarioJS.validateUser(usuLogin, {
+		callback:function(exist) {
+			if (exist){
+				$j('#validacao').hide();
 				
-			<a href="#wgrupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar selecionadas</a>  |	
-			
-			<a href="#acompanhar" style="margin-left: 5px;" class="menu2" name="acompanhar">Acompanhar</a>
-			
-			<c:if test="${box == 2}">
-				<a href="javascript:Arquivar(4);" class="menu1">Apagar</a> |
-			</c:if>
-			
-			<div style="position: relative; float: right">
-				Ordernação:
-				<select	name=slOrdenacao id="slOrdenacao" style="width: 100pt; font-style: normal; font-size: 12px; color: black; margin-right: 3px;" onchange="ordenacao()">
-					<option value=0 <c:if test="${ordenacao == 0}">selected</c:if>>Prioridade</option>
-					<option value=1 <c:if test="${ordenacao == 1}">selected</c:if>>Data decrescente</option>
-					<option value=2 <c:if test="${ordenacao == 2}">selected</c:if>>Data crescente</option>
-				</select>
-			</div>
+				$j('#validacao').css('color','green');
+				$j('#validacao').html('Usuário encontrado!');
+				$j('#btPassarContas').val('Transferir as contas acima seleciondas para '+usuLogin);
+				$j('#btPassarContas').show();
+
+				$j('#validacao').fadeIn(1000);
+			}else{
+				$j('#validacao').hide();
+				
+				$j('#btPassarContas').hide();
+				$j('#validacao').css('color','red');
+				$j('#validacao').html('Usuário inexistente ou inválido!');
+
+				$j('#validacao').fadeIn(1000);
+				
+			}
+		}
+  	});
+ 	  	
+}
+
+</script>
+
+
+		<div style="width:100%; text-align:center; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
+		
+			<span style="font-weight: bold;">Transferência de contas</span>
 		
 		</div>
 		
@@ -49,7 +129,7 @@
 					
 					<fieldset>
 						<label>Digite o login do usuário para o qual deseja trasferir as contas abaixo:</label>
-						<input type="text" id="usuLogin" name="usuLogin">
+						<input type="text" id="usuLogin" name="usuLogin" onblur="validateUser(this.value)">
 					
 					
 					<p>
@@ -58,17 +138,30 @@
 						<c:forEach var="conta" items="${usuario.contas}">
 			    		     <c:choose>
 						      <c:when test="${conta.carteira.idCarteira == contaAtual}">
-						     	<input type="checkbox" name="contas" value="${conta.carteira.idCarteira}"" id="conta_principal" /><span style="font-weight: bold;">${conta.carteira.cartAbr}</span>
+						     	<input type="checkbox" name="contas" value="${conta.idConta}"" id="conta_principal" /><span style="font-weight: bold;">${conta.carteira.cartAbr}</span>
 						      </c:when>
 						
 						      <c:otherwise>
-						      	<input type="checkbox" name="contas" value="${conta.carteira.idCarteira}"" />${conta.carteira.cartAbr}
+						      	<input type="checkbox" name="contas" value="${conta.idConta}"" />${conta.carteira.cartAbr}
 						      </c:otherwise>
 						    </c:choose>
 						    <c:if test="${conta.contaPrincipal == 1}"><br></c:if>
 						</c:forEach>
+					</p>
+					
+					<p>
+						<span id="validacao" style="font-weight: bold;"></span>
+					
 					</p>	
-			
+					
+					<p>
+						<span>	
+							<input type="button" id="btPassarContas" style="display: none; width: 50%;" />
+						</span>
+						
+					</p>
+					
+							
 					</fieldset>
 					
 					 </td>
