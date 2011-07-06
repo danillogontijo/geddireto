@@ -33,6 +33,9 @@ public interface ContaService {
 	@PreAuthorize("(hasRole('ROLE_ADMIN')) and (isAuthenticated())")
 	public void updateAccount(int idConta, int idCarteira, boolean isPrincipal);
 	
+	@PreAuthorize("(isAuthenticated())")
+	public String transferAccount(int idConta, String usuLoginDestinatario);
+	
 	public Conta getAccount(int idConta);
 	
 	public Conta getAccount(int idUsuario, int idCarteira);
