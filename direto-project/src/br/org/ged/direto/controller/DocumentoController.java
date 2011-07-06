@@ -284,10 +284,11 @@ public class DocumentoController extends BaseController {
 	public Collection<Despacho> despachos(@RequestParam("id")Integer id) {
 		Usuario usuario = Utils.userLogon();
 		List<Despacho> despachos = this.despachoService.getDespachoByDocumento(id);
-		for(Despacho despacho : despachos){
+		List<Despacho> despachosExcluir = new ArrayList<Despacho>(despachos);
+		for(Despacho despacho : despachosExcluir){
 			if(despacho.getIdUsuarioDestinatario() != 0 && despacho.getIdUsuarioDestinatario() != usuario.getIdUsuario()){
-				//despachos.remove(despacho);
-				//continue;
+				despachos.remove(despacho);
+				continue;
 			}
 			if(despacho.getIdUsuarioDestinatario() == usuario.getIdUsuario())
 				despacho.setDespacho(Utils.formatHexa(despacho.getDespacho()));
