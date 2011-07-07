@@ -36,7 +36,7 @@ public class DespachoRepositoryImpl implements DespachoRepository {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Despacho> getDespachoByUsuario(Integer idUsuario) {
-		String sql = "from Despacho as despacho where despacho.usuario.idUsuario = ?";
+		String sql = "from Despacho as despacho where despacho.usuario.idUsuario = ? order by dataHoraDespacho asc";
 		
 		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
 		

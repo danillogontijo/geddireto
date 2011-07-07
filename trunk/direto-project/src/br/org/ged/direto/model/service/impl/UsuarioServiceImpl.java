@@ -6,6 +6,7 @@ import br.org.ged.direto.model.entity.PstGrad;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.UsuarioRepository;
 import br.org.ged.direto.model.service.PstGradService;
+import br.org.ged.direto.model.service.SegurancaService;
 import br.org.ged.direto.model.service.UsuarioService;
 import br.org.ged.direto.model.service.security.IChangePassword;
 
@@ -25,6 +26,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	private MessageSource messageSource;
 	private IChangePassword changePasswordSecurity;
 	private PstGradService pstGradService;
+	private SegurancaService segurancaService;
+	
+	@Autowired
+	public void setSegurancaService(SegurancaService segurancaService) {
+		this.segurancaService = segurancaService;
+	}
 	
 	@Autowired
 	public void setPstGradService(PstGradService pstGradService) {
@@ -72,25 +79,64 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@RemoteMethod
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public String editUser(String usuLogin, String usuNGuerra, String usuNome, String usuPapel, String usuSenha, int usuIdt, int idPstGrad, int idUsuario){
-		
-		if (!checkIfUserIsDuplicate(usuLogin, idUsuario))
-			return "Este login já existe, escolha outro!";
+		try{
 			
-		Usuario user = this.usuarioRepository.selectById(idUsuario);
-		
-		if (user.getPstGrad().getIdPstGrad() != idPstGrad){
-			PstGrad pstGrad = pstGradService.getPstGradById(idPstGrad);
-			user.setPstGrad(pstGrad);
+			if(idUsuario == 0){//Para cadastrar o usuario
+				
+				if(!validateUser(usuLogin)){
+				
+					Usuario userToAdd = new Usuario();
+					userToAdd.setUsuLogin(usuLogin);
+					userToAdd.setUsuNGuerra(usuNGuerra);
+					userToAdd.setUsuNome(usuNome);
+					userToAdd.setUsuPapel(usuPapel);
+					userToAdd.setUsuSenha(segurancaService.md5(usuSenha));
+					userToAdd.setUsuIdt(usuIdt);
+					
+					PstGrad pstGrad = pstGradService.getPstGradById(idPstGrad);
+					userToAdd.setPstGrad(pstGrad);
+					
+					save(userToAdd);
+					
+					try{
+						userToAdd = usuarioRepository.selectByLogin(usuLogin);
+					}catch (NullPointerException e) {
+						e.printStackTrace();
+						return "Usuário não cadastrado ou não encontrado!";
+					}
+					
+					return ""+userToAdd.getIdUsuario();
+				
+				}
+				
+			}else{//Editando o usuário
+			
+				if (!checkIfUserIsDuplicate(usuLogin, idUsuario))
+					return "Este login já existe, escolha outro!";
+					
+				Usuario user = this.usuarioRepository.selectById(idUsuario);
+				
+				if (user.getPstGrad().getIdPstGrad() != idPstGrad){
+					PstGrad pstGrad = pstGradService.getPstGradById(idPstGrad);
+					user.setPstGrad(pstGrad);
+				}
+				
+				user.setUsuLogin(usuLogin);
+				user.setUsuNome(usuNome);
+				user.setUsuNGuerra(usuNGuerra);
+				user.setUsuIdt(usuIdt);
+				
+				if (!usuSenha.isEmpty())
+					changePassword(usuLogin,usuSenha);
+				return "Usuário atualizado com sucesso!\nAguarde verificação das contas...";
+				
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			return "Não foi possível cadastrar o usuário!";
 		}
 		
-		user.setUsuLogin(usuLogin);
-		user.setUsuNome(usuNome);
-		user.setUsuNGuerra(usuNGuerra);
-		user.setUsuIdt(usuIdt);
-		
-		if (!usuSenha.isEmpty())
-			changePassword(usuLogin,usuSenha);
-		return "Usuário atualizado com sucesso!\nAguarde verificação das contas...";
+		return "Usuário não cadastrado";
 	}
 	
 	public boolean checkIfUserIsDuplicate(String usuLogin, int idUsuario){
