@@ -103,6 +103,11 @@ var TABLE_USERS = null;
 
 $j(function() {
 
+	/**
+	*DRAGGABLES
+	*/
+	$j( "#waddcarteira" ).draggable();
+
 	$j('a[name=modal]').live('click',function(e) {
 		e.preventDefault();
 		js.direto.modal(this);
@@ -203,7 +208,7 @@ $j(function() {
 		$j("#table_users tr:first").addClass('table_titulo');
 		$j('#table_users tr').eq(1).find('td').prepend('<fieldset>');
 		
-		$j("#table_users tr:first").first().html('Cadastro de novo usuário');
+		$j("#table_users tr:first").first().html('Cadastro de novo usuário <span id="idUser" style="display:none;">0</span>');
 			
 		userForm('text','Login usuario','',0);
 		userForm('text','Nome de Guerra','',0);
@@ -262,7 +267,17 @@ $j(function() {
 						alert('Já existe um usuário cadastrado com este login.\nFavor escolha outro.');
 						return;
 					}else{
-						alert('Usuario gravado');
+						
+						//alert('Usuario gravado');
+
+						var idUsuario = parseInt($j('#idUser').text());
+						usuarioJS.editUser(usuLogin, usuNGuerra, usuNome, usuPapel, usuSenha, usuIdt, idPstGrad, idUsuario,{
+							callback:function(resultado) {
+								alert("cadastrado: "+resultado);
+								$j('#idUser').text(resultado)
+								setTimeout(function(){saveEditUser();},200);	
+							}
+						});
 					}
 				}
 		});

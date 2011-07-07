@@ -139,6 +139,21 @@ jQuery(document).ready(function($) {
 	$( "#data" ).datepicker();
 	$( "#data" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
 	
+	$( "#wacao" ).draggable();
+	$( "#weditar" ).draggable();
+	$( "#wgrupos" ).draggable();
+	$( "#chat" ).draggable();
+	$( "#console_chat" ).scroll(function(){
+		//alert('in');
+		$( "#chat" ).draggable( "option", "disabled", true );
+		$( "#chat" ).removeClass( 'ui-state-disabled' );
+		}
+	);
+	$( "#welcome" ).click(function(){
+		$( "#chat" ).draggable( "option", "disabled", false );
+		}
+	);
+	
 	
 		
 	//select all the a tag with name equal to modal
@@ -146,7 +161,7 @@ jQuery(document).ready(function($) {
 
 		//alert($(this).attr('id'));
 		//var winH = e.pageX;
-		var winW = 1002;
+		//var winW = 1002;
 	
 		//Cancel the link behavior
 		e.preventDefault();
@@ -192,7 +207,7 @@ jQuery(document).ready(function($) {
 		//Get the window height and width
 		//var winH = $(window).height();
 		//var winH = $(id).position();
-		//var winW = '1002';//$(window).width();
+		var winW = $(window).width();
               
 		//Set the popup window to center
 		//$(id).css('top',  winH/2-$(id).height()/2);
@@ -201,6 +216,7 @@ jQuery(document).ready(function($) {
 		var pos = $(this).offset();
 		$(id).css('top',  pos.top-20);
 		$(id).css('left', winW/2-$(id).width()/2);
+		//$(id).css('left', winW/2);
 	
 		//transition effect
 		$(id).fadeIn(100); 

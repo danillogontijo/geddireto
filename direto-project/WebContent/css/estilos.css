@@ -198,6 +198,7 @@ input.field_inputs_active:active { background-color:red; }
 	
 	-moz-box-shadow: 0 0 5px 5px #888;
 	-webkit-box-shadow: 0 0 5px 5px #888;	
+	z-index: 999;
 }
 
 #chat div {
@@ -272,4 +273,5 @@ input.field_inputs_active:active { background-color:red; }
 	max-width: 90px;
 	position: absolute;
 	left: 22px;
+	cursor: pointer;
 }
