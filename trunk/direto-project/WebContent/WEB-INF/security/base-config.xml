@@ -81,6 +81,10 @@
 		<aop:scoped-proxy />
 	</bean>
 	
+	<bean id="MenuTopoService" class="br.org.ged.direto.model.service.menus.MenuTopoImpl" scope="session">
+		<aop:scoped-proxy />
+	</bean>
+	
 	
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">

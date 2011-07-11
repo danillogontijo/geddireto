@@ -9,5 +9,6 @@ public interface GruposRepository {
 	
 	public List<DataUtils> listGroups(Integer idCarteira);
 	public List<DataUtils> usersByGroup(Integer idNomeGrupo);
+	public List<DataUtils> allGroups();
 
 }

@@ -18,6 +18,7 @@ import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Grupos;
+import br.org.ged.direto.model.entity.NomeGrupos;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.GruposRepository;
 
@@ -148,6 +149,27 @@ public class GruposRepositoryImpl implements GruposRepository {
 		
 		
 		return usersDwr;
+	}
+
+	@Override
+	public List<DataUtils> allGroups() {
+		List grupos = hibernateTemplate.find("from NomeGrupos");
+		
+		List<DataUtils> dados = new LinkedList<DataUtils>();
+		
+		for(int i=0; i<grupos.size(); i++){
+			DataUtils data = new DataUtils();
+			
+			NomeGrupos grupo = (NomeGrupos)grupos.get(i);
+			
+			data.setId(String.valueOf(grupo.getIdNomeGrupo()));
+			data.setTexto(grupo.getGrupoAbr());
+			
+			dados.add(data);
+		
+		}
+		
+		return dados;
 	}
 
 }

@@ -308,6 +308,10 @@ js.direto.modal = function(obj){
 
 	var id = $j(obj).attr('href');
 	
+	if(id == "#wgrupos"){
+		carregaGrupos();
+	}
+	
 	if (id == "#wcontas"){
 		carregaCarteiras();
 		var principal = 0;
