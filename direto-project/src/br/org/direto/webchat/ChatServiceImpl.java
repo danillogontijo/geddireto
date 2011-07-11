@@ -37,7 +37,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 	
 	private UserChat user;
 	
-	List<Message> messagesSession;
+	private List<Message> messagesSession;
 	
 	ChatUtils chatUtils;
 	

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.org.ged.direto.model.entity.menus.MenuTopo;
 
-@Service("MenuTopoService")
+//@Service("MenuTopoService")
 public class MenuTopoImpl implements IMenuTopo{
 	
 	private Collection<MenuTopo> menuTopo = new ArrayList<MenuTopo>();

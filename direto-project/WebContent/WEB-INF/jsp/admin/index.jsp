@@ -25,6 +25,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/funcaoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/omJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/secaoJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/gruposJS.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8""></script>
 
@@ -502,6 +503,26 @@ $j(function() {
 	
 });
 
+function carregaGrupos(){
+	gruposJS.allGroups({
+		callback:function(grupos) {
+			//alert(grupos.length);
+			dwr.util.removeAllOptions('slGrupos');
+			dwr.util.removeAllOptions('ListaDE');
+			dwr.util.removeAllOptions('ListaPARA');
+			dwr.util.addOptions('slGrupos', grupos, "id", "texto");
+
+
+			carteiraJS.getAll({
+				callback:function(carteirasList) {
+					dwr.util.addOptions('ListaDE', carteirasList, "idCarteira", "cartAbr");
+				}
+			});
+			
+		}
+	});
+};
+
 
 function carregaCarteiras(){
 	carteiraJS.getAll({
@@ -598,7 +619,7 @@ function atualizaContas(){
 	if (count == 0){
 		var slPrincipal = $j('#slContas option:selected');
 		value = slPrincipal.val();
-		$j('#novas_contas').append('<br><input type="checkbox" disabled checked value="'+value+'">'+slPrincipal.text()+' (Principal)');
+		$j('#novas_contas').append('<br><input type="checkbox" principal="true" disabled checked value="'+value+'">'+slPrincipal.text()+' (Principal)');
 	}
 	
 	
@@ -658,6 +679,21 @@ function saveCarteira(){
 
 </script>
 
+
+		<style type="text/css">
+			  #waddcarteira fieldset { border:1px solid #000 }
+			
+			  #waddcarteira input {
+			  	margin-bottom: 10px;
+			  	width: 300px;
+			  }
+			  
+			  #waddcarteira select {
+			  	margin-bottom: 10px;
+			  	width: 300px;
+			  }
+		</style>
+
 <!-- MODALS -->
 <div id="boxes">
 
@@ -707,21 +743,53 @@ function saveCarteira(){
 		<p><button onclick="atualizaContas()">Salvar</button></p>
 		</div>
 		
-		<style type="text/css">
-			  #waddcarteira fieldset { border:1px solid #000 }
+		
+		<div id="wgrupos" class="window">
+		<table width="100%">
+			<tr>
+				<td colspan="3" style="width: 720px; text-align: center;" align="center" bgcolor="red" class="titulo_notificacoes" height="20" valign="middle">Gerenciar Grupos</td>
+				<td style="width: 30px;"><a href="#" class="close" style="font-weight: bold">X</a></td>
+			</tr>
 			
+			<tr>
+				<td colspan="3" align="center">
+					<b>Grupos:</b> <select
+						name="slGrupos" id="slGrupos" style="width: 200px; margin: 20px 0 20px 0;" onchange="todosGrupos()">
+					</select>
+				</td>
+			</tr>
 			
-			  
-			  #waddcarteira input {
-			  	margin-bottom: 10px;
-			  	width: 300px;
-			  }
-			  
-			  #waddcarteira select {
-			  	margin-bottom: 10px;
-			  	width: 300px;
-			  }
-		</style>
+			<tr>
+				<td style="width: 260px;">
+					<fieldset><legend>&nbsp;<b>Todas as carteiras</b>&nbsp;</legend>
+					 <select name=ListaDE id=ListaDE multiple size=11 style="width: 250px;" disabled
+							ondblClick="mover(document.getElementById('ListaDE'), document.getElementById('ListaPARA')); return false;">
+					 </select></fieldset>
+				</td>
+				
+				<td style="text-align: center; width:50px;">
+					<input
+						type="button" value="Incluir >>" style="width: 90pt"
+						id=btParaDireita
+						onClick="mover(document.getElementById('ListaDE'), document.getElementById('ListaPARA')); return false;">
+					<input type="button" value="<< Remover" style="width: 90pt"
+						name=btExclui id=btParaEsquerda
+						onClick="remover(document.getElementById('ListaPARA'), document.getElementById('ListaDE')); return false;">
+				</td>
+	
+				<td style="width: 260px; text-align: center;">
+						<fieldset><legend>&nbsp;<b>Carteiras do Grupo</b>&nbsp;</legend>
+						<select name=ListaPARA id=ListaPARA size=11 style="width: 250px;"
+							multiple disabled
+							ondblClick="remover(document.getElementById('ListaPARA'), document.getElementById('ListaDE')); return false;">
+					</select></fieldset>
+				</td>
+			</tr>
+		</table>
+		
+		<p><button onclick="atualizaGrupo()">Atualizar Grupo</button></p>
+		</div>
+		
 	<div id="waddcarteira" class="window">
 	<table width="100%">
 			<tr>
@@ -793,6 +861,13 @@ function saveCarteira(){
 						<li>Cadastro</li>
 						<li>Edição</li>
 						<li>Grupos</li>
+					</ul>
+				</div>
+				<h3><a href="#">Grupos</a></h3>
+				<div>
+					<ul>
+						<li><a href="#wgrupos" name="modal">Cadastro</a></li>
+						<li>Edição</li>
 					</ul>
 				</div>
 				<h3><a href="#">Outros</a></h3>

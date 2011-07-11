@@ -41,4 +41,11 @@ public class GruposServiceImpl implements GruposService {
 		return gruposRepository.usersByGroup(idNomeGrupo);
 	}
 
+
+	@Override
+	@RemoteMethod
+	public List<DataUtils> allGroups() {
+		return gruposRepository.allGroups();
+	}
+
 }
