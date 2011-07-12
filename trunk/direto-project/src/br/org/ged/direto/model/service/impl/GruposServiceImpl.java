@@ -1,6 +1,7 @@
 package br.org.ged.direto.model.service.impl;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.org.direto.util.DataUtils;
+import br.org.ged.direto.model.entity.Grupos;
+import br.org.ged.direto.model.entity.NomeGrupos;
 import br.org.ged.direto.model.repository.GruposRepository;
 import br.org.ged.direto.model.service.GruposService;
 
@@ -46,6 +49,28 @@ public class GruposServiceImpl implements GruposService {
 	@RemoteMethod
 	public List<DataUtils> allGroups() {
 		return gruposRepository.allGroups();
+	}
+
+
+	@Override
+	@RemoteMethod
+	public List<DataUtils> carteirasByGroup(int idNomeGrupo) {
+		
+		NomeGrupos nomeGrupo = gruposRepository.getNomeGrupo(idNomeGrupo);
+		
+		List<DataUtils> dados = new LinkedList<DataUtils>();
+		
+		for(Grupos grupo : nomeGrupo.getGrupos()){
+			DataUtils data = new DataUtils();
+			
+			data.setId(String.valueOf(grupo.getIdGrupo()));
+			data.setTexto(grupo.getCarteira().getCartAbr());
+			
+			dados.add(data);
+		}
+		
+		return dados;
+		
 	}
 
 }

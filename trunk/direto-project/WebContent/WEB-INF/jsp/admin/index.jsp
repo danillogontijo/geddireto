@@ -508,20 +508,31 @@ function carregaGrupos(){
 		callback:function(grupos) {
 			//alert(grupos.length);
 			dwr.util.removeAllOptions('slGrupos');
-			dwr.util.removeAllOptions('ListaDE');
-			dwr.util.removeAllOptions('ListaPARA');
+			dwr.util.removeAllOptions('CarteirasListaDE');
+			dwr.util.removeAllOptions('CarteirasListaPARA');
 			dwr.util.addOptions('slGrupos', grupos, "id", "texto");
 
 
 			carteiraJS.getAll({
 				callback:function(carteirasList) {
-					dwr.util.addOptions('ListaDE', carteirasList, "idCarteira", "cartAbr");
+					dwr.util.addOptions('CarteirasListaDE', carteirasList, "idCarteira", "cartAbr");
 				}
 			});
 			
 		}
 	});
 };
+
+//Chamado quando é escolhido um grupo. Lista todas as carteiras pertencentes ao mesmo.
+function carregaCarteirasPorGrupo(){
+	var idNomeGrupo = $j("#slGrupos").val();
+	gruposJS.carteirasByGroup(idNomeGrupo,{
+		callback:function(carteirasList) {
+			dwr.util.removeAllOptions('CarteirasListaPARA');
+			dwr.util.addOptions('CarteirasListaPARA', carteirasList, "id", "texto");
+		}
+	});
+}
 
 
 function carregaCarteiras(){
@@ -535,6 +546,11 @@ function carregaCarteiras(){
 		}
 	});
 };
+
+function removerCarteiraGrupo(elemento){
+	$j(elemento+':selected').remove();
+	//alert($j(elemento+':selected').val());
+}
 
 function carregaFuncoes(){
 	funcaoJS.getAll({
@@ -754,7 +770,7 @@ function saveCarteira(){
 			<tr>
 				<td colspan="3" align="center">
 					<b>Grupos:</b> <select
-						name="slGrupos" id="slGrupos" style="width: 200px; margin: 20px 0 20px 0;" onchange="todosGrupos()">
+						name="slGrupos" id="slGrupos" style="width: 200px; margin: 20px 0 20px 0;" onchange="carregaCarteirasPorGrupo()">
 					</select>
 				</td>
 			</tr>
@@ -762,8 +778,8 @@ function saveCarteira(){
 			<tr>
 				<td style="width: 260px;">
 					<fieldset><legend>&nbsp;<b>Todas as carteiras</b>&nbsp;</legend>
-					 <select name=ListaDE id=ListaDE multiple size=11 style="width: 250px;" disabled
-							ondblClick="mover(document.getElementById('ListaDE'), document.getElementById('ListaPARA')); return false;">
+					 <select name=CarteirasListaDE id=CarteirasListaDE multiple size=11 style="width: 250px;" 
+							ondblClick="mover(document.getElementById('CarteirasListaDE'), document.getElementById('CarteirasListaPARA')); return false;">
 					 </select></fieldset>
 				</td>
 				
@@ -779,9 +795,8 @@ function saveCarteira(){
 	
 				<td style="width: 260px; text-align: center;">
 						<fieldset><legend>&nbsp;<b>Carteiras do Grupo</b>&nbsp;</legend>
-						<select name=ListaPARA id=ListaPARA size=11 style="width: 250px;"
-							multiple disabled
-							ondblClick="remover(document.getElementById('ListaPARA'), document.getElementById('ListaDE')); return false;">
+						<select name=CarteirasListaPARA id=CarteirasListaPARA size=11 style="width: 250px;"
+							multiple ondblClick="removerCarteiraGrupo(this)">
 					</select></fieldset>
 				</td>
 			</tr>

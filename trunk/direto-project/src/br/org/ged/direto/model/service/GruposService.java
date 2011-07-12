@@ -10,5 +10,6 @@ public interface GruposService {
 	public List<DataUtils> listGroups (Integer idCarteira);
 	public Collection<DataUtils> usersByGroup(Integer idNomeGrupo);
 	public List<DataUtils> allGroups();
+	public List<DataUtils> carteirasByGroup(int idNomeGrupo);
 
 }

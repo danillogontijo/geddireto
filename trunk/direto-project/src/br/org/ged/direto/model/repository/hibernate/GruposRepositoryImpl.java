@@ -172,4 +172,9 @@ public class GruposRepositoryImpl implements GruposRepository {
 		return dados;
 	}
 
+	@Override
+	public NomeGrupos getNomeGrupo(Integer idNomeGrupo) {
+		return hibernateTemplate.get(NomeGrupos.class, idNomeGrupo);
+	}
+
 }
