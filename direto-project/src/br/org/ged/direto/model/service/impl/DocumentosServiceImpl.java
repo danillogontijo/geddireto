@@ -142,6 +142,9 @@ public class DocumentosServiceImpl implements DocumentosService {
 	@RemoteMethod
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
 	public void acompanhar(Integer id, boolean yesOrNo) {
+		
+		System.out.println(id+"=============");
+		
 		Documento doc = documentosRepository.getByIdPKey(id);
 		
 		if (yesOrNo) { doc.setNotificar(1); } else { doc.setNotificar(0);}

@@ -9,6 +9,8 @@ import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.org.direto.util.DataUtils;
 import br.org.ged.direto.model.entity.Grupos;
@@ -71,6 +73,22 @@ public class GruposServiceImpl implements GruposService {
 		
 		return dados;
 		
+	}
+
+
+	@Override
+	@RemoteMethod
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	public void addCarteiraInGroup(int idNomeGrupo, int idCarteira) {
+		gruposRepository.addCarteiraInGroup(idNomeGrupo, idCarteira);
+	}
+
+
+	@Override
+	@RemoteMethod
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	public void deleteCarteiraFromGroup(int idGrupo) {
+		gruposRepository.deleteCarteiraFromGroup(idGrupo);
 	}
 
 }

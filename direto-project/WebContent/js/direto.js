@@ -42,7 +42,7 @@ js.direto.atualiza = function(page){
 		//alert(list);
 		
 		dialogMessage('Enviando documento...','<p style="text-align: center"><img src="imagens/ajax-loader.gif" /></p>',true);
-		encaminharSelecionados(list);
+		encaminharSelecionados(list); //Função encontra-se na principal.jsp
  	}else if(page=="documento"){
  		//alert(list+'documento'+DESTINATARIOS.length);
  		
@@ -140,17 +140,24 @@ js.direto.show_updates = function(id,type){
 			retorno = js.direto.compareDate(date_json_return,last_date);
 			//alert(retorno);
 	        if( retorno == 1){
-				var txt = "";
-				txt = txt + "<strong>["+d.carteira+"] ["+d.usuNGuerra+"]</strong> - ";
-				txt = txt + d.acao;
-				txt = txt + " - <span id='data_despacho'>"+d.dataHora+"</span>";
+	        	
+	        	if(d.acao.length<50){
+	        	
+	        	//alert(d.acao.length);
+	        	
+					var txt = "";
+					txt = txt + "<strong>["+d.carteira+"] ["+d.usuNGuerra+"]</strong> - ";
+					txt = txt + d.acao;
+					txt = txt + " - <span id='data_despacho'>"+d.dataHora+"</span>";
+			        
+			        $j('#'+type+' div:last').after("<div id='div_despachos'></div>");
+			        $j('#'+type+' div').last().hide();
+			        $j('#'+type+' div').last().html(txt);
+			        $j('#'+type+' div').last().addClass('celula '+singular);
+			        //$j('#'+type+' div').last().remove();
+			        $j('#'+type+' div').last().fadeIn("slow");
 		        
-		        $j('#'+type+' div:last').after("<div id='div_despachos'></div>");
-		        $j('#'+type+' div').last().hide();
-		        $j('#'+type+' div').last().html(txt);
-		        $j('#'+type+' div').last().addClass('celula '+singular);
-		        //$j('#'+type+' div').last().remove();
-		        $j('#'+type+' div').last().fadeIn("slow");
+	        	}
 	       }
 			//$j('<div>teste</div>').insertAfter($('#div_anotacoes div:last'));
 	      });

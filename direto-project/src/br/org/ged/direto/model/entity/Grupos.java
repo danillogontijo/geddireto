@@ -33,53 +33,33 @@ public class Grupos implements Serializable {
 	@Column(name="IdGrupo")
 	private Integer idGrupo;
 	
-	/*@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "IdCarteira", nullable = true)
-	private Set<Carteira> carteiras = new HashSet<Carteira>(0);*/
-	
-	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "IdNomeGrupo", nullable = true)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "IdNomeGrupo", nullable = false)
 	private NomeGrupos nomeGrupo;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdCarteira", nullable = false)
 	private Carteira carteira; 
-
-	/*public Set<Carteira> getCarteiras() {
-		return carteiras;
-	}
-
-
-	public void setCarteiras(Set<Carteira> carteiras) {
-		this.carteiras = carteiras;
-	}*/
-
 
 	public NomeGrupos getNomeGrupo() {
 		return nomeGrupo;
 	}
 
-
 	public void setNomeGrupo(NomeGrupos nomeGrupo) {
 		this.nomeGrupo = nomeGrupo;
 	}
-
 
 	public Integer getIdGrupo() {
 		return idGrupo;
 	}
 
-
 	public Carteira getCarteira() {
 		return carteira;
 	}
 
-
 	public void setCarteira(Carteira carteira) {
 		this.carteira = carteira;
 	}
-	
 	
 
 }

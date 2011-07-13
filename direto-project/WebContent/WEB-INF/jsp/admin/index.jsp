@@ -507,7 +507,7 @@ function carregaGrupos(){
 	gruposJS.allGroups({
 		callback:function(grupos) {
 			//alert(grupos.length);
-			dwr.util.removeAllOptions('slGrupos');
+			//dwr.util.removeAllOptions('slGrupos');
 			dwr.util.removeAllOptions('CarteirasListaDE');
 			dwr.util.removeAllOptions('CarteirasListaPARA');
 			dwr.util.addOptions('slGrupos', grupos, "id", "texto");
@@ -516,15 +516,31 @@ function carregaGrupos(){
 			carteiraJS.getAll({
 				callback:function(carteirasList) {
 					dwr.util.addOptions('CarteirasListaDE', carteirasList, "idCarteira", "cartAbr");
+
+					setTimeout(function(){
+
+						$j('#CarteirasListaDE option').each(function(i){
+							$j(this).attr('add','true');
+						});
+				
+					},100);
+
+					
 				}
 			});
 			
 		}
 	});
+
+	
 };
+
+var GRUPOS_PARA_EXCLUIR;
+var GRUPO_SELECIONADO;
 
 //Chamado quando é escolhido um grupo. Lista todas as carteiras pertencentes ao mesmo.
 function carregaCarteirasPorGrupo(){
+	GRUPOS_PARA_EXCLUIR = "";
 	var idNomeGrupo = $j("#slGrupos").val();
 	gruposJS.carteirasByGroup(idNomeGrupo,{
 		callback:function(carteirasList) {
@@ -547,9 +563,55 @@ function carregaCarteiras(){
 	});
 };
 
-function removerCarteiraGrupo(elemento){
-	$j(elemento+':selected').remove();
-	//alert($j(elemento+':selected').val());
+function removerCarteiraGrupo(){
+
+	var obj = $j('#CarteirasListaPARA option:selected');
+	
+	if(obj.attr('add')!='true')
+		GRUPOS_PARA_EXCLUIR += obj.val()+",";
+	
+	obj.remove();
+}
+
+function atualizaGrupo(){
+
+	GRUPO_SELECIONADO = $j('#slGrupos option:selected').val();
+
+	var arGruposParaExcluir = GRUPOS_PARA_EXCLUIR.split(',');
+	for (i=0; i<arGruposParaExcluir.length-1; i++){
+		//alert('excluindo... '+parseInt(arGruposParaExcluir[i]));
+		gruposJS.deleteCarteiraFromGroup(parseInt(arGruposParaExcluir[i]));
+	}
+
+	setTimeout(function(){
+	
+		$j('#CarteirasListaPARA option').each(function(i){
+	
+			if($j(this).attr('add')=='true'){
+				//alert($j(this).text());
+				gruposJS.addCarteiraInGroup(parseInt(GRUPO_SELECIONADO),parseInt($j(this).val()));
+			}
+		});
+
+	},100);
+
+}
+
+function adicionarCarteira(){
+	var objToAdd = $j('#CarteirasListaDE option:selected');
+	var exists = false;
+
+	$j('#CarteirasListaPARA option').each(function(i){
+		if($j(this).text()==objToAdd.text())
+			exists = true;
+	});
+
+	setTimeout(function(){
+		if(!exists)
+			$j('#CarteirasListaPARA').append($j(objToAdd).clone().text(objToAdd.text()+'(novo)'));
+		else
+			alert('Carteira já existe neste grupo.');
+	},100);
 }
 
 function carregaFuncoes(){
@@ -578,7 +640,6 @@ function carregaOm(){
 		}
 	});
 };
-
 
 function atualizaContas(){
 
@@ -724,6 +785,7 @@ function saveCarteira(){
 				<td colspan="3" align="center">
 					<b>Conta principal:</b> <select
 						name="slContas" id="slContas" style="width: 200px; margin: 20px 0 20px 0;" onchange="checkContasCadastradas()">
+						
 					</select>
 				</td>
 			</tr>
@@ -737,6 +799,7 @@ function saveCarteira(){
 				</td>
 				
 				<td style="text-align: center; width:50px;">
+					
 					<input
 						type="button" value="Incluir >>" style="width: 90pt"
 						id=btParaDireita
@@ -744,6 +807,7 @@ function saveCarteira(){
 					<input type="button" value="<< Remover" style="width: 90pt"
 						name=btExclui id=btParaEsquerda
 						onClick="remover(document.getElementById('ListaPARA'), document.getElementById('ListaDE')); return false;">
+	
 				</td>
 	
 				<td style="width: 260px; text-align: center;">
@@ -771,6 +835,7 @@ function saveCarteira(){
 				<td colspan="3" align="center">
 					<b>Grupos:</b> <select
 						name="slGrupos" id="slGrupos" style="width: 200px; margin: 20px 0 20px 0;" onchange="carregaCarteirasPorGrupo()">
+						<option value="0">--Selecione um Grupo--</option>
 					</select>
 				</td>
 			</tr>
@@ -779,24 +844,19 @@ function saveCarteira(){
 				<td style="width: 260px;">
 					<fieldset><legend>&nbsp;<b>Todas as carteiras</b>&nbsp;</legend>
 					 <select name=CarteirasListaDE id=CarteirasListaDE multiple size=11 style="width: 250px;" 
-							ondblClick="mover(document.getElementById('CarteirasListaDE'), document.getElementById('CarteirasListaPARA')); return false;">
+							ondblClick="adicionarCarteira()">
 					 </select></fieldset>
 				</td>
 				
 				<td style="text-align: center; width:50px;">
-					<input
-						type="button" value="Incluir >>" style="width: 90pt"
-						id=btParaDireita
-						onClick="mover(document.getElementById('ListaDE'), document.getElementById('ListaPARA')); return false;">
-					<input type="button" value="<< Remover" style="width: 90pt"
-						name=btExclui id=btParaEsquerda
-						onClick="remover(document.getElementById('ListaPARA'), document.getElementById('ListaDE')); return false;">
+					<input type="button" value="Novo Grupo" style="width: 90pt"	id=btNovoGrupo>
+					<input type="button" value="Editar Grupo" style="width: 90pt" id=btEditarGrupo>
 				</td>
 	
 				<td style="width: 260px; text-align: center;">
 						<fieldset><legend>&nbsp;<b>Carteiras do Grupo</b>&nbsp;</legend>
 						<select name=CarteirasListaPARA id=CarteirasListaPARA size=11 style="width: 250px;"
-							multiple ondblClick="removerCarteiraGrupo(this)">
+							multiple ondblClick="removerCarteiraGrupo()">
 					</select></fieldset>
 				</td>
 			</tr>
