@@ -326,7 +326,7 @@ jQuery(document).ready(function($) {
 
 		$(".div_docs input[type=checkbox]").each(function () {
 
-			var id = $(this).val();
+			var id = $(this).attr('pk');
 			var isChecked = $(this).is(':checked');
 			var existeNotificacao = $(".div_docs a[id="+id+"]").text();
 			

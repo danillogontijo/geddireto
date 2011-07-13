@@ -6,24 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import br.org.ged.direto.model.entity.TipoDocumento;
 import br.org.ged.direto.model.repository.TipoDocumentoRepository;
 
 @Repository("tipoDocumentoRepository")
-public class TipoDocumentoRepositoryImpl implements TipoDocumentoRepository {
+public class TipoDocumentoRepositoryImpl extends BaseRepositoryImpl implements TipoDocumentoRepository {
 
-	private HibernateTemplate hibernateTemplate;
-	
-	@Autowired
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		hibernateTemplate = new HibernateTemplate(sessionFactory);
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<Integer, String> getAll() {

@@ -12,5 +12,7 @@ public interface GruposRepository {
 	public List<DataUtils> usersByGroup(Integer idNomeGrupo);
 	public List<DataUtils> allGroups();
 	public NomeGrupos getNomeGrupo(Integer idNomeGrupo);
+	public void addCarteiraInGroup(int idNomeGrupo, int idCarteira);
+	public void deleteCarteiraFromGroup(int idGrupo);
 
 }

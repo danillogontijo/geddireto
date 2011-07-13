@@ -12,15 +12,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSourceAware;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.stereotype.Repository;
 
 import br.org.direto.util.DataTimeUtil;
@@ -28,93 +20,21 @@ import br.org.direto.util.DataUtils;
 import br.org.ged.direto.controller.forms.PesquisaForm;
 import br.org.ged.direto.controller.utils.DocumentoCompleto;
 import br.org.ged.direto.model.entity.Anexo;
-import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Notificacao;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.repository.DocumentosRepository;
-import br.org.ged.direto.model.service.UsuarioService;
 
 @Repository("documentoRepository")
-public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSourceAware {
+public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements DocumentosRepository {
 
-	private HibernateTemplate hibernateTemplate;
-    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    //private Session session = hibernateTemplate.getSessionFactory().getCurrentSession();
-	
-    @Autowired
-	private UsuarioService usuarioService;
-    
-    /*@Autowired	
-    private JdbcTemplate jdbcTemplate;*/
-    
-    @Autowired
-    private SessionFactory sessionFactory;
-    
-    //private Session session = sessionFactory.getCurrentSession();
-    
-	@Autowired
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		hibernateTemplate = new HibernateTemplate(sessionFactory);
-	}
-	
+    @SuppressWarnings("unchecked")
 	@Override
-	@Autowired
-	public void setMessageSource(MessageSource messageSource) {
-		this.messages = new MessageSourceAccessor(messageSource);
-	}
-	
-	public Session getSession(){
-		return sessionFactory.getCurrentSession();
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Documento> listByLimited(Integer idCarteira){
-		
+    public List<Documento> listByLimited(Integer idCarteira){
 		messages.getMessage("limitByPage");
-		
-		/*final Integer idCarteira = new Integer(2);
-		
-		List<Documento> list = new ArrayList<Documento>();
-		//
-		
-		Documento d = (Documento) hibernateTemplate.execute(new HibernateCallback<Documento>() {
-			@Override
-			public Documento doInHibernate(org.hibernate.Session session)
-					throws HibernateException, SQLException {
-				return (Documento) session.createQuery(
-				"from Documento where IdCarteira = :idCarteira")
-				.setParameter("idCarteira", idCarteira).uniqueResult();
-			}
-		});
-		
-		
-		list.add(d);
-		
-		System.out.println(list.size());
-		
-		return list;*/
-		
-		//Query query = session.createQuery("from User u order by u.name asc");
-
-		
-		System.out.println("Doc Repository: "+idCarteira);
-		
 		return (List<Documento>) hibernateTemplate.find("from "
 				+ Documento.class.getName() + " where idCarteira = ? order by idDocumento desc",idCarteira);
-	}
-	
-	public String queryFiltro(String filtro){
-		
-		if(filtro == null || filtro.equals("todas") || filtro.equals("naolidas")){
-			filtro = "";
-		}else{
-			filtro = " AND details.prioridade = '2' ";			
-		}
-		
-		return filtro;
-		
 	}
 	
 	@Override
@@ -211,7 +131,7 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 			}
 			
 			String texto = "<div class='div_docs'"+(doc_cart.getStatus() == '0' ? " style='font-weight: bold;'" : "")+" id='div_doc"+(i)+"'>";
-			texto = texto + "<input type='checkbox' class='chkbox' value='"+idDocumentoDetalhes+"' id='chk"+i+"' "+
+			texto = texto + "<input type='checkbox' class='chkbox' pk='"+doc_cart.getIdDocumento()+"' value='"+idDocumentoDetalhes+"' id='chk"+i+"' "+
 						"onClick='js.direto.sel_chkbox_doc("+(i)+");' />";
 			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
 			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
@@ -249,12 +169,6 @@ public class DocumentosRepositoryImpl implements DocumentosRepository, MessageSo
 		return (Long) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("SELECT count(distinct doc.documentoDetalhes.idDocumentoDetalhes) FROM Documento as doc " +
 				"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")" + filtro +
 		"").setInteger(0, idCarteira).uniqueResult();
-	}
-
-	@Override
-	public void sendDocument(Carteira[] carteira, Documento documento) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
