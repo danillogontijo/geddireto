@@ -105,11 +105,11 @@ public abstract class BaseController {
 		return menu;
 	}
 	
-	@ExceptionHandler(Exception.class)
+	/*@ExceptionHandler(Exception.class)
 	public ModelAndView handlerDocumentNotFoundException(Exception ex){
 		ModelAndView mav = new ModelAndView("error");
 		mav.addObject("error", ex.getMessage());
 		return mav;
-	}
+	}*/
 		
 }

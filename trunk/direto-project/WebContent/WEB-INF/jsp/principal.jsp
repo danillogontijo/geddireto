@@ -26,6 +26,36 @@ function ordenacao(){
 	
 }
 
+function changeStatus(status){
+
+	var resposta = "";
+
+	dialogMessage('Aguarde...','<p style="text-align: center"><img src="imagens/ajax-loader.gif" /></p>',true);
+
+	$j( "#dialog-message" ).dialog( "option", "buttons", { "Ok": function() { 
+
+		setTimeout("document.location.reload(true)",100); 
+
+    	} 
+	});
+	
+	$j(".chkbox").each(function(i){
+		var chkbox = $j(this);
+
+		if(chkbox.is(':checked')){
+			documentosJS.changeStatus(chkbox.attr('pk'),status,{
+				callback:function(sRetorno) {
+					resposta += sRetorno+'<br>';
+					dialogMessage('Aguarde...',resposta,false);
+				}
+			});
+		}
+	
+	});
+	
+
+	
+}
 
 function encaminharSelecionados(list){
 
@@ -82,17 +112,15 @@ function encaminharSelecionados(list){
 			
 			<a href="<c:out value="${mostrarURL}todas" />" style="margin-left: 5px;" class="menu2">Todas</a> |
 			
-			<a href="<c:out value="${mostrarURL}naolidas" />" style="margin-left: 5px;" class="menu2">Não lidas</a> |
+			<c:if test="${box == 1}">
+				<a href="<c:out value="${mostrarURL}naolidas" />" style="margin-left: 5px;" class="menu2">Não lidas</a> |
+			</c:if>
 			
 			<a href="<c:out value="${mostrarURL}urgentes" />" style="margin-left: 5px;" class="menu2">Urgentes</a> |
 				
 			<a href="#wgrupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar selecionadas</a>  |	
 			
 			<a href="#acompanhar" style="margin-left: 5px;" class="menu2" name="acompanhar">Acompanhar</a>
-			
-			<c:if test="${box == 2}">
-				<a href="javascript:Arquivar(4);" class="menu1">Apagar</a> |
-			</c:if>
 			
 			<div style="position: relative; float: right">
 				Ordernação:

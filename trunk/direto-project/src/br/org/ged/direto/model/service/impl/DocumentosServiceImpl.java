@@ -25,14 +25,11 @@ import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
-import br.org.ged.direto.model.entity.Historico;
-import br.org.ged.direto.model.entity.OM;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.repository.DocumentosRepository;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DocumentosService;
-import br.org.ged.direto.model.service.HistoricoService;
 import br.org.ged.direto.model.service.TipoDocumentoService;
 import br.org.ged.direto.model.service.UsuarioService;
 
@@ -142,11 +139,7 @@ public class DocumentosServiceImpl implements DocumentosService {
 	@RemoteMethod
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
 	public void acompanhar(Integer id, boolean yesOrNo) {
-		
-		System.out.println(id+"=============");
-		
 		Documento doc = documentosRepository.getByIdPKey(id);
-		
 		if (yesOrNo) { doc.setNotificar(1); } else { doc.setNotificar(0);}
 	}
 
@@ -408,6 +401,30 @@ public class DocumentosServiceImpl implements DocumentosService {
 	@Override
 	public DocumentoDetalhes getDocumentoDetalhes(int primaryKey) {
 		return documentosRepository.getDocumentoDetalhes(primaryKey);
+	}
+
+	@Override
+	@RemoteMethod
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	public String changeStatus(int idDocumento, char status) {
+		String retorno = "";
+		try{
+			Documento documento = selectById(idDocumento);
+			documento.setStatus(status);
+			String protocolo = documento.getDocumentoDetalhes().getNrProtocolo();
+			
+			if(status=='2')
+				retorno = protocolo + " --> arquivado";
+			else if (status=='4')
+				retorno = protocolo + " --> caixa de pendentes";
+			else if (status=='0')
+				retorno = protocolo + " --> não lido na caixa de entrada";
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return "Documento não encontrado ou status inválido";
+		}
+		return retorno;
 	}
 
 }

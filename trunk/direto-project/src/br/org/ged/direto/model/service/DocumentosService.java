@@ -60,4 +60,6 @@ public interface DocumentosService {
 	public DataUtils sendAndSaveFormToNewDocumento(DocumentoForm form);
 	
 	public String encaminharDocumento(String destinatarios, int idDocumentoDetalhes);
+	
+	public String changeStatus(int idDocumento, char status); 
 }

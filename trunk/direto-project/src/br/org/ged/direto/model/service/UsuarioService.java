@@ -35,5 +35,8 @@ public interface UsuarioService {
 			int usuIdt, int idPstGrad, int idUsuario);
 	
 	public boolean checkIfUserIsDuplicate(String usuLogin, int idUsuario);
+	
+	@PreAuthorize("(hasRole('ROLE_ADMIN'))")
+	public void editUser(Usuario usuario);
 
 }

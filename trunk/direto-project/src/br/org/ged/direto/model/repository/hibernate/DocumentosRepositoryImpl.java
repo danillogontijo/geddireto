@@ -57,7 +57,7 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 			filtro = "";
 		}else{
 			if(filtro.equals("urgentes")){
-				filtro = " AND details.prioridade = '2' ";
+				filtro = " AND details.prioridade in ('1','2') ";
 				box = ((box.equals("1") || box.equals("0")) ? "0,1" : box);
 			}else{
 				box = "0";

@@ -244,7 +244,7 @@ $j(function() {
 		var idPstGrad = parseInt($j('#pst_grad option:selected').val());
 		var usuPapel =  $j('#papel option:selected').val();
 		var usuNGuerra = $j('#nome_de_guerra').val();
-		var usuIdt = parseInt($j('#identidade').val());
+		var usuIdt = $j('#identidade').val();
 		var usuSenha = $j('#senha').val();
 
 		if (usuLogin == ""){
@@ -296,7 +296,7 @@ $j(function() {
 		var idPstGrad = parseInt($j('#pst_grad option:selected').val());
 		var usuPapel =  $j('#papel option:selected').val();
 		var usuNGuerra = $j('#nome_de_guerra').val();
-		var usuIdt = parseInt($j('#identidade').val());
+		var usuIdt = $j('#identidade').val();
 		var usuSenha = $j('#senha').val();
 
 		if (usuLogin == ""){
@@ -933,7 +933,7 @@ function saveCarteira(){
 				<h3><a href="#">Carteiras</a></h3>
 				<div>
 					<ul>
-						<li>Cadastro</li>
+						<li><a href="#waddcarteira" name="modal">Cadastro</a></li>
 						<li>Edição</li>
 						<li>Grupos</li>
 					</ul>
