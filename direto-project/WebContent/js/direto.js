@@ -60,6 +60,10 @@ js.direto.atualiza = function(page){
 		txtHistorico += USER_NAME;
 		txtHistorico += "-Para:"+list;
 		historicoJS.save(ID_DOCUMENTO,txtHistorico);
+		
+		dialogMessage('Documento encaminhado','Documento encaminhado com sucesso!',false);
+		
+		setTimeout("document.location.reload(true)",1000);
  		
  	}else{
  		$j('#destinatarios').val(list);
@@ -141,7 +145,9 @@ js.direto.show_updates = function(id,type){
 			//alert(retorno);
 	        if( retorno == 1){
 	        	
-	        	if(d.acao.length<50){
+	        	var arAcao = d.acao.split(" ");
+	        	//alert(arAcao.length+" - "+arAcao[0]);
+	        	if(arAcao[0].length<50){
 	        	
 	        	//alert(d.acao.length);
 	        	

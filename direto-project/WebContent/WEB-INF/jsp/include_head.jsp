@@ -776,13 +776,14 @@ function montaUsersByGrupos(listBeans){
 			 
 				<c:choose>
 			      <c:when test="${box == 1}">
-			      	<a href="javascript:Arquivar(2);" class="menu1">Arquivar</a> |
-					<a href="#" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
+			      	<a href="javascript:changeStatus(2);" class="menu1">Arquivar</a> |
+					<a href="javascript:changeStatus(4);" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
+					<a href="javascript:changeStatus(0);" class="menu1" id="testeTooltip" title="Teste">Marcar como doc. não lido</a> |
 			      </c:when>
 			
 			      <c:when test="${box == 2}">
-			      	<a href="javascript:Arquivar(3);" class="menu1" onClick="">Pender</a> |
-					<a href="javascript:Arquivar(3);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
+			      	<a href="javascript:changeStatus(4);" class="menu1" onClick="">Pender</a> |
+					<a href="javascript:changeStatus(0);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
 			      </c:when>
 					
 				  <c:when test="${box == 3}">
@@ -790,9 +791,8 @@ function montaUsersByGrupos(listBeans){
 			      </c:when>
 			      
 			      <c:when test="${box == 4}">
-			      	<a href="javascript:Arquivar(3);" class="menu1" onClick="">Arquivar</a> |
-					<a href="javascript:Arquivar(3);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
-					<a href="javascript:Arquivar(4);" class="menu1">Apagar</a> |
+			      	<a href="javascript:changeStatus(2);" class="menu1" onClick="">Arquivar</a> |
+					<a href="javascript:changeStatus(0);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
 			      </c:when>
 			      
 			      <c:when test="${box == 5}">

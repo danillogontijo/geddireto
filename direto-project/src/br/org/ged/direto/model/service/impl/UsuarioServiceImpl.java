@@ -62,6 +62,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public List<Usuario> getAll(Usuario usuario) {
 		return this.usuarioRepository.getAll(usuario);
 	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void editUser(Usuario usuario) {
+		Usuario userToChange = selectById(usuario.getIdUsuario());
+		userToChange.setContas(usuario.getContas());
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

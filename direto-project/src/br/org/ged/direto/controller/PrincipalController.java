@@ -127,8 +127,8 @@ public class PrincipalController extends BaseController {
 		
 		int ordenacao = 0;
 		try{
-			ordenacao = Integer.parseInt(request.getParameter("ordenacao"));
-			System.out.println(ordenacao+" ORDENACAO"+url);
+			if(request.getParameter("ordenacao")!=null)
+				ordenacao = Integer.parseInt(request.getParameter("ordenacao"));
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
