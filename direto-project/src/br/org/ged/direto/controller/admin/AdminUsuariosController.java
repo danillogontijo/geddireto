@@ -2,7 +2,6 @@ package br.org.ged.direto.controller.admin;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -17,12 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.springsource.json.writer.JSONArray;
-import com.springsource.json.writer.JSONObject;
-
-import br.org.direto.util.DataTimeUtil;
-import br.org.ged.direto.controller.PesquisaController;
-import br.org.ged.direto.controller.utils.DocumentoCompleto;
+import atg.taglib.json.util.JSONArray;
+import atg.taglib.json.util.JSONException;
+import atg.taglib.json.util.JSONObject;
 import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.service.UsuarioService;
@@ -49,7 +45,7 @@ public class AdminUsuariosController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/admin/consultaUsuario.html")
-	public void consultaUsuario(@RequestParam("id") int idUsuario, HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public void consultaUsuario(@RequestParam("id") int idUsuario, HttpServletRequest request,HttpServletResponse response) throws IOException, JSONException {
 		
 		writer = response.getWriter();;
 		
@@ -57,14 +53,14 @@ public class AdminUsuariosController {
 		JSONArray array = new JSONArray();
 		Usuario usuario = usuarioService.selectById(idUsuario);
 		
-		result.append("idUsuario", usuario.getIdUsuario());
-		result.append("idPstGrad", usuario.getPstGrad().getIdPstGrad());
-		result.append("usuNome", usuario.getUsuNome());
-		result.append("usuLogin", usuario.getUsuLogin());
-		result.append("usuIdt", usuario.getUsuIdt());
-		result.append("usuNGuerra", usuario.getUsuNGuerra());
-		result.append("usuPapel", usuario.getUsuPapel());
-		result.append("usuSenha", usuario.getUsuSenha());
+		result.put("idUsuario", usuario.getIdUsuario());
+		result.put("idPstGrad", usuario.getPstGrad().getIdPstGrad());
+		result.put("usuNome", usuario.getUsuNome());
+		result.put("usuLogin", usuario.getUsuLogin());
+		result.put("usuIdt", usuario.getUsuIdt());
+		result.put("usuNGuerra", usuario.getUsuNGuerra());
+		result.put("usuPapel", usuario.getUsuPapel());
+		result.put("usuSenha", usuario.getUsuSenha());
 		
 		Set<Conta> contas = usuario.getContas();
 		
@@ -101,7 +97,7 @@ public class AdminUsuariosController {
 	
 	@RequestMapping(method=RequestMethod.GET,value="/admin/buscaUsuarios.html")
 	public void usuariosJSON(HttpServletRequest request,
-			HttpServletResponse response) throws IOException{
+			HttpServletResponse response) throws IOException, JSONException{
 		
 		writer = response.getWriter();;
 		
