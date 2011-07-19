@@ -1,5 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<% //response.sendRedirect("principal.html"); %>
+<% response.sendRedirect("principal.html?box=1&pr=0&filtro=todas"); %>
 <%@ page import="org.springframework.security.core.context.SecurityContextHolder" %>
 <%@ page import="org.springframework.security.core.Authentication" %>
 <%@ page import="org.springframework.security.core.GrantedAuthority" %>

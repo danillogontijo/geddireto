@@ -3,29 +3,22 @@ package br.org.ged.direto.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.springsource.json.writer.JSONArray;
-import com.springsource.json.writer.JSONObject;
-
+import atg.taglib.json.util.JSONArray;
+import atg.taglib.json.util.JSONException;
+import atg.taglib.json.util.JSONObject;
 import br.org.direto.util.DataTimeUtil;
 import br.org.ged.direto.controller.forms.PesquisaForm;
 import br.org.ged.direto.controller.utils.DocumentoCompleto;
@@ -37,8 +30,6 @@ import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.TipoDocumentoService;
 
 @Controller
-//@RequestMapping("/pesquisar.html")
-//@SessionAttributes({"pesquisaForm"})
 public class PesquisaController extends BaseController {
 	
 	private static final String NAME_OBJ_COMMAND = "pesquisaForm";
@@ -87,11 +78,6 @@ public class PesquisaController extends BaseController {
 		
 		System.out.println("TOTAL RESULTS ====== "+total);
 		
-		/*List<DocumentoCompleto> docs = new ArrayList<DocumentoCompleto>();
-		
-		model.addAttribute(NAME_OBJ_COMMAND, form);
-		model.addAttribute("docs", docs);*/
-		
 		return "pesquisar";
 	}
 	
@@ -115,7 +101,7 @@ public class PesquisaController extends BaseController {
 	@SuppressWarnings("unused")
 	@RequestMapping(method=RequestMethod.GET,value="/resultado.html")
 	public void resultadoJSON(@RequestParam("total") int total,HttpServletRequest request,
-			HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {		
+			HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException, JSONException {		
 		
 		PesquisaForm form = new PesquisaForm();
 		Usuario obj = super.getUsuarioLogado();
