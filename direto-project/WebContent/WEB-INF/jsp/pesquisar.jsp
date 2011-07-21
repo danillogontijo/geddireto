@@ -49,7 +49,7 @@ $j(function(){
 		  		      		 		
 		
 		"sPaginationType": "full_numbers",
-		"sAjaxSource": "/direto-project/resultado.html?total=${total}&bServerSide=${bServerSide}"
+		"sAjaxSource": "resultado.html?total=${total}&bServerSide=${bServerSide}"
 
 	} );
 

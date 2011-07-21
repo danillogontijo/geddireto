@@ -78,39 +78,99 @@ function montaContas(listBeans){
 	}
 	
 }
+
+function teclaEnter(e){
+	
+	var evento = (window.event ? e.keyCode : e.which);
+
+	if(evento == 13) {
+		GerarCookie('usuLogin', $('j_username').value, 355);
+		return document.f.submit();
+	}
+
+//alert(e);
+}
+
+function logar(){
+	if($('j_password').value != ""){
+		GerarCookie('usuLogin', $('j_username').value, 355);
+		return document.f.submit();
+	}else
+		alert("Digite a senha.");
+}
+
+//Função para ler o cookie.
+function LerCookie(strCookie)
+{
+    var strNomeIgual = strCookie + "=";
+    var arrCookies = document.cookie.split(';');
+
+    for(var i = 0; i < arrCookies.length; i++)
+    {
+        var strValorCookie = arrCookies[i];
+        while(strValorCookie.charAt(0) == ' ')
+        {
+            strValorCookie = strValorCookie.substring(1, strValorCookie.length);
+        }
+        if(strValorCookie.indexOf(strNomeIgual) == 0)
+        {
+            return strValorCookie.substring(strNomeIgual.length, strValorCookie.length);
+        }
+    }
+    return null;
+}
+
+// Função para excluir o cookie desejado.
+function ExcluirCookie(strCookie)
+{
+    GerarCookie(strCookie, '', -1);
+}
+
+
+//Armazena o login do usuario no form
+function armazenaLoginForm(){
+	var usuLogin = LerCookie('usuLogin');
+
+	if (usuLogin != null){
+		$('j_username').value = usuLogin;
+	}
+}
+
+//Função para criar o cookie.
+//Para que o cookie seja destruído quando o browser for fechado, basta passar 0 no parametro lngDias.
+function GerarCookie(strCookie, strValor, lngDias)
+{
+ var dtmData = new Date();
+
+ if(lngDias)
+ {
+     dtmData.setTime(dtmData.getTime() + (lngDias * 24 * 60 * 60 * 1000));
+     var strExpires = "; expires=" + dtmData.toGMTString();
+ }
+ else
+ {
+     var strExpires = "";
+ }
+ document.cookie = strCookie + "=" + strValor + strExpires + "; path=/";
+}
+
+
 </script>    
     
 </head>
 
-<body onload="document.f.j_username.focus();">
+<body onload="document.f.j_username.focus(); armazenaLoginForm();">
   
+<style type="text/css">
+#tudo {
+height: 500px;
+width: 500px;
+margin: 0 auto;
+text-align: left;
+}
+</style>
 
-<div id="table" style="position: absolute; width: 1002px; top: 0; left: 0;">
-
-	<div id="line" style="width: 1002px;float: left; height: 43px;">
-		<div style="float: left;"><img name="direto_r1_c1" src="imagens/direto_r1_c1.jpg" width="189" height="43" border="0" id="direto_r1_c1" usemap="#m_direto_r1_c1" alt="" /></div>
-		<div style="float: left; line-height:43px; background-image: url('imagens/direto_r1_c2.jpg'); width: 813px; height:43px; text-align: center;" class="menu_titulo">
-		 	
-		 	<a href="alterar_senha.jsp" class="menu_titulo">Alterar Senha</a> | 
-		 	<a href="comentario.jsp" class="menu_titulo">Sugestões</a> | 
-		 	<a href="passar_conta.jsp" class="menu_titulo">Passar Conta</a> |
-			<a href="dados_cadastro.jsp?modo=ver" class="menu_titulo">Dados Cadastrais</a> |
-			<a href="configuracao.jsp" class="menu_titulo">Configurações</a> |  
-			<a href="logout.jsp" class="menu_titulo">Sair</a>
-			 
-   		</div>
-   		<div style="float: left;"><img src="imagens/spacer.gif" width="1" height="43" border="0" alt="" /></div>
-	</div>
-
-
-	<div id="line" style="width: 1002px; float: left; height: 29px;">
-   		<div style="float: left;"><img name="direto_r2_c1" src="imagens/head_complemento.jpg" width="117" height="29" border="0" id="direto_r2_c1" usemap="#m_direto_r2_c1" alt="" /></div>
-   		<div style="float: left;"><img name="direto_r2_c2" src="imagens/direto_r2_c2.jpg" width="813" height="29" border="0" id="direto_r2_c2" alt="" /></div>
-   		<div style="float: left; background-image: url('imagens/head_complemento.jpg');width: 72px;height:29px;"></div>
-	</div>
-
-</div>
-
+<div id="tudo">
     
 <div id="table" style="position: absolute; width: 330px; text-align: center; margin-left: -165px; left: 501px; margin-top: -160px; top: 50%;">
 	<spring:bind path="loginForm.j_username">
@@ -157,7 +217,7 @@ function montaContas(listBeans){
 				
 				<div id="line" style="height: 45px; line-height: 50px;">
 					<div id="column">
-						Senha <input type="password" name="j_password" id="j_password"> <br>		
+						Senha <input type="password" name="j_password" id="j_password" onkeypress="teclaEnter(event)"> <br>		
 					</div>
 				</div>
 				
@@ -167,7 +227,7 @@ function montaContas(listBeans){
 				</div>
 				
 				<div id="line" style="height: 30px; text-align: center; margin-top: 10px;">
-					<input type="submit" id="j_button" value="Entrar" />
+					<input type="button" id="j_button" value="Entrar" onclick="logar()" />
 				</div>
 				
 				<div id="line" style="height: 20px; text-align: center; margin-top: 0px;">
@@ -180,16 +240,15 @@ function montaContas(listBeans){
 </div>
 </form>
 	
-<div id="table" style="position: absolute; width: 1002px; top: 50%; left: 0; margin-top: 160px; text-align: center;">
+<div id="table" style="position: absolute; background-color: #fff; width: 330px; top: 50%; margin-top: 160px; margin-left: 15px; text-align: center;">
 	<font class="rodape">
-		© 2010 - Direto - Gerenciador Eletrônico de Documentos<br>
+		© 2011 - Direto - Gerenciador Eletrônico de Documentos<br>
 					Ver. 3.0
 	</font>
 </div>
 	
 
-
-
+</div>
 
 
   </body>
