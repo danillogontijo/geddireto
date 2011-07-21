@@ -219,6 +219,13 @@ $j(function(){
 		
 	});
 	
+	$j('a[name=cryptofile]').click(function(e) {
+		e.preventDefault();
+		idAnexo = $j(this).attr('id');
+		//segurancaJS.decrypt(idAnexo);
+				
+	});
+	
 
 	$j('a[name=liberar_edicao]').click(function(e) {
 		e.preventDefault();
@@ -807,7 +814,7 @@ height: 15px;
 			| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
 		</c:if>
 		
-		| <span id="s_checar"><a href="#crypto" id="crypto" class="l_edicao_vis">Cripto</a></span>
+		| <span id="s_checar"><a href="#cryptofile" name="cryptofile" id="${documento_principal.idAnexo}" class="l_edicao_vis">Cripto</a></span>
 		
 		
 		<br>
