@@ -7,6 +7,25 @@
 	<p id="p_notificacoes"><span id="s_sem_notificacoes" style="display: none;">Sem notificacoes.</span></p>
 </div>
 
+<!-- Comentario -->
+<div id="wcomentar" class="window">
+	<table width="100%">
+		<tr>
+			<td align="center" bgcolor="#1E90FF" class="titulo_confirmacao" height="20" valign="middle">Enviar sugestão/crítica</td>
+			<td width="10"><a href="#" class="close" style="font-weight: bold">X</a></td>
+		</tr>
+		<tr>
+			<td>
+			<textarea id="comentario" cols="76" rows="5"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td valign="bottom"><input type="button" id="bt_conf_comentario" value="Enviar"></td>
+		</tr>
+		
+	</table>
+</div>
+
 <div id="wgrupos" class="window">
     <table align=center cellPadding=10 cellSpacing=10 width=80%>
 		<tr>

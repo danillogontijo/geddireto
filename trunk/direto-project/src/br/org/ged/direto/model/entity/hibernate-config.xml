@@ -28,6 +28,7 @@
                 <value>br.org.ged.direto.model.entity.Anotacao</value>
                 <value>br.org.ged.direto.model.entity.Despacho</value>
                 <value>br.org.ged.direto.model.entity.TipoDocumento</value>
+                <value>br.org.ged.direto.model.entity.Comentario</value>
             </list>
         </property>
         
