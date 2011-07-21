@@ -39,6 +39,15 @@
   height:400px;
 }
 
+#boxes #wcomentar {
+  width:700px; 
+  height:180px;
+  /* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #fff;
+	-webkit-box-shadow:0 0 10px #fff;
+}
+
+
 #boxes #wnovo_documento {
   width:300px; 
   height:100px;

@@ -25,6 +25,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/loginValidatorJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentosJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/comentarioJS.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/chatJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/chatDireto.js" charset="utf-8""></script>
@@ -218,6 +219,9 @@ jQuery(document).ready(function($) {
 		$(id).css('left', winW/2-$(id).width()/2);
 		//$(id).css('left', winW/2);
 	
+		if(id=='#wcomentar')
+			$(id).css('top',  pos.top+20);
+		
 		//transition effect
 		$(id).fadeIn(100); 
 	
@@ -319,7 +323,16 @@ jQuery(document).ready(function($) {
 
 	  });	
 
-	
+	$('#bt_conf_comentario').click(function (e) {
+		e.preventDefault();
+		comentarioJS.save($('#comentario').val(),{
+			callback:function() {
+				//dialogMessage('Sugestão/crítica','Sugestão/crítica enviado com sucesso!',false);
+				alert("Sugestão/crítica enviado com sucesso!");
+				js.direto.close_mask();
+			}
+		});
+	});
 
 	$('a[name=acompanhar]').click(function(e) {
 		//e.preventDefault();
@@ -757,12 +770,14 @@ function montaUsersByGrupos(listBeans){
  				<c:set value="${mt.value}" var="value"/>
  				
  				<c:url value="${value}" var="mtURL">
-				  <c:param name="box" value="${box}" />
+				  <c:if test="${name != 'Sugestões'}">
+				    <c:param name="box" value="${box}" />
+				  </c:if>
 				</c:url>
 				
 				<c:if test="${name != 'Admin'}">| </c:if>
 				
-				<a href="<c:out value="${mtURL}" />" class="menu_titulo">${name}</a> 
+				<a href="<c:out value="${mtURL}" />" class="menu_titulo" <c:if test="${name == 'Sugestões'}">name="modal"</c:if> >${name}</a> 
 			</c:forEach>
 		</div>
 		
