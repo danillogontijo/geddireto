@@ -40,6 +40,7 @@ import br.org.ged.direto.model.service.SegurancaService;
 import br.org.ged.direto.model.service.UsuarioService;
 
 import java.util.Date;
+import java.util.Scanner;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -59,7 +60,6 @@ public class SegurancaServiceImpl implements SegurancaService {
 	@Autowired
 	private UsuarioService usuarioService;
 	
-	@Autowired
 	private Config config;
 	
 	@Autowired
@@ -72,43 +72,56 @@ public class SegurancaServiceImpl implements SegurancaService {
 	private DespachoService despachoService;
 	
 	private static final String signatureAlgorithm = "MD5withRSA";	
-	private final File jks = new File("/home/danillo/springsource/tc-server-6.0.20.C/truststore.jks");
+	private final File jks;
 	private final String pwd = "ZDE0M3Qw";
 	
 	private Cipher aes;
 	private Cipher rsa;
 	private SecretKeySpec aeskeySpec;
 	
-	
-	public SegurancaServiceImpl() throws NoSuchAlgorithmException, NoSuchPaddingException {
+	public SegurancaServiceImpl(Config config) throws NoSuchAlgorithmException, NoSuchPaddingException {
+		this.config = config;
+		jks = new File(config.certificatesDir+"/store/truststore.jks");
 		aes = Cipher.getInstance("AES");
 		rsa = Cipher.getInstance("RSA");
+		setAeskeySpec();
+	}
+	
+	private void setAeskeySpec(){
 		try{
-			aeskeySpec = getSecretKey();
+			File chave = new File(config.certificatesDir+"/AES/direto.pk");
+			if(chave.exists()){
+				aeskeySpec = getSecretKey();
+			}else{
+				Scanner in = new Scanner(System.in);
+				System.out.println("Ainda não criado a chave AES.");
+				System.out.print("Digite a senha do direto:_");
+				String senha = in.nextLine();
+				createSecretKey(senha);
+				aeskeySpec = getSecretKey();
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
-	public void createSecretKey() throws Exception{
-		String senha = "d143t0";
-		PublicKey pk = getPublicKeyFromFile(new File("/home/danillo/springsource/tc-server-6.0.20.C/direto.p12"), "direto", new String(Base64Utils.decode(pwd.getBytes())));
+	public void createSecretKey(String senha) throws Exception{
+		PublicKey pk = getPublicKeyFromFile(new File(config.certificatesDir+"/store/truststore.jks"), "direto", new String(Base64Utils.decode(pwd.getBytes())));
 		rsa.init(Cipher.ENCRYPT_MODE, pk);
-		CipherOutputStream cos = new CipherOutputStream(new FileOutputStream("/home/danillo/springsource/tc-server-6.0.20.C/direto.pk"), rsa);
+		CipherOutputStream cos = new CipherOutputStream(new FileOutputStream(config.certificatesDir+"/AES/direto.pk"), rsa);
 		cos.write(senha.getBytes());
 		cos.close();
 	}
 	
 	private SecretKeySpec getSecretKey() throws Exception{
-		File cert = new File("/home/danillo/springsource/tc-server-6.0.20.C/direto.p12");
-		PrivateKey pk = getPrivateKeyFromFile(cert, "direto.bdaopesp.eb.mil.br", new String(Base64Utils.decode(pwd.getBytes()))); 
+		File cert = new File(config.certificatesDir+"/direto.p12");
+		PrivateKey pk = getPrivateKeyFromFile(cert, "direto", new String(Base64Utils.decode(pwd.getBytes()))); 
 		rsa.init(Cipher.DECRYPT_MODE, pk);
 	    byte[] aesKey = new byte[32];
-	    CipherInputStream cis = new CipherInputStream(new FileInputStream("/home/danillo/springsource/tc-server-6.0.20.C/direto.sk"), rsa);
+	    CipherInputStream cis = new CipherInputStream(new FileInputStream(config.certificatesDir+"/AES/direto.pk"), rsa);
 	    cis.read(aesKey);
-	    String senha = new String(aesKey);
-	    System.out.println(senha);
+	    //String senha = new String(aesKey);
+	    //System.out.println(senha);
 	    cis.close();
 	    
 	    return new SecretKeySpec(md5(aesKey), "AES");
@@ -120,8 +133,8 @@ public class SegurancaServiceImpl implements SegurancaService {
 		try{
 			Anexo anexo = anexoService.selectById(idAnexo);
 			aes.init(Cipher.ENCRYPT_MODE, aeskeySpec);
-			FileInputStream fis = new FileInputStream(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
-			CipherOutputStream cos = new CipherOutputStream(new FileOutputStream(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho()), aes);
+			FileInputStream fis = new FileInputStream(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
+			CipherOutputStream cos = new CipherOutputStream(new FileOutputStream(config.baseDir+"/arquivos_upload_direto/encrypt/"+anexo.getAnexoCaminho()), aes);
 			IOUtils.copy(fis, cos);
 			cos.close();
 			fis.close();
@@ -138,8 +151,8 @@ public class SegurancaServiceImpl implements SegurancaService {
 		try{
 			Anexo anexo = anexoService.selectById(idAnexo);
 			aes.init(Cipher.DECRYPT_MODE, aeskeySpec);
-			CipherInputStream cis = new CipherInputStream(new FileInputStream(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho()), aes);
-			FileOutputStream fos = new FileOutputStream(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
+			CipherInputStream cis = new CipherInputStream(new FileInputStream(config.baseDir+"/arquivos_upload_direto/encrypt/"+anexo.getAnexoCaminho()), aes);
+			FileOutputStream fos = new FileOutputStream(config.baseDir+"/arquivos_upload_direto/decrypt/"+anexo.getAnexoCaminho());
 			IOUtils.copy(cis, fos);
 			cis.close();
 			fos.close();
@@ -192,7 +205,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 			if (despacho.getIdUsuarioDestinatario() != decrypter.getIdUsuario())
 				return "Você não tem permissão para descriptografar essa mensagem.";
 
-			File certificado = new File(config.certificatesDir+formatFileName(decrypter.getUsuIdt())+".p12");
+			File certificado = new File(config.certificatesDir+"/"+formatFileName(decrypter.getUsuIdt())+".p12");
 			
 			PrivateKey privateKey = getPrivateKeyFromFile(certificado,
 					decrypter.getUsuLogin(), password);
@@ -360,26 +373,25 @@ public class SegurancaServiceImpl implements SegurancaService {
 	/**
 	 * Extrai a chave pública do arquivo.
 	 */
-	public PrivateKey getPrivateKeyFromFile( File cert, String alias, String password ) throws Exception {
-		System.out.println(alias+"-getPrivateKey");
+	private PrivateKey getPrivateKeyFromFile( File cert, String alias, String password ) throws Exception {
 		KeyStore ks = KeyStore.getInstance ("PKCS12");
 		char[] pwd = password.toCharArray();
 		InputStream is = new FileInputStream( cert );
 		ks.load( is, pwd );
 		is.close();
 		Key key = ks.getKey( alias, pwd );
-		System.out.println(cert.exists());
-		System.out.println(key);
+		
 		if( key instanceof PrivateKey ) {
 			return (PrivateKey) key;
 		}
+		
 		return null;
 	}
 
 	/**
 	 * Extrai a chave pública do arquivo.
 	 */
-	public PublicKey getPublicKeyFromFile( File cert, String alias, String password ) throws Exception {
+	private PublicKey getPublicKeyFromFile( File cert, String alias, String password ) throws Exception {
 		KeyStore ks = KeyStore.getInstance (KeyStore.getDefaultType());
 		char[] pwd = password.toCharArray();
 		InputStream is = new FileInputStream( cert );
@@ -395,7 +407,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 	 * @param key PrivateKey
 	 * @param buffer Array de bytes a ser assinado.
 	 */
-	public byte[] createSignature( PrivateKey key, byte[] buffer ) throws Exception {
+	private byte[] createSignature( PrivateKey key, byte[] buffer ) throws Exception {
 		Signature sig = Signature.getInstance(signatureAlgorithm);
 		sig.initSign(key);
 		sig.update(buffer, 0, buffer.length);
@@ -445,7 +457,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 			
 			File certificado = new File(config.certificatesDir+formatFileName(signer.getUsuIdt())+".p12");
 			
-			File fileToSing = new File(config.baseDir+"sgt.danillo/"+anexoToSign.getAnexoCaminho());
+			File fileToSing = new File(config.baseDir+"/arquivos_upload_direto/"+anexoToSign.getAnexoCaminho());
 			FileInputStream fis = new FileInputStream(fileToSing);
 			byte fileContent[] = new byte[(int)fileToSing.length()];
 			fis.read(fileContent);
@@ -561,7 +573,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 		
 		String sha1;
 		try {
-			File file = new File(config.baseDir+"sgt.danillo/"+anexoToSign.getAnexoCaminho());
+			File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexoToSign.getAnexoCaminho());
 			sha1 = sh1withRSA(file);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
