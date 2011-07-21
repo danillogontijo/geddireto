@@ -37,6 +37,26 @@
 			<value>${jdbc.password}</value>
 		</property>
 	</bean>
+	
+	<!-- BEAN DE CONFIGURAÇÃO -->
+	<bean id="config" class="br.org.direto.util.Config">
+		<property name="baseDir">
+			<value>${util.baseDir}</value>
+		</property>
+		<property name="tempDir">
+			<value>${util.tempDir}</value>
+		</property>
+		<property name="certificatesDir">
+			<value>${util.certificatesDir}</value>
+		</property>
+		<property name="fileMaxSize">
+			<value>${util.fileMaxSize}</value>
+		</property>
+	</bean> 
+	
+	<bean id="segurancaService" class="br.org.ged.direto.model.service.impl.SegurancaServiceImpl">
+		<constructor-arg ref="config" />
+	</bean>
 		
 	<import resource="classpath:/br/org/ged/direto/model/entity/hibernate-config.xml" />
 	
@@ -63,14 +83,6 @@
 	 </bean>
 	
 	-->
-	
-	<!-- BEANS PARA CRIACAO PROTOCOLO E ENVIO DE CADASTRO DE NOVO DOCUMENTO -->
-	<bean id="config" class="br.org.direto.util.Config">
-		<constructor-arg value="${util.baseDir}"></constructor-arg>
-		<constructor-arg value="${util.tempDir}"></constructor-arg>
-		<constructor-arg value="${util.certificatesDir}"></constructor-arg>
-		<constructor-arg value="${util.fileMaxSize}"></constructor-arg>
-	</bean> 
 	
 	<!--  -->
 	<bean id="chatUtils" class="br.org.direto.webchat.ChatUtils" />
