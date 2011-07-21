@@ -119,7 +119,7 @@ public class DocumentoController extends BaseController {
 			
 			if (anexo.getAssinaturaHash() == null){
 				try {
-					File file = new File(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
+					File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
 					sha1 = segurancaService.sh1withRSA(file);
 					System.out.println(sha1.length()+"=====================");
 					anexo.setHash(sha1);
@@ -130,7 +130,7 @@ public class DocumentoController extends BaseController {
 			
 			}else if (anexo.getAssinaturaHash().length() > 40){
 				try {
-					File file = new File(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
+					File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
 					sha1 = segurancaService.sh1withRSA(file);
 					anexo.setHash(sha1);
 				}catch(Exception e){
@@ -211,7 +211,7 @@ public class DocumentoController extends BaseController {
 			
 			if (anexo.getAssinaturaHash() == null){
 				try {
-					File file = new File(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
+					File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
 					sha1 = segurancaService.sh1withRSA(file);
 					System.out.println(sha1.length()+"=====================");
 					anexo.setHash(sha1);
@@ -222,7 +222,7 @@ public class DocumentoController extends BaseController {
 			
 			}else if (anexo.getAssinaturaHash().length() > 40){
 				try {
-					File file = new File(config.baseDir+"sgt.danillo/"+anexo.getAnexoCaminho());
+					File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
 					sha1 = segurancaService.sh1withRSA(file);
 					anexo.setHash(sha1);
 				}catch(Exception e){
