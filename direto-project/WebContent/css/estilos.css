@@ -46,7 +46,7 @@ background-color: black;}
 /**
  * DIV PARA TITULO LOGIN
  */
-#login {background: transparent;position: absolute;	margin-left: -45px;	margin-top: -95px;	left: 501px; top: 50%;	z-index: 1000;	width: 90px;}
+#login {background: transparent;position: absolute;	margin-left: 140px;	margin-top: -95px;	top: 50%; z-index: 1000;	width: 90px;}
 #login .bordaBox .bordaBox .b2, #login .bordaBox .b3, #login .bordaBox .b4 {background: #FFFFFF;}
 #login .bordaBox div {display: block; background: #FFFFFF; border-left:1px solid black; border-right:1px solid black; text-align: center;font-weight: bold;}
 
