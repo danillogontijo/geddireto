@@ -5,9 +5,9 @@
 <html>
 <body onload="sistema()">
 
-<c:set var="p" value="file:\\\\\\\\10.133.108.133\\\\temp\\\\${path}"></c:set>
-<c:set var="pFirefox" value="file://///10.133.108.133/temp/${path}"></c:set>
-<c:set var="pFirefoxLinux" value="file:///home/danillo/users/sgt.danillo/temp/${path}"></c:set>
+<c:set var="p" value="file:\\\\\\\\10.133.108.111\\\\temp\\\\${path}"></c:set>
+<c:set var="pFirefox" value="file://///10.133.108.111/temp/${path}"></c:set>
+<c:set var="pFirefoxLinux" value="file:////home/direto/work_direto/temp/${path}"></c:set>
 
 
 <html>

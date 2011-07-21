@@ -105,6 +105,7 @@ background-color: black;}
 	 border-bottom: 1px solid gray;
 	 position: static;
 	 z-index: 0;
+	 font-size: 10px;
  }
  .img_docs{	margin-left: 10px; position: absolute; margin-top: 4px}
  #doc_tipo {margin-left: 40px}
