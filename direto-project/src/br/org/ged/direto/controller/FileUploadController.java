@@ -47,7 +47,7 @@ public class FileUploadController {
 	
 	//private static Logger logger = Logger.getLogger(ClubUploadController.class.getName());
 
-	private String BASE_USER_DIRECTORY = "/home/danillo/users/";
+	//private String BASE_USER_DIRECTORY = "/home/danillo/users/";
 	//private UploadItem uploadItem;
 	private int MAX_MEMO = 999999999;//524288000;
 	
@@ -83,7 +83,7 @@ public class FileUploadController {
 	public String sendFiles(HttpServletRequest request) throws IOException, FileUploadLimitExceededException, InterruptedException {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		File tempDir = new File("/home/danillo/users/"+auth.getName());
+		File tempDir = new File(config.baseDir+"/arquivos_upload_direto/"+auth.getName());
 		long maxPostSize = MAX_MEMO;
 		
 		try {
@@ -148,9 +148,8 @@ public class FileUploadController {
 		System.out.println("upload.html");
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String usuLogin = auth.getName();
-		String USER_DIRECTORY = BASE_USER_DIRECTORY+usuLogin+"/"; 
-		
+		//String usuLogin = auth.getName();
+		String USER_DIRECTORY = config.baseDir+"/arquivos_upload_direto/"; 
 		
 		System.out.println(USER_DIRECTORY);
 		
@@ -216,7 +215,8 @@ public class FileUploadController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario usuario = (Usuario)auth.getPrincipal();
 		String usuLogin = auth.getName();
-		String USER_DIRECTORY = "/home/danillo/users/check/"+usuLogin+"/"; 
+		//String USER_DIRECTORY = "/home/danillo/users/check/"+usuLogin+"/";
+		String USER_DIRECTORY = config.baseDir+"/arquivos_upload_direto/"+usuLogin+"/";
 		
 		System.out.println(USER_DIRECTORY);
 		

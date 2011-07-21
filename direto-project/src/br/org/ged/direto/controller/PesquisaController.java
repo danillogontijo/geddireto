@@ -81,7 +81,7 @@ public class PesquisaController extends BaseController {
 		return "pesquisar";
 	}
 	
-	@RequestMapping(method=RequestMethod.POST,value="/resultado.html")
+	/*@RequestMapping(method=RequestMethod.POST,value="/resultado.html")
 	public String resultado(@ModelAttribute(NAME_OBJ_COMMAND) PesquisaForm form,ModelMap model) {		
 		
 		Usuario obj = getUsuarioLogado();
@@ -96,7 +96,7 @@ public class PesquisaController extends BaseController {
 		model.addAttribute("docs", docs);
 		
 		return "json/pesquisaResultado";
-	}
+	}*/
 	
 	@SuppressWarnings("unused")
 	@RequestMapping(method=RequestMethod.GET,value="/resultado.html")
