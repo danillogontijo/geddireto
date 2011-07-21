@@ -82,7 +82,7 @@
 	
 	
 	<!-- Define AccessDesisionManager as UnanimousBased -->
-	<beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+	<!--<beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
 		<beans:property name="decisionVoters">
 			<beans:list>
 			    <beans:ref bean="suspendVoter" />
@@ -90,19 +90,19 @@
 				<beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />		
 			</beans:list>
 		</beans:property>
-	</beans:bean>
+	</beans:bean>-->
 	
 	<!-- Define custom Voter -->
-	<beans:bean id="suspendVoter" class="br.org.ged.direto.model.service.security.SuspendRealTimeVoter" />
+	<!--<beans:bean id="suspendVoter" class="br.org.ged.direto.model.service.security.SuspendRealTimeVoter" />-->
 	
 	<!-- JMX enable custom Voter -->
-	<beans:bean class="org.springframework.jmx.export.MBeanExporter">
+	<!--<beans:bean class="org.springframework.jmx.export.MBeanExporter">
 		<beans:property name="beans">
 			<beans:map>
 				<beans:entry key="org.springframework.security.access:name=SuspendRealTimeVoter" value-ref="suspendVoter" />
 			</beans:map>
 		</beans:property>
-	</beans:bean>
+	</beans:bean>-->
 	
 	
 	
