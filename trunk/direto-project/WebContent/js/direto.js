@@ -262,7 +262,7 @@ function mover (ListaDE,ListaPARA) {
 					LimpaVazios(ListaDE, ListaDE.options.length);
 					LimpaVazios(ListaPARA, ListaPARA.options.length);
 				}else{
-					alert("Usuário já incluído na lista de destinatários.");
+					alert("Os docs. pertencem agora a carteira e não mais ao usuário,\nsendo que esta já está incluída na lista de destinatários.");
 				}
 		
 			}else{

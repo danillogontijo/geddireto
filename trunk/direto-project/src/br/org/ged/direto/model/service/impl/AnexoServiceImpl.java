@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.org.direto.util.Config;
 import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
@@ -50,6 +51,9 @@ public class AnexoServiceImpl implements AnexoService {
 	
 	@Autowired
 	private HistoricoService historicoService;
+	
+	@Autowired
+	private Config config;
 	
 	@Override
 	@RemoteMethod
@@ -143,7 +147,7 @@ public class AnexoServiceImpl implements AnexoService {
 	@RemoteMethod
 	public boolean deleteAnexoFromTemp(int idAnexo) {
 		try{
-			File file = new File("/home/danillo/users/sgt.danillo/temp/"+selectById(idAnexo).getAnexoCaminho());
+			File file = new File(config.baseDir+"/temp/"+selectById(idAnexo).getAnexoCaminho());
 			file.delete();
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -155,7 +159,7 @@ public class AnexoServiceImpl implements AnexoService {
 	
 	public boolean deleteAnexoFromTemp(Anexo anexo) {
 		try{
-			File file = new File("/home/danillo/users/sgt.danillo/temp/"+anexo.getAnexoCaminho());
+			File file = new File(config.baseDir+"/temp/"+anexo.getAnexoCaminho());
 			file.delete();
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -200,8 +204,8 @@ public class AnexoServiceImpl implements AnexoService {
 		}
 		
 		try {
-			InputStream is = new FileInputStream(new File("/home/danillo/users/sgt.danillo/temp/"+anexo.getAnexoCaminho()));
-			FileOutputStream fos = new FileOutputStream(new File("/home/danillo/users/sgt.danillo/"+anexo.getAnexoCaminho()));
+			InputStream is = new FileInputStream(new File(config.baseDir+"/temp/"+anexo.getAnexoCaminho()));
+			FileOutputStream fos = new FileOutputStream(new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho()));
 			IOUtils.copy(is, fos);
 			
 			String txtHistorico = "(Edição) -"+anexo.getAnexoNome()+"-";

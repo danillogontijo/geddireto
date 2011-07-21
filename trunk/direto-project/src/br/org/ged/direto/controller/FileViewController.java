@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import br.org.direto.util.Config;
 import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.service.AnexoService;
 
@@ -29,6 +30,9 @@ public class FileViewController {
 	@Autowired
 	private AnexoService anexoService;
 	
+	@Autowired
+	private Config config;
+	
 	byte[] arquivo = null;
 	
 	@RequestMapping(value="/fileview.html",method = RequestMethod.GET)
@@ -36,7 +40,7 @@ public class FileViewController {
             HttpServletResponse response, @RequestParam("id")int idAnexo) throws IOException{
 		
 		Anexo anexo = anexoService.selectById(idAnexo);
-		File file = new File("/home/danillo/users/sgt.danillo/"+anexo.getAnexoCaminho());
+		File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
 		
 		System.out.println(anexo.getAnexoCaminho());
 		
@@ -66,8 +70,8 @@ public class FileViewController {
 		model.addAttribute("path",anexo.getAnexoCaminho());
 		
 		try {
-			InputStream is = new FileInputStream(new File("/home/danillo/users/sgt.danillo/"+anexo.getAnexoCaminho()));
-			FileOutputStream fos = new FileOutputStream(new File("/home/danillo/users/sgt.danillo/temp/"+anexo.getAnexoCaminho()));
+			InputStream is = new FileInputStream(new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho()));
+			FileOutputStream fos = new FileOutputStream(new File(config.baseDir+"/temp/"+anexo.getAnexoCaminho()));
 			IOUtils.copy(is, fos);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

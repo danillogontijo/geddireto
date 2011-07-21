@@ -262,13 +262,13 @@ jQuery(document).ready(function($) {
 		);
 
 	//$("#testeTooltip a[title]").tooltip();
-	$("#testeTooltip").tooltip(
+	/*$("#testeTooltip").tooltip(
 			{ 
 				position: "center right", 
 				opacity: 0.7,
 				effect: 'explode'
 			}
-	);
+	);*/
 	
 	
 	//$('a[name=tooltip]').live('click', function(clickEvent){clickEvent.preventDefault();});
@@ -781,7 +781,7 @@ function montaUsersByGrupos(listBeans){
 			</c:forEach>
 		</div>
 		
-		<div style="font-size: 18px; text-align: center; position: absolute; width: 100%; top: -25px;">Brigada de Operações Especiais</div>
+		<div style="font-size: 18px; text-align: center; position: absolute; width: 100%; top: -25px;">Brigada de Operações Especiais - <span style="color: red">EM TESTE</span></div>
 		
 		<div style="width:100%; text-align:left; background-color: #1E90FF; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu1">
 	
@@ -793,7 +793,7 @@ function montaUsersByGrupos(listBeans){
 			      <c:when test="${box == 1}">
 			      	<a href="javascript:changeStatus(2);" class="menu1">Arquivar</a> |
 					<a href="javascript:changeStatus(4);" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
-					<a href="javascript:changeStatus(0);" class="menu1" id="testeTooltip" title="Teste">Marcar como doc. não lido</a> |
+					<a href="javascript:changeStatus(0);" class="menu1" id="testeTooltip" title="Teste">Marcar como doc não lido</a> |
 			      </c:when>
 			
 			      <c:when test="${box == 2}">

@@ -24,6 +24,7 @@ var CRIPTOGRAFAR = false;
 var USER_LOGIN_CRIPTO_DEST;
 var ID_DESPACHO = 0;
 
+alert("ATENÇÃO!\n O link EDITAR não funcionará nessa\nversão teste do Direto\npara usuários do LINUX");
 
 /*
  **** Eventos MouseOver de atualização histórico,anotaçoes e despachos **** 
@@ -318,7 +319,7 @@ $j(function(){
 		  
 	});*/
 
-	$j('#texto_acao').limit('14','#charsLeft');
+	$j('#texto_acao').limit('500','#charsLeft');
 	
 
 	$j("#div_anexos span[name=ui_anexo]").toggle(
@@ -737,7 +738,7 @@ height: 15px;
 		
 				
 			<a href="#wgrupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar</a> |
-			<a href="" style="margin-left: 5px;" class="menu2">Responder</a> |
+			<!-- <a href="" style="margin-left: 5px;" class="menu2">Responder</a> | -->
 			<a href="" style="margin-left: 5px;" class="menu2">Despachar</a> |
 			<a href="" style="margin-left: 5px;" class="menu2">Anotar</a> |
 			<a href="#wanexar" name="modal" style="margin-left: 5px;" class="menu2">Anexar</a> |
@@ -804,7 +805,7 @@ height: 15px;
 			</c:otherwise>
 		</c:choose>
 		
-		<span id="s_visualizar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Visualizar</a></span>
+		<span id="s_visualizar"><a href="fileview.html?id=${documento_principal.idAnexo}" target="_blank" class="l_edicao_vis">Visualizar</a></span>
 		
 		<c:if test="${documento_principal.assinado == 1 && documento_principal.idAssinadoPor == usuario.idUsuario}">
 			| <span id="s_checar"><a href="#" name="liberar_edicao" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Liberar</a></span> 
@@ -814,7 +815,7 @@ height: 15px;
 			| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
 		</c:if>
 		
-		| <span id="s_checar"><a href="#cryptofile" name="cryptofile" id="${documento_principal.idAnexo}" class="l_edicao_vis">Cripto</a></span>
+		<!-- | <span id="s_checar"><a href="#cryptofile" name="cryptofile" id="${documento_principal.idAnexo}" class="l_edicao_vis">Cripto</a></span> -->
 		
 		
 		<br>
@@ -823,7 +824,7 @@ height: 15px;
 	</c:if>
 		
 		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
-			<a href="" id="link_titulo">Anexos</a>
+			<a href="#wanexar" name="modal" id="link_titulo">Anexos</a>
 		</div>
 		
 		
