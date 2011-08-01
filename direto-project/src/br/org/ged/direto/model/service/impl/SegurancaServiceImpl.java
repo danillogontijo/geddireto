@@ -335,7 +335,22 @@ public class SegurancaServiceImpl implements SegurancaService {
 
 	}
 	
-	
+	@Override
+	public String sh1withRSA(InputStream is) throws FileNotFoundException,IOException {
+		
+		byte fileContent[] = IOUtils.toByteArray(is);
+		
+		MessageDigest sha1 = null;
+		try {
+			sha1 = MessageDigest.getInstance("SHA-1");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		BigInteger hash = new BigInteger(1, sha1.digest(fileContent));
+		String sen = hash.toString(16);			
+		
+		return sen;
+	}
 	
 	public static byte[] getBytesFromFile(File file) throws IOException,FileNotFoundException {
         InputStream is = new FileInputStream(file);
@@ -369,7 +384,7 @@ public class SegurancaServiceImpl implements SegurancaService {
         is.close();
         return bytes;
     }
-
+	
 	/**
 	 * Extrai a chave pública do arquivo.
 	 */
@@ -455,7 +470,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Usuario signer = (Usuario)auth.getPrincipal();
 			
-			File certificado = new File(config.certificatesDir+formatFileName(signer.getUsuIdt())+".p12");
+			File certificado = new File(config.certificatesDir+"/"+formatFileName(signer.getUsuIdt())+".p12");
 			
 			File fileToSing = new File(config.baseDir+"/arquivos_upload_direto/"+anexoToSign.getAnexoCaminho());
 			FileInputStream fis = new FileInputStream(fileToSing);
@@ -493,8 +508,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 
 	@Override
 	@RemoteMethod
-	public boolean checkSignature(File fileToCheck, int idAnexo) {
-		FileInputStream fis;
+	public boolean checkSignature(InputStream is, int idAnexo) {
 		try{
 			Anexo anexo = anexoService.selectById(idAnexo);
 			if (anexo.getAssinado() == 0)
@@ -505,13 +519,10 @@ public class SegurancaServiceImpl implements SegurancaService {
 			
 			byte pwdDecripto[] = Base64Utils.decode(pwd.getBytes());
 	          
-			fis = new FileInputStream(fileToCheck);
-			byte fileContent[] = new byte[(int)fileToCheck.length()];
-			fis.read(fileContent);
+			byte[] fileContent = IOUtils.toByteArray(is);
 		
 			PublicKey publicKey = getPublicKeyFromFile( jks, formatFileName(signerUser.getUsuIdt()), new String(pwdDecripto) );
 			
-			fis.close();
 			if( verifySignature( publicKey, fileContent, hash ) ) {
 				System.out.println("Assinatura OK!");
 				return true; 
@@ -519,8 +530,6 @@ public class SegurancaServiceImpl implements SegurancaService {
 				System.out.println("Assinatura NOT OK!");
 				return false;
 			}
-			
-			
 		
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
@@ -529,6 +538,12 @@ public class SegurancaServiceImpl implements SegurancaService {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 		
 		return false;
@@ -553,7 +568,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 	@RemoteMethod
 	public boolean haveCertificate(int usuIdt) {
 		
-		File certificado = new File(config.certificatesDir+formatFileName(usuIdt)+".p12");
+		File certificado = new File(config.certificatesDir+"/"+formatFileName(usuIdt)+".p12");
 		
 		if (certificado.exists())
 			return true;

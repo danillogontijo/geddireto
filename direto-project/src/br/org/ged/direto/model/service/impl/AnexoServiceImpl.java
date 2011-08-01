@@ -161,6 +161,7 @@ public class AnexoServiceImpl implements AnexoService {
 		try{
 			File file = new File(config.baseDir+"/temp/"+anexo.getAnexoCaminho());
 			file.delete();
+			System.out.println(file.canRead());
 		}catch (Exception e) {
 			e.printStackTrace();
 			return false;

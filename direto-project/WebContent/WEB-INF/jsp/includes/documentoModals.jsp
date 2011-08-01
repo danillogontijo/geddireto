@@ -45,13 +45,13 @@
 			<td colspan="2">Padronizados: 
 				<select onchange="padronizado(this.value)" style="width: 327pt;" name="slPreDespacho">
 				<option value="0"></option>
-				<option value="Arquivar.">Arquivar</option>
-				<option value="Ciente.">Ciente</option>
-				<option value="Para conhecimento.">Para conhecimento</option>
-				<option value="Providenciar.">Providenciar</option>
-				<option value="Para conhecimento e providências.">Para conhecimento e providências</option>
-				<option value="Providências em andamento.">Providências em andamento</option>
-				<option value="Encaminhar.">Encaminhar</option></select>
+				<option value="arquivar.">Arquivar</option>
+				<option value="ciente.">Ciente</option>
+				<option value="para conhecimento.">Para conhecimento</option>
+				<option value="providenciar.">Providenciar</option>
+				<option value="para conhecimento e providências.">Para conhecimento e providências</option>
+				<option value="providências em andamento.">Providências em andamento</option>
+				<option value="encaminhar.">Encaminhar</option></select>
 				<br>Digite aqui seu texto: <br>
 				<textarea onkeypress="return js.direto.charProibido(event)" cols="76" rows="2" id="texto_acao"></textarea>
 				<div id="textCount">Resta(m) <span id=charsLeft></span> caracter(es) a ser(em) digitado(s)</div>
@@ -149,22 +149,22 @@
 
 
 
-<div id="form-sign" title="Assinar documento">
+<div id="form-sign" title="Assinar documento" style="display: none;">
 	<p class="validateTips"></p>
 	<form>
 	<fieldset>
 		<label for="password">Digite sua senha do certificado</label>
-		<input type="password" name="password" id="password" onfocus="javascript:this.value=''" value="" class="text ui-widget-content ui-corner-all" />
+		<input type="password" name="password" id="password" onfocus="javascript:this.value=''" value="" class="text ui-widget-content ui-corner-all" onkeypress="return teclaEnter(event);" />
 	</fieldset>
 	</form>
 </div>
 
-<div id="user-cripto" title="Destinatário">
+<div id="user-cripto" title="Destinatário"  style="display: none;">
 	<p class="validateTips"></p>
 	<form>
 	<fieldset>
 		<label for="password">Digite o login do destinatário</label>
-		<input type="text" name="usulogin" id="usulogin" onfocus="javascript:this.value=''" value="" class="text ui-widget-content ui-corner-all" />
+		<input type="text" name="usulogin" id="usulogin" onfocus="javascript:this.value=''" value="" class="text ui-widget-content ui-corner-all" onkeypress="return teclaEnter(event);" />
 	</fieldset>
 	</form>
 </div>

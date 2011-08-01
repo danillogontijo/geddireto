@@ -29,7 +29,6 @@ import br.org.direto.util.Config;
 import br.org.direto.util.Utils;
 import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Anotacao;
-import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Despacho;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
@@ -104,7 +103,7 @@ public class DocumentoController extends BaseController {
 		Set<Anexo> listAnexos = documentoDetalhes.getAnexos();
 		
 		Anexo principal = null;
-		String sha1 = "Ocorreu erro";
+		String sha1 = "";
 		
 		for(Anexo anexo : listAnexos){
 			String[] nome = anexo.getAnexoCaminho().split("_");
@@ -117,27 +116,13 @@ public class DocumentoController extends BaseController {
 			if (nome[0].equals("1"))
 				principal = anexo;
 			
-			if (anexo.getAssinaturaHash() == null){
-				try {
-					File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
-					sha1 = segurancaService.sh1withRSA(file);
-					System.out.println(sha1.length()+"=====================");
-					anexo.setHash(sha1);
-					anexoService.setAssinaturaHash(sha1, anexo.getIdAnexo());
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			
-			}else if (anexo.getAssinaturaHash().length() > 40){
-				try {
-					File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
-					sha1 = segurancaService.sh1withRSA(file);
-					anexo.setHash(sha1);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			} else {
-				anexo.setHash(anexo.getAssinaturaHash());
+			File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
+			try {
+				sha1 = segurancaService.sh1withRSA(file);
+				anexo.setHash(sha1);
+			}catch(Exception e){
+				anexo.setHash("Não foi possível ler o arquivo.");
+				e.printStackTrace();
 			}
 
 		}
@@ -176,25 +161,7 @@ public class DocumentoController extends BaseController {
 		
 		Anexo principal = null;
 		
-		for(Anexo anexo : listAnexos){
-			String[] nome = anexo.getAnexoCaminho().split("_");
-			if (nome[0].equals("1"))
-				principal = anexo;
-		}
-		
-		model.addAttribute("proximoAnexo",listAnexos.size()+1);
-		
-		if (principal == null){
-			model.addAttribute("documento_principal", "Sem documento");
-		}else{
-			model.addAttribute("documento_principal", principal);
-			listAnexos.remove(principal);
-		}
-		
-		model.addAttribute("anexos",listAnexos);
-		
-		
-		String sha1 = "Ocorreu erro";
+		String sha1 = "";
 		
 		for(Anexo anexo : listAnexos){
 			String[] nome = anexo.getAnexoCaminho().split("_");
@@ -207,33 +174,18 @@ public class DocumentoController extends BaseController {
 			if (nome[0].equals("1"))
 				principal = anexo;
 			
-			System.out.println(anexo.getAssinaturaHash()+" - hash");
-			
-			if (anexo.getAssinaturaHash() == null){
-				try {
-					File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
-					sha1 = segurancaService.sh1withRSA(file);
-					System.out.println(sha1.length()+"=====================");
-					anexo.setHash(sha1);
-					anexoService.setAssinaturaHash(sha1, anexo.getIdAnexo());
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			
-			}else if (anexo.getAssinaturaHash().length() > 40){
-				try {
-					File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
-					sha1 = segurancaService.sh1withRSA(file);
-					anexo.setHash(sha1);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			} else {
-				anexo.setHash(anexo.getAssinaturaHash());
+			File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
+			try {
+				sha1 = segurancaService.sh1withRSA(file);
+				anexo.setHash(sha1);
+			}catch(Exception e){
+				anexo.setHash("Não foi possível ler o arquivo.");
+				e.printStackTrace();
 			}
 
 		}
 		
+
 		int proximoAnexo = 1;
 		
 		if (listAnexos != null)
@@ -266,8 +218,6 @@ public class DocumentoController extends BaseController {
 	@ModelAttribute("allDocuments")
 	public ArrayList<Documento> allDocumentsById(@RequestParam("id")Integer id){
 		ArrayList<Documento> list = (ArrayList<Documento>) documentosService.getAllById(id);
-		
-		System.out.println("TAMANHO DA LISTA=="+list.size());
 		return list;
 	}
 	
