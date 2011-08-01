@@ -86,7 +86,8 @@ js.direto.parseDate = function(txt_date) {
 	var seg = txt_date.substr(17,2);
 	
 	var date = new Date();
-	date.setFullYear(parseInt(ano), parseInt(mes)-1, parseInt(dia))
+	//date.setFullYear(parseInt(ano), parseInt(mes)-1, parseInt(dia));
+	date.setFullYear(eval(ano), (eval(mes)-1), eval(dia));
 	//date.setMonth(parseInt(mes)-1);
 	//date.setFullYear(ano);
 	date.setHours(hora,min);
@@ -442,28 +443,14 @@ function alertMessage(title,message,isOwnFormat){
 	});
 	
 	ele.dialog( "option", "title", title );
-	
-	/*if (ele.css('display') == 'none'){
-		ele.attr('title',title);
-		ele.dialog({
-			modal: true,
-			buttons: {
-				Ok: function() {
-					$j( this ).dialog( "close" );
-				}
-			}
-		});
-	}else{
-		$j( '#ui-dialog-title-dialog-message' ).html(title);
-	}*/
-		
 }
 
 
 function dialogMessage(title,message,isOwnFormat){
 	
 	var ele = $j( "#dialog-message" );
-
+	
+	
 	if (isOwnFormat){
 		ele.html(message);
 	}else{
@@ -472,12 +459,21 @@ function dialogMessage(title,message,isOwnFormat){
 				message+'</p>');
 	}
 	
-	if (ele.css('display') == 'none'){
-		ele.attr('title',title);
-		ele.dialog({
-			modal: true
-		});
-	}else{
-		$j( '#ui-dialog-title-dialog-message' ).html(title);
+	ele.dialog({
+		modal: true
+	});
+	
+	ele.dialog( "option", "title", title );
+}
+
+function teclaEnter(e){
+	
+	var evento = (window.event ? e.keyCode : e.which);
+
+	if(evento == 13) {
+		alert("Clique no botão OK ou Validar.");
+		return false;
 	}
+
+//alert(e);
 }

@@ -145,7 +145,6 @@ jQuery(document).ready(function($) {
 	$( "#wgrupos" ).draggable();
 	$( "#chat" ).draggable();
 	$( "#console_chat" ).scroll(function(){
-		//alert('in');
 		$( "#chat" ).draggable( "option", "disabled", true );
 		$( "#chat" ).removeClass( 'ui-state-disabled' );
 		}
@@ -164,10 +163,8 @@ jQuery(document).ready(function($) {
 		//var winH = e.pageX;
 		//var winW = 1002;
 	
-		//Cancel the link behavior
 		e.preventDefault();
 		
-		//Get the A tag
 		var id = $(this).attr('href');
 		//alert(id);
 
@@ -175,6 +172,7 @@ jQuery(document).ready(function($) {
 			getGrupos();
 		}else if(id == '#wacao'){
 			//var winH = $(id).position();
+			$('#chk_criptografar').attr('checked', false);
 			var acao = $(this).attr('id').split('_');
 			$(id+' .titulo_confirmacao').html(acao[1]);
 			$(id+' #bt_acao_salvar').bind('click', function() {

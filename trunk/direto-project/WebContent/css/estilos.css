@@ -46,7 +46,7 @@ background-color: black;}
 /**
  * DIV PARA TITULO LOGIN
  */
-#login {background: transparent;position: absolute;	margin-left: 140px;	margin-top: -95px;	top: 50%; z-index: 1000;	width: 90px;}
+#login {background: transparent;position: absolute;	top: 113px; left: 220px; z-index: 1000;	width: 90px;}
 #login .bordaBox .bordaBox .b2, #login .bordaBox .b3, #login .bordaBox .b4 {background: #FFFFFF;}
 #login .bordaBox div {display: block; background: #FFFFFF; border-left:1px solid black; border-right:1px solid black; text-align: center;font-weight: bold;}
 
@@ -65,7 +65,7 @@ background-color: black;}
 
 .pages {font: 12px Verdana, Arial, Helvetica, sans-serif;color: #003399;}
 
-.rodape {color: #666666; font-size: 10px;}
+.rodape {color: #fff; font-size: 10px;}
 
 .titulo_confirmacao {color: #ffffff; font-weight: bold; text-decoration: none; font-size: 14px;}
 

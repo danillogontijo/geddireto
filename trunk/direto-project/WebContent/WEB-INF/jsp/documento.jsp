@@ -23,8 +23,9 @@ var NAME,CAMINHO_NOME,ID_ANEXO;
 var CRIPTOGRAFAR = false;
 var USER_LOGIN_CRIPTO_DEST;
 var ID_DESPACHO = 0;
+var BACK = false; //Variavel para checar se esta tudo ok com a edicao.
 
-alert("ATENÇÃO!\n O link EDITAR não funcionará nessa\nversão teste do Direto\npara usuários do LINUX");
+//errorAlert("ATENÇÃO!<br>O link EDITAR não funcionará nessa versão teste do Direto para usuários do LINUX");
 
 /*
  **** Eventos MouseOver de atualização histórico,anotaçoes e despachos **** 
@@ -95,8 +96,10 @@ $j(function(){
 								callback:function(retorno) { 
 									updateTips(retorno);
 									setTimeout(function(){
-										$j( "#form-sign" ).dialog( "close" );}
-									,500);
+										$j( "#form-sign" ).dialog( "close" );
+										window.location.reload();
+										}
+									,2000);
 								}
 						});
 
@@ -104,7 +107,7 @@ $j(function(){
 
 						segurancaJS.decryptMessage(password.val(),ID_DESPACHO,{
 							callback:function(dec) {
-								alert(dec);
+								dialogMessage("Despacho descriptografado",dec,false);
 							}
 						});
 						
@@ -160,6 +163,7 @@ $j(function(){
 		}
 	});
 	
+	/*Atualiza ajax histórico,anotaçoes e despachos */
 	$j('#despachos').mouseenter(function(e) {
 		var tipo = $j(this).attr('id');
 		if (!IS_UPDATES_ACTIONS)
@@ -246,7 +250,6 @@ $j(function(){
 	/*Evento do botão de confirmação da edição do documento*/
 	$j('input[type=button]').click(function(e) {
 		var bt_name = $j(this).attr('name');
-		//var nome_anexo = $j('#hn_nome_anexo').val();
 		if(bt_name == 'bt_editar_nao'){
 			confirma_edicao(0);
 			js.direto.close_mask();
@@ -256,22 +259,32 @@ $j(function(){
 			confirma_edicao(2);
 			js.direto.close_mask();
 			
-			segurancaJS.haveCertificate(${usuario.usuIdt},{
-				callback:function(ok) { 
-					if (ok){
-						$j( "#form-sign" ).dialog( "open" );
-					}else{
-						segurancaJS.blockEditDocument(ID_ANEXO,{
-							callback:function(retorno) {
-								(retorno != '1') ? errorAlert(retorno) : alertMessage('Bloquear edição do documento','Documento bloqueado para edição!',false); 
-								if (retorno == '1')
-									window.location.reload();	
-							}						
-						});
-					}
+			setTimeout(function(){
+				
+				if(BACK){
+				
+					segurancaJS.haveCertificate(${usuario.usuIdt},{
+						callback:function(ok) { 
+							if (ok){
+								$j( "#form-sign" ).dialog( "open" );
+							}else{
+								segurancaJS.blockEditDocument(ID_ANEXO,{
+									callback:function(retorno) {
+										(retorno != '1') ? errorAlert(retorno) : alertMessage('Bloquear edição do documento','Documento bloqueado para edição!',false); 
+										if (retorno == '1')
+											window.location.reload();	
+									}						
+								});
+							}
+						}
+		
+					});
+				
 				}
-
-			});
+				
+			
+			},300);	
+			
 		}
 
 		if(bt_name == 'bt_editar_sim'){
@@ -288,37 +301,6 @@ $j(function(){
 	});
 
 	
-
-	/*$j('#texto_acao').keyup(function() {
-
-		//return charCount($j(this).val());
-		
-		if (event.keyCode == 8)
-	     		$j('#texto_acao').attr("disabled","");
-			  
-		var maxText = 5;
-		var numChar = $j(this).val().length;
-
-		$j('#left').text(numChar);
-
-		if (numChar > maxText){
-			//alert('excedeu');
-			if (event.keyCode != 8)
-	     		$j('#texto_acao').attr("disabled","disabled");
-		}
-
-		$j('#left').text(numChar);
-	
-		
-		  
-	});
-
-	$j('#texto_acao').blur(function() {
-
-		//$j('#texto_acao').attr("disabled","");
-		  
-	});*/
-
 	$j('#texto_acao').limit('500','#charsLeft');
 	
 
@@ -349,12 +331,14 @@ $j(function(){
 
 /*Função de confirmação da edição do documento*/
 function confirma_edicao(resposta){
+	
 	if (resposta == 0) {
 		//alert(nome_anexo+" - Apaga arquivo temp servidor e cancela operação");
 		anexoJS.deleteAnexoFromTemp(ID_ANEXO,{
 			callback:function(ok) { 
 				if (!ok)
-					alert('O arquivo não pode ser deletado da pasta temporária.');
+					errorAlert('O arquivo não pode ser deletado da pasta temporária.');
+				BACK = eval(ok);
 			}
 		});
 		
@@ -363,17 +347,21 @@ function confirma_edicao(resposta){
 		anexoJS.copy(ID_ANEXO,{
 			callback:function(ok) { 
 				if (!ok)
-					alert('Você não tem permissão para editar o documento.');
+					errorAlert('Você não tem permissão para editar o documento. Verifique se o seu nome consta na lista de destinatários, caso encontrado, por favor, contate o administrador do sistema.');
+				BACK = eval(ok);
 			}
 		});
 	} else {
 		anexoJS.copy(ID_ANEXO,{
 			callback:function(ok) { 
 				if (!ok)
-					alert('Você não tem permissão para editar o documento.');
+					errorAlert('Você não tem permissão para editar o documento. Verifique se o seu nome consta na lista de destinatários, caso encontrado, por favor, contate o administrador do sistema.');
+				BACK = eval(ok);
 			}
 		});
 	}
+	
+	
 }
 
 function checkSignature(){
@@ -383,7 +371,7 @@ function checkSignature(){
 	  
 
 	  if (file == null){
-		  alert('Você não selecionou nenhum arquivo!');
+		  errorAlert('Você não selecionou nenhum arquivo!');
 		  return;  
 	  }
 
@@ -394,7 +382,7 @@ function checkSignature(){
 	xhr.addEventListener("abort", uploadCanceled, false);
 	xhr.open(
 	            "POST",
-	            "/direto-project/upload/check.html"
+	            "upload/check.html"
 	        );
 
 	xhr.setRequestHeader("Cache-Control", "no-cache");
@@ -409,8 +397,6 @@ function fileSelectedToCheck() {
     var file = document.getElementById('fileToCheck').files[0];
     var output = document.getElementById("file_information");
 
-    //alert(file.name);
-    
     if (file) {
       var fileSize = 0;
       if (file.size > 1024 * 1024)
@@ -426,16 +412,16 @@ function fileSelectedToCheck() {
 			callback:function(hashAssinado) {
 
 			var tam = hashAssinado.length;
-			var block = tam/50;
+			var block = tam/45;
 			var newHash = '';
 
 			var start = 0;
 			for(var i = 1; i<block+1; i++){
-				newHash += hashAssinado.slice(start, eval((i*50)-1))+' ';
-				start = eval((i*50)-1);
+				newHash += hashAssinado.slice(start, eval((i*45)-1))+' ';
+				start = eval((i*45)-1);
 			}
 
-			newHash += hashAssinado.slice(start, eval((((block+1)*50)-tam)-1));
+			newHash += hashAssinado.slice(start, eval((((block+1)*45)-tam)-1));
 
 			output.innerHTML += '<br /><b>Code:</b> ';
     	  	output.innerHTML += newHash;
@@ -451,7 +437,7 @@ function checkComplete(evt) {
 	var result = 'ASSINATURA NÃO É VÁLIDA!';
 
     if(response.success)
-		result = 'ASSINATURA VÁLIDA!'	
+		result = 'ASSINATURA VÁLIDA!';
     
    output.innerHTML = '<font color="'+(response.success ? 'green' : 'red')+'">'+result+'</font>';
     
@@ -558,19 +544,6 @@ function uploadFile() {
 		  return;  
 	  }
 
-	//var fd = new FormData();
-	    //fd.append("fileToUpload", document.getElementById('fileToUpload').files[0]);
-		//var ele = document.getElementById('fileToUpload');
-	    //var fd = ele.files[0];
-	    
-	    //var fd = document.getElementById('fileToUpload').files[0];
-	    
-	    /*var fr = new FileReader();
-	    fr.file = file;
-	    fr.onloadend = uploadComplete;
-	    fr.readAsDataURL(file);*/
-	    
-	    
 	    var xhr = new XMLHttpRequest();
 	    xhr.upload.addEventListener("progress", uploadProgress, false);
 	    xhr.addEventListener("load", uploadComplete, false);
@@ -578,7 +551,7 @@ function uploadFile() {
 	    xhr.addEventListener("abort", uploadCanceled, false);
 	    xhr.open(
 	            "POST",
-	            "/direto-project/upload/upload.html"
+	            "upload/upload.html"
 	        );
 
 	    var path = ele.value.split("\\"); // Retira as barras
@@ -644,8 +617,9 @@ function uploadProgress(evt) {
 }
 
 function uploadComplete(evt) {
-    /* This event is raised when the server send back a response */
-   // alert(evt.target.responseText);
+    
+	/* This event is raised when the server send back a response */
+    // alert(evt.target.responseText);
 	document.getElementById('progressNumber').innerHTML = 'Completado!';  
 	$j('#progressNumber').css('color','#3DD13F');
 	anexoJS.saveAnexo(NAME,CAMINHO_NOME,ID_DOCUMENTO,false,true);
@@ -663,11 +637,11 @@ function uploadComplete(evt) {
 }
 
 function uploadFailed(evt) {
-    alert("There was an error attempting to upload the file.");
+    errorAlert("Ocorreu um erro ao tentar enviar o arquivo.");
 }
 
 function uploadCanceled(evt) {
-    alert("A transferência foi cancelada pelo usuário ou devido uma falha de conexão.");
+    errorAlert("A transferência foi cancelada pelo usuário ou devido uma falha de conexão.");
 }
 
 
@@ -771,10 +745,10 @@ height: 15px;
 			    					    			
 			    	<c:choose> 
 	  					<c:when test="${doc_cart.status == '0'}" > 
-	  						<font color="black" style="font-size: 10px;" title="${conta.carteira.cartAbr}"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font> 
+	  						<span style="background-color: #fff;"><font color="black" style="font-size: 9px;" title="${conta.carteira.cartAbr}"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font></span> 
 	  					</c:when> 
 	  					<c:otherwise> 
-	  						<font title="${conta.carteira.cartAbr}" color="blue" style="font-size: 10px;"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font> 
+	  						<span style="background-color: #fff;"><font title="${conta.carteira.cartAbr}" color="blue" style="font-size: 9px;">${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</font></span> 
 	  					</c:otherwise> 
 					</c:choose>
 			    			
