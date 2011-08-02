@@ -78,13 +78,9 @@
 		 
 	</bean>	
 	
-	--><!--<bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
-	 	<property name="authenticationManager" ref="authenticationManager"/>
-	 </bean>
-	
 	-->
 	
-	<!--  -->
+	<!-- CHAT  -->
 	<bean id="chatUtils" class="br.org.direto.webchat.ChatUtils" />
 	<bean id="userChat" class="br.org.direto.webchat.UserChat" />
 	<bean id="messageChat" class="br.org.direto.webchat.Message" />
@@ -93,11 +89,12 @@
 		<aop:scoped-proxy />
 	</bean>
 	
+	<!-- MENU TOPO  -->
 	<bean id="MenuTopoService" class="br.org.ged.direto.model.service.menus.MenuTopoImpl" scope="session">
 		<aop:scoped-proxy />
 	</bean>
 	
-	
+	<!-- MESSAGE SOURCE  -->
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
@@ -113,9 +110,10 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 	
-	
+	<!-- MD5 ENCODING PASSWORD  -->
 	<bean class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" id="passwordEncoder" />
 	
+	<!-- USER SERVICE-->
 	<bean id="customerUserDetailsService" class="br.org.ged.direto.model.service.security.CustomerUserDetailsService">
 			<property name="dataSource" ref="dataSource"/>
 			<property name="enableGroups" value="false"/>
@@ -128,7 +126,7 @@
 	</bean>
 	
 	<!-- X509 -->
-	<bean id="x509Filter" class="org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter">
+	<!-- <bean id="x509Filter" class="org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager"/>
 	</bean>
 	
@@ -136,18 +134,35 @@
 		<property name="preAuthenticatedUserDetailsService" ref="authenticationUserDetailsService"/>
 	</bean>	 
 	
-	<!--<bean id="forbiddenAuthEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>	-->
-	
 	<bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
 		<property name="userDetailsService" ref="customerUserDetailsService"/>
+	</bean> -->
+	
+	<!--<bean id="forbiddenAuthEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>	-->
+	
+	<!-- REMEMBER ME FILTER, PROVIDER E SERVICE -->
+	<bean id="rememberMeFilter" class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
+ 		<property name="rememberMeServices" ref="rememberMeServices"/>
+  		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+
+	<bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+	  <property name="userDetailsService" ref="customerUserDetailsService"/>
+	  <property name="key" value="geddireto"/>
 	</bean>
 	
-	<!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="100000"/>
-    </bean>
-    
+	<bean id="rememberMeAuthenticationProvider" class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+	  <property name="key" value="geddireto"/>
+	</bean> 
 	
-	--><!--<context:annotation-config />
+	 
+	
+	<!--
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="100000"/>
+    </bean>-->
+	
+	<!--<context:annotation-config />
 
 	<dwr:configuration>
 		<dwr:convert type="bean" class="br.org.direto.util.DataUtils" />
@@ -158,7 +173,6 @@
 	<dwr:controller id="dwrController" debug="true" />
 
 	<context:component-scan base-package="br.org.ged.direto" />
-	
 	-->
 	
 	<context:annotation-config />

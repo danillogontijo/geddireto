@@ -793,7 +793,7 @@ height: 15px;
 		
 		
 		<br>
-		<font color="#666666">SHA-1: </font><b>${sha1}</b><br>
+		<font color="#666666">SHA-1: </font><b>${documento_principal.hash}</b><br>
 		
 	</c:if>
 		
@@ -822,7 +822,7 @@ height: 15px;
 				| <span id="s_checar"><a href="#" name="liberar_edicao" anexo="${anexo.idAnexo}" class="l_edicao_vis">Liberar</a></span> 
 				</c:if>
 				)
-				<span id="hash_${anexo.idAnexo}" style="background-color: red; width: 100%; display: none;">SHA-1: 32f45b23cde152f39020b4677bdb32c2eebd0c57</span>
+				<span id="hash_${anexo.idAnexo}" style="background-color: red; width: 100%; display: none;">SHA-1: ${anexo.hash}</span>
 			</div>
 		</c:forEach>
 	

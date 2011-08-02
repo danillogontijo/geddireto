@@ -2,7 +2,7 @@ package br.org.ged.direto.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -12,18 +12,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.org.direto.util.DocumentosUtil;
-import br.org.direto.webchat.ChatService;
-import br.org.direto.webchat.Message;
+import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.entity.Usuario;
-import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
+import br.org.ged.direto.model.entity.exceptions.CarteiraException;
 import br.org.ged.direto.model.entity.menus.MenuTopo;
 import br.org.ged.direto.model.service.PastasService;
 import br.org.ged.direto.model.service.UsuarioService;
@@ -58,18 +55,35 @@ public abstract class BaseController {
 	public Usuario getUserLogon(HttpServletRequest request){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		this.session = request.getSession(true);
-		System.out.println("\n\nSESSAO CONTROLER"+this.session.toString());
 		Usuario usuario = usuarioService.selectByLogin(auth.getName());
 		return usuario;
 	}
 	
-	public Integer getIdCarteiraFromSession(HttpServletRequest request){
+	public Integer getIdCarteiraFromSession(HttpServletRequest request) throws CarteiraException{
 		this.session = request.getSession(true);
-		return new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
+		
+		if(session.getAttribute("j_usuario_conta") != null)
+			return new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
+		else{
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			Usuario usuario = usuarioService.selectByLogin(auth.getName());
+			Set<Conta> contas = usuario.getContas();
+			for(Conta conta : contas){
+				if (conta.isPrincipal()){
+					session.setAttribute("j_usuario_conta", String.valueOf(conta.getIdConta()));
+					return conta.getIdConta();
+				}
+			}
+			
+			if(session.getAttribute("j_usuario_conta") == null)
+				throw new CarteiraException("Usuário com nenhuma carteira principal cadastrada.");
+			
+			return 0;
+		}
 	}
 		
 	@ModelAttribute("pastas")
-	public Collection<Pastas> todasPastas(HttpServletRequest request){
+	public Collection<Pastas> todasPastas(HttpServletRequest request) throws Exception{
 		Integer idCarteira = this.getIdCarteiraFromSession(request);
 		return this.pastasService.pastasComNrDocumentos(idCarteira);
 	}
@@ -92,24 +106,18 @@ public abstract class BaseController {
 		
 		try {
 			menu = menuTopo.filterMenuTopo(menuTopo.getMenuTopo());
-			
-			//menu = menuTopo.getMenuTopo();
-			
 		}catch(Exception e){
-			//System.out.println();
 			e.printStackTrace();
 		}
-		
-		//System.out.println(menu.toString());
-		
+	
 		return menu;
 	}
 	
-	/*@ExceptionHandler(Exception.class)
-	public ModelAndView handlerDocumentNotFoundException(Exception ex){
+	@ExceptionHandler(CarteiraException.class)
+	public ModelAndView carteiraException(CarteiraException ex){
 		ModelAndView mav = new ModelAndView("error");
 		mav.addObject("error", ex.getMessage());
 		return mav;
-	}*/
+	}
 		
 }

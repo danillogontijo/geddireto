@@ -9,7 +9,7 @@ function ChatDiretoAPI (userName, userID) {
 		USER_IS_ACTIVE = false,
 		TIMER = null,
 		SIZE_MESSAGES = 0,
-		TIME_TO_INACTIVE = 1; //em minutos
+		TIME_TO_INACTIVE = 5; //em minutos
 	
 	var listUserSearch = new Array();
 	

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.org.direto.util.DataUtils;
 import br.org.ged.direto.model.entity.Documento;
+import br.org.ged.direto.model.entity.exceptions.CarteiraException;
 
 import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.GruposService;
@@ -39,7 +40,7 @@ public class PrincipalController extends BaseController {
 	
 	
 	@ModelAttribute("grupos")
-	public Collection<DataUtils> gruposCarteira(HttpServletRequest request) {
+	public Collection<DataUtils> gruposCarteira(HttpServletRequest request) throws CarteiraException {
 		Integer idCarteira = this.getIdCarteiraFromSession(request);
 		return gruposService.listGroups(idCarteira);
 		
@@ -119,7 +120,7 @@ public class PrincipalController extends BaseController {
 	
 	
 	@ModelAttribute("DocDWR")
-	public Collection<DataUtils> docDWR(@RequestParam("box") String box,@RequestParam("filtro") String filtro,@RequestParam("pr")int pr, HttpServletRequest request, ModelMap model) {
+	public Collection<DataUtils> docDWR(@RequestParam("box") String box,@RequestParam("filtro") String filtro,@RequestParam("pr")int pr, HttpServletRequest request, ModelMap model) throws CarteiraException {
 		
 		String url = "?pr="+pr+"&box="+box+"&"+"filtro="+filtro+"&"+"ordenacao=";
 		
@@ -192,8 +193,8 @@ public class PrincipalController extends BaseController {
 	
 	@ModelAttribute("documentos")
 	public Collection<Documento> todosDocumentos(HttpServletRequest request) {
-		this.session = request.getSession(true);
-		Integer idCarteira = new Integer(Integer.parseInt((String)session.getAttribute("j_usuario_conta")));
+		Integer idCarteira = getIdCarteiraFromSession(request);
+		System.out.println(idCarteira+"=**************");
 		List<Documento> docsByConta = new ArrayList<Documento>();
 		docsByConta = this.documentosService.listByLimited(idCarteira);
 		return docsByConta;
