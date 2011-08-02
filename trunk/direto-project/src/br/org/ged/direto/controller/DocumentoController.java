@@ -3,15 +3,9 @@ package br.org.ged.direto.controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-
-import java.util.Iterator;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,7 +29,6 @@ import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Historico;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
-import br.org.ged.direto.model.service.AnexoService;
 import br.org.ged.direto.model.service.AnotacaoService;
 import br.org.ged.direto.model.service.DespachoService;
 import br.org.ged.direto.model.service.DocumentosService;
@@ -43,7 +36,6 @@ import br.org.ged.direto.model.service.HistoricoService;
 import br.org.ged.direto.model.service.SegurancaService;
 
 @Controller
-//@SessionAttributes("documentoError")
 public class DocumentoController extends BaseController {
 	
 	@Autowired
@@ -51,12 +43,6 @@ public class DocumentoController extends BaseController {
 	
 	@Autowired
 	private Config config;
-	
-	/*@Autowired
-	private MessageSource messageSource;*/
-	
-	@Autowired
-	DocumentoError documentoError;
 	
 	@Autowired
 	private SegurancaService segurancaService;
@@ -69,10 +55,6 @@ public class DocumentoController extends BaseController {
 	
 	@Autowired
 	private HistoricoService historicoService;
-	
-	@Autowired
-	private AnexoService anexoService;
-	
 	
 	@RequestMapping(value="/documento.html",method = RequestMethod.GET)
 	public String showDocument(@RequestParam("pk")Integer pk, ModelMap model){
@@ -97,7 +79,6 @@ public class DocumentoController extends BaseController {
 		
 		model.addAttribute("idDocumento",documentoDetalhes.getIdDocumentoDetalhes());
 		model.addAttribute("documento",documentoDetalhes);
-		//model.addAttribute("doc_conta",doc_conta);
 		model.addAttribute("usuarioElaborador",documentoDetalhes.getUsuarioElaborador());
 		
 		Set<Anexo> listAnexos = documentoDetalhes.getAnexos();
@@ -132,14 +113,12 @@ public class DocumentoController extends BaseController {
 		if (listAnexos != null)
 			proximoAnexo = listAnexos.size()+1;
 		
-		
 		if (principal == null){
 			model.addAttribute("documento_principal", "Sem documento");
 			model.addAttribute("proximoAnexo",1);
 		}else{
 			model.addAttribute("documento_principal", principal);
 			listAnexos.remove(principal);
-			model.addAttribute("sha1", principal.getHash());
 			model.addAttribute("anexos",listAnexos);
 			model.addAttribute("proximoAnexo",proximoAnexo);
 		}
@@ -185,7 +164,6 @@ public class DocumentoController extends BaseController {
 
 		}
 		
-
 		int proximoAnexo = 1;
 		
 		if (listAnexos != null)
@@ -198,7 +176,6 @@ public class DocumentoController extends BaseController {
 		}else{
 			model.addAttribute("documento_principal", principal);
 			listAnexos.remove(principal);
-			model.addAttribute("sha1", principal.getHash());
 			model.addAttribute("anexos",listAnexos);
 			model.addAttribute("proximoAnexo",proximoAnexo);
 		}
@@ -209,7 +186,7 @@ public class DocumentoController extends BaseController {
 		
 	@ExceptionHandler(DocumentNotFoundException.class)
 	public ModelAndView handlerDocumentNotFoundException(DocumentNotFoundException ex){
-		 System.out.println("["+DocumentNotFoundException.class.getName()+"] "+ ex.getMessage());
+		System.err.println("["+DocumentNotFoundException.class.getName()+"] "+ ex.getMessage());
 		ModelAndView mav = new ModelAndView("error");
 		mav.addObject("error", ex.getMessage());
 		return mav;
@@ -223,11 +200,8 @@ public class DocumentoController extends BaseController {
 	
 	@ModelAttribute("anotacoes")
 	public Collection<Anotacao> anotacoes(@RequestParam("id")Integer id) {
-    	
-		List<Anotacao> results = this.anotacaoService.getAnotacaoByDocumento(id); 
-		
-        return results;
-        
+    	List<Anotacao> results = this.anotacaoService.getAnotacaoByDocumento(id); 
+	    return results;
     }
 	
 	@ModelAttribute("despachos")
@@ -245,16 +219,11 @@ public class DocumentoController extends BaseController {
 		}
     	
         return despachos;
-        
     }
 	
 	@ModelAttribute("historico")
 	public Collection<Historico> historico(@RequestParam("id")Integer id) {
-    	
         return (List<Historico>)this.historicoService.getHistoricoByDocumento(id);
-        
     }
 	
-	
-
 }

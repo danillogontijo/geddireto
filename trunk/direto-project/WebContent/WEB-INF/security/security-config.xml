@@ -2,6 +2,7 @@
 <beans:beans xmlns="http://www.springframework.org/schema/security"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -18,7 +19,7 @@
 		-->
 		<intercept-url pattern="/favicon.ico" access="isAnonymous()" />
 		<intercept-url pattern="/index.jsp" access="permitAll" />
-		<intercept-url pattern="/login.html" access="permitAll" />
+		<intercept-url pattern="/login.html" access="permitAll" requires-channel="https" />
 		<intercept-url pattern="/error.html" access="permitAll" />
 		<intercept-url pattern="/dwr/*" access="permitAll" />
 		<intercept-url pattern="/arquivos/*" access="permitAll" />
@@ -27,36 +28,37 @@
 		<intercept-url pattern="/css/*" access="permitAll" />
 		<intercept-url pattern="/js/*" access="permitAll" />
 		<intercept-url pattern="/upload/**" access="hasAnyRole ('ROLE_USER','ROLE_ADMIN') and fullyAuthenticated" />
+		
+		<!-- <intercept-url pattern="/j_spring_security_filter" access="permitAll" requires-channel="https" /> -->
+		
 		<!--
 			<intercept-url pattern="/secure/**"
 			access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"
 			requires-channel="https" />
 		-->
-		<intercept-url pattern="/*"	access="hasAnyRole ('ROLE_USER','ROLE_ADMIN') and fullyAuthenticated" />
+		<intercept-url pattern="/*"	access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" requires-channel="https"/>
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN') and fullyAuthenticated" />
 		<form-login login-page="/login.html" authentication-failure-url="/login.html?login_error=1" />
 			
-		<x509 user-service-ref="customerUserDetailsService" subject-principal-regex="CN=(.*?),"/>
+		<!-- <x509 user-service-ref="customerUserDetailsService" subject-principal-regex="CN=(.*?),"/> -->
 
-		<!--<remember-me key="geddireto" token-validity-seconds="3600" />
-
-		--><logout invalidate-session="true" logout-success-url="/index.jsp" />
+		<logout invalidate-session="true" logout-success-url="/index.jsp" />
 		
 		<custom-filter ref="requestHeaderFilter" before="FORM_LOGIN_FILTER" />
+		<custom-filter ref="rememberMeFilter" after="FORM_LOGIN_FILTER" />
+		<!--<custom-filter ref="custumSessionManagerFilter" before="SESSION_MANAGEMENT_FILTER" />-->
+		<custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
+		<custom-filter before="LOGOUT_FILTER" ref="rememberMeLogoutFilter" />
 		
-		<!--<custom-filter ref="custumSessionManagerFilter" before="SESSION_MANAGEMENT_FILTER" />
-		
-		--><custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
-		
-		<session-management session-authentication-strategy-ref="defaultConcurrentSessionController"/>
-		
+		<session-management session-authentication-strategy-ref="defaultConcurrentSessionController" />
 		
 		<!--<session-management session-fixation-protection="migrateSession" invalid-session-url="/login.html">
 			<concurrency-control max-sessions="1"
 				expired-url="/login.html?login_error=1" error-if-maximum-exceeded="true" />
 		</session-management>
+		-->
 		
-		--><port-mappings> 
+		<port-mappings> 
 			<port-mapping http="8080" https="8443" />
 		</port-mappings>
 		
@@ -64,22 +66,48 @@
 
 	<authentication-manager alias="authenticationManager">
 		<authentication-provider ref="usuarioContaRequestAuthenticationProvider" />
-		<!--<authentication-provider user-service-ref="customerUserDetailsService">
-			<password-encoder ref="passwordEncoder"></password-encoder>
-		</authentication-provider>
-		 --><!-- X509 -->
-		<authentication-provider ref="preauthAuthenticationProvider"/>
+		<!-- X509 -->
+		<!-- <authentication-provider ref="preauthAuthenticationProvider"/> -->
+		<!-- REMEMBER ME -->
+		<authentication-provider ref="rememberMeAuthenticationProvider"/>
 	</authentication-manager>
 	
 	
+	<!-- REMEMBER ME LOGOUT FILTER -->
+	<beans:bean id="rememberMeLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter"
+    	p:filterProcessesUrl="/j_security_rememberMe_logout">
+    	<beans:constructor-arg value="/" />
+    	<beans:constructor-arg>
+	      	<beans:list>
+	        	<beans:ref
+	          		bean="rememberMeServices" />
+	        	<beans:bean
+	          		class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+	      	</beans:list>
+    	</beans:constructor-arg>
+  	</beans:bean>
 	
+	<!-- CONCURRENT_SESSION_FILTER -->
+	<beans:bean id="concurrencyFilter"
+		class="org.springframework.security.web.session.ConcurrentSessionFilter">
+		<beans:property name="sessionRegistry" ref="sessionRegistry" />
+		<beans:property name="expiredUrl" value="/login.html?login_error=1" />
+	</beans:bean>
 	
-	
-	
-	
-	
-	
-	
+	<!-- FORM_LOGIN_FILTER -->
+	<beans:bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
+	 	<beans:property name="authenticationManager" ref="authenticationManager"/>
+	 	<beans:property name="sessionAuthenticationStrategy" ref="defaultConcurrentSessionController" />
+	 	<beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler" />
+	 	<beans:property name="rememberMeServices" ref="rememberMeServices" />
+	 </beans:bean>
+	 
+	 <!-- SESSION_MANAGEMENT_FILTER -->
+	 <beans:bean id="custumSessionManagerFilter" class="org.springframework.security.web.session.SessionManagementFilter">
+	 	<beans:constructor-arg name="securityContextRepository" ref="securityContextRepository" />
+	 	<beans:property name="invalidSessionUrl" value="/login.html" />
+	 	<beans:property name="sessionAuthenticationStrategy" ref="defaultConcurrentSessionController" />
+	 </beans:bean>
 	
 	
 	
@@ -107,21 +135,12 @@
 	</beans:bean>-->
 	
 	
-	
-	
-	
 	<beans:bean id="sessionRegistry"
 		class="org.springframework.security.core.session.SessionRegistryImpl" />
 	
 	<beans:bean id="authenticationFailureHandler"
 		class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
 		<beans:property name="defaultFailureUrl" value="/login.html?login_error=1" />
-	</beans:bean>
-	
-	<beans:bean id="concurrencyFilter"
-		class="org.springframework.security.web.session.ConcurrentSessionFilter">
-		<beans:property name="sessionRegistry" ref="sessionRegistry" />
-		<beans:property name="expiredUrl" value="/login.html?login_error=1" />
 	</beans:bean>
 	
 	<beans:bean id="securityContextRepository"
@@ -137,41 +156,7 @@
 		<beans:property name="migrateSessionAttributes" value="true" />
 	</beans:bean>
 
-	 <beans:bean id="requestHeaderFilter" class="br.org.ged.direto.model.service.security.RequestHeaderProcessingFilter">
-	 	<beans:property name="authenticationManager" ref="authenticationManager"/>
-	 	<beans:property name="sessionAuthenticationStrategy" ref="defaultConcurrentSessionController" />
-	 	<beans:property name="authenticationFailureHandler" ref="authenticationFailureHandler" />
-	 	<!--<beans:property name="messageSource" ref="messageSource" />
-	 --></beans:bean>
-	 
-	 <beans:bean id="custumSessionManagerFilter" class="org.springframework.security.web.session.SessionManagementFilter">
-	 	<beans:constructor-arg name="securityContextRepository" ref="securityContextRepository" />
-	 	<beans:property name="invalidSessionUrl" value="/login.html" />
-	 	<beans:property name="sessionAuthenticationStrategy" ref="defaultConcurrentSessionController" />
-	 </beans:bean>
+	
 
-	<!--
-		<authentication-manager> <authentication-provider
-		user-service-ref="customerUserDetailsService"> <password-encoder
-		hash="md5" /> </authentication-provider> </authentication-manager>
-	-->
-	<!--
-		<b:bean id="userDetailsService"
-		class="br.org.ged.direto.model.service.security.HibernateUserDetailsService">
-		<b:property name="hibernateTemplate" ref="hibernateTemplate" />
-		</b:bean> <authentication-manager> <authentication-provider
-		user-service-ref="userDetailsService"> <password-encoder hash="md5" />
-		</authentication-provider> </authentication-manager>
-	-->
-	<!--
-		<authentication-manager> <authentication-provider> <password-encoder
-		hash="md5" /> <jdbc-user-service data-source-ref="dataSource"
-		authorities-by-username-query="SELECT UsuLogin AS 'username',
-		concat('ROLE_',upper(replace(UsuPapel, ' ', '_'))) AS 'authority' FROM
-		usuario WHERE UsuLogin=?" users-by-username-query="SELECT UsuLogin AS
-		'username', UsuSenha AS 'password', 'true' AS 'enabled' FROM usuario
-		WHERE UsuLogin = ?"/> </authentication-provider>
-		</authentication-manager>
-	-->
-
+	
 </beans:beans>
