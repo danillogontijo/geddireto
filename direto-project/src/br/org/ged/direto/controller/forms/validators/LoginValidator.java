@@ -45,15 +45,12 @@ public class LoginValidator extends FormsValidator {
 	public void validateJ_username(String usuLogin, Errors errors) {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "j_username",
 				"LOGIN_REQUIRED", "Digite um nome de login.");
-
 		
 		// Checa se o usuario existe
 		if (errors.getAllErrors().size() == 0) {
 			boolean existsUser = this.usuarioService.validateUser(usuLogin);
-			if (!existsUser){
-				System.out.println("existsUser");
+			if (!existsUser)
 				errors.rejectValue("j_username", "error.login.USER_NO_EXISTS");
-			}	
 		}
 	}
 

@@ -69,7 +69,6 @@ public class DocumentoController extends BaseController {
 			model.addAttribute("encaminhadoPor","");
 			e.printStackTrace();
 		}
-		System.out.println(doc_conta.getEncaminhadoPor());
 		
 		DocumentoDetalhes documentoDetalhes = doc_conta.getDocumentoDetalhes();
 		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));

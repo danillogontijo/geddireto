@@ -44,7 +44,7 @@ public abstract class BaseController {
 	private IMenuTopo menuTopo;
 	
 	@Autowired
-	private UsuarioService usuarioService;
+	protected UsuarioService usuarioService;
 	
 	@ModelAttribute("numUsers")
 	public int getNumberOfUsers() {
@@ -70,8 +70,9 @@ public abstract class BaseController {
 			Set<Conta> contas = usuario.getContas();
 			for(Conta conta : contas){
 				if (conta.isPrincipal()){
-					session.setAttribute("j_usuario_conta", String.valueOf(conta.getIdConta()));
-					return conta.getIdConta();
+					int idCarteira = conta.getCarteira().getIdCarteira();
+					session.setAttribute("j_usuario_conta", String.valueOf(idCarteira));
+					return idCarteira;
 				}
 			}
 			
