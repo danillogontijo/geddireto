@@ -45,19 +45,28 @@ public class FileViewController {
 		System.out.println(anexo.getAnexoCaminho());
 		
 		try {
-			arquivo = getBytesFromFile(file);
+			//arquivo = getBytesFromFile(file);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		//response.setContentType(getFileType(anexo.getAnexoCaminho()));
 		response.setContentType("application/octet-stream");
-		response.setContentLength(arquivo.length);
-		response.setHeader( "Content-Disposition", "attachment; filename=\"" + anexo.getAnexoNome() + "\"" ); //Pede tela para download
+		//response.setContentLength(arquivo.length);
+		response.setHeader( "Content-Disposition", "attachment; filename=\"" + anexo.getAnexoNome().replace("/[^a-zA-Z0-9_\\(\\*\\)\\.\\s:;,%$!@#&ãàáâäèéêëìíîïõòóôöùúûüçÃÀÁÂÄÈÉÊËÌÍÎÏÖÒÓÔÙÚÛÜÇ]+/g","-") + "\"" ); //Pede tela para download
 		//response.setHeader( "Content-Disposition", "inline; filename=\"" + anexo.getAnexoNome() + "\"" );
 		
 		ServletOutputStream ouputStream = response.getOutputStream();
-		ouputStream.write(arquivo, 0, arquivo.length);
+		
+		
+		InputStream is = new FileInputStream(file);				
+		byte[] buffer = new byte[8192];
+		int read = 0;
+		while( (read = is.read(buffer)) > 0) {
+			ouputStream.write(buffer, 0, read);
+		}		
+		
+		//ouputStream.write(arquivo, 0, arquivo.length);
 		ouputStream.flush();
 		ouputStream.close();
 		
