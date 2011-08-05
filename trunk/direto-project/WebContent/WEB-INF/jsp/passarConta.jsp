@@ -176,6 +176,3 @@ function validateUser(usuLogin)
 		<!-- FIM CORPO -->
 		
 <%@ include file="include_foot.jsp" %>
-
-</body>
-</html>

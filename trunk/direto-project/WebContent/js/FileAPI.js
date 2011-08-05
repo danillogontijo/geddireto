@@ -399,7 +399,7 @@ function FileAPI (t, d, f) {
             upload.addEventListener("error", function (ev) {console.log(ev);}, false);
             xhr.open(
                 "POST",
-                "/direto-project/upload/upload.html"
+                "upload/upload.html"
             );
             
             var extensaoArquivo = file.name.split(".");

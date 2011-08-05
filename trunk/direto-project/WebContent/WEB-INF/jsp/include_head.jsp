@@ -140,23 +140,57 @@ jQuery(document).ready(function($) {
 	$( "#data" ).datepicker();
 	$( "#data" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
 	
+	/**
+	*DRAGGABLES
+	*
+	**/
 	$( "#wacao" ).draggable();
 	$( "#weditar" ).draggable();
 	$( "#wgrupos" ).draggable();
+	
+	//DRAGGABLE DO CHAT
 	$( "#chat" ).draggable();
-	$( "#console_chat" ).scroll(function(){
+	$( "#chat" ).draggable( "option", "disabled", true );
+	$( "#chat" ).removeClass( 'ui-state-disabled' );
+	
+	/**
+	*Funções para habilitar e desabilitar o draggable do chat
+	*Porém quando habilitado o scroll deve desaparecer
+	**/
+	function disableChatDrag(){
 		$( "#chat" ).draggable( "option", "disabled", true );
 		$( "#chat" ).removeClass( 'ui-state-disabled' );
-		}
-	);
-	$( "#welcome" ).click(function(){
+		$( "#console_chat" ).css('overflow','auto');
+		$( "#console_chat" ).css('cursor', 'text');
+	};
+	
+	function enableChatDrag(){
 		$( "#chat" ).draggable( "option", "disabled", false );
-		}
-	);
+		$( "#console_chat" ).css('overflow','hidden');
+		$( "#console_chat" ).css('cursor', 'move');
+	};
+	
+	$('#welcome').click(function() {
+		var disabled = $( "#chat" ).draggable( "option", "disabled" );
+		if	(disabled)
+			enableChatDrag();
+		else
+			disableChatDrag();
+	});
+	
+	$( "#console_chat" ).dblclick(function() {
+		var disabled = $( "#chat" ).draggable( "option", "disabled" );
+		if	(disabled)
+			enableChatDrag();
+		else
+			disableChatDrag();
+	});
 	
 	
-		
-	//select all the a tag with name equal to modal
+	/**
+	*MODAL
+	*Seleciona todos os <a href> com name=modal
+	**/
 	$('a[name=modal]').click(function(e) {
 
 		//alert($(this).attr('id'));
@@ -350,7 +384,6 @@ jQuery(document).ready(function($) {
 			
 		});	
 
-		//document.location.reload(true);
 		setTimeout("document.location.reload(true)",1000);
 
 	});
@@ -497,61 +530,6 @@ function montaUsersByGrupos(listBeans){
 }
 
 
-
-/*function mostrarGrupos(){
-
-	var disabledZone = document.createElement('div');
-	disabledZone.setAttribute('id', 'disabledZone');
-	disabledZone.style.position = "absolute";
-	disabledZone.style.zIndex = "1000";
-	disabledZone.style.left = "0px";
-	disabledZone.style.top = "0px";
-	disabledZone.style.width = "100%";
-	disabledZone.style.height = "100%";
-	document.body.appendChild(disabledZone);
-
-	var messageZone = document.createElement('div');
-	messageZone.setAttribute('id', 'div_grupos');
-	messageZone.style.position = "absolute";
-	messageZone.style.top = "500px";
-	messageZone.style.right = "500px";
-	messageZone.style.background = "blue";
-	messageZone.style.color = "white";
-	messageZone.style.fontWeight = "bold";
-	messageZone.style.fontFamily = "Arial,Helvetica,sans-serif";
-	messageZone.style.padding = "4px";
-	disabledZone.style.zIndex = "1001";
-	disabledZone.appendChild(messageZone);
-
-
-	//var myLink = document.createElement('a');
-
-	//var href = document.createAttribute('href');
-
-	
-	var fechar = document.createElement('a'); 
-	fechar.setAttribute('href', 'javascript:fechar();');
-	//var href = document.createAttribute('href');
-	//fechar.setAttribute(href,'fecharGrupos()');
-	fechar.innerText = "fechar";
-
-	
-	//var text = document.createTextNode('Grupos');
-	//messageZone.appendChild(text);
-	
-	messageZone.appendChild(fechar);
-
-	
-
-
-	
-		
-
-	
-	$('disabledZone').style.visibility = 'visible';
-	
-}*/
-
 </script>  
 
 
@@ -678,7 +656,8 @@ function montaUsersByGrupos(listBeans){
 		<br />${numUsers} usuário(s) no sistema!
 		
 		<script type="text/javascript">
-		   
+		
+		  
 			
 			
 				$j(function(){
@@ -687,11 +666,11 @@ function montaUsersByGrupos(listBeans){
 				  $j('#stayOn').click(function(e) {
 						e.preventDefault();
 						ChatDiretoAPI.start(e);
-					});
-
-				 
-				
+				  });
+				  
+				  //setTimeout(function(){ChatDiretoAPI.changeStatusInChat(null,1);},2900);
 					
+				 
 					$j('#topo div[name=minimize]').toggle(function(){
 						ChatDiretoAPI.showMinimized();
 						$j(this).text('+');						
@@ -773,9 +752,9 @@ function montaUsersByGrupos(listBeans){
 				  </c:if>
 				</c:url>
 				
-				<c:if test="${name != 'Admin'}">| </c:if>
-				
 				<a href="<c:out value="${mtURL}" />" class="menu_titulo" <c:if test="${name == 'Sugestões'}">name="modal"</c:if> >${name}</a> 
+				
+				<c:if test="${name != 'Sair'}"> | </c:if>
 			</c:forEach>
 		</div>
 		

@@ -23,7 +23,7 @@ public interface UsuarioService {
 	public boolean validateUser(String usuLogin);
 	
 	//@PreAuthorize("hasRole('ROLE_USER')")
-	@PreAuthorize("(#usuLogin == principal.usuLogin) or (hasRole('ROLE_ADMIN'))")
+	@PreAuthorize("(#usuLogin == principal.usuLogin and #usuSenha != '') or (hasRole('ROLE_ADMIN'))")
 	public void changePassword(String usuLogin, String usuSenha);
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -38,5 +38,8 @@ public interface UsuarioService {
 	
 	@PreAuthorize("(hasRole('ROLE_ADMIN'))")
 	public void editUser(Usuario usuario);
+	
+	@PreAuthorize("(hasRole('ROLE_ADMIN'))")
+	public List<Object> allUsersLoggedInSystem();
 
 }
