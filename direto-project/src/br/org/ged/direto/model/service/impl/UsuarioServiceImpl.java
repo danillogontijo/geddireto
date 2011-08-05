@@ -14,6 +14,7 @@ import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 	private IChangePassword changePasswordSecurity;
 	private PstGradService pstGradService;
 	private SegurancaService segurancaService;
+	
+	@Autowired
+	private SessionRegistry sessionRegistry;
 	
 	@Autowired
 	public void setSegurancaService(SegurancaService segurancaService) {
@@ -75,6 +79,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@RemoteMethod
 	public void save(Usuario usuario) throws Exception {
 		try {
+			usuario.setUsuNGuerra(usuario.getUsuNGuerra().toUpperCase());
+			usuario.setUsuNome(usuario.getUsuNome().toUpperCase());
 			this.usuarioRepository.save(usuario);
 		} catch (Exception e) {
 			throw new Exception("Não foi possível salvar o usuario."
@@ -182,8 +188,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	public void changePassword(String usuLogin, String usuSenha) {
-		changePasswordSecurity.changePassword(usuLogin, usuSenha);
-		
+		if (usuSenha != "")
+			changePasswordSecurity.changePassword(usuLogin, usuSenha);
 	}
 
 	@Override
@@ -196,6 +202,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 			int usuIdt, int idPstGrad, int idUsuario) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Object> allUsersLoggedInSystem() {
+		return sessionRegistry.getAllPrincipals();
 	}
 
 }

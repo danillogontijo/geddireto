@@ -134,10 +134,22 @@ $j(function() {
 			showAllUsers();
 		}
 	});
-
+	
+	$j('a[name=showDocument]').click(function(e){
+		e.preventDefault();
+		showDocument();
+		}
+	);
+	
 	$j('a[name=addUser]').click(function(e){
 		e.preventDefault();
 		addUser();
+		}
+	);
+	
+	$j('a[name=logUsers]').click(function(e){
+		e.preventDefault();
+		showLogUsers();
 		}
 	);
 
@@ -146,7 +158,31 @@ $j(function() {
 		var id = $j(this).attr('href');
 		editUser(id);
 	});
+	
+	function showLogUsers(){
 
+		removeTable();
+		
+		table = '<table id="table_users" width="100%" class="table_users">'+
+		'<tr><td colspan="10">'+
+		'</td></tr>';
+
+		$j('#conteudo').append(table);
+		$j("#table_users tr:first").addClass('table_titulo');
+				
+		$j("#table_users tr:first").first().html('Usuários Logados no Sistema');
+		
+		<c:forEach var="u" items="${allUsersLogged}">
+			$j('#table_users').append('<tr><td>${u.usuNome} - ${u.usuLogin}</td></tr>');
+		</c:forEach>
+		
+		$j("#table_users tr:odd").css("background-color", "#E2E4FF");
+		$j('#table_users').append('<tr class="table_titulo"><td>Total de sessões abertas: ${fn:length(allUsersLogged)}</td></tr>');
+		$j("#table_users tr:last td").css("border-bottom", "1px solid #000");
+		$j("#table_users tr:last td").css("border-top", "1px solid #000");
+		
+	}
+	
 	function editUser(id){
 
 		removeTable();
@@ -437,6 +473,30 @@ $j(function() {
 
 	function removeTable(){
 		$j('#conteudo').find('table').remove();
+	}
+	
+	function showDocument(){
+
+		removeTable();
+		
+		table = '<table id="table_users" width="100%" class="table_users">'+
+		'<tr><td colspan="10">Digite o nr  do Protocolo: '+
+		'<input type="text" id="nrProtocolo"></input></td>'+
+		'</tr>';
+		
+		$j('#conteudo').append(table);
+		$j("#table_users tr:first").addClass('table_titulo');
+		
+		$j("#nrProtocolo").bind('keyup',function(e){
+			//setTimeout(function(){search();},10);
+			var evento = (window.event ? e.keyCode : e.which);
+
+			if(evento == 13) {
+				setTimeout(function(){alert('doc encontrado');},10);
+			}
+			
+		});
+		
 	}
 
 	function showAllUsers(){
@@ -924,11 +984,14 @@ function saveCarteira(){
 						<li><a href="index.html" name="addUser" target="palco">Cadastro</a></li>
 						<li>Edição</li>
 						<li>Vincular carteira</li>
+						<li><a href="index.html" name="logUsers" target="palco">Usuários Logados</a></li>
 					</ul>
 				</div>
 				<h3><a href="#">Documentos</a></h3>
 				<div>
-					
+					<ul>
+						<li><a href="#" name="showDocument">Editar doc</a></li>
+					</ul>
 				</div>
 				<h3><a href="#">Carteiras</a></h3>
 				<div>

@@ -121,7 +121,9 @@ function ChatDiretoAPI (userName, userID) {
 	};
 	
 	this.changeStatusInChat = function(e,status){
-		e.preventDefault();
+		var isRequest = (e == null ? true : false);
+		if(!isRequest)
+			e.preventDefault();
 		changeStatus(status);
 		if (status == 1){
 			showOnline();
@@ -434,6 +436,7 @@ function ChatDiretoAPI (userName, userID) {
 }
 
 dwr.engine.setErrorHandler(errh);
+//dwr.engine.setWarningHandler(null);
 
 function errh(msg, exc) {
 	 alert("O erro é: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));

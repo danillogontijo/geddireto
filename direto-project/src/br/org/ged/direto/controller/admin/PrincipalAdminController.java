@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -16,7 +18,16 @@ import br.org.ged.direto.model.service.UsuarioService;
 public class PrincipalAdminController {
 
 	@Autowired
-	UsuarioService usuarioService;
+	private UsuarioService usuarioService;
+	
+	@Autowired
+	private SessionRegistry sessionRegistry;
+	
+	@SuppressWarnings("unchecked")
+	@ModelAttribute("allUsersLogged")
+	public List<Usuario> getallUsersLogged() {
+		return (List<Usuario>)(List<?>) sessionRegistry.getAllPrincipals();
+	}
 	
 	@RequestMapping(method = RequestMethod.GET,value="/admin/index.html")
 	public String showAdmin(){

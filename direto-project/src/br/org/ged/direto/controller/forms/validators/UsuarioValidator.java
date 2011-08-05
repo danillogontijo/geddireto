@@ -42,17 +42,17 @@ public class UsuarioValidator extends FormsValidator {
 	
 	public void validateUsuNome(String usuNome, Errors errors) {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuNome",
-				"required");
+				"required", new Object[] { "Nome Completo" }, "Nome Completo não pode ser vazio.");
 	}
 	
 	public void validateUsuNGuerra(String usuNGuerra, Errors errors) {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuNGuerra",
-				"required");
+				"required", new Object[] { "Nome de Guerra" }, "Nome de Guerra não pode ser vazio.");
 	}
 	
 	public void validateUsuIdt(String usuIdt, Errors errors) {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usuIdt",
-				"required");
+				"required", new Object[] { "Identidade" }, "Identidade não pode ser vazio.");
 	}
 	
 	public void validateRepeatedPassword(String usuSenhaConcat, Errors errors) {

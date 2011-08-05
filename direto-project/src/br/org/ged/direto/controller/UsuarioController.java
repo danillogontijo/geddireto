@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,10 +62,13 @@ public class UsuarioController extends BaseController {
      public String processValidatinForm(@ModelAttribute("usuarioForm") UsuarioForm usuarioForm,
                      BindingResult result, ModelMap model) throws Exception {
              
-			validator.validate(usuarioForm, result);  
+			validator.validate(usuarioForm, result);
+			if(!usuarioForm.getUsuSenha().equals(usuarioForm.getRepeatedPassword()))
+				result.addError(new FieldError("UsuarioForm", "usuSenha", "Senhas não conferem."));
 		
 			if (result.hasErrors()) {
-                 return "usuarioForm";
+				//model.addAttribute("usuarioForm", usuarioForm);
+				return "usuarioForm";
             }
             
 			Usuario usuario = usuarioService.selectByLogin(getUsuarioLogado().getUsuLogin());
@@ -76,11 +80,12 @@ public class UsuarioController extends BaseController {
 			
 			usuario.setPstGrad(pstGrad);
 			
-			System.out.println("Senha:"+usuarioForm.getUsuSenha());
-			
 			usuarioService.save(usuario);
-			// Add the saved validationForm to the model
-            model.put("usuarioForm", usuarioForm);
+			
+			if(usuarioForm.getRepeatedPassword() != "")
+				usuarioService.changePassword(usuario.getUsuLogin(),usuarioForm.getUsuSenha());
+			
+			model.put("usuarioForm", usuarioForm);
            
             return "redirect:usuario.html";
      }
