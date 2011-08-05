@@ -46,7 +46,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 		users = chatUtils.getUsers();
 	}
 
-	public static HttpSession session() {
+	private static HttpSession session() {
 	    ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 	    return attr.getRequest().getSession(true); // true == permite criar
 	}
@@ -56,7 +56,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 		return messagesSession;
 	}
 	
-	public int initialStatus(int idUser){
+	private int initialStatus(int idUser){
 		if (users.containsKey(idUser))
 			return users.get(idUser).getStatusUser();
 		return -1;
@@ -77,7 +77,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 		return initialStatus;
 	}
 	
-	public void addUser(int idUser,String nameUser,boolean isStarted){
+	private void addUser(int idUser,String nameUser,boolean isStarted){
 		if(!isStarted){
 			synchronized (users) {
 				user = new UserChat();
@@ -91,7 +91,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 		user = users.get(idUser);
 	}
 	
-	public void removeUser(int idUser){
+	private void removeUser(int idUser){
 		synchronized (users) {
 			if (users.containsKey(idUser))
 				users.remove(idUser);
@@ -124,11 +124,11 @@ public class ChatServiceImpl implements ChatService, Serializable{
 		return msgs;
 	}
 	
-	public void addMessageInSession(Message msg){
+	private void addMessageInSession(Message msg){
 		messagesSession.add(msg);
 	}
 	
-	public void addMessageInSession(List<Message> list){
+	private void addMessageInSession(List<Message> list){
 		if(list == null)
 			return;
 		for (Message msg : list)
@@ -148,7 +148,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 			return getAllUsersOn();
 	}
 	
-	public boolean isSessionActive(UserChat user){
+	private boolean isSessionActive(UserChat user){
 		List<Object> principals = sessionRegistry.getAllPrincipals();
 		for(Object obj : principals){
 			Usuario u = (Usuario)obj;
@@ -158,8 +158,11 @@ public class ChatServiceImpl implements ChatService, Serializable{
 		
 		return false;
 	}
-	
-	public String getNowDataTime(){
+	/**
+	 * DATA E HORA DA MENSAGEM QUE FOI ENVIADA
+	 * @return String no formato dd-mm-aaaa HH:mm
+	 */
+	private String getNowDataTime(){
 		return DataTimeUtil.getBrazilFormatDataHora(new Date());
 	}
 	
@@ -228,7 +231,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 			notifyUser();
 	}
 	
-	public void notifyUser(){
+	private void notifyUser(){
 		synchronized (user) {
 			user.notifyAll();
 		}

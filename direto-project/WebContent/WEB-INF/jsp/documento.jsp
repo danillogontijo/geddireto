@@ -107,8 +107,8 @@ $j(function(){
 
 						segurancaJS.decryptMessage(password.val(),ID_DESPACHO,{
 							callback:function(dec) {
-							dec += " ADÇÇâÂÃo !@#%& ;: .()";
-								dialogMessage("Despacho descriptografado",dec.replace(/[^a-zA-Z0-9_\(\*\)\.\s:;,%$!@#&ãàáâäèéêëìíîïõòóôöùúûüçÃÀÁÂÄÈÉÊËÌÍÎÏÖÒÓÔÙÚÛÜÇ]+/g,' ? '),false);
+							//dec += " ADÇÇâÂÃo !@#%& ;: .()";
+								dialogMessage("Despacho descriptografado",dec.replace(/[^a-zA-Z0-9_\(\*\)\.\s:;,%$!@#&ãàáâäèéêëìíîïõòóôöùúûüçÃÀÁÂÄÈÉÊËÌÍÎÏÖÒÓÔÙÚÛÜÇ]+/g,'-'),false);
 							}
 						});
 						

@@ -115,7 +115,25 @@ function init(page){
   	}
 
 	$j('.tela_apresentacao').hide();
+	
 }
+
+function preloadMedia() {
+	var audioElement = document.createElement('audio');
+	audioElement.setAttribute('src', 'beepchat.wav');
+	audioElement.setAttribute('id', 'wav');
+	//audioElement.play();
+	//  document.body.appendChild(audioElement);
+	$j('body').append($j(audioElement));
+}
+
+function soundPlay(which) {
+	  var sounder = document.getElementById('wav');
+	  sounder.play();
+	}
+//preloadMedia();
+//soundPlay('beepchat');
+
 
 jQuery(document).ready(function($) {	
 	
@@ -529,7 +547,6 @@ function montaUsersByGrupos(listBeans){
 	
 }
 
-
 </script>  
 
 
@@ -542,7 +559,10 @@ function montaUsersByGrupos(listBeans){
 <c:set var="pageName" value="${fn:split((fn:split(pagePath,'/')[(fn:length(fn:split(pagePath,'/'))-1)]),'.')[0]}"></c:set>
 
 <body onload="init('${pageName}')">
+<span><button type="button" onclick="soundPlay('beepchat')" value="som">som</button></span>
 
+<embed src="beepchat.wav" type="application/x-mplayer2" autostart=false width=0 height=0 id="beepchat" enablejavascript="true">
+<audio src="beepchat.wav" id="wav"></audio>
 
 <div id="error-message" title="Error" class="ui-state-error ui-corner-all" style="display: none;">
 </div>
