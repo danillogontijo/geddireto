@@ -10,6 +10,7 @@ function ChatDiretoAPI (userName, userID) {
 		TIMER = null,
 		SIZE_MESSAGES = 0,
 		TIME_TO_INACTIVE = 5; //em minutos
+		DISABLE_SOUND = true;
 	
 	var listUserSearch = new Array();
 	
@@ -108,6 +109,7 @@ function ChatDiretoAPI (userName, userID) {
 		setTimeout(function(){checkUsers();},3100); //Ativar o checador de users
 		
 		welcomeMessage(status);
+		setTimeout(function(){DISABLE_SOUND=false;},5000);
 		
 		if(status == 0){
 			showInactive();
@@ -320,7 +322,26 @@ function ChatDiretoAPI (userName, userID) {
 					+from+'<br>'+msgRec+'</p>';
 			
 			showMessage(msgHTML);
+			if(!DISABLE_SOUND)
+				alertBeepMessage('beepchat');
 		}
+	};
+	
+	var alertBeepMessage = function (soundobj) {
+		if(isIE){
+			 var thissound=document.getElementById(soundobj);
+			 thissound.Play();
+		}else{
+		 obj = document.embeds[soundobj];
+		if(obj.Play) obj.Play();
+		// return true;
+		}
+	 };
+
+	var isIE = function(){
+		if(document.all)
+			return true;
+		return false;
 	};
 	
 	var checkNewMessage = function (){
@@ -330,7 +351,6 @@ function ChatDiretoAPI (userName, userID) {
 				if(listMsgCallback != null){
 					iteratorMessages(listMsgCallback,false);			
 					setTimeout(function(){checkNewMessage();},300);
-					
 				}else{
 					alert("\t\tVocê ficou offline!\nAs mensagens que os usuários lhe enviarem\nserão mostradas da próxima vez que entrar.");
 				}	
