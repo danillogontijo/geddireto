@@ -60,7 +60,7 @@ public class GruposRepositoryImpl extends BaseRepositoryImpl implements GruposRe
 				"AND grupo.IdCarteira=usuomsec.IdCarteira " +
 				"AND usuomsec.IdUsuario=usuario.IdUsuario " +
 				"AND pstgrad.IdPstGrad=usuario.IdPstGrad "+//GROUP BY usuario.IdUsuario " +
-				"ORDER BY pstgrad.IdPstGrad";
+				"ORDER BY pstgrad.IdPstGrad asc, usuario.usuNGuerra asc";
 		
 		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createSQLQuery(sql).addEntity(Conta.class);
 		query.setInteger(0, idNomeGrupo);

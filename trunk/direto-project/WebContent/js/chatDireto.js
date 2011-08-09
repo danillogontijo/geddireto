@@ -9,7 +9,8 @@ function ChatDiretoAPI (userName, userID) {
 		USER_IS_ACTIVE = false,
 		TIMER = null,
 		SIZE_MESSAGES = 0,
-		TIME_TO_INACTIVE = 5; //em minutos
+		TIME_TO_INACTIVE = 5, //em minutos
+		STATUS = 2,
 		DISABLE_SOUND = true;
 	
 	var listUserSearch = new Array();
@@ -153,6 +154,16 @@ function ChatDiretoAPI (userName, userID) {
 		}
 		
 		(status == 2 ? clearTimer(false,false) : startTimer(false,true));
+			
+		//função para colocar o usuario offline após o dobro de tempo de inatividade
+		/*if(status == 2){
+			startTimer();
+			USER_IS_ACTIVE = false;
+			STATUS = 0;
+		}else if(status == 1) {
+			STATUS = 2;
+			startTimer();
+		}*/
 		
 		var logoff = ' (<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)';
 		var status = 'Você está <span>'+(USER_IS_ACTIVE ? 'ON' : 'INATIVO')
@@ -328,13 +339,15 @@ function ChatDiretoAPI (userName, userID) {
 	};
 	
 	var alertBeepMessage = function (soundobj) {
-		if(isIE){
+		if(!isIE()){
+			var thissound=document.getElementById(soundobj);
+			thissound.play();
+		}else{
+		// obj = document.embeds[soundobj];
+		//if(obj.Play) obj.Play();
+		// return true;
 			 var thissound=document.getElementById(soundobj);
 			 thissound.Play();
-		}else{
-		 obj = document.embeds[soundobj];
-		if(obj.Play) obj.Play();
-		// return true;
 		}
 	 };
 
@@ -398,7 +411,7 @@ function ChatDiretoAPI (userName, userID) {
 	};
 	
 	var doTimer = function (){
-		TIMER = setTimeout(function(){changeStatus(2);},(TIME_TO_INACTIVE*60*1000));
+		TIMER = setTimeout(function(){changeStatus(STATUS);},(TIME_TO_INACTIVE*60*1000));
 	};
 	
 	var clearTimer = function (isTyping,isUserActive){
@@ -407,7 +420,7 @@ function ChatDiretoAPI (userName, userID) {
 		clearTimeout(TIMER);
 	};
 	
-	var startTimer = function (){
+	var startTimer = function(){
 		USER_IS_TYPING = false;
 		USER_IS_ACTIVE = true;
 		doTimer();
