@@ -41,5 +41,7 @@ public interface UsuarioService {
 	
 	@PreAuthorize("(hasRole('ROLE_ADMIN'))")
 	public List<Object> allUsersLoggedInSystem();
+	
+	public int userIdentity(String usuLogin);
 
 }

@@ -209,4 +209,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return sessionRegistry.getAllPrincipals();
 	}
 
+	@Override
+	@RemoteMethod
+	public int userIdentity(String usuLogin) {
+		return selectByLogin(usuLogin).getUsuIdt();
+	}
+
 }

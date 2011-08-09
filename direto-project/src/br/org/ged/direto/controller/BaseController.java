@@ -72,6 +72,8 @@ public abstract class BaseController {
 				if (conta.isPrincipal()){
 					int idCarteira = conta.getCarteira().getIdCarteira();
 					session.setAttribute("j_usuario_conta", String.valueOf(idCarteira));
+					Usuario usuLogado = (Usuario)auth.getPrincipal();
+					usuLogado.setIdCarteira(idCarteira);
 					return idCarteira;
 				}
 			}

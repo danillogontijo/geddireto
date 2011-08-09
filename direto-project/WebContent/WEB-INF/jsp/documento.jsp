@@ -143,10 +143,25 @@ $j(function(){
 						bValid = bValid && checkExists(usulogin,ok);
 						
 						if ( bValid ) {
-							USER_LOGIN_CRIPTO_DEST = usulogin.val();
-							CRIPTOGRAFAR = true;
-							$j( "#user-cripto" ).dialog( "close" );
-							$j('#mask').show();
+							
+							usuarioJS.userIdentity(usulogin.val(),{
+								callback:function(usuIdt) { 
+							
+								segurancaJS.haveCertificate(usuIdt,{
+									callback:function(ok) { 
+									if(ok){
+										USER_LOGIN_CRIPTO_DEST = usulogin.val();
+										CRIPTOGRAFAR = true;
+										$j( "#user-cripto" ).dialog( "close" );
+										$j('#mask').show();
+									}else{
+										alertMessage('Usuário sem certificado digital','Este usuário não tem certifcado digital para ler despachos criptografados',false); 
+									}
+								
+									}
+								});
+							 }
+							});
 						}
 		  			}
 				});
