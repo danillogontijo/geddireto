@@ -83,7 +83,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 		this.config = config;
 		jks = new File(config.certificatesDir+"/store/truststore.jks");
 		aes = Cipher.getInstance("AES");
-		rsa = Cipher.getInstance("RSA");
+		rsa = Cipher.getInstance("RSA/ECB/NoPadding");
 		setAeskeySpec();
 	}
 	
@@ -427,7 +427,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 	 * Extrai a chave pública do arquivo.
 	 */
 	private PublicKey getPublicKeyFromFile( File cert, String alias, String password ) throws Exception {
-		KeyStore ks = KeyStore.getInstance (KeyStore.getDefaultType());
+		KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
 		char[] pwd = password.toCharArray();
 		InputStream is = new FileInputStream( cert );
 		ks.load( is, pwd );

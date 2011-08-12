@@ -1,9 +1,13 @@
 package br.org.ged.direto.controller.admin;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,11 +27,40 @@ public class PrincipalAdminController {
 	@Autowired
 	private SessionRegistry sessionRegistry;
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@ModelAttribute("allUsersLogged")
 	public List<Usuario> getallUsersLogged() {
 		return (List<Usuario>)(List<?>) sessionRegistry.getAllPrincipals();
+	}*/
+	
+	@SuppressWarnings("unchecked")
+	@ModelAttribute("activeUsers")
+	public Map<Usuario, Date> listActiveUsers() {
+		Map<Usuario, Date> lastActivityDates = new HashMap<Usuario, Date>();
+		
+		for (Usuario principal : (List<Usuario>)(List<?>)sessionRegistry.getAllPrincipals()) {
+			// a principal may have multiple active sessions
+			for (SessionInformation session : sessionRegistry.getAllSessions(
+					principal, false)) {
+				// no last activity stored
+				if (lastActivityDates.get(principal) == null) {
+					lastActivityDates.put(principal, session.getLastRequest());
+				} else {
+					// check to see if this session is newer than the last
+					// stored
+					Date prevLastRequest = lastActivityDates.get(principal);
+					if (session.getLastRequest().after(prevLastRequest)) {
+						// update if so
+						lastActivityDates.put(principal,
+								session.getLastRequest());
+					}
+				}
+			}
+		}
+		
+		return lastActivityDates;
 	}
+
 	
 	@RequestMapping(method = RequestMethod.GET,value="/admin/index.html")
 	public String showAdmin(){

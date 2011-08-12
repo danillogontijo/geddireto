@@ -221,6 +221,7 @@ jQuery(document).ready(function($) {
 			//$('#hn_nome_anexo').val(anexoCaminho);
 			//alert("abrir documento: "+anexoCaminho);
 			ID_ANEXO = $(this).attr('anexo');
+			NOME_ANEXO = $(this).attr('nomeanexo');
 			caminho = "verdocumentoFisico.html?id="+ID_ANEXO;
 			//alert(caminho);
 			window.open(caminho, '', ''); 
