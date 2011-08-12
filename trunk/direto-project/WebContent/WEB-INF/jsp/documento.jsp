@@ -19,7 +19,7 @@ var IS_UPDATES_ACTIONS = false; //Para execucao de uma atualizacao por vez
 var PROXIMO_ANEXO = ${proximoAnexo};
 var ID_DOCUMENTO = ${idDocumento};
 var USER_NAME = '${usuario.pstGrad.pstgradNome}	${usuario.usuNGuerra}';
-var NAME,CAMINHO_NOME,ID_ANEXO;
+var NAME,CAMINHO_NOME,ID_ANEXO,NOME_ANEXO;
 var CRIPTOGRAFAR = false;
 var USER_LOGIN_CRIPTO_DEST;
 var ID_DESPACHO = 0;
@@ -107,8 +107,9 @@ $j(function(){
 
 						segurancaJS.decryptMessage(password.val(),ID_DESPACHO,{
 							callback:function(dec) {
-							//dec += " ADÇÇâÂÃo !@#%& ;: .()";
-								dialogMessage("Despacho descriptografado",dec.replace(/[^a-zA-Z0-9_\(\*\)\.\s:;,%$!@#&ãàáâäèéêëìíîïõòóôöùúûüçÃÀÁÂÄÈÉÊËÌÍÎÏÖÒÓÔÙÚÛÜÇ]+/g,'-'),false);
+								//dec += " ADÇÇâÂÃo !@#%& ;: .()";
+								//dialogMessage("Despacho descriptografado",dec.replace(/[^a-zA-Z0-9_\(\*\)\.\s:;,%$!@#&ãàáâäèéêëìíîïõòóôöùúûüçÃÀÁÂÄÈÉÊËÌÍÎÏÖÒÓÔÙÚÛÜÇ]+/g,'-'),false);
+								dialogMessage("Despacho descriptografado",dec,false);
 							}
 						});
 						
@@ -278,7 +279,11 @@ $j(function(){
 			setTimeout(function(){
 				
 				if(BACK){
-				
+					
+					textoHistorico = "(Assinado) "+NOME_ANEXO+"-${usuario.usuLogin}";
+					
+					historicoJS.save(${idDocumento},textoHistorico);
+					
 					segurancaJS.haveCertificate(${usuario.usuIdt},{
 						callback:function(ok) { 
 							if (ok){
@@ -743,8 +748,10 @@ height: 15px;
 	<div style="float: left; text-align: left; margin-top: 10px; margin-left: 7px">
 	
 		<font size="+2">[${documento.tipoDocumento.tipoDocumentoNome}] ${documento.assunto}</font>		
-			
+		
 		<br><br>
+		
+		<font color="#666666">Id Documento: </font><b>${idDocumento}</b><br>
 		<c:if test="${encaminhadoPor != ''}">
 			<font color="#666666">Carteira que encaminhou: </font><b>${encaminhadoPor}</b><br>
 		</c:if>
@@ -787,7 +794,7 @@ height: 15px;
 		<c:choose>
 			<c:when test="${documento.assinatura == 0}">
 				<c:if test="${documento_principal.assinado == 0}">
-				 <span id="s_editar"><a href="#weditar" id="${documento_principal.anexoCaminho}" anexo="${documento_principal.idAnexo}" name="modal" class="l_edicao_vis">Editar</a></span> |
+				 <span id="s_editar"><a href="#weditar" id="${documento_principal.anexoCaminho}" nomeAnexo="${documento_principal.anexoNome}" anexo="${documento_principal.idAnexo}" name="modal" class="l_edicao_vis">Editar</a></span> |
 				</c:if>
 			</c:when>
 			<c:otherwise>
@@ -826,7 +833,7 @@ height: 15px;
 				<c:choose>
 					<c:when test="${documento.assinatura == 0}">
 						<c:if test="${anexo.assinado == 0}">
-							<a href="#weditar" name="modal" id="${anexo.anexoCaminho}" anexo="${anexo.idAnexo}" class="l_edicao_vis">Editar</a> |
+							<a href="#weditar" name="modal" id="${anexo.anexoCaminho}" nomeanexo="${documento_principal.anexoNome}" anexo="${anexo.idAnexo}" class="l_edicao_vis">Editar</a> |
 						</c:if>
 					</c:when>
 				</c:choose>
