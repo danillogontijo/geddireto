@@ -3,7 +3,6 @@ package br.org.ged.direto.model.service.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import br.org.ged.direto.model.entity.Pastas;
 import br.org.ged.direto.model.repository.DocumentosRepository;
 import br.org.ged.direto.model.repository.PastasRepository;
-import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.PastasService;
 
 @Service("pastasService")
@@ -51,11 +49,10 @@ public class PastasServiceImpl implements PastasService {
 			long total = this.documentosRepository.counterDocumentsByBox(String.valueOf(pasta.getIdPasta()),idCarteira,null);
 			String nomePasta = pasta.getNomePasta()+" ("+total+")";
 			pasta.setNomePasta(nomePasta);
-			System.out.println(nomePasta);
+	
 		}
 		
 		return pastas;
-		
 	}
 
 }

@@ -172,8 +172,8 @@ $j(function() {
 				
 		$j("#table_users tr:first").first().html('Usuários Logados no Sistema');
 		
-		<c:forEach var="u" items="${allUsersLogged}">
-			$j('#table_users').append('<tr><td>${u.usuNome} - ${u.usuLogin}</td></tr>');
+		<c:forEach items="${activeUsers}" var="uinfo">
+			$j('#table_users').append('<tr><td><strong>${uinfo.key.usuNome} - ${uinfo.key.usuLogin}</strong> / Last Active: <strong>${uinfo.value}</strong></td></tr>');
 		</c:forEach>
 		
 		$j("#table_users tr:odd").css("background-color", "#E2E4FF");
@@ -354,8 +354,9 @@ $j(function() {
 				alert(resultado);
 
 				var count = 0;
+				
 				$j('#contas_atuais').find('input:checkbox').each(function(i){
-
+					
 					var pkConta = parseInt($j(this).val());
 					
 					if ( (i == 0) && ($j(this).attr('checked') == '') ){
@@ -386,12 +387,15 @@ $j(function() {
 					
 				});
 				
+				
+				setTimeout(function(){editUser(idUsuario);},1000);	
+				
 			}
 						
 		});
 
 		
-		setTimeout(function(){editUser(idUsuario);},200);		
+			
 
 	};
 
@@ -654,6 +658,8 @@ function atualizaGrupo(){
 		});
 
 	},100);
+	
+	alert("Grupo atualizado com sucesso!");
 
 }
 
@@ -829,6 +835,18 @@ function saveCarteira(){
 			  	margin-bottom: 10px;
 			  	width: 300px;
 			  }
+			  
+			  #waddgrupo fieldset { border:1px solid #000 }
+			
+			  #waddgrupo input {
+			  	margin-bottom: 10px;
+			  	width: 300px;
+			  }
+			  
+			  #waddgrupo select {
+			  	margin-bottom: 10px;
+			  	width: 300px;
+			  }
 		</style>
 
 <!-- MODALS -->
@@ -964,9 +982,36 @@ function saveCarteira(){
 				</td>
 			</tr>
 	</table>		
+	</div>
+	
+	<div id="waddgrupo" class="window">
+	<table width="100%">
+			<tr>
+				<td colspan="3" align="center" bgcolor="red" class="titulo_notificacoes" height="20" valign="middle">Adicionar novo grupo</td>
+				<td style="width: 30px;"><a href="#" class="close" style="font-weight: bold">X</a></td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+					<fieldset>
+  						
+  							
+    						<label for="grupoDesc">Descrição:</label>
+    							<input type="text" name="grupoDesc" id="grupoDesc" maxlength="60"/>
+    						<br>
+    						
+    						<label for="grupoAbr">Abreviatura:</label>
+    							<input type="text" name="grupoAbr" id="grupoAbr" maxlength="30"/>
+    						<br>
+    						
+    						<input type="button" value="Salvar" style="width: 50px;" onclick="saveGrupo()" />		
+    						
+  					</fieldset>
+				</td>
+			</tr>
+	</table>		
 	
 	
-	</div>	
+	</div>		
 
   <!-- Mask para bloquear tela -->
   <div id="mask"></div>
@@ -1004,8 +1049,8 @@ function saveCarteira(){
 				<h3><a href="#">Grupos</a></h3>
 				<div>
 					<ul>
-						<li><a href="#wgrupos" name="modal">Cadastro</a></li>
-						<li>Edição</li>
+						<li><a href="#wgrupos" name="modal">Gerenciar</a></li>
+						<li><a href="#waddgrupo" name="modal">Cadastro</a></li>
 					</ul>
 				</div>
 				<h3><a href="#">Outros</a></h3>

@@ -13,6 +13,8 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import br.org.direto.util.DataTimeUtil;
@@ -23,6 +25,7 @@ import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Notificacao;
+import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.repository.DocumentosRepository;
 
@@ -307,7 +310,15 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 									+ " or details.nrDocumento like '%"+searchTerm+"%'"
 									+ " or details.assunto like '%"+searchTerm+"%'"
 									+ " or details.dataEntSistema like '%"+searchTerm+"%')";
-		String baseSearch = " doc.carteira.secao.idSecao = "+idSecao+" and doc.carteira.om.idOM = "+idOM+"";
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario obj = (Usuario)auth.getPrincipal();
+		String baseSearch = "";
+		
+		if(obj.getUsuPapel().equals("ADMIN"))
+			baseSearch = " doc.carteira.secao.idSecao <> 0 and doc.carteira.om.idOM <> 0";
+		else
+			baseSearch = " doc.carteira.secao.idSecao = "+idSecao+" and doc.carteira.om.idOM = "+idOM+"";
 		
 		if(searchTerm!=""&&individualSearch!=""){
 			searchSQL = globeSearch + " and " + individualSearch;

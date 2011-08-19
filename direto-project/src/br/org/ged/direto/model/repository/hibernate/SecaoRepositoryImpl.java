@@ -14,7 +14,7 @@ public class SecaoRepositoryImpl extends BaseRepositoryImpl implements SecaoRepo
 	@Override
 	public List<Secao> getAll() {
 		return (List<Secao>) hibernateTemplate.find("from "
-				+ Secao.class.getName());
+				+ Secao.class.getName()+" order by secAbr asc");
 	}
 
 	@Override

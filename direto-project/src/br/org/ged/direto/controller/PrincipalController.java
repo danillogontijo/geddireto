@@ -32,9 +32,6 @@ public class PrincipalController extends BaseController {
 	@Autowired
 	private DocumentosService documentosService;
 	
-	/*@Autowired
-	private PastasService pastasService;*/
-	
 	@Autowired
 	private GruposService gruposService;
 	
@@ -43,7 +40,6 @@ public class PrincipalController extends BaseController {
 	public Collection<DataUtils> gruposCarteira(HttpServletRequest request) throws CarteiraException {
 		Integer idCarteira = this.getIdCarteiraFromSession(request);
 		return gruposService.listGroups(idCarteira);
-		
 	}
 	
 	
@@ -194,7 +190,6 @@ public class PrincipalController extends BaseController {
 	@ModelAttribute("documentos")
 	public Collection<Documento> todosDocumentos(HttpServletRequest request) {
 		Integer idCarteira = getIdCarteiraFromSession(request);
-		System.out.println(idCarteira+"=**************");
 		List<Documento> docsByConta = new ArrayList<Documento>();
 		docsByConta = this.documentosService.listByLimited(idCarteira);
 		return docsByConta;

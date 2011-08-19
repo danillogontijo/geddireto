@@ -93,7 +93,7 @@ public class GruposRepositoryImpl extends BaseRepositoryImpl implements GruposRe
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DataUtils> allGroups() {
-		List grupos = hibernateTemplate.find("from "+NomeGrupos.class.getName());
+		List grupos = hibernateTemplate.find("from "+NomeGrupos.class.getName()+" order by grupoAbr asc");
 		
 		List<DataUtils> dados = new LinkedList<DataUtils>();
 		
