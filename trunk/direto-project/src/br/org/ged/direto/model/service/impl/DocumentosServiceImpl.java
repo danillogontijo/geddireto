@@ -187,7 +187,7 @@ public class DocumentosServiceImpl implements DocumentosService {
 		
 	}
 	
-	public synchronized String createProtocolNumber(int idDocumentoDetalhes){
+	private synchronized String createProtocolNumber(int idDocumentoDetalhes){
 		String y = "yyyy";
 		String m = "MM";
 		String year, month;
@@ -204,13 +204,13 @@ public class DocumentosServiceImpl implements DocumentosService {
 
 	}
 	
-	public int multiplica(String s, int c){
+	private int multiplica(String s, int c){
 		int n = Character.getNumericValue(s.charAt(s.length()-1));
 		if (s.length() == 1) return (n*c);
 		return (n*c) + multiplica(s.substring(0, s.length()-1),++c);
 	}
 	
-	public synchronized String createProtocolNumber(String year){
+	private synchronized String createProtocolNumber(String year){
 				
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario usuario = (Usuario) auth.getPrincipal();
@@ -406,7 +406,51 @@ public class DocumentosServiceImpl implements DocumentosService {
 
 	@Override
 	public DocumentoDetalhes getDocumentoDetalhes(int primaryKey) {
-		return documentosRepository.getDocumentoDetalhes(primaryKey);
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario obj = (Usuario)auth.getPrincipal();
+		Usuario usuario = usuarioService.selectByLogin(auth.getName());
+		usuario.setIdCarteira(obj.getIdCarteira());
+		
+		DocumentoDetalhes doc_det = documentosRepository.getDocumentoDetalhes(primaryKey);
+		
+		if (doc_det == null)
+			throw new DocumentNotFoundException("Documento inexistente.");
+		
+		Iterator<Documento> ite = doc_det.getDocumentosByCarteira().iterator();
+		Documento documento = null;
+		boolean granted = false;
+		
+		while(ite.hasNext()){
+			
+			documento = ite.next();
+			
+			int secaoDocumento = documento.getCarteira().getSecao().getIdSecao();
+			int omDocumento = documento.getCarteira().getOm().getIdOM();
+		
+			for(Conta conta : usuario.getContas()){
+				
+				Carteira carteiraUsuarioLogado = conta.getCarteira();
+				
+				//ative o if caso queira que visualize apenas os ocumentos da carteira logada
+				//if (usuario.getIdCarteira() == carteiraUsuarioLogado.getIdCarteira()){
+					if ( (carteiraUsuarioLogado.getSecao().getIdSecao() == secaoDocumento) && (carteiraUsuarioLogado.getOm().getIdOM() == omDocumento) )
+							granted = true;
+				//}
+				
+			}
+			
+		}
+		
+		if(!granted)
+			if(usuario.getUsuPapel().equals("ADMIN"))
+				granted = true;
+		
+		documento.setGranted(granted);
+		if (!documento.isGranted()) 
+			throw new DocumentNotFoundException("Você não tem permissão para acessar este documento.");
+		
+		return doc_det;
 	}
 
 	@Override

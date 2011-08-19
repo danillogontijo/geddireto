@@ -335,18 +335,17 @@ js.direto.modal = function(obj){
 				
 				if (i==0){
 					principal = $j(this).attr('id');
+					
+					$j('#slContas option').each(function(){
+						if ($j(this).val() == principal)
+							$j(this).attr('selected','selected');
+							
+					});
+					
 				}else{
 					contas += $j(this).attr('id')+',';
 				}
 				
-				
-				
-			});
-			
-			$j('#slContas option').each(function(){
-				if ($j(this).val() == principal)
-					$j(this).attr('selected','selected');
-					
 			});
 			
 			var arContas = contas.split(',');
@@ -372,8 +371,7 @@ js.direto.modal = function(obj){
 			
 			});
 			
-			
-		},2000);
+		},5000);
 		
 		setTimeout(function(){$j('#ListaPARA').attr('disabled','');
 		$j('#ListaDE').attr('disabled','');},2500);

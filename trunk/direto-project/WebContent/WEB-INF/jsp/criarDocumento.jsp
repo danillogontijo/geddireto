@@ -706,9 +706,9 @@ function fEnviar(e){
 
 <tr>
 	<td>
-		<p>
+		<p style="display: none;">
 		Assinar o documento? 
-	   <form:checkbox path="assinatura" value="1"/>
+	   <form:checkbox path="assinatura" value="1" />
 		</p>		
 	</td>
 	<td>

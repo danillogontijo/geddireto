@@ -26,6 +26,7 @@ import br.org.ged.direto.model.service.AnotacaoService;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.HistoricoService;
+import br.org.ged.direto.model.service.UsuarioService;
 
 @Service("anotacaoService")
 @RemoteProxy(name = "anotacaoJS")
@@ -44,6 +45,9 @@ public class AnotacaoServiceImpl implements AnotacaoService {
 	
 	@Autowired
 	private HistoricoService historicoService;
+	
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@Override
 	public List<Anotacao> getAnotacaoByDocumento(Integer idDocumentoDetalhes) {
@@ -59,37 +63,42 @@ public class AnotacaoServiceImpl implements AnotacaoService {
 
 	@Override
 	@RemoteMethod
+	@Transactional(readOnly=false)
 	public void save(int idDocumentoDetalhes, String txtAnotacao) {
-		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Usuario usuario = (Usuario) auth.getPrincipal();
-		
-		Carteira carteira = carteiraService.selectById(usuario.getIdCarteira()); 
-		
-		DocumentoDetalhes documento = documentoService.getDocumentoDetalhes(idDocumentoDetalhes);
-		
-		Date data = new Date();
-		
-		Anotacao anotacao = new Anotacao();
-		anotacao.setCarteira(carteira);
-		anotacao.setDataHoraAnotacao(data);
-		anotacao.setAnotacao(txtAnotacao);
-		anotacao.setDocumentoDetalhes(documento);
-		anotacao.setUsuario(usuario);
-		
-		anotacaoRepository.save(anotacao);
-		
-		String txtHistorico = "(Anotação) - ";
-				txtHistorico += usuario.getPstGrad().getPstgradNome()+" "+usuario.getUsuNGuerra();
-				
-		Historico historico = new Historico();
-		historico.setCarteira(carteira);
-		historico.setDataHoraHistorico(data);
-		historico.setHistorico(txtHistorico);
-		historico.setDocumentoDetalhes(documento);
-		historico.setUsuario(usuario);
-		
-		historicoService.save(historico);
+		try{
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			Usuario usuarioLogado = (Usuario) auth.getPrincipal();
+			Usuario usuario = usuarioService.selectById(usuarioLogado.getIdUsuario());
+			
+			Carteira carteira = carteiraService.selectById(usuarioLogado.getIdCarteira()); 
+			
+			DocumentoDetalhes documento = documentoService.getDocumentoDetalhes(idDocumentoDetalhes);
+			
+			Date data = new Date();
+			
+			Anotacao anotacao = new Anotacao();
+			anotacao.setCarteira(carteira);
+			anotacao.setDataHoraAnotacao(data);
+			anotacao.setAnotacao(txtAnotacao);
+			anotacao.setDocumentoDetalhes(documento);
+			anotacao.setUsuario(usuario);
+			
+			anotacaoRepository.save(anotacao);
+			
+			String txtHistorico = "(Anotação) - ";
+					txtHistorico += usuario.getPstGrad().getPstgradNome()+" "+usuario.getUsuNGuerra();
+					
+			Historico historico = new Historico();
+			historico.setCarteira(carteira);
+			historico.setDataHoraHistorico(data);
+			historico.setHistorico(txtHistorico);
+			historico.setDocumentoDetalhes(documento);
+			historico.setUsuario(usuario);
+			
+			historicoService.save(historico);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 

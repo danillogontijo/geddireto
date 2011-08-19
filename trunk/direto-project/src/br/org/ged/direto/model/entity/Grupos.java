@@ -33,7 +33,7 @@ public class Grupos implements Serializable {
 	@Column(name="IdGrupo")
 	private Integer idGrupo;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdNomeGrupo", nullable = false)
 	private NomeGrupos nomeGrupo;
 

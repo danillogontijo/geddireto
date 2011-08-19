@@ -112,6 +112,12 @@
   background-color: #fff;
 }
 
+#boxes #waddgrupo{
+  width:350px; 
+  height:245px;
+  background-color: #fff;
+}
+
 
 #bt_conf_edicao {
 	border: 1px solid #006;

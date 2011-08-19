@@ -90,4 +90,9 @@ public class PrincipalAdminController {
 		}
 		
 	}
+	
+	@RequestMapping(method = RequestMethod.GET,value="/admin/idDocumento.html")
+	public void mudarIdTipoDocumento(){
+		
+	}
 }
