@@ -15,6 +15,19 @@ $j(function(){
 	$j("#usuLogin").focus(function() {
         $j("#btPassarContas").fadeOut(1000);
 	});
+	
+	$j("#usuLogin").bind('blur',function(){
+	
+		validateUser($j(this).val());
+	
+		}
+	);
+	
+	$j('input:checkbox').bind('click',function(){
+		
+		validateUser($j("#usuLogin").val());
+	
+	});
 
 	$j("#conta_principal").bind('click',function(){
 		if($j(this).is(':checked')){
@@ -35,7 +48,7 @@ $j(function(){
 	});
 
 	$j("#btPassarContas").click(function(){
-
+		
 		var sContasTransferidas = "";
 
 		$j('input:checked[name=contas]').each(function(index) {
@@ -57,7 +70,8 @@ $j(function(){
 
 			    	//$(this).dialog("close");
 
-			    	alert('fazendo logoff'); 
+			    	//alert('fazendo logoff-j_security_rememberMe_logout');
+			    	window.location.href = 'j_security_rememberMe_logout';
 
 			    	} 
 		    	});
@@ -66,7 +80,9 @@ $j(function(){
 
 			    	//$(this).dialog("close");
 
-			    	alert('fazendo logoff'); 
+			    	//alert('fazendo logoff'); 
+			    	
+			    	window.location.href = 'j_security_rememberMe_logout';
 
 			    	});
 		    	
@@ -84,7 +100,8 @@ function validateUser(usuLogin)
 {
 	usuarioJS.validateUser(usuLogin, {
 		callback:function(exist) {
-			if (exist){
+			//alert(exist);
+			if (eval(exist)){
 				$j('#validacao').hide();
 				
 				$j('#validacao').css('color','green');
@@ -129,7 +146,7 @@ function validateUser(usuLogin)
 					
 					<fieldset>
 						<label>Digite o login do usuário para o qual deseja trasferir as contas abaixo:</label>
-						<input type="text" id="usuLogin" name="usuLogin" onblur="validateUser(this.value)">
+						<input type="text" id="usuLogin" name="usuLogin">
 					
 					
 					<p>
@@ -138,11 +155,11 @@ function validateUser(usuLogin)
 						<c:forEach var="conta" items="${usuario.contas}">
 			    		     <c:choose>
 						      <c:when test="${conta.carteira.idCarteira == contaAtual}">
-						     	<input type="checkbox" name="contas" value="${conta.idConta}"" id="conta_principal" /><span style="font-weight: bold;">${conta.carteira.cartAbr}</span>
+						     	<input type="checkbox" name="contas" value="${conta.idConta}" <c:if test="${conta.contaPrincipal == 1}">id="conta_principal"</c:if> /><span style="font-weight: bold;">${conta.carteira.cartAbr}</span>
 						      </c:when>
 						
 						      <c:otherwise>
-						      	<input type="checkbox" name="contas" value="${conta.idConta}"" />${conta.carteira.cartAbr}
+						      	<input type="checkbox" name="contas" value="${conta.idConta}"" <c:if test="${conta.contaPrincipal == 1}">id="conta_principal"</c:if> />${conta.carteira.cartAbr}
 						      </c:otherwise>
 						    </c:choose>
 						    <c:if test="${conta.contaPrincipal == 1}"><br></c:if>

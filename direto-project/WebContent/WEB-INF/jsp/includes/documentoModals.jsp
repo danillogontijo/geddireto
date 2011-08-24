@@ -55,7 +55,7 @@
 				<br>Digite aqui seu texto: <br>
 				<textarea onkeypress="return js.direto.charProibido(event)" cols="76" rows="2" id="texto_acao"></textarea>
 				<div id="textCount">Resta(m) <span id=charsLeft></span> caracter(es) a ser(em) digitado(s)</div>
-				<div><input type="checkbox" id="chk_criptografar" value="1">Criptografar</input></div>
+				<div id="div_criptografar"><input type="checkbox" id="chk_criptografar" value="1">Criptografar</input></div>
 			</td>
 		</tr>
 		

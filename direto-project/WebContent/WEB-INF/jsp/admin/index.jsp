@@ -311,7 +311,7 @@ $j(function() {
 						usuarioJS.editUser(usuLogin, usuNGuerra, usuNome, usuPapel, usuSenha, usuIdt, idPstGrad, idUsuario,{
 							callback:function(resultado) {
 								alert("cadastrado: "+resultado);
-								$j('#idUser').text(resultado)
+								$j('#idUser').text(resultado);
 								setTimeout(function(){saveEditUser();},200);	
 							}
 						});
