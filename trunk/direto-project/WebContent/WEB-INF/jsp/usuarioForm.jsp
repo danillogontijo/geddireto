@@ -59,6 +59,7 @@ function updateTips( t ) {
 <style  type="text/css">
 
 .validateTips { border: 1px solid transparent; padding: 0.3em; color: red;}
+input[type=text] {width: 330px;}
 
 </style>
 

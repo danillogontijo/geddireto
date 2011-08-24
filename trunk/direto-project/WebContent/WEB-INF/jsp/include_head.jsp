@@ -78,6 +78,24 @@
 				 left: 180px;
 				 display: none;
 			}
+			
+			.tooltip {
+				display:none;
+				background-color: #696969;
+				
+				padding:5px;
+				color:#fff;
+				font-weight: bold;
+				font-size: 10px;
+				
+				border: 2px solid #fff;
+				
+				-moz-box-shadow: 0 0 5px 5px #888;
+	-webkit-box-shadow: 0 0 5px 5px #888;	
+				
+				-moz-border-radius:4px;
+				-webkit-border-radius:4px;
+			}
 		
 		</style>
 
@@ -209,8 +227,13 @@ jQuery(document).ready(function($) {
 			getGrupos();
 		}else if(id == '#wacao'){
 			//var winH = $(id).position();
-			$('#chk_criptografar').attr('checked', false);
+			$('#div_criptografar').css('display','none');
 			var acao = $(this).attr('id').split('_');
+			
+			if(acao[1] == 'Despachar')
+				$('#div_criptografar').css('display','block');
+			
+			$('#chk_criptografar').attr('checked', false);
 			$(id+' .titulo_confirmacao').html(acao[1]);
 			$(id+' #bt_acao_salvar').bind('click', function() {
 				//alert(acao[1]);
@@ -288,7 +311,7 @@ jQuery(document).ready(function($) {
 
 			// opening animation
 			function(done) {
-				this.getTip().show('explode');
+				this.getTip().show('slide');
 			},
 
 			// closing animation
@@ -297,14 +320,14 @@ jQuery(document).ready(function($) {
 			}
 		);
 
-	//$("#testeTooltip a[title]").tooltip();
-	/*$("#testeTooltip").tooltip(
+	//$("#ass_docs a[title]").tooltip();
+	$(".ahref_docs").tooltip(
 			{ 
-				position: "center right", 
-				opacity: 0.7,
+				position: "bottom right", 
+				opacity: 1,
 				effect: 'explode'
 			}
-	);*/
+	);
 	
 	
 	//$('a[name=tooltip]').live('click', function(clickEvent){clickEvent.preventDefault();});

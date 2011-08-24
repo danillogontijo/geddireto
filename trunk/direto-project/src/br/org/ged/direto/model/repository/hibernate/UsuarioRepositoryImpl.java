@@ -55,20 +55,24 @@ public class UsuarioRepositoryImpl extends BaseRepositoryImpl implements Usuario
 		Usuario u = this.selectByLogin(usuLogin);
 		
 		Iterator<Conta> ite_conta = u.getContas().iterator();
-			
+		
 		for(int i = 0; i < u.getContas().size(); i++){
 			Conta c = ite_conta.next();
 			DataUtils dados = new DataUtils();
 			dados.setId(String.valueOf(c.getCarteira().getIdCarteira()));
 			dados.setTexto(c.getCarteira().getCartAbr()+"["+c.getCarteira().getOm().getOmAbr()+"]");
 				
-			list.add(dados);
-				
-			System.out.println(dados.getId());
-			System.out.println(dados.getTexto());
-			//System.out.println(c.getCarteira().getCartAbr());
+			if (c.isAtivada())
+				list.add(dados);
 		}
-			
+		
+		if(list.size() == 0){
+			DataUtils dados = new DataUtils();
+			dados.setId("0");
+			dados.setTexto("[Nenhuma conta ativada]");
+			list.add(dados);
+		}
+		
 		return list;//(List<Conta>)hibernateTemplate.find("from Usuario u, Conta c where u.usuLogin = ? and c.ativado = 1", usuLogin);
 	}
 

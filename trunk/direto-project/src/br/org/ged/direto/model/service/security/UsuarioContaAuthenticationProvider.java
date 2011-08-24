@@ -42,6 +42,12 @@ public class UsuarioContaAuthenticationProvider extends DaoAuthenticationProvide
                     isIncludeDetailsObject() ? userDetails : null);
 		}
 		
+		if(contaUsuarioToken.getRequestUsuarioConta().equals("0")){
+			throw new BadCredentialsException(messages.getMessage(
+                    "UsuarioContaAuthenticationProvider.missingUsuarioConta", "Usuário com nenhuma conta ativada"),
+                    isIncludeDetailsObject() ? userDetails : null);
+		}
+		
 		// verifique se a conta esta ativa
 		/*if(!contaUsuarioToken.getRequestUsuarioConta().equals(calculateExpectedContaUsuario(contaUsuarioToken))) {
 			throw new BadCredentialsException(messages.getMessage(
