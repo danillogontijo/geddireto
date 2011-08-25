@@ -1,5 +1,6 @@
 package br.org.ged.direto.model.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.directwebremoting.annotations.RemoteMethod;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.org.direto.util.DataUtils;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Funcao;
 import br.org.ged.direto.model.entity.OM;
@@ -37,7 +39,6 @@ public class CarteiraServiceImpl implements CarteiraService {
 	private OMService omService;
 	
 	@Override
-	@RemoteMethod
 	public List<Carteira> getAll() {
 		return carteiraRepository.getAll();
 	}
@@ -72,6 +73,23 @@ public class CarteiraServiceImpl implements CarteiraService {
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	@RemoteMethod
+	public List<DataUtils> getAllDwr() {
+		List<DataUtils> carteirasDWR = new ArrayList<DataUtils>();
+		
+		List<Carteira> carteiras = getAll();
+		
+		for(Carteira carteira : carteiras){
+			DataUtils dado = new DataUtils();
+			dado.setId(String.valueOf(carteira.getIdCarteira()));
+			dado.setTexto(carteira.getCartAbr());
+			carteirasDWR.add(dado);
+		}
+
+		return carteirasDWR;
 	}
 
 }

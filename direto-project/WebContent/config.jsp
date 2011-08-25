@@ -129,10 +129,11 @@ try {
 			
 		}
 		resultado.close();
-
+		
 }else{
 
 	/**
+	*DESVINCULANDO O DOC DO USUARIO E PASSANDO PARA A CARTEIRA
 	*ESSE SCRIPT SÓ PODERÁ SER EXECUTADO DEPOIS DE TODAS AS CARTEIRAS CADASTRADAS
 	**/
 	query = "select carteira.idCarteira,usuario.idUsuario from usuario,usuomsec,carteira where usuomsec.idUsuario=usuario.idUsuario and carteira.idCarteira=usuomsec.idCarteira and usuomsec.idCarteira<>1";
@@ -145,6 +146,33 @@ try {
 		pstmt2 =  conn.prepareStatement(query);
 		pstmt2.execute();
 		out.println(query+"<br>");
+	}
+	resultado.close();
+
+	/**
+	*CADASTRANDO DOC ENVIADOS
+	**/
+	query = "select idUsuRem,id,data from mensagens";
+	pstmt = conn.prepareStatement(query);
+	resultado = pstmt.executeQuery();
+	while(resultado.next()){
+		int idUsuario = resultado.getInt(1);
+		int idMensagem = resultado.getInt(2);
+		String data = resultado.getString(3);
+		
+		query = "select idCarteira from usuomsec where idCarteira<>1 and idUsuario="+idUsuario;
+		pstmt = conn.prepareStatement(query);
+		rs2 = pstmt.executeQuery();
+		while(rs2.next()){
+			int idCarteira = rs2.getInt(1);
+			
+			query = "INSERT INTO idmensausu(idMensagem,status,dataHora,idCarteira,notificar)"+
+			    " VALUES ("+idMensagem+", 3, '"+data+"', "+idCarteira+",0)";
+			pstmt =  conn.prepareStatement(query);
+			pstmt.execute();
+			out.println(query+"<br>");
+			break;
+		}
 	}
 
 }
