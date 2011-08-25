@@ -616,13 +616,13 @@ function carregaCarteirasPorGrupo(){
 
 
 function carregaCarteiras(){
-	carteiraJS.getAll({
+	carteiraJS.getAllDwr({
 		callback:function(carteirasList) {
 			dwr.util.removeAllOptions('slContas');
 			dwr.util.removeAllOptions('ListaDE');
 			dwr.util.removeAllOptions('ListaPARA');
-			dwr.util.addOptions('slContas', carteirasList, "idCarteira", "cartAbr");
-			dwr.util.addOptions('ListaDE', carteirasList, "idCarteira", "cartAbr");
+			dwr.util.addOptions('slContas', carteirasList, "id", "texto");
+			dwr.util.addOptions('ListaDE', carteirasList, "id", "texto");
 		}
 	});
 };
