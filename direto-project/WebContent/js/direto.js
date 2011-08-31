@@ -378,9 +378,13 @@ js.direto.modal = function(obj){
 	}
 	
 	if (id == "#waddcarteira"){
-		carregaFuncoes();
-		carregaSecoes();
-		carregaOm();
+		carregaFuncoes('slFuncao');
+		carregaSecoes('slSecao');
+		carregaOm('slOm');
+	}
+	
+	if (id == "#weditcarteira"){
+		carregaCarteiras("slCarteira");
 	}
 
 	var maskHeight = $j(document).height();

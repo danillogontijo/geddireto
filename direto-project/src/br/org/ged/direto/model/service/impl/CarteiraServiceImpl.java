@@ -15,6 +15,7 @@ import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Funcao;
 import br.org.ged.direto.model.entity.OM;
 import br.org.ged.direto.model.entity.Secao;
+import br.org.ged.direto.model.entity.dwr.CarteiraDWR;
 import br.org.ged.direto.model.repository.CarteiraRepository;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.FuncaoService;
@@ -56,9 +57,17 @@ public class CarteiraServiceImpl implements CarteiraService {
 
 	@Override
 	@RemoteMethod
-	public void save(String descricao, String abreviatura, int idFuncao,
+	@Transactional(propagation=Propagation.REQUIRED,readOnly = false)
+	public void save(int id, String descricao, String abreviatura, int idFuncao,
 			int idSecao, int idOM) {
-		Carteira carteira = new Carteira();
+		
+		Carteira carteira = null;
+		
+		if(id==0)
+			carteira = new Carteira();
+		else
+			carteira = selectById(id);
+		
 		Funcao funcao = funcaoService.getFuncaoByPkId(idFuncao);
 		Secao secao = secaoService.getSecaoByPkId(idSecao);
 		OM om = omService.getOMByPkId(idOM);
@@ -66,7 +75,8 @@ public class CarteiraServiceImpl implements CarteiraService {
 		carteira.setSecao(secao);
 		carteira.setOm(om);
 		carteira.setCartDesc(descricao);
-		carteira.setCartAbr(abreviatura);	
+		carteira.setCartAbr(abreviatura);
+		
 		try{
 			carteiraRepository.save(carteira);
 		}catch (Exception e) {
@@ -85,11 +95,25 @@ public class CarteiraServiceImpl implements CarteiraService {
 		for(Carteira carteira : carteiras){
 			DataUtils dado = new DataUtils();
 			dado.setId(String.valueOf(carteira.getIdCarteira()));
-			dado.setTexto(carteira.getCartAbr());
+			dado.setTexto(carteira.getCartAbr()+"["+carteira.getOm().getOmAbr()+"]");
 			carteirasDWR.add(dado);
 		}
 
 		return carteirasDWR;
+	}
+
+	@Override
+	@RemoteMethod
+	public CarteiraDWR select(int id) {
+		Carteira carteira = selectById(id);
+		CarteiraDWR dwr = new CarteiraDWR();
+		dwr.setCartAbr(carteira.getCartAbr());
+		dwr.setCartDesc(carteira.getCartDesc());
+		dwr.setIdCarteira(carteira.getIdCarteira());
+		dwr.setIdFuncao(carteira.getFuncao().getIdFuncao());
+		dwr.setIdOM(carteira.getOm().getIdOM());
+		dwr.setIdSecao(carteira.getSecao().getIdSecao());
+		return dwr;
 	}
 
 }

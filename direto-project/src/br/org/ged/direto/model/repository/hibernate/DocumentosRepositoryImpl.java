@@ -317,6 +317,8 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 		
 		if(obj.getUsuPapel().equals("ADMIN"))
 			baseSearch = " doc.carteira.secao.idSecao <> 0 and doc.carteira.om.idOM <> 0";
+		else if (obj.getUsuPapel().equals("PROTOCOLO"))
+			baseSearch = " doc.carteira.om.idOM = "+idOM+"";
 		else
 			baseSearch = " doc.carteira.secao.idSecao = "+idSecao+" and doc.carteira.om.idOM = "+idOM+"";
 		

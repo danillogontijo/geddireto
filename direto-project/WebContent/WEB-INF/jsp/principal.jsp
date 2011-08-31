@@ -159,17 +159,40 @@ function encaminharSelecionados(list){
 				    	
 					    <c:set var="iCountPages" value="1" />
 					    <c:set var="fCountPages" value="${pages}" />
+					    <c:set var="sizeViewPages" value="20" />
 					    
-					    <c:if test="${pages > 10}">
-					    	<c:set var="fCountPages" value="10" />
-					    	<c:if test="${page % 10 == 0}">
-					    		<c:set var="iCountPages" value="${page+1}" />
-					    		<c:set var="fCountPages" value="${page+10}" />
-					    		<c:if test="${fCountPages > pages}">
-					    			<c:set var="iCountPages" value="${page-1}" />
-					    			<c:set var="fCountPages" value="${pages}" />
-					    		</c:if>
+					    <c:if test="${pages > sizeViewPages}">
+					    	
+					    	<c:set var="fCountPages" value="20" />
+					    	
+					    	<c:if test="${page > (sizeViewPages-1)}">
+					    	 	<c:set var="temp" value="${(page%10)}" />
+					    	 	<c:set var="temp" value="${(page-temp)/10}" />
+					    	 	
+					    	 	<c:forEach var="c" begin="0" end="${temp}">
+					    			<c:set var="fCountPages" value="${(fCountPages+10)}" />					    		
+					    		</c:forEach>
+					    		<c:set var="fCountPages" value="${(fCountPages-sizeViewPages)}" />
+					    		<c:set var="iCountPages" value="${fCountPages-sizeViewPages}" />
+					    							    	
+						    	<c:if test="${page % sizeViewPages == 0}">
+						    		<c:set var="iCountPages" value="${page}" />
+						    		<c:set var="fCountPages" value="${page+sizeViewPages}" />
+						    		<c:if test="${fCountPages > pages}">
+						    			<c:set var="iCountPages" value="${page-1}" />
+						    			<c:set var="fCountPages" value="${pages}" />
+						    		</c:if>
+						    	</c:if>
+						    	
+						    	<c:if test="${page == pages}">
+						    		<c:set var="iCountPages" value="${page-(sizeViewPages-1)}" />
+						    		<c:set var="fCountPages" value="${pages}" />
+						    	</c:if>
+					    		
 					    	</c:if>
+					    	
+					    	
+					    	
 					    	
 					    </c:if>
 					    
@@ -178,6 +201,7 @@ function encaminharSelecionados(list){
 							  <c:param name="pr" value="${previousPage - limiteByPage}" />
 							  <c:param name="filtro" value="${filtro}" />
 							  <c:param name="idCarteira" value="${contaAtual}" />
+							  <c:param name="ordenacao" value="${ordenacao}" />
 						</c:url>
 					    
 					    <c:if test="${previousPage != 0}">
@@ -191,6 +215,7 @@ function encaminharSelecionados(list){
 							  <c:param name="pr" value="${(i*limiteByPage) - limiteByPage}" />
 							  <c:param name="filtro" value="${filtro}" />
 							  <c:param name="idCarteira" value="${contaAtual}" />
+							  <c:param name="ordenacao" value="${ordenacao}" />
 							</c:url>
 							
 							<a href="<c:out value="${pagesURL}" />" class="pages" <c:if test="${page==i}">style="font-weight: bold"</c:if>> ${i}</a> 
@@ -201,6 +226,7 @@ function encaminharSelecionados(list){
 							  <c:param name="pr" value="${nextPage}" />
 							  <c:param name="filtro" value="${filtro}" />
 							  <c:param name="idCarteira" value="${contaAtual}" />
+							  <c:param name="ordenacao" value="${ordenacao}" />
 						</c:url>
 					    
 					    <c:if test="${pages > 1 && page != pages}">

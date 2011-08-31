@@ -138,6 +138,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 				user.setUsuNome(usuNome);
 				user.setUsuNGuerra(usuNGuerra);
 				user.setUsuIdt(usuIdt);
+				user.setUsuPapel(usuPapel);
 				
 				if (!usuSenha.isEmpty())
 					changePassword(usuLogin,usuSenha);
