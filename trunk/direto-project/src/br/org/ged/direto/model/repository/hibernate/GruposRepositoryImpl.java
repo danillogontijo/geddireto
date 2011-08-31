@@ -84,6 +84,8 @@ public class GruposRepositoryImpl extends BaseRepositoryImpl implements GruposRe
 				data.setTexto(conta.getUsuario().getPstGrad().getPstgradNome()+" "+conta.getUsuario().getUsuNGuerra()+"["+conta.getCarteira().getCartAbr()+"]");
 			}
 			
+			data.setTitulo(conta.getCarteira().getCartDesc());
+			
 			usersDwr.add(data);
 		}
 		

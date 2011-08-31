@@ -70,7 +70,7 @@ public class Usuario implements Serializable,UserDetails
 	@Column(name = "UsuNGuerra", nullable = false, length = 60)
 	private String usuNGuerra;
 	
-	@Column(name = "UsuPapel", nullable = false, length = 20)
+	@Column(name = "UsuPapel", nullable = false, length = 10)
 	private String usuPapel;
 	
 	@Column(name = "UsuSenha", nullable = false, length = 255)

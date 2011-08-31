@@ -72,7 +72,7 @@ public class PrincipalAdminController {
 		
 	}
 	
-	@RequestMapping(method = RequestMethod.GET,value="/admin/config_usuarios.html")
+	/*@RequestMapping(method = RequestMethod.GET,value="/admin/config_usuarios.html")
 	public void config(){
 		System.out.println("Setando IdUsuarioProprietário da tabela usuario...");
 		List<Usuario> usuarios = usuarioService.getAll(new Usuario());
@@ -89,7 +89,7 @@ public class PrincipalAdminController {
 			usuarioService.editUser(usu);
 		}
 		
-	}
+	}*/
 	
 	@RequestMapping(method = RequestMethod.GET,value="/admin/idDocumento.html")
 	public void mudarIdTipoDocumento(){

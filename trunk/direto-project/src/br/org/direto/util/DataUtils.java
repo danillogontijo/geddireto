@@ -4,6 +4,7 @@ public class DataUtils {
 	
 	private String id = "";
 	private String texto;
+	private String titulo;
 	
 	public String getId() {
 		return id;
@@ -16,6 +17,12 @@ public class DataUtils {
 	}
 	public void setTexto(String texto) {
 		this.texto = texto;
+	}
+	public String getTitulo() {
+		return titulo;
+	}
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
 	
 

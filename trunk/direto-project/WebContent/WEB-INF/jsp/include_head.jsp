@@ -38,7 +38,7 @@
 
  <script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> 
 
-<script src="<%=request.getContextPath() %>/js/custom/external/tooltip.js"></script>
+<script src="<%=request.getContextPath() %>/js/flowplayer/jquery.tools.min.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/external/validator.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/external/jquery.alerts.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.datepicker-pt-BR.js"></script>
@@ -106,6 +106,7 @@
 var $j = jQuery.noConflict();
 var DESTINATARIOS = new Array();
 var PAGE = '';
+var MOUSE_X=0,MOUSE_Y=0;
 
 function init(page){
 	PAGE = page;
@@ -130,6 +131,7 @@ function init(page){
 
 	if(page=="principal"){
 	    setTimeout("$j('.tela_apresentacao').hide('explode')",1100);
+	    //errorAlert("Sistema em teste. Qualquer problema encontrado utilize o link sugestões ou ligue para o ramal 4470.<br><br>O G.E.D. voltará ao normal a partir das 10:30 hs.");
   	}
 
 	$j('.tela_apresentacao').hide();
@@ -329,6 +331,11 @@ jQuery(document).ready(function($) {
 			}
 	);
 	
+	$(document).mousemove(function(e){
+		MOUSE_X=e.pageX;
+		MOUSE_Y=e.pagey;
+		//alert(MOUSE_X);
+	}); 
 	
 	//$('a[name=tooltip]').live('click', function(clickEvent){clickEvent.preventDefault();});
 	/*$('#testeTooltip').tooltip({
@@ -546,6 +553,7 @@ function carregaGrupo()
 {
 	var idNomeGrupo = $("slGrupo").value;
 	gruposJS.usersByGroup(idNomeGrupo,montaUsersByGrupos);
+	
 }
 
 function montaUsersByGrupos(listBeans){
@@ -554,11 +562,52 @@ function montaUsersByGrupos(listBeans){
 		dwr.util.addOptions("ListaDE", listBeans, "id", "texto");
 	}
 	
+	var total = $j('#ListaDE option').length;
+	var cur;
+	for ( var i = 0; i < total; i++ )
+	{
+		cur = $j('#ListaDE option:eq(' + i + ')');
+		cur.attr( 'title', listBeans[i].titulo );
+	}
+	
+	var pos = $j("#wgrupos").offset();
+	var x = 0, y = 0;
+	
+	$j(document).mousemove(function(e){
+		x=e.pageX;
+		y=e.pagey;
+	}); 
+	
+	$j('#ListaDE option').tooltip(
+			{ 
+				position: 'bottom center', 
+				offset: [pos.top+100, pos.left+100],
+				opacity: 1,
+				effect: 'explode',
+				
+				onBeforeHide: function() {
+					$j(".tooltip").each(function(i){
+						//$j(this).css('top',y);
+						//$j(this).css('left',x);
+						
+					});
+					
+				}
+			}
+			
+			
+	).dynamic({ top: {offset: [400, -300]} });
+	
 }
 
 </script>  
 
-
+<style>
+.tooltip {
+z-index: 9999;
+position: relative;
+}
+</style>
 
 
 

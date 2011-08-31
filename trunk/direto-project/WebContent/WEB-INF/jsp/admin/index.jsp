@@ -457,7 +457,7 @@ $j(function() {
 		  	});
 		} else if ((isSelect)) {
 			dwr.util.addOptions(field_name, valor);	
-			dwr.util.addOptions(field_name, ['ADMIN', 'USER', 'PROTOCOLISTA']);
+			dwr.util.addOptions(field_name, ['ADMIN', 'USER', 'PROTOCOLO']);
 		} 
 	}
 
@@ -577,9 +577,9 @@ function carregaGrupos(){
 			dwr.util.addOptions('slGrupos', grupos, "id", "texto");
 
 
-			carteiraJS.getAll({
+			carteiraJS.getAllDwr({
 				callback:function(carteirasList) {
-					dwr.util.addOptions('CarteirasListaDE', carteirasList, "idCarteira", "cartAbr");
+					dwr.util.addOptions('CarteirasListaDE', carteirasList, "id", "texto");
 
 					setTimeout(function(){
 
@@ -614,18 +614,6 @@ function carregaCarteirasPorGrupo(){
 	});
 }
 
-
-function carregaCarteiras(){
-	carteiraJS.getAllDwr({
-		callback:function(carteirasList) {
-			dwr.util.removeAllOptions('slContas');
-			dwr.util.removeAllOptions('ListaDE');
-			dwr.util.removeAllOptions('ListaPARA');
-			dwr.util.addOptions('slContas', carteirasList, "id", "texto");
-			dwr.util.addOptions('ListaDE', carteirasList, "id", "texto");
-		}
-	});
-};
 
 function removerCarteiraGrupo(){
 
@@ -680,32 +668,84 @@ function adicionarCarteira(){
 	},100);
 }
 
-function carregaFuncoes(){
+function carregaCarteiras(id){
+	carteiraJS.getAllDwr({
+		callback:function(carteirasList) {
+			
+			if(id=="slCarteira"){
+				dwr.util.removeAllOptions('slCarteira');
+				dwr.util.addOptions('slCarteira', ['-- ESCOLHA UMA CARTEIRA --']);
+				dwr.util.addOptions('slCarteira', carteirasList, "id", "texto");
+			}else{
+				dwr.util.removeAllOptions('slContas');
+				dwr.util.removeAllOptions('ListaDE');
+				dwr.util.removeAllOptions('ListaPARA');
+				dwr.util.addOptions('slContas', carteirasList, "id", "texto");
+				dwr.util.addOptions('ListaDE', carteirasList, "id", "texto");
+			}
+		}
+	});
+};
+
+function carregaFuncoes(id,idSelected){
 	funcaoJS.getAll({
 		callback:function(funcoesList) {
-			dwr.util.removeAllOptions('slFuncao');
-			dwr.util.addOptions('slFuncao', funcoesList, "idFuncao", "funcAbr");
+			dwr.util.removeAllOptions(id);
+			dwr.util.addOptions(id, funcoesList, "idFuncao", "funcAbr");
+			
+			setTimeout(function(){
+				$j('#'+id).find('option').each(function(){
+					if ($j(this).val() == idSelected)
+						$j(this).attr('selected','selected');
+				});
+			},1000);
 		}
 	});
 };
 
-function carregaSecoes(){
+function carregaSecoes(id,idSelected){
 	secaoJS.getAll({
 		callback:function(secoesList) {
-			dwr.util.removeAllOptions('slSecao');
-			dwr.util.addOptions('slSecao', secoesList, "idSecao", "secaoAbr");
+			dwr.util.removeAllOptions(id);
+			dwr.util.addOptions(id, secoesList, "idSecao", "secaoAbr");
+			
+			setTimeout(function(){
+				$j('#'+id).find('option').each(function(){
+					if ($j(this).val() == idSelected)
+						$j(this).attr('selected','selected');
+				});
+			},1000);
 		}
 	});
 };
 
-function carregaOm(){
+function carregaOm(id,idSelected){
 	omJS.getAll({
 		callback:function(omList) {
-			dwr.util.removeAllOptions('slOm');
-			dwr.util.addOptions('slOm', omList, "idOM", "omAbr");
+			dwr.util.removeAllOptions(id);
+			dwr.util.addOptions(id, omList, "idOM", "omAbr");
+			
+			setTimeout(function(){
+				$j('#'+id).find('option').each(function(){
+					if ($j(this).val() == idSelected)
+						$j(this).attr('selected','selected');
+				});
+			},1000);
 		}
 	});
 };
+
+function selectCarteira(id){
+	carteiraJS.select(id,{
+		callback:function(carteira) {
+			carregaFuncoes('slECarteiraFuncao',carteira.idFuncao);
+			carregaSecoes('slECarteiraSecao',carteira.idSecao);
+			carregaOm('slECarteiraOm',carteira.idOM);	
+			$j('#txtECarteiraDesc').val(carteira.cartDesc);
+			$j('#txtECarteiraAbr').val(carteira.cartAbr);
+		}
+	});
+}
 
 function atualizaContas(){
 
@@ -793,16 +833,23 @@ function checkContasCadastradas(){
 	
 };
 
-function saveCarteira(){
+function saveCarteira(isSave){
 
 	if(confirm("Todos os dados estão corretos?"))
 	{
-		var idFuncao = parseInt($j('#slFuncao').val());
-		var idSecao = parseInt($j('#slSecao').val());
-		var idOM = parseInt($j('#slOm').val());
+		var idCarteira = 0;
+		var idEdit = "";
+		if (!isSave){
+			idCarteira = parseInt($j('#slCarteira').val());
+			idEdit = "ECarteira";
+		}
 		
-		var descricao = $j('#cartDesc').val();
-		var abreviatura = $j('#cartAbr').val();
+		var idFuncao = parseInt($j('#sl'+idEdit+'Funcao').val());
+		var idSecao = parseInt($j('#sl'+idEdit+'Secao').val());
+		var idOM = parseInt($j('#sl'+idEdit+'Om').val());
+		
+		var descricao = $j('#txt'+idEdit+'Desc').val();
+		var abreviatura = $j('#txt'+idEdit+'Abr').val();
 		
 		if (descricao == ""){
 			alert('Preencha o campo Descrição');
@@ -812,26 +859,31 @@ function saveCarteira(){
 			return;
 		}
 
-		carteiraJS.save(descricao, abreviatura, idFuncao,
+		carteiraJS.save(idCarteira,descricao, abreviatura, idFuncao,
 				idSecao, idOM);
 
-		alert('Carteira Cadastrada');
+		alert('Carteira '+(isSave ? 'cadastrada' : 'editada'));
+		
+		if (!isSave)
+			carregaCarteiras("slCarteira");
 	}
 	
 };
+
+
 
 </script>
 
 
 		<style type="text/css">
-			  #waddcarteira fieldset { border:1px solid #000 }
+			  .carteira fieldset { border:1px solid #000 }
 			
-			  #waddcarteira input {
+			  .carteira input {
 			  	margin-bottom: 10px;
 			  	width: 300px;
 			  }
 			  
-			  #waddcarteira select {
+			  .carteira select {
 			  	margin-bottom: 10px;
 			  	width: 300px;
 			  }
@@ -943,7 +995,7 @@ function saveCarteira(){
 		<p><button onclick="atualizaGrupo()">Atualizar Grupo</button></p>
 		</div>
 		
-	<div id="waddcarteira" class="window">
+	<div id="waddcarteira" class="window carteira">
 	<table width="100%">
 			<tr>
 				<td colspan="3" style="width: 720px; text-align: center;" align="center" bgcolor="red" class="titulo_notificacoes" height="20" valign="middle">Adicionar nova carteira</td>
@@ -954,12 +1006,12 @@ function saveCarteira(){
 					<fieldset>
   						
   							
-    						<label for="cartDesc">Descrição:</label>
-    							<input type="text" name="cartDesc" id="cartDesc" maxlength="60"/>
+    						<label for="txtDesc">Descrição:</label>
+    							<input type="text" name="txtDesc" id="txtDesc" maxlength="60"/>
     						<br>
     						
-    						<label for="cartAbr">Abreviatura:</label>
-    							<input type="text" name="cartAbr" id="cartAbr" maxlength="30"/>
+    						<label for="txtAbr">Abreviatura:</label>
+    							<input type="text" name="txtAbr" id="txtAbr" maxlength="30"/>
     						<br>
     						
     						<label for="slFuncao">Função:</label>
@@ -976,7 +1028,54 @@ function saveCarteira(){
     							<select name="slOm" id="slOm">
     							</select>
     							
-    						<input type="button" value="Salvar" style="width: 50px;" onclick="saveCarteira()" />		
+    						<input type="button" value="Salvar" style="width: 50px;" onclick="saveCarteira(true)" />		
+    						
+  					</fieldset>
+				</td>
+			</tr>
+	</table>		
+	</div>
+	
+	<div id="weditcarteira" class="window carteira">
+	<table width="100%">
+			<tr>
+				<td colspan="3" style="width: 720px; text-align: center;" align="center" bgcolor="red" class="titulo_notificacoes" height="20" valign="middle">Editar carteira</td>
+				<td style="width: 30px;"><a href="#" class="close" style="font-weight: bold">X</a></td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+					<fieldset>
+					
+					<label for="slCarteira">Selecione a carteira:</label>
+					<select
+						name="slCarteira" id="slCarteira" onchange="selectCarteira(this.value)">
+					</select>
+					<br>
+  						
+  							
+    						<label for="txtECarteiraDesc">Descrição:</label>
+    							<input type="text" name="txtECarteiraDesc" id="txtECarteiraDesc" maxlength="60"/>
+    						<br>
+    						
+    						<label for="txtECarteiraAbr">Abreviatura:</label>
+    							<input type="text" name="txtECarteiraAbr" id="txtECarteiraAbr" maxlength="30"/>
+    						<br>
+    						
+    						<label for="slECarteiraFuncao">Função:</label>
+    							<select name="slECarteiraFuncao" id="slECarteiraFuncao">
+    							</select>
+    						<br>
+    						
+    						<label for="slECarteiraSecao">Seção:</label>
+    							<select name="slEditSecao" id="slECarteiraSecao">
+    							</select>
+    						<br>
+    						
+    						<label for="slECarteiraOm">OM:</label>
+    							<select name="slEditOm" id="slECarteiraOm">
+    							</select>
+    							
+    						<input type="button" value="Salvar" style="width: 50px;" onclick="saveCarteira(false)" />		
     						
   					</fieldset>
 				</td>
@@ -1042,8 +1141,7 @@ function saveCarteira(){
 				<div>
 					<ul>
 						<li><a href="#waddcarteira" name="modal">Cadastro</a></li>
-						<li>Edição</li>
-						<li>Grupos</li>
+						<li><a href="#weditcarteira" name="modal">Edição</a></li>
 					</ul>
 				</div>
 				<h3><a href="#">Grupos</a></h3>

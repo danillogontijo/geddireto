@@ -37,8 +37,8 @@
 			access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"
 			requires-channel="https" />
 		-->
-		<intercept-url pattern="/**"	access="isAuthenticated() or isRememberMe()" requires-channel="https"/>
-		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN') and fullyAuthenticated" />
+		<intercept-url pattern="/*"	access="hasAnyRole ('ROLE_USER','ROLE_ADMIN','ROLE_PROTOCOLO') or isRememberMe()" requires-channel="https"/>
+		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN') and fullyAuthenticated" requires-channel="https"/>
 		<form-login login-page="/login.html" authentication-failure-url="/login.html?login_error=1" />
 			
 		<!-- <x509 user-service-ref="customerUserDetailsService" subject-principal-regex="CN=(.*?),"/> -->
