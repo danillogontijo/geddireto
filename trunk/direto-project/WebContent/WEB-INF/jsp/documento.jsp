@@ -396,12 +396,12 @@ function confirma_edicao(resposta){
 			notificacaoJS.save(${idDocumento},textoParaNotificacao);
 		}
 	}else{
-		/*anexoJS.deleteAnexoFromTemp(ID_ANEXO,{
+		anexoJS.deleteAnexoFromTemp(ID_ANEXO,{
 			callback:function(ok) { 
 				if (!ok)
 					errorAlert('O arquivo não pode ser deletado da pasta temporária.');
 			}
-		});*/
+		});
 	}
 	
 }
