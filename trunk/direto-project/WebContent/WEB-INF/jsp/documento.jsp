@@ -180,6 +180,14 @@ $j(function(){
 		}
 	});
 	
+	$j("font[title]").tooltip(
+			{ 
+				position: "bottom right", 
+				opacity: 1,
+				effect: 'explode'
+			}
+	);
+	
 	/*Atualiza ajax histórico,anotaçoes e despachos */
 	$j('#despachos').mouseenter(function(e) {
 		var tipo = $j(this).attr('id');
@@ -364,7 +372,7 @@ function confirma_edicao(resposta){
 		});
 		
 	} else if (resposta == 1) {
-		//alert(nome_anexo+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.");
+		//alert(NOME_ANEXO+" - Substitui arquivo servidor, apaga arquivo temp e armazena histórico.-"+ID_ANEXO);
 		anexoJS.copy(ID_ANEXO,{
 			callback:function(ok) { 
 				if (!ok)
@@ -382,6 +390,19 @@ function confirma_edicao(resposta){
 		});
 	}
 	
+	if(BACK){
+		if(resposta != 0){
+			var textoParaNotificacao = "Edição("+NOME_ANEXO+") - ${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}";
+			notificacaoJS.save(${idDocumento},textoParaNotificacao);
+		}
+	}else{
+		/*anexoJS.deleteAnexoFromTemp(ID_ANEXO,{
+			callback:function(ok) { 
+				if (!ok)
+					errorAlert('O arquivo não pode ser deletado da pasta temporária.');
+			}
+		});*/
+	}
 	
 }
 
@@ -549,7 +570,7 @@ function padronizado(valor){
 		//return;
 
 	textArea.value += " " + valor;
-	
+	$("texto_acao").focus();
 }
 
 function uploadFile() {
@@ -594,9 +615,6 @@ function uploadFile() {
 	      
 	    xhr.send(file);
 
-      
-      
-      
       
 
 /*var reader = new FileReader();
@@ -645,8 +663,12 @@ function uploadComplete(evt) {
 	$j('#progressNumber').css('color','#3DD13F');
 	anexoJS.saveAnexo(NAME,CAMINHO_NOME,ID_DOCUMENTO,false,true);
 	PROXIMO_ANEXO++;
+	
+	var textoParaNotificacao = "Anexo("+NAME+") - ${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}";
+	notificacaoJS.save(${idDocumento},textoParaNotificacao);
 
-	 $j( "#progressbar" ).progressbar({
+
+	$j( "#progressbar" ).progressbar({
 			value: 100
 	  });
 

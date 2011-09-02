@@ -106,7 +106,6 @@
 var $j = jQuery.noConflict();
 var DESTINATARIOS = new Array();
 var PAGE = '';
-var MOUSE_X=0,MOUSE_Y=0;
 
 function init(page){
 	PAGE = page;
@@ -263,7 +262,7 @@ jQuery(document).ready(function($) {
 		$('#mask').css({'width':maskWidth,'height':maskHeight});
 		
 		//transition effect		
-		$('#mask').fadeIn(1000);	
+		$('#mask').fadeIn(100);	
 		$('#mask').fadeTo("slow",0.8);	
 	
 		//Get the window height and width
@@ -303,7 +302,7 @@ jQuery(document).ready(function($) {
 		js.direto.close_mask();
 	});		
 	
-	//if mask is clicked
+	//Se mask for clicado, desaparece o  modal
 	/*$('#mask').click(function () {
 		/$(this).hide();
 		$('.window').hide();
@@ -311,12 +310,12 @@ jQuery(document).ready(function($) {
 
 	$.tools.tooltip.addEffect("explode",
 
-			// opening animation
+			// abrindo animação
 			function(done) {
 				this.getTip().show('slide');
 			},
 
-			// closing animation
+			// fechando animação
 			function(done) {
 				this.getTip().fadeOut('slow');
 			}
@@ -329,14 +328,9 @@ jQuery(document).ready(function($) {
 				opacity: 1,
 				effect: 'explode'
 			}
-	);
+	).dynamic({ bottom: { direction: 'top', bounce: true } });
 	
-	$(document).mousemove(function(e){
-		MOUSE_X=e.pageX;
-		MOUSE_Y=e.pagey;
-		//alert(MOUSE_X);
-	}); 
-	
+		
 	//$('a[name=tooltip]').live('click', function(clickEvent){clickEvent.preventDefault();});
 	/*$('#testeTooltip').tooltip({
 			 
@@ -357,14 +351,7 @@ jQuery(document).ready(function($) {
 	});*/
 
 	
-	//$(document).ready(function() {
-		 // var $box = $('#box')
-		 //.wrap('<div id="box-outer"></div>');
-		  //$('#blind').click(function() {
-		 //$box.blindToggle('slow');
-		  //});
-	//});
-
+	
 	$('a[name=notificacoes]').click(function(e) {
 		e.preventDefault();
 		
@@ -570,7 +557,7 @@ function montaUsersByGrupos(listBeans){
 		cur.attr( 'title', listBeans[i].titulo );
 	}
 	
-	var pos = $j("#wgrupos").offset();
+	/*var pos = $j("#wgrupos").offset();
 	var x = 0, y = 0;
 	
 	$j(document).mousemove(function(e){
@@ -596,7 +583,7 @@ function montaUsersByGrupos(listBeans){
 			}
 			
 			
-	).dynamic({ top: {offset: [400, -300]} });
+	).dynamic({ top: {offset: [400, -300]} });*/
 	
 }
 
