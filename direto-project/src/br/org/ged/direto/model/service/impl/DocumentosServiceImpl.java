@@ -425,6 +425,9 @@ public class DocumentosServiceImpl implements DocumentosService {
 			
 			documento = ite.next();
 			
+			if(documento.getCarteira()==null)
+				continue;
+			
 			int secaoDocumento = documento.getCarteira().getSecao().getIdSecao();
 			int omDocumento = documento.getCarteira().getOm().getIdOM();
 		
@@ -432,7 +435,7 @@ public class DocumentosServiceImpl implements DocumentosService {
 				
 				Carteira carteiraUsuarioLogado = conta.getCarteira();
 				
-				//ative o if caso queira que visualize apenas os ocumentos da carteira logada
+				//ative o if caso queira que visualize apenas os documentos da carteira logada
 				//if (usuario.getIdCarteira() == carteiraUsuarioLogado.getIdCarteira()){
 					if ( (carteiraUsuarioLogado.getSecao().getIdSecao() == secaoDocumento) && (carteiraUsuarioLogado.getOm().getIdOM() == omDocumento) )
 							granted = true;

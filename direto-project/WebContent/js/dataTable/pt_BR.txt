@@ -1,6 +1,6 @@
 {
 	"sProcessing": "Processando...",
-	"sLengthMenu": "Mostrar _MENU_ resultador por página",
+	"sLengthMenu": "Mostrar _MENU_ resultados por página",
 	"sZeroRecords": "Nenhum resultado encontrado.",
 	"sInfo": "Mostrando _START_ ate _END_ de _TOTAL_ resultados",
 	"sInfoEmpty": "0 ate 0 de 0 resultados",

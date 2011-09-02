@@ -160,8 +160,7 @@ public class AnexoServiceImpl implements AnexoService {
 	public boolean deleteAnexoFromTemp(Anexo anexo) {
 		try{
 			File file = new File(config.baseDir+"/temp/"+anexo.getAnexoCaminho());
-			file.delete();
-			System.out.println(file.canRead());
+			System.out.println("deletado? "+file.delete());
 		}catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -173,38 +172,41 @@ public class AnexoServiceImpl implements AnexoService {
 	@Override
 	@RemoteMethod
 	public boolean copy(int idAnexo) {
-		
-		Anexo anexo = selectById(idAnexo);
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Usuario usuario = (Usuario) auth.getPrincipal();
-		
-		if(anexo.getAssinado() == 1 && anexo.getIdAssinadoPor() != usuario.getIdUsuario()){
-			deleteAnexoFromTemp(anexo);
-			return false;
-		}
-		
-		Carteira carteira = carteiraService.selectById(usuario.getIdCarteira());
-		Secao secao = carteira.getSecao();
-		OM om = carteira.getOm();
-		
-		DocumentoDetalhes documentoDetalhes = anexo.getDocumentoDetalhes();
-		Set<Documento> documentos = documentoDetalhes.getDocumentosByCarteira();
-		
-		boolean havePermission = false;
-		for(Documento documento : documentos){
-			Carteira carteiraDocumento = documento.getCarteira(); 
-			if ( carteiraDocumento.getOm() == om && carteiraDocumento.getSecao() == secao){
-				havePermission = true;
-				break;
-			}
-		}
-		
-		if(!havePermission){
-			System.out.println("Não tem permissao.");
-			return false;
-		}
-		
 		try {
+			Anexo anexo = selectById(idAnexo);
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			Usuario usuario = (Usuario) auth.getPrincipal();
+			
+			if(anexo.getAssinado() == 1 && anexo.getIdAssinadoPor() != usuario.getIdUsuario()){
+				deleteAnexoFromTemp(anexo);
+				return false;
+			}
+			
+			Carteira carteiraUsuario = carteiraService.selectById(usuario.getIdCarteira());
+			
+			DocumentoDetalhes documentoDetalhes = anexo.getDocumentoDetalhes();
+			Set<Documento> documentos = documentoDetalhes.getDocumentosByCarteira();
+			
+			boolean havePermission = false;
+			for(Documento documento : documentos){
+				Carteira carteiraDocumento = documento.getCarteira(); 
+				
+				if(carteiraDocumento == null)
+					continue;
+				
+				if ( carteiraDocumento.getIdCarteira() == carteiraUsuario.getIdCarteira()){
+					havePermission = true;
+					System.out.println("tem permisssao: "+havePermission);
+					break;
+				}
+			}
+			
+			if(!havePermission){
+				System.out.println("Não tem permissao.");
+				return false;
+			}
+		
+			//Gravando o arquivo	
 			InputStream is = new FileInputStream(new File(config.baseDir+"/temp/"+anexo.getAnexoCaminho()));
 			FileOutputStream fos = new FileOutputStream(new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho()));
 			IOUtils.copy(is, fos);
@@ -213,7 +215,7 @@ public class AnexoServiceImpl implements AnexoService {
 			txtHistorico += usuario.getUsuLogin();
 			
 			Historico historico = new Historico();
-			historico.setCarteira(carteira);
+			historico.setCarteira(carteiraUsuario);
 			historico.setDataHoraHistorico(new Date());
 			historico.setHistorico(txtHistorico);
 			historico.setDocumentoDetalhes(documentoDetalhes);
@@ -221,7 +223,9 @@ public class AnexoServiceImpl implements AnexoService {
 			
 			historicoService.save(historico);
 			
-			return deleteAnexoFromTemp(anexo);
+			deleteAnexoFromTemp(anexo);
+			
+			return true;
 		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

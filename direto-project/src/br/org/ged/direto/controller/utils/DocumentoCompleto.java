@@ -16,6 +16,7 @@ public class DocumentoCompleto implements Serializable {
 	
 	private Documento documento;
 	private DocumentoDetalhes documentoDetalhes;
+	private int total;
 	
 	public DocumentoCompleto(Documento documento,
 			DocumentoDetalhes documentoDetalhes) {
@@ -29,6 +30,7 @@ public class DocumentoCompleto implements Serializable {
 	public void setDocumento(Documento documento) {
 		this.documento = documento;
 	}
+	
 	public DocumentoDetalhes getDocumentoDetalhes() {
 		return documentoDetalhes;
 	}
@@ -36,6 +38,14 @@ public class DocumentoCompleto implements Serializable {
 		this.documentoDetalhes = documentoDetalhes;
 	}
 	
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
 	public int hashCode() {
 		return this.documentoDetalhes.getIdDocumentoDetalhes();
 	}

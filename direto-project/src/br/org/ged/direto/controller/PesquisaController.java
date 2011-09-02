@@ -212,7 +212,7 @@ public class PesquisaController extends BaseController {
 		List<DocumentoCompleto> docs = (List<DocumentoCompleto>) documentoService.returnSearch(form);
 		
 		if (searchTerm != "" || form.getIndividualSearch()!="")
-			totalAfterFilter = docs.size();
+			totalAfterFilter = docs.size() > 0 ? docs.get(0).getTotal() : 0;
 		
 		Iterator<DocumentoCompleto> ite = docs.iterator();
 		

@@ -139,7 +139,7 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
 			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
 			texto = texto + (pri.equals(" N") ? "<span class='prio_n_docs'>"+pri+"</span>" : (pri.equals(" U") ? "<span class='prio_u_docs'>"+pri+"</span>" : "<span class='prio_uu_docs'>"+pri+"</span>"));
-			texto = texto + (notificar+"<a href='"+url+"' title='"+doc.getUsuarioElaborador().getUsuLogin()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente().replace('-',' ')+"</a>");
+			texto = texto + (notificar+"<a href='"+url+"' title='Nr. Doc: "+doc.getNrDocumento()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente().replace('-',' ')+"</a>");
 			texto = texto + (" - <a href='"+url+"' title='["+doc.getTipoDocumento().getTipoDocumentoNome()+"] - Protocolo: "+doc.getNrProtocolo()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
 			texto = texto + ("<font class='data_docs'>"+DataTimeUtil.getBrazilFormatDataHora(doc_cart.getDataHora())+"</font>");
 			texto = texto + "</div>"; 
@@ -342,6 +342,7 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 		sql += " group by details.idDocumentoDetalhes order by " + form.getColName() + " " + form.getDir();
 		
 		System.out.println(sql);
+		int total = returnTotalSearch(sql);
 		
 		Query query = getSession().createQuery(sql);
 		
@@ -358,7 +359,7 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 			DocumentoDetalhes doc_det = (DocumentoDetalhes) objects[1];
 			Documento doc_conta = (Documento) objects[0];
 			DocumentoCompleto doc_completo = new DocumentoCompleto(doc_conta,doc_det);
-			
+			doc_completo.setTotal(total);
 			documentos.add(doc_completo);
 			
 		}
@@ -366,15 +367,37 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 		
 		return documentos;
 	}
+	
+	private int returnTotalSearch(String sql){
+		int total = 0; 
+		try{
+			Query query = getSession().createQuery("select count(*) "+sql);
+			total = (query.list()).size();
+		}catch (Exception e) {
+			e.printStackTrace();
+			total = 0;
+		}
+		
+		return total; 
+	}
 
 	@Override
 	public int returnTotalSearch(PesquisaForm form) {
 		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario obj = (Usuario)auth.getPrincipal();
+		
 		int idSecao = form.getCarteira().getSecao().getIdSecao();
 		int idOM = form.getCarteira().getOm().getIdOM();
 		
-		String sqlCount = "select count(distinct doc.documentoDetalhes.idDocumentoDetalhes) from Documento as doc" +
-		" where doc.carteira.secao.idSecao = "+idSecao+" and doc.carteira.om.idOM = "+idOM;
+		String sqlCount = "select count(distinct doc.documentoDetalhes.idDocumentoDetalhes) from Documento as doc";
+		
+		if(obj.getUsuPapel().equals("USER"))
+			sqlCount += " where doc.carteira.secao.idSecao = "+idSecao+" and doc.carteira.om.idOM = "+idOM;
+		else if (obj.getUsuPapel().equals("PROTOCOLO"))
+			sqlCount += " where doc.carteira.om.idOM = "+idOM+"";
+		else
+			sqlCount += " where doc.carteira.secao.idSecao <> 0 and doc.carteira.om.idOM <> 0";
 		
 		Integer total = ((Long)getSession().createQuery(sqlCount).uniqueResult()).intValue();
 		

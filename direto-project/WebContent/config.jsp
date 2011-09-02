@@ -56,6 +56,10 @@ try {
 		pstmt = conn.prepareStatement(query);
 		pstmt.execute();
 		
+		query = "update idmensausu set ultimanotificacao = '2011-08-19 00:00:00'";
+		pstmt = conn.prepareStatement(query);
+		pstmt.execute();
+		
 		query = "update usuario set usuIdt = 0";
 		pstmt = conn.prepareStatement(query);
 		pstmt.execute();

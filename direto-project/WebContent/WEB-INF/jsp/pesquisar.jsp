@@ -20,6 +20,25 @@ $j(function(){
 		"oLanguage": {
 			"sUrl": "js/dataTable/pt_BR.txt"
 		},
+		
+		"fnFormatNumber": function ( iIn ) {
+			if ( iIn < 1000 ) {
+				return iIn;
+			} else {
+				var 
+					s=(iIn+""), 
+					a=s.split(""), out="", 
+					iLen=s.length;
+				
+				for ( var i=0 ; i<iLen ; i++ ) {
+					if ( i%3 === 0 && i !== 0 ) {
+						out = "."+out;
+					}
+					out = a[iLen-i-1]+out;
+				}
+			}
+			return out;
+		},
 
 		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 
