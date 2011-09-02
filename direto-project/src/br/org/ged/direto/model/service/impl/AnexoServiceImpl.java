@@ -223,9 +223,8 @@ public class AnexoServiceImpl implements AnexoService {
 			
 			historicoService.save(historico);
 			
-			deleteAnexoFromTemp(anexo);
+			return deleteAnexoFromTemp(anexo);
 			
-			return true;
 		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
