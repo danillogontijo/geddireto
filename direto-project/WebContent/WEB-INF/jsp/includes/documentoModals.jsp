@@ -17,6 +17,41 @@
 
 </script>
 
+<style type="text/css">
+ul.auto-list{
+	display: none;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	border: 1px solid green;
+	background-color: #A3DF99;
+	padding: 0;
+	margin:0;
+	list-style:none;
+}
+ul.auto-list > li:hover,
+ul.auto-list > li[data-selected=true]{
+	background-color: #236574;
+}
+
+ul.auto-list > li{
+	border: 1px solid gray;
+	cursor: default;
+	padding: 2px;
+
+}
+
+mark{
+	font-weight: bold;
+}
+
+</style>
+
+<ul class="auto-list" style="left: 91px; top: 113px; display: none;">
+    <li data-value="daniel"><mark>d</mark>aniel</li>
+    <li data-value="david"><mark>d</mark>avid</li>
+</ul>
+
 <!-- Confirmação da edição documento -->
 <div id="weditar" class="window">
 	<table width="100%">
