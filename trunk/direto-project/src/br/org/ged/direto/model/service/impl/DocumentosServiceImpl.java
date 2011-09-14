@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
@@ -90,11 +91,11 @@ public class DocumentosServiceImpl implements DocumentosService {
 		int secaoDocumento = documento.getCarteira().getSecao().getIdSecao();
 		int omDocumento = documento.getCarteira().getOm().getIdOM();
 		
-		Iterator<Conta> ite = usuario.getContas().iterator();
+		Set<Conta> contas = usuario.getContas();
 		
-		while(ite.hasNext()){
+		for(Conta conta : contas){
 			
-			Carteira carteiraUsuarioLogado = ite.next().getCarteira();
+			Carteira carteiraUsuarioLogado = conta.getCarteira();
 			
 			if (usuario.getIdCarteira() == carteiraUsuarioLogado.getIdCarteira()){
 			
@@ -423,6 +424,9 @@ public class DocumentosServiceImpl implements DocumentosService {
 		
 		while(ite.hasNext()){
 			
+			if(granted)
+				break;
+			
 			documento = ite.next();
 			
 			if(documento.getCarteira()==null)
@@ -434,6 +438,14 @@ public class DocumentosServiceImpl implements DocumentosService {
 			for(Conta conta : usuario.getContas()){
 				
 				Carteira carteiraUsuarioLogado = conta.getCarteira();
+				
+				if(usuario.getUsuPapel().equals("PROTOCOLO")){
+					int omUsuario = conta.getCarteira().getOm().getIdOM();
+					if (omDocumento == omUsuario){
+						granted = true;
+						break;
+					}
+				}
 				
 				//ative o if caso queira que visualize apenas os documentos da carteira logada
 				//if (usuario.getIdCarteira() == carteiraUsuarioLogado.getIdCarteira()){
@@ -448,7 +460,7 @@ public class DocumentosServiceImpl implements DocumentosService {
 		if(!granted)
 			if(usuario.getUsuPapel().equals("ADMIN"))
 				granted = true;
-		
+	
 		documento.setGranted(granted);
 		if (!documento.isGranted()) 
 			throw new DocumentNotFoundException("Você não tem permissão para acessar este documento.");

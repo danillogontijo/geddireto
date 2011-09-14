@@ -139,8 +139,8 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
 			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
 			texto = texto + (pri.equals(" N") ? "<span class='prio_n_docs'>"+pri+"</span>" : (pri.equals(" U") ? "<span class='prio_u_docs'>"+pri+"</span>" : "<span class='prio_uu_docs'>"+pri+"</span>"));
-			texto = texto + (notificar+"<a href='"+url+"' title='Nr. Doc: "+doc.getNrDocumento()+"' id='rem_docs' class='ahref_docs'>"+doc.getRemetente().replace('-',' ')+"</a>");
-			texto = texto + (" - <a href='"+url+"' title='["+doc.getTipoDocumento().getTipoDocumentoNome()+"] - Protocolo: "+doc.getNrProtocolo()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
+			texto = texto + (notificar+"<a href='"+url+"' title='Rem: "+doc.getRemetente().replace('-',' ')+"<br>Nr. Doc: "+doc.getNrDocumento()+"' id='rem_docs' class='ahref_docs'>["+doc.getTipoDocumento().getTipoDocumentoNome()+"]</a>");
+			texto = texto + (" - <a href='"+url+"' title='Protocolo: "+doc.getNrProtocolo()+"<br>Assunto: "+doc.getAssunto()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
 			texto = texto + ("<font class='data_docs'>"+DataTimeUtil.getBrazilFormatDataHora(doc_cart.getDataHora())+"</font>");
 			texto = texto + "</div>"; 
 			

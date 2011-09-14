@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.Set;
 
@@ -25,15 +24,12 @@ import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Historico;
-import br.org.ged.direto.model.entity.OM;
-import br.org.ged.direto.model.entity.Secao;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.AnexoRepository;
 import br.org.ged.direto.model.service.AnexoService;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.HistoricoService;
-import br.org.ged.direto.model.service.UsuarioService;
 
 @Service("anexoService")
 @RemoteProxy(name = "anexoJS")
@@ -157,7 +153,7 @@ public class AnexoServiceImpl implements AnexoService {
 		return true;
 	}
 	
-	public boolean deleteAnexoFromTemp(Anexo anexo) {
+	public synchronized boolean deleteAnexoFromTemp(Anexo anexo) {
 		try{
 			File file = new File(config.baseDir+"/temp/"+anexo.getAnexoCaminho());
 			System.out.println("deletado? "+file.delete());
@@ -171,7 +167,7 @@ public class AnexoServiceImpl implements AnexoService {
 
 	@Override
 	@RemoteMethod
-	public boolean copy(int idAnexo) {
+	public synchronized boolean copy(int idAnexo) {
 		try {
 			Anexo anexo = selectById(idAnexo);
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -207,9 +203,9 @@ public class AnexoServiceImpl implements AnexoService {
 			}
 		
 			//Gravando o arquivo	
-			InputStream is = new FileInputStream(new File(config.baseDir+"/temp/"+anexo.getAnexoCaminho()));
+			FileInputStream fis = new FileInputStream(new File(config.baseDir+"/temp/"+anexo.getAnexoCaminho()));
 			FileOutputStream fos = new FileOutputStream(new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho()));
-			IOUtils.copy(is, fos);
+			IOUtils.copy(fis, fos);
 			
 			String txtHistorico = "(Edição) -"+anexo.getAnexoNome()+"-";
 			txtHistorico += usuario.getUsuLogin();
