@@ -13,7 +13,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/custom/jquery.limit-1.2.source.js"></script>
 
-<script type="text/javascript" src="<%=request.getContextPath() %>/js/custom/jquery.limit-1.2.source.js"></script><script type="text/javascript" src="<%=request.getContextPath() %>/js/auto.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/auto.js"></script>
 
 <script type="text/javascript">
 
@@ -29,49 +29,11 @@ var BACK = false; //Variavel para checar se esta tudo ok com a edicao.
 
 //errorAlert("ATENÇÃO!<br>O link EDITAR não funcionará nessa versão teste do Direto para usuários do LINUX");
 
-
-var urls = [
-    		"facebook.com",
-    		"google.com",
-    		"twitter.com",
-    		"amirharel.com",
-    		"amazon.com",
-    		"microsoft.com",
-    		"quora.com",
-    		"walla.co.il",
-    		"ebay.com",
-    		"gowala.com",
-    		"myspace.com",
-    		"youtube.com"		
-    		];
-    		
-    		function initURLTextarea(){
-    			$j("#texto_acao").autocomplete({
-    						wordCount:1,
-    						mode: "outter",
-    						on: {
-    							query: function(text,cb){
-    								var words = [];
-    								for( var i=0; i<urls.length; i++ ){
-    									if( urls[i].toLowerCase().indexOf(text.toLowerCase()) == 0 ) words.push(urls[i]);
-    									
-    								}
-    								cb(words);								
-    							}
-    						}
-    					});
-    		}
-
-
-
 /*
  **** Eventos MouseOver de atualização histórico,anotaçoes e despachos **** 
  */
 $j(function(){
-	
 	initURLTextarea();
-
-
 	var password = $j( "#password" ),
 	    usulogin = $j("#usulogin");
 		allFields = $j( [] ).add( password,usulogin ),

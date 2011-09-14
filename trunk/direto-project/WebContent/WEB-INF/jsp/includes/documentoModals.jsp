@@ -15,6 +15,40 @@
 	return true;
 }*/
 
+var pst_grad = ["Sd","Cb","Sgt","Ten"];
+var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="conta" items="${doc_cart.carteira.contas}">"${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra}",</c:forEach></c:forEach>"GED"];
+    		
+    		function initURLTextarea(){
+    			$j("#texto_acao").autocomplete({
+    						wordCount:1,
+    						mode: "outter",
+    						on: {
+    							query: function(text,cb){
+    				//alert(text.toLowerCase().indexOf("sd"))
+									//for( var k=0; k<pst_grad.length; k++ ){
+										//alert(text.indexOf(pst_grad[k]));
+										//if( text.indexOf( pst_grad[k] ) != -1){
+										
+										var auto = true;
+										
+										//for( var k=0; k<text.length; k++ )
+											if(text.charCodeAt(0) < 64 || text.charCodeAt(0) > 96)
+												auto = false;
+										
+										if(auto){
+											var words = [];
+		    								for( var i=0; i<urls.length; i++ ){
+		    									if( urls[i].toLowerCase().indexOf(text.toLowerCase()) != -1 ) words.push(urls[i]);
+		    									
+		    								}
+		    								cb(words);
+										}		
+    							}
+							}
+				});
+			}
+    		
+
 </script>
 
 <style type="text/css">
@@ -28,6 +62,7 @@ ul.auto-list{
 	padding: 0;
 	margin:0;
 	list-style:none;
+	z-index: 9999;
 }
 ul.auto-list > li:hover,
 ul.auto-list > li[data-selected=true]{
@@ -47,10 +82,6 @@ mark{
 
 </style>
 
-<ul class="auto-list" style="left: 91px; top: 113px; display: none;">
-    <li data-value="daniel"><mark>d</mark>aniel</li>
-    <li data-value="david"><mark>d</mark>avid</li>
-</ul>
 
 <!-- Confirmação da edição documento -->
 <div id="weditar" class="window">
