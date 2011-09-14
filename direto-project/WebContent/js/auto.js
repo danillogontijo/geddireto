@@ -282,7 +282,8 @@
 				wordsFound++;
 			}
 		}
-		return ret.join("");		
+		return ret.join(""); //Retornar palavra atualmente digitada
+		//return text; //Retornar o texto inteiro
 	}
 	
 	
@@ -447,7 +448,7 @@
 	
 	function onUserSelected(li,data){
 		var seletedText = $(li).attr("data-value");
-		
+		//alert(data.ta);
 		
 		var selectionEnd = getTextAreaSelectionEnd(data.ta);//.selectionEnd;
 		var text = data.ta.value;
@@ -555,7 +556,8 @@
 				data.on.query(text,function(list){
 					//console.log("got list = ",list);
 					if( list.length ){
-						showList(data,list,text);	
+						showList(data,list,text);
+						//setTimeout(function(){hideList(data);},10000);
 					}
 					else{
 						hideList(data);
