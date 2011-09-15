@@ -14,6 +14,8 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/custom/jquery.limit-1.2.source.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/auto.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.fcbkcomplete.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.elastic.source.js"></script>
 
 <script type="text/javascript">
 
@@ -34,6 +36,17 @@ var BACK = false; //Variavel para checar se esta tudo ok com a edicao.
  */
 $j(function(){
 	initURLTextarea();
+
+	$j('#tar').elastic();
+	//$j('#tar').trigger('update');
+
+	$j("#tar").keyup(function() {
+		var v = $j(this).val();
+		//var lastChar = v.charAt(v.length-1);
+		var hiText = v.replace(/\[/g,"<b>[").replace(/]/g,"]</b>");
+		$j("#hiText").html(hiText);
+	});
+	
 	var password = $j( "#password" ),
 	    usulogin = $j("#usulogin");
 		allFields = $j( [] ).add( password,usulogin ),

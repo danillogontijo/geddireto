@@ -16,10 +16,10 @@
 }*/
 
 var pst_grad = ["Sd","Cb","Sgt","Ten"];
-var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="conta" items="${doc_cart.carteira.contas}">"${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra}",</c:forEach></c:forEach>"GED"];
+var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="conta" items="${doc_cart.carteira.contas}">"[123@${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra}]",</c:forEach></c:forEach>"[0@GED]"];
     		
     		function initURLTextarea(){
-    			$j("#texto_acao").autocomplete({
+    			$j("#tar").autocomplete({
     						wordCount:1,
     						mode: "outter",
     						on: {
@@ -80,7 +80,79 @@ mark{
 	font-weight: bold;
 }
 
+
+.actionArea{
+	width: 350px;
+	display: block;
+	height: 60px;
+}
+
+#highlighter{
+	position:absolute;
+	
+	top: 0px;
+	right: 2px;
+	bottom: 2px;
+	left: 2px;
+	
+	padding: 0px 3px 3px 3px;
+	direction: ltr;
+	
+	position: absolute;
+	vertical-align: baseline;
+	background-color: aqua;
+}
+
+#tar{
+
+	vertical-align: text-bottom;
+	background-color: transparent;
+	position: static;
+	display: block;
+	direction: ltr;
+	
+	font-family: "Trebuchet MS",sans-serif;
+	font-size: 13px;
+	font-weight: 400;
+	
+	overflow: hidden;
+}
+
+.lineH{ line-height: 25px; height: 36px;}
+
+#highlighter b{background-color: #D8DFEA; font-weight: 400;}
+#highlighter span{display: inline; 
+white-space: pre; 
+background-color: transparent; 
+color: blue;
+word-spacing: 0;
+}
+
+}
 </style>
+
+<div id="actionArea" class="actionArea">
+	
+	<div id="actionBox" class="actionArea lineH" sytle="position:relative;">
+		
+		<div class="lineH" style="position: relative;">
+			<div id="highlighter" class="lineH">
+				<div style="text-align: left; width: 350px; display: block; position: static;">
+					<span id="hiText"></span>
+				</div>
+			</div>
+			
+			<div id="textArea" style="position:relative;">
+				<div style="width: 352px; vertical-align: baseline; display: block;">
+					<textarea style="width: 350px; height 50px;" id="tar"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+
 
 
 <!-- Confirmação da edição documento -->
