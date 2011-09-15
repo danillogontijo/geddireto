@@ -141,6 +141,7 @@
 	
 	var _data = {};
 	var _count = 0;
+	var _highlighterText = document.getElementById('hiText');
 	function makeAutoComplete(ta,obj){
 		_count++;
 		_data[_count] = {
@@ -473,6 +474,8 @@
 		data.ta.selectionEnd = pos+1+seletedText.length;
 		hideList(data);
 		$(data.ta).focus();	
+		
+		$(_highlighterText).html(a.replace(/\[/g,"<b>[").replace(/]/g,"]</b>")+"<b>"+seletedText+"</b>"+c.replace(/\[/g,"<b>[").replace(/]/g,"]</b>"));
 	}
 	
 	function registerEvents(data){
