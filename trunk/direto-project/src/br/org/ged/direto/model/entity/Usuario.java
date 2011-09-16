@@ -283,7 +283,7 @@ public class Usuario implements Serializable,UserDetails
 	}
 	
 	public int hashCode() {
-        int code = 9792;
+       /* int code = 9792;
 
         for (GrantedAuthority authority : getAuthorities()) {
             code = code * (authority.hashCode() % 7);
@@ -321,7 +321,8 @@ public class Usuario implements Serializable,UserDetails
             code = code * -7;
         }
 
-        return code;
+        return code;*/
+		return idUsuario;
     }
 	
 	public boolean equals(Object rhs) {

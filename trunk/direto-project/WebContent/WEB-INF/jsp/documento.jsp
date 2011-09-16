@@ -36,11 +36,11 @@ var BACK = false; //Variavel para checar se esta tudo ok com a edicao.
  */
 $j(function(){
 	initURLTextarea();
-
-	$j('#tar').elastic();
+	
+	$j('#texto_acao').elastic();
 	//$j('#tar').trigger('update');
 
-	$j("#tar").keyup(function() {
+	$j("#texto_acao").keyup(function() {
 		var v = $j(this).val();
 		//var lastChar = v.charAt(v.length-1);
 		var hiText = v.replace(/\[/g,"<b>[").replace(/]/g,"]</b>");

@@ -15,11 +15,10 @@
 	return true;
 }*/
 
-var pst_grad = ["Sd","Cb","Sgt","Ten"];
-var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="conta" items="${doc_cart.carteira.contas}">"[123@${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra}]",</c:forEach></c:forEach>"[0@GED]"];
+var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="conta" items="${doc_cart.carteira.contas}">"[${conta.usuario.idUsuario}@${conta.usuario.pstGrad.pstgradNome}-${conta.usuario.usuNGuerra}-(${conta.carteira.cartAbr})]",</c:forEach></c:forEach>"[0@GED]"];
     		
     		function initURLTextarea(){
-    			$j("#tar").autocomplete({
+    			$j("#texto_acao").autocomplete({
     						wordCount:1,
     						mode: "outter",
     						on: {
@@ -38,7 +37,7 @@ var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="co
 										if(auto){
 											var words = [];
 		    								for( var i=0; i<urls.length; i++ ){
-		    									if( urls[i].toLowerCase().indexOf(text.toLowerCase()) != -1 ) words.push(urls[i]);
+		    									if( urls[i].toLowerCase().indexOf(text.toLowerCase()) != -1 ) words.push(urls[i].replace(/\s/g, "-"));
 		    									
 		    								}
 		    								cb(words);
@@ -57,8 +56,8 @@ ul.auto-list{
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	border: 1px solid green;
-	background-color: #A3DF99;
+	border: 1px solid #1E90FF;
+	background-color: #6495ED;
 	padding: 0;
 	margin:0;
 	list-style:none;
@@ -66,11 +65,11 @@ ul.auto-list{
 }
 ul.auto-list > li:hover,
 ul.auto-list > li[data-selected=true]{
-	background-color: #236574;
+	background-color: #E2E4FF;
 }
 
 ul.auto-list > li{
-	border: 1px solid gray;
+	border: 1px solid #fff;
 	cursor: default;
 	padding: 2px;
 
@@ -82,9 +81,9 @@ mark{
 
 
 .actionArea{
-	width: 350px;
+	width: 560px;
 	display: block;
-	height: 60px;
+	margin-left: 35px;
 }
 
 #highlighter{
@@ -95,15 +94,15 @@ mark{
 	bottom: 2px;
 	left: 2px;
 	
-	padding: 0px 3px 3px 3px;
+	padding: 2px 4px 20px 1px;
 	direction: ltr;
 	
-	position: absolute;
 	vertical-align: baseline;
-	background-color: aqua;
+	background-color: transparent;
+	border: 1px solid #000;
 }
 
-#tar{
+#texto_acao{
 
 	vertical-align: text-bottom;
 	background-color: transparent;
@@ -116,44 +115,29 @@ mark{
 	font-weight: 400;
 	
 	overflow: hidden;
+	border: 0px;
+	
+	/*max-height: 100px;*/
+	margin-left: 2px;
+	width: 550px;
+	height: auto;
 }
 
-.lineH{ line-height: 25px; height: 36px;}
+.lineH{
+/*height: 36px;*/ 
+}
 
-#highlighter b{background-color: #D8DFEA; font-weight: 400;}
-#highlighter span{display: inline; 
-white-space: pre; 
+#highlighter b{background-color: #D8DFEA; font-weight: 200;}
+#highlighter span{
+display: inline; 
 background-color: transparent; 
-color: blue;
+color: transparent;
 word-spacing: 0;
+white-space: pre-wrap;
 }
 
-}
+
 </style>
-
-<div id="actionArea" class="actionArea">
-	
-	<div id="actionBox" class="actionArea lineH" sytle="position:relative;">
-		
-		<div class="lineH" style="position: relative;">
-			<div id="highlighter" class="lineH">
-				<div style="text-align: left; width: 350px; display: block; position: static;">
-					<span id="hiText"></span>
-				</div>
-			</div>
-			
-			<div id="textArea" style="position:relative;">
-				<div style="width: 352px; vertical-align: baseline; display: block;">
-					<textarea style="width: 350px; height 50px;" id="tar"></textarea>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-</div>
-
-
-
 
 <!-- Confirmação da edição documento -->
 <div id="weditar" class="window">
@@ -173,6 +157,7 @@ word-spacing: 0;
 
 <!-- Despacho e Anotaçao -->
 <div id="wacao" class="window">
+	<div style="display: block; position: static;">
 	<table width="100%">
 		<tr>
 			<td align="center" bgcolor="#1E90FF" width="690" class="titulo_confirmacao" height="20" valign="middle" id="titulo"></td>
@@ -191,7 +176,26 @@ word-spacing: 0;
 				<option value="providências em andamento.">Providências em andamento</option>
 				<option value="encaminhar.">Encaminhar</option></select>
 				<br>Digite aqui seu texto: <br>
-				<textarea onkeypress="return js.direto.charProibido(event)" cols="76" rows="2" id="texto_acao"></textarea>
+				
+				<div id="actionArea" class="actionArea">
+					<div id="actionBox" class="actionArea lineH" sytle="position:relative;">
+						<div class="lineH" style="position: relative;">
+							<div id="highlighter" class="lineH">
+								<div style="text-align: left; width: 550px; display: block; position: static;">
+									<span id="hiText"></span>
+								</div>
+							</div>
+							
+							<div id="textArea" style="position:relative;">
+								<div style="width: 352px; vertical-align: baseline; display: block;">
+									<textarea onkeypress="return js.direto.charProibido(event)" id="texto_acao"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+					<span id="t"></span>
+				</div>
+				
 				<div id="textCount">Resta(m) <span id=charsLeft></span> caracter(es) a ser(em) digitado(s)</div>
 				<div id="div_criptografar"><input type="checkbox" id="chk_criptografar" value="1">Criptografar</input></div>
 			</td>
@@ -201,6 +205,7 @@ word-spacing: 0;
 			<td height="35" valign="bottom" colspan="2"><input type="button" id="bt_acao_salvar" value="Salvar" name="bt_acao_salvar"></td>
 		</tr>
 	</table>
+	</div>
 </div>
 
 <!-- Adicionar anexo -->

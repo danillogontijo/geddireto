@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
@@ -25,6 +26,7 @@ import br.org.ged.direto.model.repository.AnotacaoRepository;
 import br.org.ged.direto.model.service.AnotacaoService;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DocumentosService;
+import br.org.ged.direto.model.service.FeedService;
 import br.org.ged.direto.model.service.HistoricoService;
 import br.org.ged.direto.model.service.UsuarioService;
 
@@ -48,6 +50,9 @@ public class AnotacaoServiceImpl implements AnotacaoService {
 	
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private FeedService feedService;
 
 	@Override
 	public List<Anotacao> getAnotacaoByDocumento(Integer idDocumentoDetalhes) {
@@ -66,6 +71,9 @@ public class AnotacaoServiceImpl implements AnotacaoService {
 	@Transactional(readOnly=false)
 	public void save(int idDocumentoDetalhes, String txtAnotacao) {
 		try{
+			
+			Set<Usuario> usuariosMencionados = feedService.usuariosMencionados(txtAnotacao);
+			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Usuario usuarioLogado = (Usuario) auth.getPrincipal();
 			Usuario usuario = usuarioService.selectById(usuarioLogado.getIdUsuario());
@@ -79,7 +87,7 @@ public class AnotacaoServiceImpl implements AnotacaoService {
 			Anotacao anotacao = new Anotacao();
 			anotacao.setCarteira(carteira);
 			anotacao.setDataHoraAnotacao(data);
-			anotacao.setAnotacao(txtAnotacao);
+			anotacao.setAnotacao(feedService.formatarMencionados(txtAnotacao));
 			anotacao.setDocumentoDetalhes(documento);
 			anotacao.setUsuario(usuario);
 			
