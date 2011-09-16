@@ -85,6 +85,12 @@ js.direto.parseDate = function(txt_date) {
 	var min = txt_date.substr(14,2);
 	var seg = txt_date.substr(17,2);
 	
+	if(dia.substring(0,1) == "0")
+		dia = dia.substring(1);
+	
+	if(mes.substring(0,1) == "0")
+		mes = mes.substring(1);
+	
 	var date = new Date();
 	//date.setFullYear(parseInt(ano), parseInt(mes)-1, parseInt(dia));
 	date.setFullYear(eval(ano), (eval(mes)-1), eval(dia));

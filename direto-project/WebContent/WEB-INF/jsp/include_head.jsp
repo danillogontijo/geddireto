@@ -207,7 +207,7 @@ jQuery(document).ready(function($) {
 		else
 			disableChatDrag();
 	});
-	
+
 	
 	/**
 	*MODAL
@@ -231,15 +231,18 @@ jQuery(document).ready(function($) {
 			$('#div_criptografar').css('display','none');
 			var acao = $(this).attr('id').split('_');
 			
+			$j(id+' #bt_acao_salvar').unbind('click');
+			
 			if(acao[1] == 'Despachar')
 				$('#div_criptografar').css('display','block');
 			
 			$('#chk_criptografar').attr('checked', false);
 			$(id+' .titulo_confirmacao').html(acao[1]);
 			$(id+' #bt_acao_salvar').bind('click', function() {
-				//alert(acao[1]);
 				salvarAcao(acao[1],parseInt(acao[0]),$(this));
 			});
+			
+			
 		}else if(id=='#weditar'){	
 			//var anexoCaminho = $(this).attr('id');
 			//$('#hn_nome_anexo').val(anexoCaminho);
@@ -266,9 +269,8 @@ jQuery(document).ready(function($) {
 		$('#mask').fadeTo("slow",0.8);	
 	
 		//Get the window height and width
-		//var winH = $(window).height();
-		//var winH = $(id).position();
-		var winW = $(window).width();
+		var winH = $(window).height();
+	    var winW = $(window).width();
               
 		//Set the popup window to center
 		//$(id).css('top',  winH/2-$(id).height()/2);
@@ -281,7 +283,10 @@ jQuery(document).ready(function($) {
 	
 		if(id=='#wcomentar')
 			$(id).css('top',  pos.top+20);
-		
+
+		if(id=='#wacao')
+			$(id).css('top',  pos.top-$(id).height());
+	   
 		//transition effect
 		$(id).fadeIn(100); 
 	

@@ -301,7 +301,9 @@
 		}		
 		
 		var html = "";
+		text = text.replace(/\[/g,"");
 		var regEx = new RegExp("("+text+")");
+		
 		var taWidth = $(data.ta).width()-5;
 		var width = data.mode == "outter" ? "style='width:"+taWidth+"px;'" : "";
 		for( var i=0; i< list.length; i++ ){
@@ -469,6 +471,7 @@
 		var a = data.ta.value.substr(0,pos+1);
 		var c = data.ta.value.substr(selectionEnd,data.ta.value.length);
 		var scrollTop = data.ta.scrollTop;
+		
 		data.ta.value = a+seletedText+c;
 		data.ta.scrollTop = scrollTop;
 		data.ta.selectionEnd = pos+1+seletedText.length;
