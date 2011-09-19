@@ -240,6 +240,22 @@ public class DocumentoDetalhes implements Serializable {
 	public void setTipoDocumento(TipoDocumento tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
+	
+	@Override
+	public int hashCode() {
+		return idDocumentoDetalhes;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof DocumentoDetalhes){
+			DocumentoDetalhes doc = (DocumentoDetalhes)obj;
+			if(this.getIdDocumentoDetalhes() == doc.getIdDocumentoDetalhes())
+				return true;
+			return false;
+		}
+		return false;
+	}
 
 	@Override
 	public String toString(){

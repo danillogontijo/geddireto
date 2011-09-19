@@ -781,7 +781,7 @@ height: 15px;
 			</div>
 			
 			<!-- INICIO CORPO PRINCIPAL -->
-			<div id="corpo_documento" class="ui_main_body _width_main_body" style="background-color: #fff; min-height: 640px;">
+			<div id="corpo_documento" class="ui_main_body _width_main_body" style="background-color: #fff; min-height: 640px; margin-bottom: 5px;">
 		
 			<div style="float: left; text-align: left; margin-top: 10px; margin-left: 7px">
 			

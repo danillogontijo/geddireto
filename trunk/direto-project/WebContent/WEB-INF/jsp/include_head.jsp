@@ -53,7 +53,7 @@
 				 /*line-height: 700px;*/
 				 top: 133px;
 				 left: 180px;
-				 display: block;
+				 display: none;
 			}
 			
 			.tooltip {
@@ -595,12 +595,14 @@ position: relative;
 			</div>
 		</div>
 		<div style="line-height: 29px; height: 29px; background-color: #fff; position: relative; top: 43px;"> 
-			<div style="font-size: 14px; font-weight: bold; width: 167px; float: left; margin-top: -43px;">
-				<span style="margin-left: 5px;"><spring:message code="welcome"/></span>
-			</div>
-			<div style="font-size:18px; text-align: center; width: 822px; float: right; margin-top: -43px;">
-				Brigada de Operações Especiais - <span style="color: red">EM TESTE</span>
-			</div>
+			<div style="width: 1002px; margin: 0 auto;">
+				<div style="width: 184px; font-size:14px; position: absolute;">
+					<span style="margin-left: 5px;"><spring:message code="welcome"/></span>
+				</div>
+				<div style="width: 817px; font-size:18px; margin: 0 189px; position: absolute; text-align: center;">
+					Brigada de Operações Especiais - <span style="color: red">EM TESTE</span>
+				</div>
+			</div>	
 		</div>
 	</div>
 	

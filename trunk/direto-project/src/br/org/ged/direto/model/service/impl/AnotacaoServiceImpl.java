@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.org.ged.direto.model.entity.Anotacao;
 import br.org.ged.direto.model.entity.Carteira;
+import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
+import br.org.ged.direto.model.entity.Feed;
 import br.org.ged.direto.model.entity.Historico;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.AnotacaoRepository;
@@ -72,8 +74,7 @@ public class AnotacaoServiceImpl implements AnotacaoService {
 	public void save(int idDocumentoDetalhes, String txtAnotacao) {
 		try{
 			
-			Set<Usuario> usuariosMencionados = feedService.usuariosMencionados(txtAnotacao);
-			feedService.selectFeeds(1);
+			Set<Conta> contasMencionadas = feedService.contasMencionadas(txtAnotacao);
 			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Usuario usuarioLogado = (Usuario) auth.getPrincipal();
@@ -85,14 +86,32 @@ public class AnotacaoServiceImpl implements AnotacaoService {
 			
 			Date data = new Date();
 			
+			String txtAnotacaoTemp = feedService.formatarMencionados(txtAnotacao);
+			
 			Anotacao anotacao = new Anotacao();
 			anotacao.setCarteira(carteira);
 			anotacao.setDataHoraAnotacao(data);
-			anotacao.setAnotacao(feedService.formatarMencionados(txtAnotacao));
+			anotacao.setAnotacao(txtAnotacaoTemp);
 			anotacao.setDocumentoDetalhes(documento);
 			anotacao.setUsuario(usuario);
 			
-			anotacaoRepository.save(anotacao);
+			anotacao.setIdAnotacao(anotacaoRepository.save(anotacao));
+			
+			for(Conta c : contasMencionadas){
+				Feed feed = new Feed();
+				//feed.setAcao("1_"+anotacao.getIdAnotacao());
+				feed.setAcao("<b>[Anotação]</b> "+txtAnotacaoTemp);
+				feed.setCarteira(c.getCarteira());
+				feed.setCarteiraRem(carteira);
+				feed.setDataHora(data);
+				feed.setDocumentoDetalhes(documento);
+				feed.setIdAnotacao(anotacao.getIdAnotacao());
+				feed.setIdDespacho(0);
+				feed.setUsuario(c.getUsuario());
+				feed.setUsuarioRem(usuario);
+				
+				feedService.save(feed);
+			}
 			
 			String txtHistorico = "(Anotação) - ";
 					txtHistorico += usuario.getPstGrad().getPstgradNome()+" "+usuario.getUsuNGuerra();

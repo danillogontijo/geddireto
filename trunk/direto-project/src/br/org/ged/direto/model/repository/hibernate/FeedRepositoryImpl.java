@@ -44,4 +44,9 @@ public class FeedRepositoryImpl extends BaseRepositoryImpl implements FeedReposi
 			
 		return feeds;
 	}
+
+	@Override
+	public Integer save(Feed feed) {
+		return (Integer) hibernateTemplate.save(feed);
+	}
 }
