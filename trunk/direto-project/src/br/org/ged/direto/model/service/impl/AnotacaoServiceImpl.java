@@ -73,6 +73,7 @@ public class AnotacaoServiceImpl implements AnotacaoService {
 		try{
 			
 			Set<Usuario> usuariosMencionados = feedService.usuariosMencionados(txtAnotacao);
+			feedService.selectFeeds(1);
 			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Usuario usuarioLogado = (Usuario) auth.getPrincipal();

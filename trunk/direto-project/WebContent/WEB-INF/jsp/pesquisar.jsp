@@ -64,9 +64,7 @@ $j(function(){
 		  		], 
 
 		 //"aLengthMenu": [[10, 15, -1], [10, 15, "All"]],
-		 "aLengthMenu": [10, 15, 20],
-		  		      		 		
-		
+		"aLengthMenu": [10, 15, 20, 50, 100],
 		"sPaginationType": "full_numbers",
 		"sAjaxSource": "resultado.html?total=${total}&bServerSide=${bServerSide}"
 
@@ -80,8 +78,6 @@ $j(function(){
 		/* Filter on the column (the index) of this element */
 		oTable.fnFilter( this.value, eval($j("tfoot input").index(this)-subtrai) ); //subtraia -1 caso exista um input nao searchable
 	} );
-	
-	
 	
 	/*
 	 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
@@ -150,10 +146,9 @@ $j(function(){
 
 </style>
 		
-		
-<!-- INICIO CORPO DE LISTA DOCUMENTOS E PESQUISA-->
-<div id="corpo" style="width:100%; text-align:center; float: left; position: static; width: 822px; vertical-align: middle;">
-		
+<!-- INICIO CORPO PRINCIPAL -->
+<div class="ui_main_body _width_main_body" style="background-color: #fff; min-height: 640px;">
+				
 		
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="pesquisaDataTables"> 
 	<thead> 
@@ -184,18 +179,9 @@ $j(function(){
 </table> 
 		
 		
-			
-		
-		
-</div>
-<!-- FIM CORPO DE LISTA DOCUMENTOS E PESQUISA-->
-		
-<%@ include file="include_foot.jsp" %>	
-
-
-
-
-
-
-
-
+				
+			</div>
+		</div>
+	</div>
+	
+	<%@ include file="include_foot.jsp" %>		

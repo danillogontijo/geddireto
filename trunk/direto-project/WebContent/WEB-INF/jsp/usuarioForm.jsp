@@ -63,17 +63,14 @@ input[type=text] {width: 330px;}
 
 </style>
 
-
-<div style="width:100%; text-align:center; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
-		
-			<span style="font-weight: bold;">Dados Cadastrais</span>
-		
-		</div>
-		
-		
-		<!-- INICIO CORPO -->
-		<div style="width:100%; text-align:left; float: left; position: static; width: 822px; vertical-align: middle;">
-		
+<!-- INICIO SUBMENU 2 DO CORPO PRINCIPAL -->
+			<div style="background-color: #B8C9DD;" class="ui_main_body ui_subMenu _width_main_body _font_normal">
+				<span style="font-weight: bold;">Dados Cadastrais</span>
+			</div>
+			
+			<!-- INICIO CORPO PRINCIPAL -->
+			<div class="ui_main_body _width_main_body" style="background-color: #fff; min-height: 640px;">
+				
 			<form:form method="POST" commandName="usuarioForm">
 				<table style="background-color: #fff; margin: 20px auto;">
 					<tr>
@@ -178,18 +175,10 @@ input[type=text] {width: 330px;}
 					</tr>
 				</table>
 			</form:form>
-		</div>
-		<!-- FIM CORPO -->
+
 		
-<%@ include file="include_foot.jsp" %>
-
-</body>
-</html>
-
-
-
-
-
-
-</body>
-</html>
+			</div>
+		</div>
+	</div>
+	
+	<%@ include file="include_foot.jsp" %>

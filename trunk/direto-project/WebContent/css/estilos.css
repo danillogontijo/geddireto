@@ -65,7 +65,7 @@ background-color: black;}
 
 .pages {font: 12px Verdana, Arial, Helvetica, sans-serif;color: #003399;}
 
-.rodape {color: #fff; font-size: 10px;}
+.ui_foot {height: 85px; color: #fff; font-size: 10px;}
 
 .titulo_confirmacao {color: #ffffff; font-weight: bold; text-decoration: none; font-size: 14px;}
 
@@ -119,9 +119,6 @@ background-color: black;}
  
  .data_docs{float: right;color: gray; font-style: italic;}
  
- 
- 
-  
  /**
  * ESTILO PAGINA VISUALIZACAO DE DOCUMENTO (documento.html)
  */
@@ -130,7 +127,7 @@ background-color: black;}
 
 #line .div_title_anotacoes {margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;}
 
-.celula{border-bottom: 1px solid gray; background-color: #FFFFCC; position: relative; width: 822px; text-align: left; }
+.celula{border-bottom: 1px solid gray; background-color: #FFFFCC; position: relative; width: 812px; text-align: left; }
 	.anotacao {color: blue;}
 	.despacho {color: blue;}
 	.historico {color: red;}
@@ -142,13 +139,22 @@ background-color: black;}
 	border-bottom: 1px solid gray; 
 	background-color: #FFFFCC; 
 	position: relative; 
-	width: 822px; 
+	width: 812px; 
 	height: 25px; 
 	text-align: center; 
 	line-height: 25px;	
 	cursor: pointer;
 }
 
+.ui_action_title{
+	margin-top: 10px; 
+	background-color: #B8C9DD;
+	position: relative;
+	width: 812px;
+	height: 30px;
+	text-align: center;
+	line-height:30px;
+}
 
 /**
  * ESTILO PAGINA DE PESQUISA (pesquisar.html)

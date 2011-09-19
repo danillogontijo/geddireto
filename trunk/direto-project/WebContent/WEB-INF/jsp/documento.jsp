@@ -14,7 +14,6 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/custom/jquery.limit-1.2.source.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/auto.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.fcbkcomplete.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.elastic.source.js"></script>
 
 <script type="text/javascript">
@@ -769,171 +768,172 @@ height: 15px;
 
 </style>
 
-<div style="width: 822px; text-align:left; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
-		
+
+<!-- INICIO SUBMENU 2 DO CORPO PRINCIPAL -->
+			<div style="background-color: #B8C9DD;" class="ui_main_body ui_subMenu _width_main_body _font_normal">
 				
-			<a href="#wgrupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar</a> |
-			<!-- <a href="" style="margin-left: 5px;" class="menu2">Responder</a> | -->
-			<a href="" style="margin-left: 5px;" class="menu2">Despachar</a> |
-			<a href="" style="margin-left: 5px;" class="menu2">Anotar</a> |
-			<a href="#wanexar" name="modal" style="margin-left: 5px;" class="menu2">Anexar</a> |
+				<a href="#wgrupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar</a> |
+				<!-- <a href="" style="margin-left: 5px;" class="menu2">Responder</a> | -->
+				<a href="" style="margin-left: 5px;" class="menu2">Despachar</a> |
+				<a href="" style="margin-left: 5px;" class="menu2">Anotar</a> |
+				<a href="#wanexar" name="modal" style="margin-left: 5px;" class="menu2">Anexar</a> |
 			
+			</div>
+			
+			<!-- INICIO CORPO PRINCIPAL -->
+			<div id="corpo_documento" class="ui_main_body _width_main_body" style="background-color: #fff; min-height: 640px;">
 		
-</div>
-
-
-
-<div id="corpo_documento" style="float: left; position: static; width: 822px; vertical-align: middle; display: none;">
-	
-	<div style="float: left; text-align: left; margin-top: 10px; margin-left: 7px">
-	
-		<font size="+2">[${documento.tipoDocumento.tipoDocumentoNome}] ${documento.assunto}</font>		
-		
-		<br><br>
-		
-		<font color="#666666">Id Documento: </font><b>${idDocumento}</b><br>
-		<c:if test="${encaminhadoPor != ''}">
-			<font color="#666666">Carteira que encaminhou: </font><b>${encaminhadoPor}</b><br>
-		</c:if>
-		<font color="#666666">Nr. Prototocolo: </font><b>${documento.nrProtocolo}</b><br>
-		<font color="#666666">Nr. Documento: </font><b>${documento.nrDocumento}</b><br>	
-		<font color="#666666">Documento elaborado por: </font><b>${usuarioElaborador.pstGrad.pstgradNome}
-		${usuarioElaborador.usuNGuerra}</b><br>
-		
-		
-		<font color="#666666">Documento enviado para... (negrito) e acessado por...(azul): </font>
-		
-		 <c:forEach var="doc_cart" items="${allDocuments}">
-			   <c:forEach var="conta" items="${doc_cart.carteira.contas}">
-			    					    			
-			    	<c:choose> 
-	  					<c:when test="${doc_cart.status == '0'}" > 
-	  						<span style="background-color: #fff;"><font color="black" style="font-size: 9px;" title="${conta.carteira.cartAbr}"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font></span> 
-	  					</c:when> 
-	  					<c:otherwise> 
-	  						<span style="background-color: #fff;"><font title="${conta.carteira.cartAbr}" color="blue" style="font-size: 9px;">${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</font></span> 
-	  					</c:otherwise> 
-					</c:choose>
-			    			
-			    				
-			    </c:forEach>
-		 </c:forEach>
-		<br>
-		
-		<font color="#666666">Remetente: </font><b>${documento.remetente}</b><br>	
-		<font color="#666666">Destinatario: </font><b>${documento.destinatario}</b><br>
-		<font color="#666666">Data de entrada no sistema: </font><b><fmt:formatDate pattern="EEEE, d MMMM yyyy HH:mm" value="${documento.dataEntSistema}" /></b><br>
-		<font color="#666666">Referência: </font><b>${documento.referencia}</b><br>
-	
-		<font color="#666666">Documento: </font><b>${documento_principal}</b> 
-		
-   <c:if test="${documento_principal != 'Sem documento'}">			
-		
-		>>
-		
-		<c:choose>
-			<c:when test="${documento.assinatura == 0}">
-				<c:if test="${documento_principal.assinado == 0}">
-				 <span id="s_editar"><a href="#weditar" id="${documento_principal.anexoCaminho}" nomeAnexo="${documento_principal.anexoNome}" anexo="${documento_principal.idAnexo}" name="modal" class="l_edicao_vis">Editar</a></span> |
+			<div style="float: left; text-align: left; margin-top: 10px; margin-left: 7px">
+			
+				<font size="+2">[${documento.tipoDocumento.tipoDocumentoNome}] ${documento.assunto}</font>		
+				
+				<br><br>
+				
+				<font color="#666666">Id Documento: </font><b>${idDocumento}</b><br>
+				<c:if test="${encaminhadoPor != ''}">
+					<font color="#666666">Carteira que encaminhou: </font><b>${encaminhadoPor}</b><br>
 				</c:if>
-			</c:when>
-			<c:otherwise>
-				Documento assinado.
-			</c:otherwise>
-		</c:choose>
-		
-		<span id="s_visualizar"><a href="fileview.html?id=${documento_principal.idAnexo}" target="_blank" class="l_edicao_vis">Visualizar</a></span>
-		
-		<c:if test="${documento_principal.assinado == 1 && documento_principal.idAssinadoPor == usuario.idUsuario}">
-			| <span id="s_checar"><a href="#" name="liberar_edicao" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Liberar</a></span> 
-		</c:if>
-		
-		<c:if test="${documento_principal.assinado == 1 || documento.assinatura == 1}">
-			| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
-		</c:if>
-		
-		<!-- | <span id="s_checar"><a href="#cryptofile" name="cryptofile" id="${documento_principal.idAnexo}" class="l_edicao_vis">Cripto</a></span> -->
-		
-		
-		<br>
-		<font color="#666666">SHA-1: </font><b>${documento_principal.hash}</b><br>
-		
-	</c:if>
-		
-		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
-			<a href="#wanexar" name="modal" id="link_titulo">Anexos</a>
-		</div>
-		
-		
-		
-		<c:forEach var="anexo" items="${anexos}">
-			<div id="div_anexos" class="anexos">
-				<span id="${anexo.idAnexo}" name="ui_anexo">${anexo.anexoNome}</span>
-				(
+				<font color="#666666">Nr. Prototocolo: </font><b>${documento.nrProtocolo}</b><br>
+				<font color="#666666">Nr. Documento: </font><b>${documento.nrDocumento}</b><br>	
+				<font color="#666666">Documento elaborado por: </font><b>${usuarioElaborador.pstGrad.pstgradNome}
+				${usuarioElaborador.usuNGuerra}</b><br>
+				
+				
+				<font color="#666666">Documento enviado para... (negrito) e acessado por...(azul): </font>
+				
+				 <c:forEach var="doc_cart" items="${allDocuments}">
+					   <c:forEach var="conta" items="${doc_cart.carteira.contas}">
+					    					    			
+					    	<c:choose> 
+			  					<c:when test="${doc_cart.status == '0'}" > 
+			  						<span style="background-color: #fff;"><font color="black" style="font-size: 9px;" title="${conta.carteira.cartAbr}"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font></span> 
+			  					</c:when> 
+			  					<c:otherwise> 
+			  						<span style="background-color: #fff;"><font title="${conta.carteira.cartAbr}" color="blue" style="font-size: 9px;">${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</font></span> 
+			  					</c:otherwise> 
+							</c:choose>
+					    			
+					    				
+					    </c:forEach>
+				 </c:forEach>
+				<br>
+				
+				<font color="#666666">Remetente: </font><b>${documento.remetente}</b><br>	
+				<font color="#666666">Destinatario: </font><b>${documento.destinatario}</b><br>
+				<font color="#666666">Data de entrada no sistema: </font><b><fmt:formatDate pattern="EEEE, d MMMM yyyy HH:mm" value="${documento.dataEntSistema}" /></b><br>
+				<font color="#666666">Referência: </font><b>${documento.referencia}</b><br>
+			
+				<font color="#666666">Documento: </font><b>${documento_principal}</b> 
+				
+		   <c:if test="${documento_principal != 'Sem documento'}">			
+				
+				>>
+				
 				<c:choose>
 					<c:when test="${documento.assinatura == 0}">
-						<c:if test="${anexo.assinado == 0}">
-							<a href="#weditar" name="modal" id="${anexo.anexoCaminho}" nomeanexo="${documento_principal.anexoNome}" anexo="${anexo.idAnexo}" class="l_edicao_vis">Editar</a> |
+						<c:if test="${documento_principal.assinado == 0}">
+						 <span id="s_editar"><a href="#weditar" id="${documento_principal.anexoCaminho}" nomeAnexo="${documento_principal.anexoNome}" anexo="${documento_principal.idAnexo}" name="modal" class="l_edicao_vis">Editar</a></span> |
 						</c:if>
 					</c:when>
+					<c:otherwise>
+						Documento assinado.
+					</c:otherwise>
 				</c:choose>
-				<a href="fileview.html?id=${anexo.idAnexo}" target="_blank" class="l_edicao_vis">Visualizar</a>
-				<c:if test="${anexo.assinado == 1 || documento.assinatura == 1}">
-				| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${anexo.idAnexo}" class="l_edicao_vis">Checar</a></span>
+				
+				<span id="s_visualizar"><a href="fileview.html?id=${documento_principal.idAnexo}" target="_blank" class="l_edicao_vis">Visualizar</a></span>
+				
+				<c:if test="${documento_principal.assinado == 1 && documento_principal.idAssinadoPor == usuario.idUsuario}">
+					| <span id="s_checar"><a href="#" name="liberar_edicao" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Liberar</a></span> 
 				</c:if>
-				<c:if test="${anexo.assinado == 1 && anexo.idAssinadoPor == usuario.idUsuario}">
-				| <span id="s_checar"><a href="#" name="liberar_edicao" anexo="${anexo.idAnexo}" class="l_edicao_vis">Liberar</a></span> 
+				
+				<c:if test="${documento_principal.assinado == 1 || documento.assinatura == 1}">
+					| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
 				</c:if>
-				)
-				<span id="hash_${anexo.idAnexo}" style="background-color: red; width: 100%; display: none;">SHA-1: ${anexo.hash}</span>
-			</div>
-		</c:forEach>
-	
-		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
-			<a href="javascript:show_updates(${idDocumento},'despachos')" id="link_titulo" name="link_despachos">Despachos</a> [<a href="#wacao" name="modal" id="1_Despachar">Despachar</a>]
-		</div>
-		<div style="position: relative" id="despachos">
-			<c:forEach var="d" items="${despachos}">
-				<div id="div_despachos" class="celula despacho">
-					<p><strong>[${d.carteira.cartAbr }] [${d.usuario.pstGrad.pstgradNome} ${d.usuario.usuNGuerra}]</strong> - ${d.despacho} - 
-					<span id="data_despacho"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${d.dataHoraDespacho}" /></span> 
-					<c:if test="${d.idUsuarioDestinatario != 0}"> (<a href="#decrypto" name="decrypto" id="${d.idDespacho}" style="color: red;">Descripto</a>)</c:if>
-					</p>
+				
+				<!-- | <span id="s_checar"><a href="#cryptofile" name="cryptofile" id="${documento_principal.idAnexo}" class="l_edicao_vis">Cripto</a></span> -->
+				
+				
+				<br>
+				<font color="#666666">SHA-1: </font><b>${documento_principal.hash}</b><br>
+				
+			</c:if>
+				
+				<!-- ANEXOS TITULO -->
+				<div class="ui_action_title">
+					<a href="#wanexar" name="modal" id="link_titulo">Anexos</a>
 				</div>
-			 </c:forEach>
-		 </div>
-		
-		<div id="line" class="div_title_anotacoes" style="">
-			<a href="javascript:show_updates(${idDocumento},'anotacoes')" id="link_titulo" name="link_anotacoes">Anotações</a> [<a href="#wacao" name="modal" id="2_Anotar">Anotar</a>]
-		</div>
-		<div style="position: relative" id="anotacoes">
-			<c:forEach var="a" items="${anotacoes}">
-				<div id="div_anotacoes" class="celula anotacao">
-					<strong>[${a.carteira.cartAbr }] [${a.usuario.pstGrad.pstgradNome} ${a.usuario.usuNGuerra}]</strong> - ${a.anotacao} - 
-					<span id="data_anotacao"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${a.dataHoraAnotacao}" /></span> 
+				<c:forEach var="anexo" items="${anexos}">
+					<div id="div_anexos" class="anexos">
+						<span id="${anexo.idAnexo}" name="ui_anexo">${anexo.anexoNome}</span>
+						(
+						<c:choose>
+							<c:when test="${documento.assinatura == 0}">
+								<c:if test="${anexo.assinado == 0}">
+									<a href="#weditar" name="modal" id="${anexo.anexoCaminho}" nomeanexo="${documento_principal.anexoNome}" anexo="${anexo.idAnexo}" class="l_edicao_vis">Editar</a> |
+								</c:if>
+							</c:when>
+						</c:choose>
+						<a href="fileview.html?id=${anexo.idAnexo}" target="_blank" class="l_edicao_vis">Visualizar</a>
+						<c:if test="${anexo.assinado == 1 || documento.assinatura == 1}">
+						| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${anexo.idAnexo}" class="l_edicao_vis">Checar</a></span>
+						</c:if>
+						<c:if test="${anexo.assinado == 1 && anexo.idAssinadoPor == usuario.idUsuario}">
+						| <span id="s_checar"><a href="#" name="liberar_edicao" anexo="${anexo.idAnexo}" class="l_edicao_vis">Liberar</a></span> 
+						</c:if>
+						)
+						<span id="hash_${anexo.idAnexo}" style="background-color: red; width: 100%; display: none;">SHA-1: ${anexo.hash}</span>
+					</div>
+				</c:forEach>
+			
+				<!-- DESPACHOS TITULO -->
+				<div class="ui_action_title">
+					<a href="javascript:show_updates(${idDocumento},'despachos')" id="link_titulo" name="link_despachos">Despachos</a> [<a href="#wacao" name="modal" id="1_Despachar">Despachar</a>]
 				</div>
-			 </c:forEach>
-		 </div>	
-		 
-		<div id="line" style="margin-top: 10px; background-color: #B8C9DD; position: relative; width: 822px; height: 30px; text-align: center; line-height:30px;">
-			<a href="#" id="link_titulo" name="link_historico">Histórico</a>
-		</div>
-		<div style="position: relative" id="historico">
-			<c:forEach var="h" items="${historico}">
-				<div id="div_historico" class="celula historico">
-					<strong>[${h.carteira.cartAbr }]</strong> - ${h.historico} - 
-					<span id="data_historico"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${h.dataHoraHistorico}" /></span> 
+				<div style="position: relative" id="despachos">
+					<c:forEach var="d" items="${despachos}">
+						<div id="div_despachos" class="celula despacho">
+							<p><strong>[${d.carteira.cartAbr }] [${d.usuario.pstGrad.pstgradNome} ${d.usuario.usuNGuerra}]</strong> - ${d.despacho} - 
+							<span id="data_despacho"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${d.dataHoraDespacho}" /></span> 
+							<c:if test="${d.idUsuarioDestinatario != 0}"> (<a href="#decrypto" name="decrypto" id="${d.idDespacho}" style="color: red;">Descripto</a>)</c:if>
+							</p>
+						</div>
+					 </c:forEach>
+				 </div>
+				
+				<!-- ANOTAÇÕES TITULO -->
+				<div class="ui_action_title">
+					<a href="javascript:show_updates(${idDocumento},'anotacoes')" id="link_titulo" name="link_anotacoes">Anotações</a> [<a href="#wacao" name="modal" id="2_Anotar">Anotar</a>]
 				</div>
-			 </c:forEach>
+				<div style="position: relative" id="anotacoes">
+					<c:forEach var="a" items="${anotacoes}">
+						<div id="div_anotacoes" class="celula anotacao">
+							<strong>[${a.carteira.cartAbr }] [${a.usuario.pstGrad.pstgradNome} ${a.usuario.usuNGuerra}]</strong> - ${a.anotacao} - 
+							<span id="data_anotacao"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${a.dataHoraAnotacao}" /></span> 
+						</div>
+					 </c:forEach>
+				 </div>	
+				
+				<!-- HISTORICO TITULO --> 
+				<div class="ui_action_title">
+					<a href="#" id="link_titulo" name="link_historico">Histórico</a>
+				</div>
+				<div style="position: relative" id="historico">
+					<c:forEach var="h" items="${historico}">
+						<div id="div_historico" class="celula historico">
+							<strong>[${h.carteira.cartAbr }]</strong> - ${h.historico} - 
+							<span id="data_historico"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${h.dataHoraHistorico}" /></span> 
+						</div>
+					 </c:forEach>
+				</div>
+			
+			</div>	
+		</div>				
+		
 		</div>
+	</div>
 	
-	</div>	
-		
-		
-		
-		    
+
+
 	
-		
-</div>	
 	
 <%@ include file="include_foot.jsp" %>

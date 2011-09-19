@@ -8,18 +8,19 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/anexoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/historicoJS.js"></script>
 
-<div style="width: 822px; text-align:left; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
-		
-				
-			<a href="#grupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar</a> |
-			<a href="" style="margin-left: 5px;" class="menu2">Responder</a> |
-			<a href="" style="margin-left: 5px;" class="menu2">Despachar</a> |
-			<a href="" style="margin-left: 5px;" class="menu2">Anotar</a> |
-			<a href="" style="margin-left: 5px;" class="menu2">Anexar</a> |
-			
-		
-</div>
 
+
+<!-- INICIO SUBMENU 2 DO CORPO PRINCIPAL -->
+<div style="background-color: #B8C9DD;" class="ui_main_body ui_subMenu _width_main_body _font_normal">
+								
+	<a href="#grupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar</a> |
+	<a href="" style="margin-left: 5px;" class="menu2">Responder</a> |
+	<a href="" style="margin-left: 5px;" class="menu2">Despachar</a> |
+	<a href="" style="margin-left: 5px;" class="menu2">Anotar</a> |
+	<a href="" style="margin-left: 5px;" class="menu2">Anexar</a> |
+				
+</div>
+			
 <style type="text/css">
 .upload-button {
     display:block; /* or inline-block */
@@ -476,10 +477,8 @@ function fEnviar(e){
 }
 </script>
 
-<div style="width:100%; text-align:center; float: left; position: static; width: 822px; vertical-align: middle;">
-<!--<form action="/direto-project/upload/upload.html" method="post" enctype="multipart/form-data">-->
-
-<!-- <span id="error" style="color: red;"></span> -->
+<!-- INICIO CORPO PRINCIPAL -->
+<div class="ui_main_body _width_main_body" style="background-color: #fff; min-height: 640px;">
 
 <style type="text/css">
 
@@ -753,21 +752,14 @@ function fEnviar(e){
      <div id="fileDrop" class="fileDropEnter">
     	<p style="padding-top: 7px; text-align: center; font-size: medium;">Solte os arquivos aqui</p>
     </div>
-     
-     
 </div>
 
 </form:form>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/FileAPI.js" charset="UTF-8"></script>
 
-
-
-
+					
+		</div>
+	</div>
 </div>
-
-
-
-		
-
 	
 <%@ include file="include_foot.jsp" %>
