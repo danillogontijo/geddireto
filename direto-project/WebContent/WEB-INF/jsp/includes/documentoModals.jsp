@@ -15,7 +15,7 @@
 	return true;
 }*/
 
-var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="conta" items="${doc_cart.carteira.contas}">"[${conta.usuario.idUsuario}@${conta.usuario.pstGrad.pstgradNome}-${conta.usuario.usuNGuerra}-(${conta.carteira.cartAbr})]",</c:forEach></c:forEach>"[0@GED]"];
+var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="conta" items="${doc_cart.carteira.contas}">"[${conta.usuario.idUsuario}_${conta.carteira.idCarteira}@${conta.usuario.pstGrad.pstgradNome}-${conta.usuario.usuNGuerra}-(${conta.carteira.cartAbr})]",</c:forEach></c:forEach>"[0@GED]"];
     		
     		function initURLTextarea(){
     			$j("#texto_acao").autocomplete({

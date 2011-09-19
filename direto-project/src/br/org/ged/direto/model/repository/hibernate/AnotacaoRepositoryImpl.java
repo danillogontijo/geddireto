@@ -38,8 +38,13 @@ public class AnotacaoRepositoryImpl extends BaseRepositoryImpl implements Anotac
 	}
 
 	@Override
-	public void save(Anotacao anotacao) {
-		hibernateTemplate.save(anotacao);
+	public Integer save(Anotacao anotacao) {
+		return (Integer) hibernateTemplate.save(anotacao);
+	}
+
+	@Override
+	public Anotacao get(int idAnotacao) {
+		return hibernateTemplate.get(Anotacao.class, idAnotacao);
 	}
 
 }

@@ -53,9 +53,15 @@ public class Feed implements Serializable{
 	@Column(name = "DataHora", nullable = true)
 	private Date dataHora;
 	
-	@Column(name = "acao", nullable = false, length = 100)
+	@Column(name = "acao", nullable = false, length = 1024)
 	private String acao;
-
+	
+	@Column(name="IdAnotacao",nullable=false)
+	private Integer IdAnotacao;
+	
+	@Column(name="IdDespacho",nullable=false)
+	private Integer IdDespacho;
+	
 	public Integer getIdFeed() {
 		return idFeed;
 	}
@@ -118,6 +124,22 @@ public class Feed implements Serializable{
 
 	public void setAcao(String acao) {
 		this.acao = acao;
+	}
+
+	public Integer getIdAnotacao() {
+		return IdAnotacao;
+	}
+
+	public void setIdAnotacao(Integer idAnotacao) {
+		IdAnotacao = idAnotacao;
+	}
+
+	public Integer getIdDespacho() {
+		return IdDespacho;
+	}
+
+	public void setIdDespacho(Integer idDespacho) {
+		IdDespacho = idDespacho;
 	}
 	
 }

@@ -109,12 +109,6 @@ public class PrincipalController extends BaseController {
 		return "principal";
 	}
 	
-	@RequestMapping(value="/feed.html", method = RequestMethod.GET)
-	public String showFeedPrincipal(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
-		model.addAttribute("box",6);
-		return "feed";
-	}
-	
 	
 }
 
