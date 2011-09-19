@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,11 +34,11 @@ public class Anotacao implements Serializable {
 	@Column(name = "Anotacao")
 	private String anotacao;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdMensagem", nullable = false)
 	private DocumentoDetalhes documentoDetalhes;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdUsuario", nullable = false)
 	private Usuario usuario;
 	
@@ -45,7 +46,7 @@ public class Anotacao implements Serializable {
 	@Column(name = "DataHora", nullable = true)
 	private Date dataHoraAnotacao;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdCarteira", nullable = false)
 	private Carteira carteira;
 

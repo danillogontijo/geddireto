@@ -1,12 +1,15 @@
 package br.org.ged.direto.model.service.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.org.ged.direto.model.entity.Feed;
 import br.org.ged.direto.model.entity.Usuario;
+import br.org.ged.direto.model.repository.FeedRepository;
 import br.org.ged.direto.model.service.FeedService;
 import br.org.ged.direto.model.service.UsuarioService;
 
@@ -15,6 +18,9 @@ public class FeedServiceImpl implements FeedService {
 
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private FeedRepository feedRepository;
 	
 	@Override
 	public Set<Usuario> usuariosMencionados(String acao) {
@@ -41,6 +47,11 @@ public class FeedServiceImpl implements FeedService {
 				sb.append(w+" ");
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public List<Feed> selectFeeds(int filter) {
+		return feedRepository.selectFeeds(filter);
 	}
 
 }

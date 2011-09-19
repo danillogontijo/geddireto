@@ -1,21 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+
 <%@ include file="include_taglibs.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title><spring:message code="title"/></title>
-	
+
 <!-- Inicio Folha de Estilos -->
 <link href="css/estilos.css" rel="stylesheet" type="text/css" />
 <link href="css/modals.css" rel="stylesheet" type="text/css" />
 
-<!-- <link href="css/dateinput.css" rel="stylesheet" type="text/css" /> -->
-
 <link href="css/custom-theme-jquery/jquery-ui-1.8.10.custom.css" rel="stylesheet" type="text/css" />
 <link href="css/custom-theme-jquery/jquery.alerts.css" rel="stylesheet" type="text/css" media="screen" />
-
 <!-- Fim Folha de Estilos -->
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/engine.js"></script>
@@ -30,9 +28,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/chatJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/chatDireto.js" charset="utf-8""></script>
 
-<script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8""></script>
-
-<!-- <script src="<%=request.getContextPath() %>/js/jquery.tools.min.js"></script> -->
+<script src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8"" type="text/javascript"></script>
 
 <script src="<%=request.getContextPath() %>/js/custom/jquery-1.4.4.min.js"></script>
 
@@ -43,25 +39,6 @@
 <script src="<%=request.getContextPath() %>/js/custom/external/jquery.alerts.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/ui/jquery.ui.datepicker-pt-BR.js"></script>
 
-<!--
-<script src="<%=request.getContextPath() %>/js/custom/external/jquery.bgiframe-2.1.2.js"></script>
-
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.core.min.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.widget.min.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.datepicker.min.js"></script>
-
-
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.effects.core.min.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.effects.clip.min.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.effects.explode.min.js"></script>
-
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.mouse.min.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.button.min.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.draggable.min.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.position.min.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.resizable.min.js"></script>
-<script src="<%=request.getContextPath() %>/js/custom/ui/minified/jquery.ui.dialog.min.js"></script>
- -->
 <style type="text/css">
 		
 			.tela_apresentacao {
@@ -76,7 +53,7 @@
 				 /*line-height: 700px;*/
 				 top: 133px;
 				 left: 180px;
-				 display: none;
+				 display: block;
 			}
 			
 			.tooltip {
@@ -91,7 +68,7 @@
 				border: 2px solid #fff;
 				
 				-moz-box-shadow: 0 0 5px 5px #888;
-	-webkit-box-shadow: 0 0 5px 5px #888;	
+				-webkit-box-shadow: 0 0 5px 5px #888;	
 				
 				-moz-border-radius:4px;
 				-webkit-border-radius:4px;
@@ -118,7 +95,6 @@ function init(page){
 	if(page=="documento"){
 		$j('.tela_apresentacao').hide();
  	}
- 	 	
 
 	if(page=="pesquisar"){
 		$j('.tela_apresentacao').hide();
@@ -134,12 +110,9 @@ function init(page){
   	}
 
 	$j('.tela_apresentacao').hide();
-	
 }
 
 jQuery(document).ready(function($) {	
-	
-	
 	
 	/*$.tools.dateinput.localize("pt-br",  {
 		   months:        'Janeiro,Fevereiro,Março,Abril,Maio,Junho,Julho,Agosto,Setembro,' +
@@ -207,7 +180,6 @@ jQuery(document).ready(function($) {
 		else
 			disableChatDrag();
 	});
-
 	
 	/**
 	*MODAL
@@ -314,19 +286,16 @@ jQuery(document).ready(function($) {
 	});*/
 
 	$.tools.tooltip.addEffect("explode",
-
 			// abrindo animação
 			function(done) {
 				this.getTip().show('slide');
 			},
-
 			// fechando animação
 			function(done) {
 				this.getTip().fadeOut('slow');
 			}
 		);
 
-	//$("#ass_docs a[title]").tooltip();
 	$(".ahref_docs").tooltip(
 			{ 
 				position: "bottom right", 
@@ -334,7 +303,6 @@ jQuery(document).ready(function($) {
 				effect: 'explode'
 			}
 	).dynamic({ bottom: { direction: 'top', bounce: true } });
-	
 		
 	//$('a[name=tooltip]').live('click', function(clickEvent){clickEvent.preventDefault();});
 	/*$('#testeTooltip').tooltip({
@@ -355,30 +323,14 @@ jQuery(document).ready(function($) {
 		delay: 0
 	});*/
 
-	
-	
 	$('a[name=notificacoes]').click(function(e) {
 		e.preventDefault();
-		
 		var id = $(this).attr('id');
-		
-		//javascript:getNotificacoes("+doc.getIdDocumentoDetalhes()+",this);
-		
 		getNotificacoes(id,$(this));
-		//alert("teste");
-		
-	  //get the position of the placeholder element
-	  var pos = $(this).offset();  
-	  var width = $(this).width();
-
-//	alert(pos.left);
-//	alert(pos.top);
-	  
-	  //show the menu directly over the placeholder
-	  $("#notificacoes").css( { "left": (pos.left) + "px", "top":(pos.top+20) + "px" } );
-	  $("#notificacoes").toggle("fast");
-
-
+		var pos = $(this).offset();
+		var width = $(this).width();
+	  	$("#notificacoes").css( { "left": (pos.left) + "px", "top":(pos.top+20) + "px" } );
+	  	$("#notificacoes").toggle("fast");
 	  });	
 
 	$('#bt_conf_comentario').click(function (e) {
@@ -394,9 +346,7 @@ jQuery(document).ready(function($) {
 
 	$('a[name=acompanhar]').click(function(e) {
 		//e.preventDefault();
-
 		$(".div_docs input[type=checkbox]").each(function () {
-
 			var id = $(this).attr('pk');
 			var isChecked = $(this).is(':checked');
 			var existeNotificacao = $(".div_docs a[id="+id+"]").text();
@@ -409,22 +359,8 @@ jQuery(document).ready(function($) {
 			}
 			
 		});	
-
 		setTimeout("document.location.reload(true)",1000);
-
 	});
-	
-	
-
-	
-	//var $not = $('#notificacoes').wrap('<div id="box-outer"></div>');		
-
-	//$('a[name=tooltip]').click(function() {
-		//$not.blindToggle('slow');
-		  //});	
-
-	
-		  
 		
 });
 
@@ -443,10 +379,6 @@ function getNotificacoes(id,ele){
 	}else{
 		first_click_notification = false;
 	}
-
-	//alert(first_click_notification);
-	//alert("ele = "+($j(notificacao_elemento) == $j(ele)));
-	//ele.style.backgroundColor="#dddddd"; 
 
 	$j.getJSON("notificacoes.html?id="+id, function(json){
 	        //$('#tipoUdt').val(json.tipo);
@@ -514,9 +446,6 @@ function getNotificacoes(id,ele){
 			
 	        } // fim do callback
 		); // fim do .getJSON()
-
-	
-	
 	
 }
 
@@ -601,15 +530,12 @@ position: relative;
 }
 </style>
 
-
-
 </head>
 
 <c:set var="pagePath" value="${pageContext.request.requestURI}"></c:set>
 <c:set var="pageName" value="${fn:split((fn:split(pagePath,'/')[(fn:length(fn:split(pagePath,'/'))-1)]),'.')[0]}"></c:set>
 
 <body onload="init('${pageName}')">
-
 
 <audio src="sound81.wav" id="beepchat" type="application/x-mplayer2"></audio>
 
@@ -640,91 +566,103 @@ position: relative;
   <div id="mask"></div>
 </div>
 
-
 <div id="#tela_apresentacao" class="tela_apresentacao"></div> 
 
-<div id="table" style="position: absolute; width: 100%;">
-		 
-
-<div id="table" style="position: relative; width: 100%; top: 0; left: 0;">
-
-	<div id="line" style="background-image: url('imagens/fundo.jpg'); height:43px; width: 100%;">
-	
-		<div style="width: 1002px; height: 43px; margin: 0 auto;">
-			<div style="float: left; width: 189; height: 43px;"><img name="direto_r1_c1" src="imagens/direto_r1_c1.jpg" width="189" height="43" border="0" id="direto_r1_c1" usemap="#m_direto_r1_c1" alt="" /></div>
-			<div style="float: left; background-image: url('imagens/direto_r1_c2.jpg'); width: 813px; height:43px;"></div>
-		</div>
-	
-	</div>
-
-
-	
-	<div id="line" style="width: 100%; height: 29px;">
-   		<!--<div style="float: left; background-image: url('imagens/head_complemento.jpg');width: 72px;height:29px;"></div>-->
-   	</div>
-
-</div>
-
-    
-<div id="table" style="position: relative; width: 1002px; text-align: center; top: 0px; left: 0px; height: 700px; background-color: white; border-bottom: 1px solid #ccc; border-left: 1px solid #fff; border-right: 1px solid #fff;">
-	<div id="line" style="width: 167px; height: 715px; position: absolute; text-align: left; background-color: #ffffff; top: -24px; left: 5px" class="menuLado">
-		
-		<div style="height: 30px; font-size: 14px; font-weight: bold;">
-			<spring:message code="welcome"/>
-		</div>
-		
-		<c:set var="divStyle" value="menuLado" />
-		
-		<div style="height: 30px; vertical-align: middle;">
-			${usuario.pstGrad.pstgradNome}
-			${usuario.usuNGuerra}
-		</div>
-		
-		<c:forEach var="p" items="${pastas}">
- 			<c:set var="pasta" value="${p.nomePasta}" />
- 			
- 			<c:url value="principal.html" var="pastaURL">
-				  <c:param name="box" value="${p.idPasta}" />
-				  <c:param name="pr" value="0" />
-				  <c:param name="filtro" value="todas" />
-				  <c:param name="idCarteira" value="${contaAtual}" />
-			</c:url>
-      		
-	      	<div id="divMenuLateral" style="left: 5px; position: relative;">
-				<a href="<c:out value="${pastaURL}" />" class="<c:out value="${divStyle}"/><c:if test="${box == p.idPasta}">Sel</c:if>">
-					<c:out value="${pasta}"/>
-				</a> 
+<div style="width: 100%; margin: 0 auto;">
+	<!-- CABEÇALHO -->
+	<div style="position: relative; background-image: url('imagens/fundo.jpg'); height:72px;">
+		<div style="width: 1002px; margin: 0 auto;">
+			<div style="width: 189px; float: left;">
+				<img name="direto_r1_c1" src="imagens/direto_r1_c1.jpg" width="189" height="43" border="0" id="direto_r1_c1" usemap="#m_direto_r1_c1" alt="" />
 			</div>
-      	
- 		</c:forEach>
+			<div style="line-height:43px; width: 813px; height:43px; background-image: url('imagens/direto_r1_c2.jpg'); float: right;">
+				<div style="text-align: center; position: relative; width: 100%;">
+					<c:forEach var="mt" items="${menuTopo}">
+		 				<c:set value="${mt.name}" var="name"/>
+		 				<c:set value="${mt.value}" var="value"/>
+		 				
+		 				<c:url value="${value}" var="mtURL">
+						  <c:if test="${name != 'Sugestões'}">
+						    <c:param name="box" value="${box}" />
+						  </c:if>
+						</c:url>
+						
+						<a href="<c:out value="${mtURL}" />" class="menu_titulo" <c:if test="${name == 'Sugestões'}">name="modal"</c:if> >${name}</a> 
+						
+						<c:if test="${name != 'Sair'}"> | </c:if>
+					</c:forEach>
+				</div>
+			</div>
+		</div>
+		<div style="line-height: 29px; height: 29px; background-color: #fff; position: relative; top: 43px;"> 
+			<div style="font-size: 14px; font-weight: bold; width: 167px; float: left; margin-top: -43px;">
+				<span style="margin-left: 5px;"><spring:message code="welcome"/></span>
+			</div>
+			<div style="font-size:18px; text-align: center; width: 822px; float: right; margin-top: -43px;">
+				Brigada de Operações Especiais - <span style="color: red">EM TESTE</span>
+			</div>
+		</div>
+	</div>
+	
+	<!-- CORPO e MENU ESQUERDA-->
+	<div style="display: table; margin: 0 auto; width: 1002px; position: relative; min-height: 700px; border-bottom: 1px solid #ccc;">
+		<div style="width: 167px; height: 700px; background-color: #fff; float: left; margin: 3px 0 0 5px;">
 		
-		<div style="margin-top: 15px; height: 25px; font-weight: bold; font-size: 13px;">
-		
-			Alternar entre contas:
-		
-		</div>		
-		
-		<ul style="margin: 0;">
-	 		<c:forEach var="conta" items="${usuario.contas}">
-			     
-			     <c:choose>
-			      <c:when test="${conta.carteira.idCarteira == contaAtual}">
-			     	<li style="margin-left: -5px; font-weight: bold; font-style: italic;"><a href="alternar.html?id=${conta.carteira.idCarteira}" style="color: gray;">${conta.carteira.cartAbr}</a></li> 
-			      </c:when>
+			<c:set var="divStyle" value="menuLado" />
 			
-			      <c:otherwise>
-			      	<li style="margin-left: -5px;"><a href="alternar.html?id=${conta.carteira.idCarteira}">${conta.carteira.cartAbr}</a></li>
-			      </c:otherwise>
-			    </c:choose>
-			    <c:if test="${conta.contaPrincipal == 1}"><br></c:if>
-			     
-			     
-			</c:forEach>
-		</ul>
-		
-		<br />${numUsers} usuário(s) no sistema!
-		
-		<script type="text/javascript">
+			<div style="height: 30px; vertical-align: middle;">
+				${usuario.pstGrad.pstgradNome}
+				${usuario.usuNGuerra}
+			</div>
+			
+			<div id="divMenuLateral" style="left: 5px; position: relative;">
+				<a href="feed.html?${url}" class="<c:out value="${divStyle}"/><c:if test="${box == 6}">Sel</c:if>">
+					Feed Principal
+				</a>
+			</div>
+			
+			<c:forEach var="p" items="${pastas}">
+	 			<c:set var="pasta" value="${p.nomePasta}" />
+	 			<c:url value="principal.html" var="pastaURL">
+					  <c:param name="box" value="${p.idPasta}" />
+					  <c:param name="pr" value="0" />
+					  <c:param name="filtro" value="todas" />
+					  <c:param name="idCarteira" value="${contaAtual}" />
+				</c:url>
+	      		<div id="divMenuLateral" style="left: 5px; position: relative;">
+					<a href="<c:out value="${pastaURL}" />" class="<c:out value="${divStyle}"/><c:if test="${box == p.idPasta}">Sel</c:if>">
+						<c:out value="${pasta}"/>
+					</a> 
+				</div>
+	      </c:forEach>
+			
+			<div style="margin-top: 15px; height: 25px; font-weight: bold; font-size: 13px;">
+			
+				Alternar entre contas:
+			
+			</div>		
+			
+			<ul style="margin: 0;">
+		 		<c:forEach var="conta" items="${usuario.contas}">
+				     
+				     <c:choose>
+				      <c:when test="${conta.carteira.idCarteira == contaAtual}">
+				     	<li style="margin-left: -5px; font-weight: bold; font-style: italic;"><a href="alternar.html?id=${conta.carteira.idCarteira}" style="color: gray;">${conta.carteira.cartAbr}</a></li> 
+				      </c:when>
+				
+				      <c:otherwise>
+				      	<li style="margin-left: -5px;"><a href="alternar.html?id=${conta.carteira.idCarteira}">${conta.carteira.cartAbr}</a></li>
+				      </c:otherwise>
+				    </c:choose>
+				    <c:if test="${conta.contaPrincipal == 1}"><br></c:if>
+				     
+				     
+				</c:forEach>
+			</ul>
+			
+			<br />${numUsers} usuário(s) no sistema!
+			
+					<script type="text/javascript">
 		
 		  
 			
@@ -801,74 +739,74 @@ position: relative;
 			</div>
 			<div id="div_status"><span id="status"><a href="#" id="stayOn">Entrar no chat</a></span></div>
 		</div>	
-				   
-	</div>
-	
-	<div id="line" style="width: 1px; position: absolute; margin: 0; background-color: #ccc; left: 177px; height: 700px;" class="menuLado">
+			
 		
-	</div>
-	
-	<div id="line" style="width: 822px; position: absolute; margin: 0 0 0 2px; text-align: center; left: 178px; overflow: visible;">
 		
-		<div style="text-align: center; position: absolute; width: 100%; top: -60px;">
-			<c:forEach var="mt" items="${menuTopo}">
- 				<c:set value="${mt.name}" var="name"/>
- 				<c:set value="${mt.value}" var="value"/>
- 				
- 				<c:url value="${value}" var="mtURL">
-				  <c:if test="${name != 'Sugestões'}">
-				    <c:param name="box" value="${box}" />
-				  </c:if>
-				</c:url>
-				
-				<a href="<c:out value="${mtURL}" />" class="menu_titulo" <c:if test="${name == 'Sugestões'}">name="modal"</c:if> >${name}</a> 
-				
-				<c:if test="${name != 'Sair'}"> | </c:if>
-			</c:forEach>
 		</div>
 		
-		<div style="font-size: 18px; text-align: center; position: absolute; width: 100%; top: -25px;">Brigada de Operações Especiais - <span style="color: red">EM TESTE</span></div>
+		<style type="text/css">
+			.ui_subMenu{
+				line-height:30px; 
+				height: 30px;			
+			}
+			
+			.ui_main_body{
+				margin-left: 2px; 
+				float: right;
+			}
+			
+			._width_main_body{
+				width: 820px;
+			}
+			
+			._font_white_bold{
+				color: #fff;	
+				font-weight: bold; 
+				text-decoration: none;
+			}
+			._font_white_bold{
+				font-weight: normal; 
+				text-decoration: none;
+			}
+			
+		</style>
 		
-		<div style="width:100%; text-align:left; background-color: #1E90FF; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu1">
-	
-			<a href="criarDocumento.html" style="margin-left: 5px;" class="menu1">Novo</a> | 
+		<!-- INICIO SUBMENU 1 DO CORPO PRINCIPAL -->
+		<div style="border-left:1px solid #ccc; width: 822px; float: right; height: auto;">
+			<div style="background-color: #1E90FF;" class="ui_main_body ui_subMenu _width_main_body _font_white_bold">
+				<a href="criarDocumento.html" style="margin-left: 5px;" class="menu1">Novo</a> | 
 			
-			<c:if test="${pageName == 'principal'}">
-			 
-				<c:choose>
-			      <c:when test="${box == 1}">
-			      	<a href="javascript:changeStatus(2);" class="menu1">Arquivar</a> |
-					<a href="javascript:changeStatus(4);" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
-					<a href="javascript:changeStatus(0);" class="menu1" id="testeTooltip" title="Teste">Marcar como doc não lido</a> |
-			      </c:when>
-			
-			      <c:when test="${box == 2}">
-			      	<a href="javascript:changeStatus(4);" class="menu1" onClick="">Pender</a> |
-					<a href="javascript:changeStatus(0);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
-			      </c:when>
-					
-				  <c:when test="${box == 3}">
-			      	
-			      </c:when>
-			      
-			      <c:when test="${box == 4}">
-			      	<a href="javascript:changeStatus(2);" class="menu1" onClick="">Arquivar</a> |
-					<a href="javascript:changeStatus(0);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
-			      </c:when>
-			      
-			      <c:when test="${box == 5}">
-			      	<a href="javascript:Arquivar(4);" class="menu1">Apagar</a> |
-			      </c:when>
-			      
-			      <c:otherwise>
-			        
-			      </c:otherwise>
-	    		</c:choose>
-    	</c:if>	
-			
-			<a href="pesquisar.html" class="menu1">Pesquisar</a> |
-			<a href="javascript: history.go(-1);" class="menu1">Voltar</a>
+				<c:if test="${pageName == 'principal'}">
+					<c:choose>
+				      <c:when test="${box == 1}">
+				      	<a href="javascript:changeStatus(2);" class="menu1">Arquivar</a> |
+						<a href="javascript:changeStatus(4);" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
+						<a href="javascript:changeStatus(0);" class="menu1" id="testeTooltip" title="Teste">Marcar como doc não lido</a> |
+				      </c:when>
+				
+				      <c:when test="${box == 2}">
+				      	<a href="javascript:changeStatus(4);" class="menu1" onClick="">Pender</a> |
+						<a href="javascript:changeStatus(0);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
+				      </c:when>
 						
-		</div>
-		
-		
+					  <c:when test="${box == 3}">
+				      	
+				      </c:when>
+				      
+				      <c:when test="${box == 4}">
+				      	<a href="javascript:changeStatus(2);" class="menu1" onClick="">Arquivar</a> |
+						<a href="javascript:changeStatus(0);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
+				      </c:when>
+				      
+				      <c:when test="${box == 5}">
+				      	<a href="javascript:Arquivar(4);" class="menu1">Apagar</a> |
+				      </c:when>
+				      
+				      <c:otherwise>
+				        
+				      </c:otherwise>
+		    		</c:choose>
+	    		</c:if>	
+				<a href="pesquisar.html" class="menu1">Pesquisar</a> |
+				<a href="javascript: history.go(-1);" class="menu1">Voltar</a>
+			</div>

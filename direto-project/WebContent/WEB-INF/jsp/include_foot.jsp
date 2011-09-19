@@ -1,20 +1,10 @@
-
-</div>
-	
-</div>
-    
-	
-<div id="foot" style="position: relative; width: 100%; background-color: #6495ED; margin-top: 10px; text-align: center; z-index: -1; min-height: 85px; ">
-	<div class="rodape" style="font-weight: bold; position: relative; padding-top: 35px; width: 1002px; background-color: #6495ED; margin: 0 auto;">
-			© 2011 - Direto - Gerenciador Eletrônico de Documentos<br>
-			Ver. 3.0
+<!-- RODAPÉ -->
+<div style="background-color: #6495ED; position: relative; margin-top: 10px; height: 200px; line-height: 20px;">
+	<div class="ui_foot" style="padding-top: 40px; text-align:center; width: 1002px; margin: 0 auto;">
+		© 2011 - Direto - Gerenciador Eletrônico de Documentos<br>
+		Ver. 3.0
 	</div>
-</div>
-
-
-
-</div>
-
+</div>	
 
 </body>
 </html>

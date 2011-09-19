@@ -127,19 +127,14 @@ function validateUser(usuLogin)
 
 </script>
 
-
-		<div style="width:100%; text-align:center; background-color: #B8C9DD; float: left; line-height:30px; position: static; width: 822px; height:30px; vertical-align: middle;" class="menu2">
-		
-			<span style="font-weight: bold;">Transferência de contas</span>
-		
-		</div>
-		
-		
-		<!-- INICIO CORPO -->
-		<div style="width:100%; text-align:center; float: left; position: static; width: 822px; vertical-align: middle;">
-		
-		
-			<table width="100%">
+<!-- INICIO SUBMENU 2 DO CORPO PRINCIPAL -->
+			<div style="background-color: #B8C9DD;" class="ui_main_body ui_subMenu _width_main_body _font_normal">
+				<span style="font-weight: bold;">Transferência de contas</span>
+			</div>
+			
+			<!-- INICIO CORPO PRINCIPAL -->
+			<div class="ui_main_body _width_main_body" style="background-color: #fff; min-height: 640px;">
+				<table width="100%">
 			
 				<tr>
 					<td align="center">
@@ -185,11 +180,9 @@ function validateUser(usuLogin)
 				</tr>
 			
 			</table>
-			
-			
-		
-		
 		</div>
-		<!-- FIM CORPO -->
-		
+	</div>
+</div>
+	
 <%@ include file="include_foot.jsp" %>
+
