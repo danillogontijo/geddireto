@@ -27,7 +27,20 @@
 					
 					<div style="width: 100%; border-bottom: 1px solid gray; float: left; margin-top: 5px; padding-bottom: 5px;">
 						<div style="width: 162px; float: left;">
-							<div style="background-color: red; height: 60px; line-height: 60px; width: 60px; margin: 0 auto;">UU</div>
+							
+							<c:choose> 
+			  					<c:when test="${feedsByDocs.key.prioridade == '0'}" > 
+			  						<div style="background-color: #fff; height: 60px; line-height: 60px; width: 60px; margin: 0 auto;">N 
+			  					</c:when>
+			  					<c:when test="${feedsByDocs.key.prioridade == '1'}" > 
+			  						<div style="background-color: yellow; height: 60px; line-height: 60px; width: 60px; margin: 0 auto;">U 
+			  					</c:when> 
+			  					<c:otherwise> 
+			  						<div style="background-color: red; height: 60px; line-height: 60px; width: 60px; margin: 0 auto;">UU
+			  					</c:otherwise> 
+							</c:choose>
+					    	
+							</div>
 						</div>
 						
 						<div style="width: 654px; float: left; margin: 0 auto;">
