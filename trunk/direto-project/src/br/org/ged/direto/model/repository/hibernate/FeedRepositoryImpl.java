@@ -32,12 +32,10 @@ public class FeedRepositoryImpl extends BaseRepositoryImpl implements FeedReposi
 			String sQuery = "from Feed as f where "+filtro+" order by f.dataHora desc";
 			
 			Query query = getSession().createQuery(sQuery);
+			query.setMaxResults(50);
 			
 			feeds = query.list();
-	
-			for(Feed f : feeds){
-				System.out.println(f.getIdFeed()+"-"+f.getCarteira().getCartAbr());
-			}
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}	

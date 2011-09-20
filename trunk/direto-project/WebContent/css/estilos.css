@@ -203,8 +203,6 @@ input.field_inputs_active:active { background-color:red; }
 	text-align: center;
 	background-color: #B8C9DD;
 	
-	-moz-box-shadow: 0 0 5px 5px #888;
-	-webkit-box-shadow: 0 0 5px 5px #888;	
 	z-index: 999;
 }
 
@@ -249,11 +247,6 @@ input.field_inputs_active:active { background-color:red; }
 .online {color: green;}
 .session {color: gray;}
 
-.border_radius {
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-}
-
 .messageChat {}
 
 #topo {
@@ -282,3 +275,53 @@ input.field_inputs_active:active { background-color:red; }
 	left: 22px;
 	cursor: pointer;
 }
+
+/**
+ * PÁGINA FEED.HTML
+*/
+._font_feed{
+	font-size: 9px;
+}
+._font_feed_titulo{
+	font-size: 11px;
+}
+.ui_feed {
+	width: 630px;
+	background-color: #D8DFEA;
+	float: left;
+	margin: 0 27px 3px 27px;
+	padding: 5px 0 5px 0;
+	color: #000;
+}
+
+/**
+ * UI
+*/
+.border_radius {
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+}
+.ui_border_shadow {
+	-moz-box-shadow: 0 0 5px 5px #888;
+	-webkit-box-shadow: 0 0 5px 5px #888;
+	border: 1px solid #000;	
+}
+
+.ui_subMenu{
+	line-height:30px; 
+	height: 30px;			
+}
+.ui_main_body{
+	margin-left: 2px; 
+	float: right;
+}
+._width_main_body{
+	width: 820px;
+}
+._font_white_bold{
+	color: #fff;	
+	font-weight: bold; 
+	text-decoration: none;
+}
+
+

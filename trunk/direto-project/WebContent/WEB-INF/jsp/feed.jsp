@@ -2,16 +2,27 @@
     pageEncoding="ISO-8859-1"%>
 
 <%@ include file="include_head.jsp" %>
+
+<script type="text/javascript">
+function filtro(){
+	var listaFilter = $("slFilter");
+	for (var i=0; i < listaFilter.options.length; i++){
+		if (listaFilter.options[i].selected){
+			window.location.href = "feed.html?filter="+listaFilter.options[i].value;
+		}
+	}
+}
+</script>
 			
 			<!-- INICIO SUBMENU 2 DO CORPO PRINCIPAL -->
 			<div style="background-color: #B8C9DD;" class="ui_main_body ui_subMenu _width_main_body _font_normal">
 				
 				<div style="position: relative; float: right">
 					Filtro:
-					<select	name=slOrdenacao id="slOrdenacao" style="width: 100pt; font-style: normal; font-size: 12px; color: black; margin-right: 3px;" onchange="ordenacao()">
-						<option value=0 <c:if test="${ordenacao == 0}">selected</c:if>>Por Usuário</option>
-						<option value=1 <c:if test="${ordenacao == 1}">selected</c:if>>Por Carteira</option>
-						<option value=2 <c:if test="${ordenacao == 2}">selected</c:if>>Por Usuário e Carteira</option>
+					<select	name=slFilter id="slFilter" style="width: 170px; font-style: normal; font-size: 12px; color: black; margin-right: 3px;" onchange="filtro()">
+						<option value=1 <c:if test="${filter == 1}">selected</c:if>>Por Usuário</option>
+						<option value=2 <c:if test="${filter == 2}">selected</c:if>>Por Carteira</option>
+						<option value=3 <c:if test="${filter == 3}">selected</c:if>>Por Usuário e Carteira</option>
 					</select>
 				</div>
 			
@@ -23,35 +34,46 @@
 				<!-- INICIO CORPO DE LISTA FEED -->
 				<div style="text-align:center; float: left; position: static; vertical-align: middle;" class="_width_main_body">
 					
+					<c:if test="${fn:length(feeds) == 0}">
+						<p>Alimentador vazio</p>
+					</c:if>
+					
 					<c:forEach var="feedsByDocs" items="${feeds}" >
 					
-					<div style="width: 100%; border-bottom: 1px solid gray; float: left; margin-top: 5px; padding-bottom: 5px;">
-						<div style="width: 162px; float: left;">
+					<div style="width: 100%; border-bottom: 1px solid #ccc; float: left; margin-top: 5px; padding-bottom: 5px;">
+						
+						<div style="width: 132px; float: left; margin-top: 10px;">
 							
 							<c:choose> 
 			  					<c:when test="${feedsByDocs.key.prioridade == '0'}" > 
-			  						<div style="background-color: #fff; height: 60px; line-height: 60px; width: 60px; margin: 0 auto;">N 
+			  						<div class="border_radius ui_border_shadow" style="background-color: #fff; height: 60px; line-height: 60px; width: 60px; margin: 0 auto;">N 
 			  					</c:when>
 			  					<c:when test="${feedsByDocs.key.prioridade == '1'}" > 
-			  						<div style="background-color: yellow; height: 60px; line-height: 60px; width: 60px; margin: 0 auto;">U 
+			  						<div class="border_radius ui_border_shadow" style="background-color: yellow; height: 60px; line-height: 60px; width: 60px; margin: 0 auto;">U 
 			  					</c:when> 
 			  					<c:otherwise> 
-			  						<div style="background-color: red; height: 60px; line-height: 60px; width: 60px; margin: 0 auto;">UU
+			  						<div class="border_radius ui_border_shadow" style="background-color: red; height: 60px; line-height: 60px; width: 60px; margin: 0 auto;">UU
 			  					</c:otherwise> 
 							</c:choose>
 					    	
 							</div>
 						</div>
 						
-						<div style="width: 654px; float: left; margin: 0 auto;">
+						<div style="width: 684px; float: left; margin: 0 auto;">
+						
 							<div style="width: 100%; float: left; padding-bottom: 10px;">
-								<p style="margin: 0 0 0 0;"><b>Você foi mencionado em:</b><br> [${feedsByDocs.key.tipoDocumento.tipoDocumentoAbr}] ${feedsByDocs.key.assunto}</p> 
-								<p><a href="view.html?id=${feedsByDocs.key.idDocumentoDetalhes}" style="color: #708090;">Visualizar documento</a></p>
+								<p style="margin: 0;" class="_font_feed_titulo"><b>Você foi mencionado em:</b><br> [${feedsByDocs.key.tipoDocumento.tipoDocumentoAbr}] ${feedsByDocs.key.assunto}</p> 
+								<p class="_font_feed_titulo"><a href="view.html?id=${feedsByDocs.key.idDocumentoDetalhes}" style="color: #708090;">Visualizar documento</a></p>
 							</div>
 							
 							<c:forEach var="feed" items="${feedsByDocs.value}">
-							 <div style="width: 600px; background-color: #B8C9DD; float: left; margin: 0 27px 3px 27px; padding: 10px 0 10px 0; color: #000;">${feed.acao}</div>
+							 <div class="ui_feed _font_feed">
+							 	<div style="float: left; width: 525px; text-align: left; margin-left: 5px;">${feed.acao}</div>
+							 	<div style="float: left; width: 100px;"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${feed.dataHora}" /></div>
+							 </div>
 							</c:forEach>
+							
+							
 							
 						</div>
 					</div>
