@@ -23,13 +23,13 @@ public class FeedRepositoryImpl extends BaseRepositoryImpl implements FeedReposi
 			
 			String filtro = "";
 			if(filter==1)
-				filtro = "f.usuario.idUsuario="+usuario.getIdUsuario();
+				filtro = "f.usuario.idUsuario="+usuario.getIdUsuario()+" or f.usuarioRem.idUsuario="+usuario.getIdUsuario();
 			else if(filter==2)
-				filtro = "f.carteira.idCarteira="+usuario.getIdCarteira();
+				filtro = "f.carteira.idCarteira="+usuario.getIdCarteira()+" or f.carteiraRem.idCarteira="+usuario.getIdCarteira();
 			else
-				filtro = "f.carteira.idCarteira="+usuario.getIdCarteira()+" and f.usuario.idUsuario="+usuario.getIdUsuario();
+				filtro = "(f.carteira.idCarteira="+usuario.getIdCarteira()+" and f.usuario.idUsuario="+usuario.getIdUsuario()+") or (f.carteiraRem.idCarteira="+usuario.getIdCarteira()+" and f.usuarioRem.idUsuario="+usuario.getIdUsuario()+")";
 			
-			String sQuery = "from Feed as f where "+filtro+" order by f.dataHora desc";
+			String sQuery = "from Feed as f where "+filtro+" order by f.dataHora asc";
 			
 			Query query = getSession().createQuery(sQuery);
 			query.setMaxResults(50);

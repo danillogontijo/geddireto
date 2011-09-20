@@ -3,6 +3,9 @@ package br.org.ged.direto.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +34,9 @@ public class FeedController extends BaseController {
 	@ModelAttribute("feeds")
 	public Map<DocumentoDetalhes,List<Feed>> feedCollection(HttpServletRequest request, ModelMap model) {
 		
+		//Por causa do remember-me
+		this.getIdCarteiraFromSession(request);
+		
 		int filter = 1;
 		
 		if(request.getParameter("filter") != null)
@@ -38,12 +44,24 @@ public class FeedController extends BaseController {
 		
 		model.addAttribute("filter",filter);
 		
-		Map<DocumentoDetalhes,List<Feed>> map = new HashMap<DocumentoDetalhes,List<Feed>>();
+		Map<DocumentoDetalhes,List<Feed>> map = new LinkedHashMap<DocumentoDetalhes,List<Feed>>();
 	    List<Feed> feeds = feedService.selectFeeds(filter);
-		Set<DocumentoDetalhes> documentos = new HashSet<DocumentoDetalhes>();
+		Set<DocumentoDetalhes> documentos = new LinkedHashSet<DocumentoDetalhes>();
+		Set<DocumentoDetalhes> documentosInv = new LinkedHashSet<DocumentoDetalhes>();
 		
 		for(Feed f : feeds)
 			documentos.add(f.getDocumentoDetalhes());
+		
+		List<DocumentoDetalhes> docs = new ArrayList<DocumentoDetalhes>(documentos);
+
+		for(int i=docs.size()-1;i>=0;i--){
+			DocumentoDetalhes d = docs.get(i);
+			documentosInv.add(docs.get(i));
+		}
+		
+		docs = null;
+		
+		documentos = documentosInv;
 		
 		for(DocumentoDetalhes d : documentos){
 			List<Feed> feedsPorDocumento = new ArrayList<Feed>();

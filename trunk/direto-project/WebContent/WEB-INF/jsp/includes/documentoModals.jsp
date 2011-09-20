@@ -36,7 +36,7 @@ var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="co
 										
 										if(auto){
 											var words = [];
-		    								for( var i=0; i<urls.length; i++ ){
+		    								for( var i=0; i<urls.length-1; i++ ){
 		    									if( urls[i].toLowerCase().indexOf(text.toLowerCase()) != -1 ) words.push(urls[i].replace(/\s/g, "-"));
 		    									
 		    								}

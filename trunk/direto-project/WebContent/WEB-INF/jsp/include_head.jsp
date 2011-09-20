@@ -548,17 +548,13 @@ position: relative;
 <!-- MODALS -->
 <div id="boxes">
 
-	<c:if test="${pageName == 'principal'}">
-		<%@ include file="includes/principalModals.jsp" %>
-	</c:if>
+	<%@ include file="includes/principalModals.jsp" %>
 	
 	<c:if test="${pageName == 'documento'}">
-		<%@ include file="includes/principalModals.jsp" %>
 		<%@ include file="includes/documentoModals.jsp" %>
 	</c:if>
 	
 	<c:if test="${pageName == 'criarDocumento'}">
-		<%@ include file="includes/principalModals.jsp" %>
 		<%@ include file="includes/criarDocumentoModals.jsp" %>
 	</c:if>	
 
@@ -618,7 +614,7 @@ position: relative;
 			</div>
 			
 			<div id="divMenuLateral" style="left: 5px; position: relative;">
-				<a href="feed.html" class="<c:out value="${divStyle}"/><c:if test="${box == 7}">Sel</c:if>">
+				<span style="color: red;">*</span><a href="feed.html" class="<c:out value="${divStyle}"/><c:if test="${box == 7}">Sel</c:if>">
 					Feed Principal
 				</a>
 			</div>
