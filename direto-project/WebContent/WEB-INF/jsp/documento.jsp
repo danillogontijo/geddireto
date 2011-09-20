@@ -196,7 +196,7 @@ $j(function(){
 	
 	$j("font[title]").tooltip(
 			{ 
-				position: "bottom right", 
+				position: "bottom center", 
 				opacity: 1,
 				effect: 'explode'
 			}

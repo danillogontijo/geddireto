@@ -68,7 +68,7 @@ function filtro(){
 							
 							<c:forEach var="feed" items="${feedsByDocs.value}">
 							 <div class="ui_feed _font_feed">
-							 	<div style="float: left; width: 525px; text-align: left; margin-left: 5px;">${feed.acao}</div>
+							 	<div style="float: left; width: 525px; text-align: left; margin-left: 5px;"><b>[${feed.usuarioRem.pstGrad.pstgradNome} ${feed.usuarioRem.usuNGuerra}]</b> ${feed.acao}</div>
 							 	<div style="float: left; width: 100px;"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${feed.dataHora}" /></div>
 							 </div>
 							</c:forEach>
