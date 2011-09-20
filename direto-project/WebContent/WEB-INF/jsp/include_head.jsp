@@ -618,7 +618,7 @@ position: relative;
 			</div>
 			
 			<div id="divMenuLateral" style="left: 5px; position: relative;">
-				<a href="feed.html?${url}" class="<c:out value="${divStyle}"/><c:if test="${box == 6}">Sel</c:if>">
+				<a href="feed.html" class="<c:out value="${divStyle}"/><c:if test="${box == 7}">Sel</c:if>">
 					Feed Principal
 				</a>
 			</div>
@@ -728,7 +728,7 @@ position: relative;
 
 </script>
 
-		<div id="chat" class="border_radius">
+		<div id="chat" class="ui_border_shadow border_radius">
 			<div id="topo"><div class="left border_radius" name="minimize"> - </div><div id="welcome"></div><div class="right border_radius" name="search"> p </div></div>
 			<div id="console_chat" class="border_radius">
 			
@@ -742,36 +742,7 @@ position: relative;
 			<div id="div_status"><span id="status"><a href="#" id="stayOn">Entrar no chat</a></span></div>
 		</div>	
 			
-		
-		
 		</div>
-		
-		<style type="text/css">
-			.ui_subMenu{
-				line-height:30px; 
-				height: 30px;			
-			}
-			
-			.ui_main_body{
-				margin-left: 2px; 
-				float: right;
-			}
-			
-			._width_main_body{
-				width: 820px;
-			}
-			
-			._font_white_bold{
-				color: #fff;	
-				font-weight: bold; 
-				text-decoration: none;
-			}
-			._font_white_bold{
-				font-weight: normal; 
-				text-decoration: none;
-			}
-			
-		</style>
 		
 		<!-- INICIO SUBMENU 1 DO CORPO PRINCIPAL -->
 		<div style="border-left:1px solid #ccc; width: 822px; float: right; height: auto;">

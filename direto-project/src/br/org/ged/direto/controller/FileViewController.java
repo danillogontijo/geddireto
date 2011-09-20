@@ -42,8 +42,6 @@ public class FileViewController {
 		Anexo anexo = anexoService.selectById(idAnexo);
 		File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
 		
-		System.out.println(anexo.getAnexoCaminho());
-		
 		try {
 			//arquivo = getBytesFromFile(file);
 		} catch (Exception e) {

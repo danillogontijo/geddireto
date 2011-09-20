@@ -29,9 +29,17 @@ public class FeedController extends BaseController {
 	private FeedService feedService;
 	
 	@ModelAttribute("feeds")
-	public Map<DocumentoDetalhes,List<Feed>> feedCollection() {
+	public Map<DocumentoDetalhes,List<Feed>> feedCollection(HttpServletRequest request, ModelMap model) {
+		
+		int filter = 1;
+		
+		if(request.getParameter("filter") != null)
+			filter = Integer.parseInt(request.getParameter("filter"));
+		
+		model.addAttribute("filter",filter);
+		
 		Map<DocumentoDetalhes,List<Feed>> map = new HashMap<DocumentoDetalhes,List<Feed>>();
-	    List<Feed> feeds = feedService.selectFeeds(1);
+	    List<Feed> feeds = feedService.selectFeeds(filter);
 		Set<DocumentoDetalhes> documentos = new HashSet<DocumentoDetalhes>();
 		
 		for(Feed f : feeds)
