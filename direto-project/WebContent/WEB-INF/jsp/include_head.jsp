@@ -256,9 +256,14 @@ jQuery(document).ready(function($) {
 		if(id=='#wcomentar')
 			$(id).css('top',  pos.top+20);
 
-		if(id=='#wacao')
-			$(id).css('top',  pos.top-$(id).height());
-	   
+		if(id=='#wacao'){
+			if($(this).attr('direction') == 'bottom')
+				$(id).css('top',  winH-$(id).height()-100);
+			else
+		   		$(id).css('top',  pos.top-$(id).height());
+		}	
+		
+		
 		//transition effect
 		$(id).fadeIn(100); 
 	

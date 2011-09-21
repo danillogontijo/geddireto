@@ -774,8 +774,8 @@ height: 15px;
 				
 				<a href="#wgrupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar</a> |
 				<!-- <a href="" style="margin-left: 5px;" class="menu2">Responder</a> | -->
-				<a href="" style="margin-left: 5px;" class="menu2">Despachar</a> |
-				<a href="" style="margin-left: 5px;" class="menu2">Anotar</a> |
+				<a id="1_Despachar" direction="bottom" name="modal" href="#wacao" style="margin-left: 5px;" class="menu2">Despachar</a> |
+				<a id="2_Anotar" direction="bottom" name="modal" href="#wacao" style="margin-left: 5px;" class="menu2">Anotar</a> |
 				<a href="#wanexar" name="modal" style="margin-left: 5px;" class="menu2">Anexar</a> |
 			
 			</div>

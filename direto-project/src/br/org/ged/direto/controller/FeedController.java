@@ -60,13 +60,12 @@ public class FeedController extends BaseController {
 		docs = null;
 		
 		for(DocumentoDetalhes d : documentosInv){
-			Set<Feed> feedsPorDocumento = new HashSet<Feed>();
-			for(Feed f : feeds){
-				System.out.println(d.getIdDocumentoDetalhes()+"-->"+f.getIdFeed()+"-"+f.getAcao()+"-"+f.hashCode());
-				if(d.equals(f.getDocumentoDetalhes())){
+			Set<Feed> feedsPorDocumento = new LinkedHashSet<Feed>();
+			
+			for(Feed f : feeds)
+				if(d.equals(f.getDocumentoDetalhes()))
 					feedsPorDocumento.add(f);
-				}
-			}
+				
 			map.put(d, new ArrayList<Feed>(feedsPorDocumento));
 		}
 		
