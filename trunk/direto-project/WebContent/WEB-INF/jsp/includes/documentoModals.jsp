@@ -15,7 +15,7 @@
 	return true;
 }*/
 
-var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="conta" items="${doc_cart.carteira.contas}">"[${conta.usuario.idUsuario}_${conta.carteira.idCarteira}@${conta.usuario.pstGrad.pstgradNome}-${conta.usuario.usuNGuerra}-(${conta.carteira.cartAbr})]",</c:forEach></c:forEach>"[0@GED]"];
+var users = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="conta" items="${doc_cart.carteira.contas}">"[${conta.usuario.idUsuario}_${conta.carteira.idCarteira}@${conta.usuario.pstGrad.pstgradNome}-${conta.usuario.usuNGuerra}-(${conta.carteira.cartAbr})]",</c:forEach></c:forEach>"[0@GED]"];
     		
     		function initURLTextarea(){
     			$j("#texto_acao").autocomplete({
@@ -36,8 +36,8 @@ var urls = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="co
 										
 										if(auto){
 											var words = [];
-		    								for( var i=0; i<urls.length-1; i++ ){
-		    									if( urls[i].toLowerCase().indexOf(text.toLowerCase()) != -1 ) words.push(urls[i].replace(/\s/g, "-"));
+		    								for( var i=0; i<users.length-1; i++ ){
+		    									if( users[i].toLowerCase().indexOf(text.toLowerCase()) != -1 ) words.push(users[i].replace(/\s/g, "-")+" ");
 		    									
 		    								}
 		    								cb(words);

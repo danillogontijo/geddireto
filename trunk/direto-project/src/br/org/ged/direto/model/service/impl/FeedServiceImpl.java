@@ -47,9 +47,10 @@ public class FeedServiceImpl implements FeedService {
 		String arAcao[] = acao.split("\\s+");
 		for(String w : arAcao){
 			if(w.length() != 0){
-				if( w.charAt(0) == '[' && w.charAt(w.length()-1) == ']' ){
+				if( w.charAt(0) == '[' && w.indexOf(']') != -1 ){
 					String sU[] = w.split("\\@");
-					sb.append( (sU[1].substring(0,sU[1].length()-1)+" ").replaceAll("\\-", "\\ ") );
+					sb.append( (sU[1].replaceAll("\\]", "\\ ")).replaceAll("\\-", "\\ ") );
+					//sb.append( (sU[1].substring(0,sU[1].length()-1)+" ").replaceAll("\\-", "\\ ") );
 				}else
 					sb.append(w+" ");
 			}
@@ -69,7 +70,7 @@ public class FeedServiceImpl implements FeedService {
 		for(String w : arAcao){
 			
 			if(w.length() != 0){
-				if( w.charAt(0) == '[' && w.charAt(w.length()-1) == ']' ){
+				if( w.charAt(0) == '[' && w.indexOf(']') != -1 ){
 					String sU[] = w.split("\\@");
 					String ids[] = sU[0].split("\\_");
 					int idUsuario = Integer.parseInt(ids[0].substring(1));
