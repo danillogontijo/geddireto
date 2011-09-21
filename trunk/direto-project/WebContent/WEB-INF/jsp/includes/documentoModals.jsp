@@ -56,8 +56,8 @@ ul.auto-list{
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	border: 1px solid #1E90FF;
-	background-color: #6495ED;
+	border: 1px solid #778899;
+	background-color: #E2E4FF;
 	padding: 0;
 	margin:0;
 	list-style:none;
@@ -65,7 +65,7 @@ ul.auto-list{
 }
 ul.auto-list > li:hover,
 ul.auto-list > li[data-selected=true]{
-	background-color: #E2E4FF;
+	background-color: #FFFFCC;
 }
 
 ul.auto-list > li{
