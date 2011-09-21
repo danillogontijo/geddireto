@@ -46,31 +46,28 @@ public class FeedController extends BaseController {
 		
 		Map<DocumentoDetalhes,List<Feed>> map = new LinkedHashMap<DocumentoDetalhes,List<Feed>>();
 	    List<Feed> feeds = feedService.selectFeeds(filter);
-		Set<DocumentoDetalhes> documentos = new LinkedHashSet<DocumentoDetalhes>();
 		Set<DocumentoDetalhes> documentosInv = new LinkedHashSet<DocumentoDetalhes>();
 		
 		for(Feed f : feeds)
-			documentos.add(f.getDocumentoDetalhes());
+			documentosInv.add(f.getDocumentoDetalhes());
 		
-		List<DocumentoDetalhes> docs = new ArrayList<DocumentoDetalhes>(documentos);
-
-		for(int i=docs.size()-1;i>=0;i--){
-			DocumentoDetalhes d = docs.get(i);
+		List<DocumentoDetalhes> docs = new ArrayList<DocumentoDetalhes>(documentosInv);
+		documentosInv = new LinkedHashSet<DocumentoDetalhes>();
+		
+		for(int i=docs.size()-1;i>=0;i--)
 			documentosInv.add(docs.get(i));
-		}
 		
 		docs = null;
 		
-		documentos = documentosInv;
-		
-		for(DocumentoDetalhes d : documentos){
-			List<Feed> feedsPorDocumento = new ArrayList<Feed>();
+		for(DocumentoDetalhes d : documentosInv){
+			Set<Feed> feedsPorDocumento = new HashSet<Feed>();
 			for(Feed f : feeds){
+				System.out.println(d.getIdDocumentoDetalhes()+"-->"+f.getIdFeed()+"-"+f.getAcao()+"-"+f.hashCode());
 				if(d.equals(f.getDocumentoDetalhes())){
 					feedsPorDocumento.add(f);
 				}
 			}
-			map.put(d, feedsPorDocumento);
+			map.put(d, new ArrayList<Feed>(feedsPorDocumento));
 		}
 		
 		return map;

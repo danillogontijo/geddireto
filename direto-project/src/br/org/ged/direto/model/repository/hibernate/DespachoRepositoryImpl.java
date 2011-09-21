@@ -36,8 +36,8 @@ public class DespachoRepositoryImpl extends BaseRepositoryImpl implements Despac
 	}
 
 	@Override
-	public void save(Despacho despacho) {
-		hibernateTemplate.save(despacho);
+	public Integer save(Despacho despacho) {
+		return (Integer)hibernateTemplate.save(despacho);
 	}
 
 	@Override

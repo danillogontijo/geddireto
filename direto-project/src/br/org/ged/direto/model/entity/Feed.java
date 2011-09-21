@@ -57,10 +57,10 @@ public class Feed implements Serializable{
 	private String acao;
 	
 	@Column(name="IdAnotacao",nullable=false)
-	private Integer IdAnotacao;
+	private Integer idAnotacao;
 	
 	@Column(name="IdDespacho",nullable=false)
-	private Integer IdDespacho;
+	private Integer idDespacho;
 	
 	public Integer getIdFeed() {
 		return idFeed;
@@ -127,19 +127,45 @@ public class Feed implements Serializable{
 	}
 
 	public Integer getIdAnotacao() {
-		return IdAnotacao;
+		return idAnotacao;
 	}
 
 	public void setIdAnotacao(Integer idAnotacao) {
-		IdAnotacao = idAnotacao;
+		this.idAnotacao = idAnotacao;
 	}
 
 	public Integer getIdDespacho() {
-		return IdDespacho;
+		return idDespacho;
 	}
 
 	public void setIdDespacho(Integer idDespacho) {
-		IdDespacho = idDespacho;
+		this.idDespacho = idDespacho;
+	}
+	
+	@Override
+	public int hashCode() {
+		int code = 0;
+		
+		for(int i=0; i<acao.length(); i++)
+			code += acao.codePointAt(i);
+		
+		code += documentoDetalhes.getIdDocumentoDetalhes();
+		
+		return code;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (obj == null)
+			return false;
+		
+		if(obj instanceof Feed){
+			if ( ((Feed)obj).getIdAnotacao().equals(idAnotacao) && 
+					((Feed)obj).getIdDespacho().equals(idDespacho) )
+				return true;
+		}
+		return false;
 	}
 	
 }

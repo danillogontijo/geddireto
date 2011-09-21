@@ -63,13 +63,13 @@ function filtro(){
 						
 							<div style="width: 100%; float: left; padding-bottom: 10px;">
 								<p style="margin: 0;" class="_font_feed_titulo"><b>Você foi mencionado em:</b><br> [${feedsByDocs.key.tipoDocumento.tipoDocumentoAbr}] ${feedsByDocs.key.assunto}</p> 
-								<p class="_font_feed_titulo"><a href="view.html?id=${feedsByDocs.key.idDocumentoDetalhes}" style="color: #708090;">Visualizar documento</a></p>
+								<p class="_font_feed_titulo"><a href="view.html?id=${feedsByDocs.key.idDocumentoDetalhes}" style="color: #1E90FF;">Visualizar documento</a></p>
 							</div>
 							
 							<c:forEach var="feed" items="${feedsByDocs.value}">
 							 <div class="ui_feed _font_feed">
-							 	<div style="float: left; width: 525px; text-align: left; margin-left: 5px;"><b>[${feed.usuarioRem.pstGrad.pstgradNome} ${feed.usuarioRem.usuNGuerra}]</b> ${feed.acao}</div>
-							 	<div style="float: left; width: 100px;"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${feed.dataHora}" /></div>
+							 	<div style="float: left; width: 515px; text-align: left; margin-left: 5px;"><b>[${feed.usuarioRem.pstGrad.pstgradNome} ${feed.usuarioRem.usuNGuerra} - ${feed.carteiraRem.cartAbr}]</b> ${feed.acao}</div>
+							 	<div style="float: left; width: 110px; color: #708090;"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${feed.dataHora}" /></div>
 							 </div>
 							</c:forEach>
 							
