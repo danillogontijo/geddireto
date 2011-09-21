@@ -248,12 +248,13 @@ public class DocumentoDetalhes implements Serializable {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof DocumentoDetalhes){
-			DocumentoDetalhes doc = (DocumentoDetalhes)obj;
-			if(this.getIdDocumentoDetalhes() == doc.getIdDocumentoDetalhes())
-				return true;
+		
+		if (obj == null)
 			return false;
-		}
+		
+		if(obj instanceof DocumentoDetalhes &&
+			idDocumentoDetalhes == ((DocumentoDetalhes)obj).getIdDocumentoDetalhes() )
+				return true;
 		return false;
 	}
 
