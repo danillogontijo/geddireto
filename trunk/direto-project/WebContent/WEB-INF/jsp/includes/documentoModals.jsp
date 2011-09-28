@@ -294,12 +294,10 @@ white-space: pre-wrap;
 
 <div id="form-sign" title="Assinar documento" style="display: none;">
 	<p class="validateTips"></p>
-	<form>
 	<fieldset>
 		<label for="password">Digite sua senha do certificado</label>
-		<input type="password" name="password" id="password" onfocus="javascript:this.value=''" value="" class="text ui-widget-content ui-corner-all" onkeypress="return teclaEnter(event);" />
+		<input type="password" name="password" id="password" onfocus="javascript:this.value=''" value="" class="text ui-widget-content ui-corner-all" >
 	</fieldset>
-	</form>
 </div>
 
 <div id="user-cripto" title="Destinatário"  style="display: none;">
