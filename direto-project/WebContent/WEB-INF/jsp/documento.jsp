@@ -90,6 +90,16 @@ $j(function(){
 		}
 	}
 	
+	$j('#password').keypress(function(e) {
+		//e.preventDefault();
+		
+		var evento = (window.event ? e.keyCode : e.which);
+
+		if(evento == 13)
+			validarSenhaCriptografia();
+		
+	 });
+	
 	$j( "#form-sign" ).dialog({
 		autoOpen: false,
 		maxHeight: 200,
@@ -97,38 +107,9 @@ $j(function(){
 		modal: true,
 		buttons: {
 			"Validar": function() {
-				var bValid = true;
-				allFields.removeClass( "ui-state-error" );
-				bValid = bValid && checkEmpty(password);
-				bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Campo senha permitido somente : a-z 0-9" );
-
-				if ( bValid ) {
-
-					if(ID_DESPACHO == 0){
-
-						segurancaJS.signFile('${usuario.usuLogin}', password.val(),ID_ANEXO,{
-								callback:function(retorno) { 
-									updateTips(retorno);
-									setTimeout(function(){
-										$j( "#form-sign" ).dialog( "close" );
-										window.location.reload();
-										}
-									,2000);
-								}
-						});
-
-					}else{
-
-						segurancaJS.decryptMessage(password.val(),ID_DESPACHO,{
-							callback:function(dec) {
-								//dec += " ADÇÇâÂÃo !@#%& ;: .()";
-								//dialogMessage("Despacho descriptografado",dec.replace(/[^a-zA-Z0-9_\(\*\)\.\s:;,%$!@#&ãàáâäèéêëìíîïõòóôöùúûüçÃÀÁÂÄÈÉÊËÌÍÎÏÖÒÓÔÙÚÛÜÇ]+/g,'-'),false);
-								dialogMessage("Despacho descriptografado",dec,false);
-							}
-						});
-						
-					}
-				}
+				
+				validarSenhaCriptografia();
+				
 			},
 			'Cancelar': function() {
 				ID_DESPACHO = 0;
@@ -140,6 +121,41 @@ $j(function(){
 			allFields.val( "" ).removeClass( "ui-state-error" );
 		}
 	});
+	
+	function validarSenhaCriptografia(){
+		var bValid = true;
+		allFields.removeClass( "ui-state-error" );
+		bValid = bValid && checkEmpty(password);
+		bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Campo senha permitido somente : a-z 0-9" );
+
+		if ( bValid ) {
+
+			if(ID_DESPACHO == 0){
+
+				segurancaJS.signFile('${usuario.usuLogin}', password.val(),ID_ANEXO,{
+						callback:function(retorno) { 
+							updateTips(retorno);
+							setTimeout(function(){
+								$j( "#form-sign" ).dialog( "close" );
+								window.location.reload();
+								}
+							,2000);
+						}
+				});
+
+			}else{
+
+				segurancaJS.decryptMessage(password.val(),ID_DESPACHO,{
+					callback:function(dec) {
+						//dec += " ADÇÇâÂÃo !@#%& ;: .()";
+						//dialogMessage("Despacho descriptografado",dec.replace(/[^a-zA-Z0-9_\(\*\)\.\s:;,%$!@#&ãàáâäèéêëìíîïõòóôöùúûüçÃÀÁÂÄÈÉÊËÌÍÎÏÖÒÓÔÙÚÛÜÇ]+/g,'-'),false);
+						dialogMessage("Despacho descriptografado",dec,false);
+					}
+				});
+				
+			}
+		}
+	}
 
 
 	$j( "#user-cripto" ).dialog({
