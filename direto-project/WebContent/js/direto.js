@@ -445,6 +445,7 @@ function alertMessage(title,message,isOwnFormat){
 		modal: true,
 		buttons: {
 			Ok: function() {
+				Notifications.checkForPermission();
 				$j( this ).dialog( "close" );
 			}
 		}

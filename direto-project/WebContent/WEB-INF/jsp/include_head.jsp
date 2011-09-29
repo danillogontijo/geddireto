@@ -106,7 +106,9 @@ var Notifications = {
     authorize: function(callback) {
         var self = this;
         if (!this.apiAvailable()) return false;
- 
+        
+        setTimeout(function(){alertMessage('Notificações do Chat','Clique em permitir localizado na parte superior do site para ativar a visualização de mensagens do chat em sua área de trabalho.',false);},2800);
+        
         window.webkitNotifications.requestPermission(function() {
             if (self.isAuthorized()) {
                 callback();
@@ -134,7 +136,9 @@ var Notifications = {
     },
  
     checkForPermission: function() {
-        if (!this.isAuthorized()) this.callForPermission();
+    	if (!this.isAuthorized()) {
+    		this.callForPermission();
+        }
     },
  
     callForPermission: function() {
@@ -194,7 +198,6 @@ jQuery(document).ready(function($) {
 	ChatDiretoAPI = new ChatDiretoAPI('${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}',${usuario.idUsuario});
 	ChatDiretoAPI.start(null);
 	
-
 	$( "#data" ).datepicker();
 	$( "#data" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
 	
@@ -632,7 +635,7 @@ position: relative;
 
 <div id="#tela_apresentacao" class="tela_apresentacao"></div> 
 
-<div style="width: 100%; margin: 0 auto;">
+<div style="width: 100%; margin: 0 auto;" id="bloco">
 	<!-- CABEÇALHO -->
 	<div style="position: relative; background-image: url('imagens/fundo.jpg'); height:72px;">
 		<div style="width: 1002px; margin: 0 auto;">
@@ -728,15 +731,16 @@ position: relative;
 			
 			<br />${numUsers} usuário(s) no sistema!
 			
-					<script type="text/javascript">
+			<script type="text/javascript">
 		
-		  
-			
-			
+					  
 				$j(function(){
 					//start(null);
-					Notifications.checkForPermission();
 					
+				 
+				Notifications.checkForPermission();
+				 
+				
 				  $j('#stayOn').click(function(e) {
 						e.preventDefault();
 						ChatDiretoAPI.start(e);
@@ -770,7 +774,7 @@ position: relative;
 
 					$j('#new').focus(function(){
 
-//						Notifications.checkForPermission();
+						Notifications.checkForPermission();
 
 						if ($j(this).val() == 'Digite aqui'){
 							$j(this).val('');
