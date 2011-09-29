@@ -337,7 +337,8 @@ function ChatDiretoAPI (userName, userID) {
 			var m = $j('<p>'+msgRec+'</p>');
 			
 			if(!isSession)
-				Notifications.show('favicon.ico',from,m.text());	
+				if(Notifications.isAuthorized())
+					Notifications.show('favicon.ico',from,m.text());
 			
 			if(!DISABLE_SOUND)
 				alertBeepMessage('beepchat');
