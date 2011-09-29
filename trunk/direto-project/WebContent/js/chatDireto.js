@@ -333,6 +333,12 @@ function ChatDiretoAPI (userName, userID) {
 					+from+'<br>'+msgRec+'</p>';
 			
 			showMessage(msgHTML);
+			
+			var m = $j('<p>'+msgRec+'</p>');
+			
+			if(!isSession)
+				Notifications.show('favicon.ico',from,m.text());	
+			
 			if(!DISABLE_SOUND)
 				alertBeepMessage('beepchat');
 		}
