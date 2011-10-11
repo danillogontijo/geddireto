@@ -456,12 +456,18 @@ function fEnviar(e){
 					if (FileAPI.fileQueueSize() == 0){
 						stayInLoop = false;
 
+						var url = 'view.html?id='+ID_DOCUMENTO;
+						
 						var message = 'Foi gerado um protocolo sob o número '+
 							'<b>'+data.texto+
-							'</b><br /><a href="view.html?id='+ID_DOCUMENTO+
+							'</b><br /><a href="'+url+
 							'">Abrir documento</a>';
 	
 						dialogMessage('Novo documento enviado',message,false);
+
+						setTimeout(function(){
+							window.location = url;
+						},3000);
 							
 					}
 				}
