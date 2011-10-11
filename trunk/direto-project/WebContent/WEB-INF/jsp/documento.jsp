@@ -302,6 +302,37 @@ $j(function(){
 		
 	});
 
+	/*Função separada para assinar ou bloquear edição e também salvar histórico*/
+	function assinar(){
+		textoHistorico = "(Assinado) "+NOME_ANEXO+"-${usuario.usuLogin}";
+				
+		historicoJS.save(${idDocumento},textoHistorico);
+				
+		segurancaJS.haveCertificate(${usuario.usuIdt},{
+			callback:function(ok) { 
+				if (ok){
+					$j( "#form-sign" ).dialog( "open" );
+				}else{
+					segurancaJS.blockEditDocument(ID_ANEXO,{
+						callback:function(retorno) {
+							(retorno != '1') ? errorAlert(retorno) : alertMessage('Bloquear edição do documento','Documento bloqueado para edição!',false); 
+							if (retorno == '1')
+								window.location.reload();	
+						}						
+					});
+				}
+			}
+	
+		});
+	}
+
+	$j('a[name=assinar]').click(function(e) {
+		e.preventDefault();
+		ID_ANEXO = $j(this).attr('anexo');
+		NOME_ANEXO = $j(this).attr('nomeanexo');
+		assinar();
+	});
+	
 	/*Evento do botão de confirmação da edição do documento*/
 	$j('input[type=button]').click(function(e) {
 		var bt_name = $j(this).attr('name');
@@ -313,36 +344,10 @@ $j(function(){
 		if(bt_name == 'bt_editar_sim_assinar'){
 			confirma_edicao(2);
 			js.direto.close_mask();
-			
 			setTimeout(function(){
-				
-				if(BACK){
-					
-					textoHistorico = "(Assinado) "+NOME_ANEXO+"-${usuario.usuLogin}";
-					
-					historicoJS.save(${idDocumento},textoHistorico);
-					
-					segurancaJS.haveCertificate(${usuario.usuIdt},{
-						callback:function(ok) { 
-							if (ok){
-								$j( "#form-sign" ).dialog( "open" );
-							}else{
-								segurancaJS.blockEditDocument(ID_ANEXO,{
-									callback:function(retorno) {
-										(retorno != '1') ? errorAlert(retorno) : alertMessage('Bloquear edição do documento','Documento bloqueado para edição!',false); 
-										if (retorno == '1')
-											window.location.reload();	
-									}						
-								});
-							}
-						}
-		
-					});
-				
-				}
-				
-			
-			},300);	
+				if(BACK)
+					assinar();
+			},300);
 			
 		}
 
@@ -848,11 +853,12 @@ height: 15px;
 				<c:choose>
 					<c:when test="${documento.assinatura == 0}">
 						<c:if test="${documento_principal.assinado == 0}">
-						 <span id="s_editar"><a href="#weditar" id="${documento_principal.anexoCaminho}" nomeAnexo="${documento_principal.anexoNome}" anexo="${documento_principal.idAnexo}" name="modal" class="l_edicao_vis">Editar</a></span> |
+						 <span id="s_editar">(<a href="#weditar" id="${documento_principal.anexoCaminho}" nomeAnexo="${documento_principal.anexoNome}" anexo="${documento_principal.idAnexo}" name="modal" class="l_edicao_vis">Editar</a> |
+						 <a href="#assinar" id="${documento_principal.anexoCaminho}" nomeAnexo="${documento_principal.anexoNome}" anexo="${documento_principal.idAnexo}" name="assinar" class="l_edicao_vis">Assinar</a>)</span> |
 						</c:if>
 					</c:when>
 					<c:otherwise>
-						Documento assinado.
+						(Documento bloqueado)
 					</c:otherwise>
 				</c:choose>
 				
@@ -886,6 +892,7 @@ height: 15px;
 							<c:when test="${documento.assinatura == 0}">
 								<c:if test="${anexo.assinado == 0}">
 									<a href="#weditar" name="modal" id="${anexo.anexoCaminho}" nomeanexo="${documento_principal.anexoNome}" anexo="${anexo.idAnexo}" class="l_edicao_vis">Editar</a> |
+									<a href="#assinar" id="${documento_principal.anexoCaminho}" nomeAnexo="${documento_principal.anexoNome}" anexo="${documento_principal.idAnexo}" name="assinar" class="l_edicao_vis">Assinar</a> |
 								</c:if>
 							</c:when>
 						</c:choose>
