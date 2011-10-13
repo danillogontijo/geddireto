@@ -129,13 +129,7 @@ public class DocumentoController extends BaseController {
 	@RequestMapping(value="/view.html",method = RequestMethod.GET)
 	public String showByIdDocumentoDetalhes(@RequestParam("id")Integer id, ModelMap model){
 	
-		Documento docRedirect = null;
-		
-		try{
-			docRedirect = documentosService.selectById(id, this.getIdCarteira());
-		}catch (DocumentNotFoundException e) {
-			System.out.println("Documento apenas no view: "+id);
-		}
+		Documento docRedirect = documentosService.selectById(id, this.getIdCarteira());
 		
 		if(docRedirect != null)
 			return "redirect:documento.html?id=0&pk="+docRedirect.getIdDocumento();
