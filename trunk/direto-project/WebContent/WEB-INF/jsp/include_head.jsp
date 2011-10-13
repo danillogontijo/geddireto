@@ -821,7 +821,7 @@ position: relative;
 			
 				<c:set var="isPagePrincipal" value="true"></c:set>
 			
-				<c:if test="${pageName == 'principal' || pageName == 'documento'}">
+				<c:if test="${pageName == 'principal' || (pageName == 'documento' && pkDocumento !=0)}">
 					
 					<script type="text/javascript">
 						function changeStatus(status,isMultiplos){
