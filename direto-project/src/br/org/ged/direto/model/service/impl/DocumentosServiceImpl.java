@@ -494,7 +494,14 @@ public class DocumentosServiceImpl implements DocumentosService {
 
 	@Override
 	public Documento selectById(Integer idDocumentoDetalhes, Integer idCarteira) {
-		return documentosRepository.selectById(idDocumentoDetalhes, idCarteira);
+		Documento doc = null;
+		try {
+			doc = documentosRepository.selectById(idDocumentoDetalhes, idCarteira);
+		}catch (DocumentNotFoundException e) {
+			System.out.println("Doc não encontrado na carteira: "+idDocumentoDetalhes);
+		}
+		
+		return doc;
 	}
 
 }
