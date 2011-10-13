@@ -26,6 +26,7 @@ public interface SegurancaService {
 	public boolean haveCertificate(int usuIdt);
 	public String blockEditDocument(int idAnexo);
 	public String releaseDocumentEdition(int idAnexo);
+	public String releaseDocumentBlock(int idDocumentoDetalhes);
 	public boolean encrypt(int idAnexo);
 	public boolean decrypt(int idAnexo);
 	public String encryptMessage(String message, String usuLogin);

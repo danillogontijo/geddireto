@@ -301,6 +301,36 @@ $j(function(){
 		});
 		
 	});
+	
+	$j('a[name=liberar_edicao]').click(function(e) {
+		e.preventDefault();
+
+		segurancaJS.releaseDocumentEdition($j(this).attr('anexo'),{
+			callback:function(retorno) { 
+				//retorno = eval(retorno);
+				//(retorno == -1) ? errorAlert('Documento já está assinado.') : alertMessage('Bloquear edição do documento',retorno,false);
+				alertMessage('Liberar edição do documento',retorno,false); 
+
+				window.location.reload();	
+			}						
+		});
+		
+	});
+	
+	$j('a[name=desbloquear]').click(function(e) {
+		e.preventDefault();
+
+		segurancaJS.releaseDocumentBlock($j(this).attr('documento'),{
+			callback:function(retorno) { 
+				//retorno = eval(retorno);
+				//(retorno == -1) ? errorAlert('Documento já está assinado.') : alertMessage('Bloquear edição do documento',retorno,false);
+				alertMessage('Desbloqueio do documento',retorno,false); 
+
+				window.location.reload();	
+			}						
+		});
+		
+	});
 
 	/*Função separada para assinar ou bloquear edição e também salvar histórico*/
 	function assinar(){
@@ -858,9 +888,18 @@ height: 15px;
 						</c:if>
 					</c:when>
 					<c:otherwise>
-						(Documento bloqueado)
+						<span style="color: blue;">(Doc bloqueado por ${documento.assinadoPor}
+						<c:if test="${documento.assinadoPor == usuario.usuLogin}">
+							| <a href="#" name="desbloquear" documento="${documento.idDocumentoDetalhes}" class="l_edicao_vis">Desbloquear</a>
+						</c:if>
+						)
+						</span>
 					</c:otherwise>
 				</c:choose>
+				
+				<c:if test="${documento_principal.assinado == 1 && documento.assinatura == 0}">
+					<span style="color: blue;">(Doc assinado por ${documento_principal.assinadoPor})</span>
+				</c:if>
 				
 				<span id="s_visualizar"><a href="fileview.html?id=${documento_principal.idAnexo}" target="_blank" class="l_edicao_vis">Visualizar</a></span>
 				
@@ -868,9 +907,11 @@ height: 15px;
 					| <span id="s_checar"><a href="#" name="liberar_edicao" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Liberar</a></span> 
 				</c:if>
 				
+				
 				<c:if test="${documento_principal.assinado == 1 || documento.assinatura == 1}">
 					| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${documento_principal.idAnexo}" class="l_edicao_vis">Checar</a></span>
 				</c:if>
+				
 				
 				<!-- | <span id="s_checar"><a href="#cryptofile" name="cryptofile" id="${documento_principal.idAnexo}" class="l_edicao_vis">Cripto</a></span> -->
 				
@@ -891,19 +932,25 @@ height: 15px;
 						<c:choose>
 							<c:when test="${documento.assinatura == 0}">
 								<c:if test="${anexo.assinado == 0}">
-									<a href="#weditar" name="modal" id="${anexo.anexoCaminho}" nomeanexo="${documento_principal.anexoNome}" anexo="${anexo.idAnexo}" class="l_edicao_vis">Editar</a> |
-									<a href="#assinar" id="${documento_principal.anexoCaminho}" nomeAnexo="${documento_principal.anexoNome}" anexo="${documento_principal.idAnexo}" name="assinar" class="l_edicao_vis">Assinar</a> |
+									<a href="#weditar" name="modal" id="${anexo.anexoCaminho}" nomeanexo="${anexo.anexoNome}" anexo="${anexo.idAnexo}" class="l_edicao_vis">Editar</a> |
+									<a href="#assinar" id="${anexo.anexoCaminho}" nomeAnexo="${anexo.anexoNome}" anexo="${anexo.idAnexo}" name="assinar" class="l_edicao_vis">Assinar</a> |
 								</c:if>
 							</c:when>
 						</c:choose>
 						<a href="fileview.html?id=${anexo.idAnexo}" target="_blank" class="l_edicao_vis">Visualizar</a>
-						<c:if test="${anexo.assinado == 1 || documento.assinatura == 1}">
-						| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${anexo.idAnexo}" class="l_edicao_vis">Checar</a></span>
-						</c:if>
 						<c:if test="${anexo.assinado == 1 && anexo.idAssinadoPor == usuario.idUsuario}">
 						| <span id="s_checar"><a href="#" name="liberar_edicao" anexo="${anexo.idAnexo}" class="l_edicao_vis">Liberar</a></span> 
 						</c:if>
+						
+						<c:if test="${anexo.assinado == 1 || documento.assinatura == 1}">
+						| <span id="s_checar"><a href="#wchecar" name="modal" id="checar_assinatura" anexo="${anexo.idAnexo}" class="l_edicao_vis">Checar</a></span>
+						</c:if>
 						)
+						
+						<c:if test="${anexo.assinado == 1 && documento.assinatura == 0}">
+						  <span style="color: blue;">[assinado por ${anexo.assinadoPor}]</span>
+						</c:if>
+						
 						<span id="hash_${anexo.idAnexo}" style="background-color: red; width: 100%; display: none;">SHA-1: ${anexo.hash}</span>
 					</div>
 				</c:forEach>
