@@ -26,37 +26,6 @@ function ordenacao(){
 	
 }
 
-function changeStatus(status){
-
-	var resposta = "";
-
-	dialogMessage('Aguarde...','<p style="text-align: center"><img src="imagens/ajax-loader.gif" /></p>',true);
-
-	$j( "#dialog-message" ).dialog( "option", "buttons", { "Ok": function() { 
-
-		setTimeout("document.location.reload(true)",100); 
-
-    	} 
-	});
-	
-	$j(".chkbox").each(function(i){
-		var chkbox = $j(this);
-
-		if(chkbox.is(':checked')){
-			documentosJS.changeStatus(chkbox.attr('pk'),status,{
-				callback:function(sRetorno) {
-					resposta += sRetorno+'<br>';
-					dialogMessage('Aguarde...',resposta,false);
-				}
-			});
-		}
-	
-	});
-	
-
-	
-}
-
 function encaminharSelecionados(list){
 
 	$j( "#dialog-message" ).bind( "dialogclose", function(event, ui) {

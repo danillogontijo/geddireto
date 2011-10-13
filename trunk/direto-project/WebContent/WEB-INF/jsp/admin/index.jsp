@@ -995,6 +995,8 @@ function saveCarteira(isSave){
 		<p><button onclick="atualizaGrupo()">Atualizar Grupo</button></p>
 		</div>
 		
+		
+		
 	<div id="waddcarteira" class="window carteira">
 	<table width="100%">
 			<tr>

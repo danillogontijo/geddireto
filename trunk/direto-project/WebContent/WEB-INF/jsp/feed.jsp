@@ -62,7 +62,7 @@ function filtro(){
 						<div style="width: 684px; float: left; margin: 0 auto;">
 						
 							<div style="width: 100%; float: left; padding-bottom: 10px;">
-								<p style="margin: 0;" class="_font_feed_titulo"><b>Você foi mencionado em:</b><br> [${feedsByDocs.key.tipoDocumento.tipoDocumentoAbr}] ${feedsByDocs.key.assunto}</p> 
+								<p style="margin: 0;" class="_font_feed_titulo"><b>Você foi citado em:</b><br> [${feedsByDocs.key.tipoDocumento.tipoDocumentoAbr}] ${feedsByDocs.key.assunto}</p> 
 								<p class="_font_feed_titulo"><a href="view.html?id=${feedsByDocs.key.idDocumentoDetalhes}" style="color: #1E90FF;">Visualizar documento</a></p>
 							</div>
 							
