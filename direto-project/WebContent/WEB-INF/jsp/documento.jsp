@@ -845,7 +845,7 @@ height: 15px;
 				<c:if test="${encaminhadoPor != ''}">
 					<font color="#666666">Carteira que encaminhou: </font><b>${encaminhadoPor}</b><br>
 				</c:if>
-				<font color="#666666">N.U.D.: </font><b>${documento.nrProtocolo}</b><br>
+				<font color="#666666">Protocolo/N.U.D.: </font><b>${documento.nrProtocolo}</b><br>
 				<font color="#666666">Nr. Documento: </font><b>${documento.nrDocumento}</b><br>	
 				<font color="#666666">Documento elaborado por: </font><b>${usuarioElaborador.pstGrad.pstgradNome}
 				${usuarioElaborador.usuNGuerra}</b><br>

@@ -80,6 +80,9 @@ public class DocumentoController extends BaseController {
 		model.addAttribute("pkDocumento",pk);
 		model.addAttribute("documento",documentoDetalhes);
 		model.addAttribute("usuarioElaborador",documentoDetalhes.getUsuarioElaborador());
+		//model.addAttribute("box",doc_conta.getStatus());
+		
+		session.setAttribute("box", Integer.parseInt(""+doc_conta.getStatus()));
 		
 		Set<Anexo> listAnexos = documentoDetalhes.getAnexos();
 		
