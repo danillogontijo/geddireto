@@ -700,7 +700,7 @@ function fEnviar(e){
 <tr>
 	<td>
 		<p style="display: block;">
-		Bloquear edição de todo o documento? 
+		Bloquear a edição do documento? 
 	   <form:checkbox path="assinatura" value="1" />
 		</p>		
 	</td>

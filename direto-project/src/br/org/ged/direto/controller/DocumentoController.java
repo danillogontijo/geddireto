@@ -77,6 +77,7 @@ public class DocumentoController extends BaseController {
 			documentosService.setDocumentoStatus(doc_conta.getIdDocumento(), '1');
 		
 		model.addAttribute("idDocumento",documentoDetalhes.getIdDocumentoDetalhes());
+		model.addAttribute("pkDocumento",pk);
 		model.addAttribute("documento",documentoDetalhes);
 		model.addAttribute("usuarioElaborador",documentoDetalhes.getUsuarioElaborador());
 		
@@ -132,6 +133,7 @@ public class DocumentoController extends BaseController {
 		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));
 		model.addAttribute("encaminhadoPor","");
 		model.addAttribute("idDocumento",documentoDetalhes.getIdDocumentoDetalhes());
+		model.addAttribute("pkDocumento",0);
 		model.addAttribute("documento",documentoDetalhes);
 		model.addAttribute("usuarioElaborador",documentoDetalhes.getUsuarioElaborador());
 		

@@ -21,6 +21,7 @@
 var IS_UPDATES_ACTIONS = false; //Para execucao de uma atualizacao por vez
 var PROXIMO_ANEXO = ${proximoAnexo};
 var ID_DOCUMENTO = ${idDocumento};
+var PK_DOCUMENTO = ${pkDocumento};
 var USER_NAME = '${usuario.pstGrad.pstgradNome}	${usuario.usuNGuerra}';
 var NAME,CAMINHO_NOME,ID_ANEXO,NOME_ANEXO;
 var CRIPTOGRAFAR = false;

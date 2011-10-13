@@ -686,7 +686,7 @@ position: relative;
 			
 			<div id="divMenuLateral" style="left: 5px; position: relative;">
 				<span style="color: red;">*</span><a href="feed.html" class="<c:out value="${divStyle}"/><c:if test="${box == 7}">Sel</c:if>">
-					Feed Principal
+					Citações Doc Tramitados
 				</a>
 			</div>
 			
@@ -819,17 +819,56 @@ position: relative;
 			<div style="background-color: #1E90FF;" class="ui_main_body ui_subMenu _width_main_body _font_white_bold">
 				<a href="criarDocumento.html" style="margin-left: 5px;" class="menu1">Novo</a> | 
 			
-				<c:if test="${pageName == 'principal'}">
+				<c:set var="isPagePrincipal" value="true"></c:set>
+			
+				<c:if test="${pageName == 'principal' || pageName == 'documento'}">
+					
+					<script type="text/javascript">
+						function changeStatus(status,isMultiplos){
+							var resposta = "";
+							dialogMessage('Aguarde...','<p style="text-align: center"><img src="imagens/ajax-loader.gif" /></p>',true);
+							$j( "#dialog-message" ).dialog( "option", "buttons", { "Ok": function() { 
+								setTimeout("document.location.reload(true)",100); 
+						    	} 
+							});
+						
+							if(isMultiplos){
+								$j(".chkbox").each(function(i){
+									var chkbox = $j(this);
+									if(chkbox.is(':checked')){
+										documentosJS.changeStatus(chkbox.attr('pk'),status,{
+											callback:function(sRetorno) {
+												resposta += sRetorno+'<br>';
+												dialogMessage('Aguarde...',resposta,false);
+											}
+										});
+									}
+								});
+							}else{
+								documentosJS.changeStatus(PK_DOCUMENTO,status,{
+									callback:function(sRetorno) {
+										resposta += sRetorno+'<br>';
+										dialogMessage('Aguarde...',resposta,false);
+									}
+								});
+							}
+						}
+					</script>
+				
+					<c:if test="${ pageName == 'documento'}">
+						<c:set var="isPagePrincipal" value="false"></c:set>
+					</c:if>
+					
 					<c:choose>
 				      <c:when test="${box == 1}">
-				      	<a href="javascript:changeStatus(2);" class="menu1">Arquivar</a> |
-						<a href="javascript:changeStatus(4);" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
-						<a href="javascript:changeStatus(0);" class="menu1" id="testeTooltip" title="Teste">Marcar como doc não lido</a> |
+				      	<a href="javascript:changeStatus(2,${isPagePrincipal});" class="menu1">Arquivar</a> |
+						<a href="javascript:changeStatus(4,${isPagePrincipal});" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
+						<a href="javascript:changeStatus(0,${isPagePrincipal});" class="menu1" id="testeTooltip" title="Teste">Marcar como doc não lido</a> |
 				      </c:when>
 				
 				      <c:when test="${box == 2}">
-				      	<a href="javascript:changeStatus(4);" class="menu1" onClick="">Pender</a> |
-						<a href="javascript:changeStatus(0);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
+				      	<a href="javascript:changeStatus(4,${isPagePrincipal});" class="menu1" onClick="">Pender</a> |
+						<a href="javascript:changeStatus(0,${isPagePrincipal});" class="menu1" onClick="">Retornar para caixa de entrada </a> |
 				      </c:when>
 						
 					  <c:when test="${box == 3}">
@@ -837,8 +876,8 @@ position: relative;
 				      </c:when>
 				      
 				      <c:when test="${box == 4}">
-				      	<a href="javascript:changeStatus(2);" class="menu1" onClick="">Arquivar</a> |
-						<a href="javascript:changeStatus(0);" class="menu1" onClick="">Retornar para caixa de entrada </a> |
+				      	<a href="javascript:changeStatus(2,${isPagePrincipal});" class="menu1" onClick="">Arquivar</a> |
+						<a href="javascript:changeStatus(0,${isPagePrincipal});" class="menu1" onClick="">Retornar para caixa de entrada </a> |
 				      </c:when>
 				      
 				      <c:when test="${box == 5}">
