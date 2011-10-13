@@ -9,18 +9,6 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/historicoJS.js"></script>
 
 
-
-<!-- INICIO SUBMENU 2 DO CORPO PRINCIPAL -->
-<div style="background-color: #B8C9DD;" class="ui_main_body ui_subMenu _width_main_body _font_normal">
-								
-	<a href="#grupos" style="margin-left: 5px;" class="menu2" name="modal">Encaminhar</a> |
-	<a href="" style="margin-left: 5px;" class="menu2">Responder</a> |
-	<a href="" style="margin-left: 5px;" class="menu2">Despachar</a> |
-	<a href="" style="margin-left: 5px;" class="menu2">Anotar</a> |
-	<a href="" style="margin-left: 5px;" class="menu2">Anexar</a> |
-				
-</div>
-			
 <style type="text/css">
 .upload-button {
     display:block; /* or inline-block */
@@ -711,8 +699,8 @@ function fEnviar(e){
 
 <tr>
 	<td>
-		<p style="display: none;">
-		Assinar o documento? 
+		<p style="display: block;">
+		Bloquear edição de todo o documento? 
 	   <form:checkbox path="assinatura" value="1" />
 		</p>		
 	</td>
@@ -738,7 +726,7 @@ function fEnviar(e){
 
 
 
-<div id="wrap" style="width: 100%;">
+<div id="wrap" style="width: 100%; min-height: 180px;">
 
 <div class="upload-button" style="position: relative; overflow: hidden; direction: ltr;">
      	Clique aqui para adicionar os documentos

@@ -24,23 +24,28 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.codec.Hex;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.org.direto.util.Base64Utils;
 import br.org.direto.util.Config;
 import br.org.ged.direto.model.entity.Anexo;
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Despacho;
+import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Historico;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.service.AnexoService;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DespachoService;
+import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.HistoricoService;
 import br.org.ged.direto.model.service.SegurancaService;
 import br.org.ged.direto.model.service.UsuarioService;
 
 import java.util.Date;
 import java.util.Scanner;
+import java.util.Set;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -71,6 +76,9 @@ public class SegurancaServiceImpl implements SegurancaService {
 	@Autowired
 	private DespachoService despachoService;
 	
+	@Autowired
+	private DocumentosService documentosService;
+		
 	private static final String signatureAlgorithm = "MD5withRSA";	
 	private final File jks;
 	private final String pwd = "ZDE0M3Qw";
@@ -674,6 +682,41 @@ public class SegurancaServiceImpl implements SegurancaService {
 		historicoService.save(historico);
 		
 		return "Documento com edição liberada!";
+		
+	}
+	
+	@Override
+	@RemoteMethod
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	public String releaseDocumentBlock(int idDocumentoDetalhes) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario usuario = (Usuario)auth.getPrincipal();
+		Carteira carteira = carteiraService.selectById(usuario.getIdCarteira());
+		
+		DocumentoDetalhes doc = documentosService.getDocumentoDetalhes(idDocumentoDetalhes);
+		if( !doc.getAssinadoPor().equals(usuario.getUsuLogin()) )
+			return "Você não tem permissão para desbloquear este documento.";
+		
+		doc.setAssinatura(0);
+		
+		Set<Anexo> anexos = doc.getAnexos();
+		for(Anexo anexo : anexos)
+			anexo.setAssinado(0);
+		
+		String txtHistorico = "(Doc desbloqueado)-Todos os anexos foram desbloqueados-";
+		txtHistorico += usuario.getUsuLogin();
+		
+		Historico historico = new Historico();
+		historico.setCarteira(carteira);
+		historico.setDataHoraHistorico(new Date());
+		historico.setHistorico(txtHistorico);
+		historico.setDocumentoDetalhes(doc);
+		historico.setUsuario(usuario);
+		
+		historicoService.save(historico);
+		
+		return "Documento desbloqueado!";
 		
 	}
 	

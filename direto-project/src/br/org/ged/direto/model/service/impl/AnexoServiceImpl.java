@@ -89,6 +89,7 @@ public class AnexoServiceImpl implements AnexoService {
 			anexoToSave.setDocumentoDetalhes(documento);
 			anexoToSave.setAssinado(assinado);
 			anexoToSave.setAssinadoPor(auth.getName());
+			//anexoToSave.setIdAssinadoPor( ((Usuario)(auth.getPrincipal())).getIdUsuario() );
 			
 			anexoRepository.saveAnexo(anexoToSave);
 			
