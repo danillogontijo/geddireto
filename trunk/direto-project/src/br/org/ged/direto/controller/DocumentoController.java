@@ -129,6 +129,11 @@ public class DocumentoController extends BaseController {
 	@RequestMapping(value="/view.html",method = RequestMethod.GET)
 	public String showByIdDocumentoDetalhes(@RequestParam("id")Integer id, ModelMap model){
 	
+		Documento docRedirect = documentosService.selectById(id, this.getIdCarteira());
+		
+		if(docRedirect != null)
+			return "redirect:documento.html?id=0&pk="+docRedirect.getIdDocumento();
+		
 		DocumentoDetalhes documentoDetalhes = documentosService.getDocumentoDetalhes(id);
 		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));
 		model.addAttribute("encaminhadoPor","");

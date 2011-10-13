@@ -27,6 +27,8 @@ public interface DocumentosService {
 	//@PostAuthorize("returnObject.idCarteira == principal.idCarteira")
 	public Documento selectByIdCarteira(Integer idCarteira);
 	
+	public Documento selectById(Integer idDocumentoDetalhes, Integer idCarteira);
+	
 	//@PostAuthorize("(returnObject == null) or (returnObject.carteira.idCarteira == principal.idCarteira)")
 	@PostAuthorize("(returnObject == null) or (returnObject.granted)")
 	public Documento selectById(int primaryKey) throws DocumentNotFoundException;

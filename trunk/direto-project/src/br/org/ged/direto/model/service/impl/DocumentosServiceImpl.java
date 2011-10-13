@@ -492,4 +492,9 @@ public class DocumentosServiceImpl implements DocumentosService {
 		return retorno;
 	}
 
+	@Override
+	public Documento selectById(Integer idDocumentoDetalhes, Integer idCarteira) {
+		return documentosRepository.selectById(idDocumentoDetalhes, idCarteira);
+	}
+
 }
