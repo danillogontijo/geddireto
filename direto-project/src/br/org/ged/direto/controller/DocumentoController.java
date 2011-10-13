@@ -132,7 +132,7 @@ public class DocumentoController extends BaseController {
 		Documento docRedirect = documentosService.selectById(id, this.getIdCarteira());
 		
 		if(docRedirect != null)
-			return "redirect:documento.html?id=0&pk="+docRedirect.getIdDocumento();
+			return "redirect:documento.html?id="+docRedirect.getDocumentoDetalhes().getIdDocumentoDetalhes()+"&pk="+docRedirect.getIdDocumento();
 		
 		DocumentoDetalhes documentoDetalhes = documentosService.getDocumentoDetalhes(id);
 		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));
