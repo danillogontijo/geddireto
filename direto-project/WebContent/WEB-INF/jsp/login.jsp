@@ -93,8 +93,12 @@ function teclaEnter(e){
 
 function logar(){
 	if($('j_password').value != ""){
-		GerarCookie('usuLogin', $('j_username').value, 355);
-		return document.f.submit();
+		if($('j_usuario_conta').value == 0){
+			alert('Selecione uma conta para logar');
+		}else{
+			GerarCookie('usuLogin', $('j_username').value, 355);
+			return document.f.submit();
+		}
 	}else
 		alert("Digite a senha.");
 }
@@ -229,7 +233,7 @@ background-color: #fff;
 				
 				<div id="line" style="height: 45px; line-height: 50px;">
 					<div id="column">
-					Contas <select id="j_usuario_conta" name="j_usuario_conta"><option>Selecione sua conta</option></select></div>
+					Contas <select id="j_usuario_conta" name="j_usuario_conta"><option value="0">Selecione sua conta</option></select></div>
 				</div>
 				
 				<div id="line" style="height: 30px; text-align: center; margin-top: 10px;">
