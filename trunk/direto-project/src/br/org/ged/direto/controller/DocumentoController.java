@@ -137,6 +137,8 @@ public class DocumentoController extends BaseController {
 		if(docRedirect != null)
 			return "redirect:documento.html?id="+docRedirect.getDocumentoDetalhes().getIdDocumentoDetalhes()+"&pk="+docRedirect.getIdDocumento();
 		
+		session.setAttribute("box", 10);
+		
 		DocumentoDetalhes documentoDetalhes = documentosService.getDocumentoDetalhes(id);
 		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));
 		model.addAttribute("encaminhadoPor","");
