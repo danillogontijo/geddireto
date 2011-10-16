@@ -25,7 +25,7 @@ try {
 	
 	if(documento == null){	
 	
-		query = "select id,tipoNome from tiposdocumentos";
+		/*query = "select id,tipoNome from tiposdocumentos";
 		
 		pstmt = conn.prepareStatement(query);
 		
@@ -135,7 +135,7 @@ try {
 			out.println(query+"<br>");
 			
 		}
-		resultado.close();
+		resultado.close();*/
 		
 }else{
 
@@ -174,7 +174,7 @@ try {
 		query = "INSERT INTO idmensausu(idMensagem,status,dataHora,idCarteira,notificar,idsecao,idom,ultimanotificacao,idUsuario)"+
 	    " VALUES ("+idMensagem+", 3, '"+data+"', 1,0,"+idSecao+","+idOM+",'2011-08-19 00:00:00',"+idUsuario+")";
 		pstmt2 =  conn.prepareStatement(query);
-		pstmt2.execute();
+		//pstmt2.execute();//ATIVAR QUANDO FOR USAR
 		pstmt2.close();
 		pstmt2 = null;
 	}
