@@ -2,13 +2,11 @@ package br.org.ged.direto.model.repository;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import br.org.direto.util.DataUtils;
 import br.org.ged.direto.controller.forms.PesquisaForm;
 import br.org.ged.direto.controller.utils.DocumentoCompleto;
 import br.org.ged.direto.model.entity.Anexo;
-import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 
@@ -30,4 +28,6 @@ public interface DocumentosRepository {
 	public void saveOrUpdateDocumento(Documento documento);
 	public DocumentoDetalhes getDocumentoDetalhes(int primaryKey);
 	public int getAmountDocumentoByYear(String year);
+	public void tranferirDocumentos(int idUsuario, int idCarteira);
+		
 }

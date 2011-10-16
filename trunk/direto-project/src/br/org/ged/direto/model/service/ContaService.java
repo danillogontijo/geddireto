@@ -40,7 +40,6 @@ public interface ContaService {
 	
 	public Conta getAccount(int idUsuario, int idCarteira);
 	
-	
-	//public List<Conta> getAll(Usuario usuario);
+	public List<Conta> getContasPrincipais(int idUsuarioProprietario);
 
 }

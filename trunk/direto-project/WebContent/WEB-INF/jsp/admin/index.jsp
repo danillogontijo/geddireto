@@ -26,6 +26,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/omJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/secaoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/gruposJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentosJS.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8""></script>
 
@@ -100,6 +101,8 @@ var $j = jQuery.noConflict();
 
 var S_USERS = "";
 var TABLE_USERS = null;
+var IDCARTEIRA_CONTAPRINCIPAL;
+var IDUSUARIO;
 
 
 $j(function() {
@@ -185,6 +188,8 @@ $j(function() {
 	
 	function editUser(id){
 
+		IDUSUARIO = id;
+		
 		removeTable();
 		
 		table = '<table id="table_users" width="100%" class="table_users">'+
@@ -215,6 +220,9 @@ $j(function() {
 			$j.each(data.contas, function(i,conta){
 				userForm('contas','Contas',conta,4);
 				
+				if ( conta.isPrincipal == true )
+					IDCARTEIRA_CONTAPRINCIPAL = conta.idCarteira;
+				
 			});
 
 			if (data.contas.length == 0){
@@ -226,12 +234,30 @@ $j(function() {
 			}	
 		});
 
-		setTimeout(function(){$j('#table_users tr').eq(1).first().find('fieldset').append('<p><button id="save_user"> Salvar modificações</button></p>');
-		$j( "button", "#table_users" ).button();
-		$j('#save_user').click(saveEditUser);
+		setTimeout(function(){
+			$j('#table_users tr').eq(1).first().find('fieldset').append('<p><button id="save_user">Salvar modificações</button></p>');
+			$j('#table_users tr').eq(1).first().find('fieldset').append('<p><button id="transf_docs">Transferir docs para conta principal</button></p>');
+			$j( "button", "#table_users" ).button();
+			$j('#save_user').click(saveEditUser);
+			$j('#transf_docs').click(tranferirDocs);
 
 		},3000);
 	};
+	
+	/*
+	* FUNÇÃO QUE TRANSFERE OS DOCS DO GED ANTERIOR 
+	* PARA A CARTEIRA PRINCIPAL
+	*/
+	function tranferirDocs(){
+		dialogMessage('Tranferindo docs..','<p style="text-align: center"><img src="../imagens/ajax-loader.gif" /></p>',true);
+		
+		documentosJS.tranferirDocumentos(IDUSUARIO,IDCARTEIRA_CONTAPRINCIPAL,{
+			callback:function(message) {
+				dialogMessage('Tranferência de Documentos',message,false);
+			}
+	  	});
+		
+	}
 
 	function addUser(){
 
@@ -707,7 +733,11 @@ function carregaSecoes(id,idSelected){
 	secaoJS.getAll({
 		callback:function(secoesList) {
 			dwr.util.removeAllOptions(id);
-			dwr.util.addOptions(id, secoesList, "idSecao", "secaoAbr");
+			
+			for( var i = 0; i<secoesList.length; i++ )
+				secoesList[i].secaoDesc = secoesList[i].secaoAbr+" ("+secoesList[i].secaoDesc+")"; 
+			
+			dwr.util.addOptions(id, secoesList, "idSecao", "secaoDesc");
 			
 			setTimeout(function(){
 				$j('#'+id).find('option').each(function(){
@@ -900,6 +930,9 @@ function saveCarteira(isSave){
 			  	width: 300px;
 			  }
 		</style>
+		
+<div id="dialog-message" title="Caixa de Diálogo" style="display: none;">
+</div>		
 
 <!-- MODALS -->
 <div id="boxes">

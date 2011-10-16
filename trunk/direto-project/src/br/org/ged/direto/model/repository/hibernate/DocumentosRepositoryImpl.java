@@ -430,5 +430,10 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 		return total;
 	}
 
+	@Override
+	public void tranferirDocumentos(int idUsuario, int idCarteira) {
+		getSession().createSQLQuery("UPDATE idmensausu set idCarteira="+idCarteira+" WHERE idUsuario="+idUsuario).executeUpdate();  
+	}
+
 
 }

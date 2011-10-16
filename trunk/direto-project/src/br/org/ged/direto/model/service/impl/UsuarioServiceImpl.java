@@ -1,10 +1,13 @@
 package br.org.ged.direto.model.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import br.org.direto.util.DataUtils;
+import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.PstGrad;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.UsuarioRepository;
+import br.org.ged.direto.model.service.ContaService;
 import br.org.ged.direto.model.service.PstGradService;
 import br.org.ged.direto.model.service.SegurancaService;
 import br.org.ged.direto.model.service.UsuarioService;
@@ -14,6 +17,8 @@ import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,7 +33,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 	private IChangePassword changePasswordSecurity;
 	private PstGradService pstGradService;
 	private SegurancaService segurancaService;
+	private ContaService contaService;
 	
+	@Autowired
+	public void setContaService(ContaService contaService) {
+		this.contaService = contaService;
+	}
+
 	@Autowired
 	private SessionRegistry sessionRegistry;
 	
@@ -214,6 +225,36 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@RemoteMethod
 	public int userIdentity(String usuLogin) {
 		return selectByLogin(usuLogin).getUsuIdt();
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void updateLoginDate() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario obj = (Usuario)auth.getPrincipal();
+		
+		Usuario usuario = selectById(obj.getIdUsuario());
+		usuario.setUsuUltimoLogin(new Date());
+	}
+
+	@Override
+	@RemoteMethod
+	public String whereIsMyAccount(String usuLogin) {
+		String retorno = "";
+		
+		try{
+			Usuario usuario = selectByLogin(usuLogin);
+			List<Conta> contas = contaService.getContasPrincipais(usuario.getIdUsuario());
+			for(Conta conta : contas)
+				retorno += "O "+conta.getUsuario().getUsuLogin()+" está resp pela conta "+conta.getCarteira().getCartAbr()+"["+conta.getCarteira().getOm().getOmAbr()+"]<br>";
+			
+			if(contas.size()==0)
+				return "Você não tem nenhuma conta cadastrada, contate o adm sist.";
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return retorno;
 	}
 
 }

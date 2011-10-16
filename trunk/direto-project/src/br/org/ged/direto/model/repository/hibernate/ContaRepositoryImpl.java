@@ -1,5 +1,6 @@
 package br.org.ged.direto.model.repository.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -64,6 +65,33 @@ public class ContaRepositoryImpl extends BaseRepositoryImpl implements ContaRepo
 	@Override
 	public void updateAccount(int idUsuario, int idCarteira) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public List<Conta> getContasPrincipais(int idUsuarioProprietario) {
+		String sql = "FROM Conta c WHERE c.idUsuarioProprietario = ?";
+		
+		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setInteger(0, idUsuarioProprietario);
+		
+		List<Conta> contas = query.list();
+		List<Conta> contasResp = new ArrayList<Conta>();
+		Conta conta;
+		if(contas.size() > 0){
+			conta = contas.get(0);
+			
+			sql = "FROM Conta c WHERE c.carteira.idCarteira = ?";
+			
+			query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
+			query.setInteger(0, conta.getCarteira().getIdCarteira());
+			contas = query.list();
+			for(Conta c : contas)
+				if(!c.isPrincipal())
+					contasResp.add(c);
+			
+		}
+		
+		return contasResp;
 	}
 
 	

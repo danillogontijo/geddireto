@@ -1,5 +1,7 @@
 package br.org.ged.direto.model.repository;
 
+import java.util.List;
+
 import br.org.ged.direto.model.entity.Conta;
 
 public interface ContaRepository {
@@ -11,5 +13,6 @@ public interface ContaRepository {
 	public void updateAccount(int idUsuario, int idCarteira);
 	public Conta getAccount(int idConta);
 	public Conta getAccount(int idUsuario, int idCarteira);
+	public List<Conta> getContasPrincipais(int idUsuarioProprietario);
 
 }

@@ -188,6 +188,12 @@ public class DocumentosServiceImpl implements DocumentosService {
 		
 	}
 	
+	/**
+	 * Criação do protocolo antigo
+	 * @param idDocumentoDetalhes
+	 * @return String
+	 */
+	@SuppressWarnings("unused")
 	private synchronized String createProtocolNumber(int idDocumentoDetalhes){
 		String y = "yyyy";
 		String m = "MM";
@@ -502,6 +508,19 @@ public class DocumentosServiceImpl implements DocumentosService {
 		}
 		
 		return doc;
+	}
+
+	@Override
+	@RemoteMethod
+	public String tranferirDocumentos(int idUsuario, int idCarteira) {
+		try{
+			documentosRepository.tranferirDocumentos(idUsuario, idCarteira);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage(); 
+		}
+		
+		return "Docs transferidos com sucesso!";
 	}
 
 }
