@@ -43,5 +43,9 @@ public interface UsuarioService {
 	public List<Object> allUsersLoggedInSystem();
 	
 	public int userIdentity(String usuLogin);
+	
+	public void updateLoginDate();
+	
+	public String whereIsMyAccount(String usuLogin);
 
 }

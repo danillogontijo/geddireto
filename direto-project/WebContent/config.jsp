@@ -13,6 +13,8 @@ String documento = request.getParameter("documento");
 try {
 	Class.forName("com.mysql.jdbc.Driver").newInstance();
 	Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/direto", "root", "g3dd143t0");
+	
+	//Connection conn2 = DriverManager.getConnection("jdbc:mysql://10.133.108.133/direto", "root", "root");
 
 	String query = "";
 	PreparedStatement pstmt = null;
@@ -154,6 +156,32 @@ try {
 	}
 	resultado.close();*/
 	
+	/**
+	*CADASTRANDO DOC ENVIADOS
+	*ADICIONANDO DOCS ENVIADOS DO GED ANTERIOR QUE FICAVA SO NA 
+	*TABELA MENSAGENS
+	**/
+	query = "select idUsuRem,id,data,idSecRem,idOMRem from mensagens";
+	pstmt = conn.prepareStatement(query);
+	resultado = pstmt.executeQuery();
+	while(resultado.next()){
+		int idUsuario = resultado.getInt(1);
+		int idMensagem = resultado.getInt(2);
+		String data = resultado.getString(3);
+		int idSecao = resultado.getInt(4);
+		int idOM = resultado.getInt(5);
+		
+		query = "INSERT INTO idmensausu(idMensagem,status,dataHora,idCarteira,notificar,idsecao,idom,ultimanotificacao,idUsuario)"+
+	    " VALUES ("+idMensagem+", 3, '"+data+"', 1,0,"+idSecao+","+idOM+",'2011-08-19 00:00:00',"+idUsuario+")";
+		pstmt2 =  conn.prepareStatement(query);
+		pstmt2.execute();
+		pstmt2.close();
+		pstmt2 = null;
+	}
+	resultado.close();
+	resultado = null;
+	
+	
 	query = "select idmensausu.id,idmensausu.idOM,idmensausu.idSecao,idmensausu.idUsuario from idmensausu";
 	pstmt = conn.prepareStatement(query);
 	resultado = pstmt.executeQuery();
@@ -169,6 +197,7 @@ try {
 		boolean tem = false;
 		
 		query = "select carteira.idCarteira from usuomsec,carteira where usuomsec.idUsuario="+idUsuario+" and carteira.idCarteira=usuomsec.idCarteira and usuomsec.idCarteira<>1 and carteira.idom="+idOM+" and carteira.idsecao="+idSecao;
+		//query = "select carteira.idCarteira from usuomsec,carteira where usuomsec.idUsuario="+idUsuario+" and carteira.idCarteira=usuomsec.idCarteira and usuomsec.idCarteira<>1";
 		pstmt = conn.prepareStatement(query);
 		rs2 = pstmt.executeQuery();
 		while(rs2.next()){
@@ -187,7 +216,7 @@ try {
 		pstmt = null;
 		
 		
-		if (tem)
+		/*if (tem)
 			continue;
 	
 		query = "select carteira.idCarteira from carteira where carteira.idSecao="+idSecao+" and carteira.idom="+idOM+" and idCarteira <> 1";
@@ -205,17 +234,76 @@ try {
 		rs2.close();
 		rs2 = null;
 		pstmt.close();
+		pstmt = null;*/
+		
+	}
+	resultado.close();
+	resultado = null;
+	
+	/**
+	*Completando os doc onde as carteiras ainda são NULL
+	**/
+	query = "select idmensausu.id,idmensausu.idOM,idmensausu.idSecao,idmensausu.idUsuario from idmensausu where idmensausu.idcarteira IS NULL";
+	pstmt = conn.prepareStatement(query);
+	resultado = pstmt.executeQuery();
+	idSecaoAnt = 0;
+	idOMAnt = 0;
+	
+	while(resultado.next()){
+		int id = resultado.getInt(1);
+		int idSecao = resultado.getInt(3);
+		int idOM = resultado.getInt(2);
+		int idUsuario = resultado.getInt(4);
+		
+		boolean tem = false;
+		
+		query = "select carteira.idCarteira from usuomsec,carteira where usuomsec.idUsuario="+idUsuario+" and carteira.idCarteira=usuomsec.idCarteira and usuomsec.idCarteira<>1";
+		pstmt = conn.prepareStatement(query);
+		rs2 = pstmt.executeQuery();
+		while(rs2.next()){
+			int idCarteira = rs2.getInt(1);
+			query = "update idmensausu set idCarteira = "+idCarteira+" where id="+id;
+			pstmt2 =  conn.prepareStatement(query);
+			pstmt2.execute();
+			pstmt2.close();
+			tem = true;
+			
+			break;
+		}
+		rs2.close();
+		rs2 = null;
+		pstmt.close();
+		pstmt = null;
+				
+		if (tem)
+			continue;
+	
+		query = "select carteira.idCarteira from carteira where carteira.idSecao="+idSecao+" and carteira.idom="+idOM+" and idCarteira <> 1";
+		pstmt = conn.prepareStatement(query);
+		rs2 = pstmt.executeQuery();
+		while(rs2.next()){
+			int idCarteira = rs2.getInt(1);
+			query = "update idmensausu set idCarteira = "+idCarteira+" where id="+id;
+			pstmt2 = conn.prepareStatement(query);
+			pstmt2.execute();
+			pstmt2.close();
+			//out.println(query+"<br>");
+			break;
+		}
+		rs2.close();
+		rs2 = null;
+		pstmt.close();
 		pstmt = null;
 		
 	}
 	resultado.close();
 	resultado = null;
-		
+	
 	
 	/**
 	*CADASTRANDO DOC ENVIADOS
 	**/
-	query = "select idUsuRem,id,data,idSecRem,idOMRem from mensagens";
+	/*query = "select idUsuRem,id,data,idSecRem,idOMRem from mensagens";
 	pstmt = conn.prepareStatement(query);
 	resultado = pstmt.executeQuery();
 	while(resultado.next()){
@@ -227,7 +315,8 @@ try {
 		
 		boolean tem = false;
 		
-		query = "select carteira.idCarteira from usuomsec,carteira where usuomsec.idUsuario="+idUsuario+" and carteira.idCarteira=usuomsec.idCarteira and usuomsec.idCarteira<>1 and carteira.idom="+idOM+" and carteira.idsecao="+idSecao;
+		//query = "select carteira.idCarteira from usuomsec,carteira where usuomsec.idUsuario="+idUsuario+" and carteira.idCarteira=usuomsec.idCarteira and usuomsec.idCarteira<>1 and carteira.idom="+idOM+" and carteira.idsecao="+idSecao;
+		query = "select carteira.idCarteira from usuomsec,carteira where usuomsec.idUsuario="+idUsuario+" and carteira.idCarteira=usuomsec.idCarteira and usuomsec.idCarteira<>1";
 		pstmt = conn.prepareStatement(query);
 		rs2 = pstmt.executeQuery();
 		while(rs2.next()){
@@ -270,8 +359,28 @@ try {
 		rs2 = null;
 		pstmt.close();
 		pstmt = null;
-	}
 
+	}*/
+	
+	/**
+	* CADASTRO DOS GRUPOS
+	**/
+	query = "SELECT usuomsec.idcarteira,grupo.idgrupo FROM nomegrupos as ng,grupo,usuomsec where grupo.idom=ng.idom and grupo.idsecao=ng.idsecao and usuomsec.idusuario=grupo.idusuario and usuomsec.idCarteira <> 1";
+	pstmt = conn.prepareStatement(query);
+	rs2 = pstmt.executeQuery();
+	while(rs2.next()){
+		int idCarteira = rs2.getInt(1);
+		int idGrupo = rs2.getInt(2);
+		query = "update grupo set idCarteira = "+idCarteira+" where idGrupo="+idGrupo;
+		pstmt2 = conn.prepareStatement(query);
+		pstmt2.execute();
+		pstmt2.close();
+		out.println(query+"<br>");
+	}
+	rs2.close();
+	rs2 = null;
+	pstmt.close();
+	pstmt = null;
 }
 
 resultado.close();

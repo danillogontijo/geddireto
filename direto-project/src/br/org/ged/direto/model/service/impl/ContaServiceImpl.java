@@ -213,6 +213,11 @@ public class ContaServiceImpl implements ContaService {
 		
 	}
 
+	@Override
+	public List<Conta> getContasPrincipais(int idUsuarioProprietario) {
+		return contaRepository.getContasPrincipais(idUsuarioProprietario);
+	}
+
 	
 
 }

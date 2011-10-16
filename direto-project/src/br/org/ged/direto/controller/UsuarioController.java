@@ -2,6 +2,8 @@ package br.org.ged.direto.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -38,7 +40,7 @@ public class UsuarioController extends BaseController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/usuario.html")
-	public String showUserForm(ModelMap model) {
+	public String showUserForm(ModelMap model,HttpServletRequest request) {
 		Usuario usuario = usuarioService.selectByLogin(getUsuarioLogado().getUsuLogin());
 		
 		UsuarioForm usuarioForm = new UsuarioForm();
@@ -46,6 +48,12 @@ public class UsuarioController extends BaseController {
 		usuarioForm.setUsuNGuerra(usuario.getUsuNGuerra());
 		usuarioForm.setUsuNome(usuario.getUsuNome());
 		usuarioForm.setUsu_pstGrad(usuario.getPstGrad().getIdPstGrad());
+		
+		boolean primeiroAcesso = (request.getParameter("login") != null ? true : false );
+		model.addAttribute("primeiroAcesso",primeiroAcesso);
+		
+		if(primeiroAcesso)
+			usuarioService.updateLoginDate();
 		
 		model.addAttribute("usuarioForm",usuarioForm);
 			

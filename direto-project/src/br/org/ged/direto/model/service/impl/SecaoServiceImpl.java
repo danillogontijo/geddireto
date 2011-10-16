@@ -24,6 +24,11 @@ public class SecaoServiceImpl implements SecaoService {
 	@Override
 	@RemoteMethod
 	public List<Secao> getAll() {
+		
+		/*List<Secao> secoes = secaoRepository.getAll();
+		for(Secao secao : secoes)
+			secao.setSecaoDesc(secao.getSecaoAbr()+" ("+secao.getSecaoDesc()+")");*/
+		
 		return secaoRepository.getAll();
 	}
 

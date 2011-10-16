@@ -667,7 +667,7 @@ position: relative;
 					<span style="margin-left: 5px;"><spring:message code="welcome"/></span>
 				</div>
 				<div style="width: 817px; font-size:18px; margin: 0 189px; position: absolute; text-align: center;">
-					Brigada de Operações Especiais - <span style="color: red">EM TESTE</span>
+					Brigada de Operações Especiais 
 				</div>
 			</div>	
 		</div>

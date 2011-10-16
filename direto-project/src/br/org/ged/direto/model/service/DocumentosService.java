@@ -63,5 +63,7 @@ public interface DocumentosService {
 	
 	public String encaminharDocumento(String destinatarios, int idDocumentoDetalhes);
 	
-	public String changeStatus(int idDocumento, char status); 
+	public String changeStatus(int idDocumento, char status);
+	
+	public String tranferirDocumentos(int idUsuario, int idCarteira);
 }

@@ -77,6 +77,15 @@ function montaContas(listBeans){
 		dwr.util.addOptions('j_usuario_conta', listBeans, "id", "texto");
 	}
 	
+	if ($('j_usuario_conta')[0].value == 0){
+		usuarioJS.whereIsMyAccount($('j_username').value,{
+			callback:function(dataFromServer) {
+				document.getElementById("j_usernameError").innerHTML = dataFromServer;
+	  		}
+	  	});
+	}
+	//$j('#j_usuario_conta').find('option').first().val()
+	
 }
 
 function teclaEnter(e){
