@@ -855,7 +855,7 @@ height: 15px;
 				
 				 <c:forEach var="doc_cart" items="${allDocuments}">
 					   <c:forEach var="conta" items="${doc_cart.carteira.contas}">
-					    					    			
+					    <c:if test="${conta.carteira.idCarteira != 1}">			    			
 					    	<c:choose> 
 			  					<c:when test="${doc_cart.status == '0'}" > 
 			  						<span style="background-color: #fff;"><font color="black" style="font-size: 9px;" title="${conta.carteira.cartAbr}"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font></span> 
@@ -864,6 +864,7 @@ height: 15px;
 			  						<span style="background-color: #fff;"><font title="${conta.carteira.cartAbr}" color="blue" style="font-size: 9px;">${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</font></span> 
 			  					</c:otherwise> 
 							</c:choose>
+						</c:if>	
 					    			
 					    				
 					    </c:forEach>

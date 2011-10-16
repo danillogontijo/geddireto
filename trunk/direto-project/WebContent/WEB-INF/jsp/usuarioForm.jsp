@@ -15,13 +15,13 @@ $j(function(){
 		"de alguns dados que nos foram enviados pelas Seç, não foi possível "+ 
 		"cadastrar todas as carteiras e vinculá-las a seus usuários. Portanto, peço que, caso haja "+
 		"alguma inconsistência ou todas as PASTAS (caixa entrada, arquivados, etc) "+
-		"estejam VAZIAS, contate o ramal 4440 ou 4470, tendo em mãos a descrição completada e "+
+		"estejam VAZIAS, contate o ramal 4440 ou 4470, tendo em mãos a descrição completa e "+
 		"abreviatura da carteira de como deseja que apareça para os outros usuários, além de "+ 
 		"todos os grupos a qual fazia parte na versão anterior do GED. "+
 		"Confira seus dados cadastrais completando o campo IDENTIDADE. "+
 		"Dúvidas, críticas e/ou sugestões utilize o link localizado "+
-		"na parte superior ao lado do link SAIR, não se esquecendo de "+
-		"nos informar o nr ramal para que possamos entrar em contato.<br>Att. Eqp Des Seç Infor.";
+		"na parte superior ao lado de SAIR, não se esquecendo de "+
+		"nos informar o nr ramal para que possamos, posteriormente, entrarmos em contato.<br>Att. Eqp Des Seç Infor.";
 		
 	alertMessage('ATENÇÃO',alertaInicial,false);
 	

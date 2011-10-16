@@ -172,7 +172,7 @@ function init(page){
  	}
 
 	if(page=="principal"){
-	    setTimeout("$j('.tela_apresentacao').hide('explode')",1100);
+	    setTimeout("$j('.tela_apresentacao').hide('explode')",100);
 	    //errorAlert("Sistema em teste. Qualquer problema encontrado utilize o link sugestões ou ligue para o ramal 4470.<br><br>O G.E.D. voltará ao normal a partir das 10:30 hs.");
   	}
 
@@ -799,7 +799,7 @@ position: relative;
 </script>
 
 		<div id="chat" class="ui_border_shadow border_radius">
-			<div id="topo"><div class="left border_radius" name="minimize"> - </div><div id="welcome"></div><div class="right border_radius" name="search"> p </div></div>
+			<div id="topo"><div class="left border_radius" name="minimize" title="Minimizar"> - </div><div id="welcome"></div><div class="right border_radius" name="search" title="Clique aqui para pesquisar por usuários"> p </div></div>
 			<div id="console_chat" class="border_radius">
 			
 			</div>
