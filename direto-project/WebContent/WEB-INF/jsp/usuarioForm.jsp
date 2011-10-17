@@ -11,19 +11,28 @@
 
 $j(function(){
 	
-	var alertaInicial = "Devido a falta ou informações incompletas "+
-		"de alguns dados que nos foram enviados pelas Seç, não foi possível "+ 
-		"cadastrar todas as carteiras e vinculá-las a seus usuários. Portanto, peço que, caso haja "+
-		"alguma inconsistência ou todas as PASTAS (caixa entrada, arquivados, etc) "+
-		"estejam VAZIAS, contate o ramal 4440 ou 4470, tendo em mãos a descrição completa e "+
-		"abreviatura da carteira de como deseja que apareça para os outros usuários, além de "+ 
-		"todos os grupos a qual fazia parte na versão anterior do GED. "+
+	var alertaInicial = "Devido a falta ou informaÃ§Ãµes incompletas "+
+		"de alguns dados que nos foram enviados pelas SeÃ§, nÃ£o foi possÃ­vel "+ 
+		"cadastrar todas as carteiras e vinculÃ¡-las a seus usuÃ¡rios. Portanto, peÃ§o que, caso haja "+
+		"alguma inconsistÃªncia ou que todas as PASTAS (caixa entrada, arquivados, etc) "+
+		"estejam VAZIAS, contate o ramal 4440 ou 4470, tendo em mÃ£os a descriÃ§Ã£o completa e "+
+		"abreviatura da carteira de como deseja que apareÃ§a para os outros usuÃ¡rios, alÃ©m de "+ 
+		"todos os grupos a qual fazia parte na versÃ£o anterior do GED. "+
 		"Confira seus dados cadastrais completando o campo IDENTIDADE. "+
-		"Dúvidas, críticas e/ou sugestões utilize o link localizado "+
-		"na parte superior ao lado de SAIR, não se esquecendo de "+
-		"nos informar o nr ramal para que possamos, posteriormente, entrarmos em contato.<br>Att. Eqp Des Seç Infor.";
+		"DÃºvidas, crÃ­ticas e/ou sugestÃµes utilize o link localizado "+
+		"na parte superior ao lado de SAIR, nÃ£o se esquecendo de "+
+		"nos informar o nr ramal para que possamos, posteriormente, entrar em contato.<br>Att. Eqp Des SeÃ§ Infor.";
 		
-	alertMessage('ATENÇÃO',alertaInicial,false);
+	alertMessage('ATENÃ‡ÃƒO',alertaInicial,false);
+	
+	$j("#usuIdt").bind("keyup blur focus", function(e) {
+        e.preventDefault();
+        var expre = /[A-Za-z\.\Â§\Â£\@\`\Å½\^\~\'\"\!\?\#\$\%\Å¡\Â¬\_\+\=\.\,\:\;\<\>\|\Â°\Âª\Âº\]\[\{\}\\ \)\(\*\&\-\/\\]/g;
+
+        // REMOVE OS CARACTERES DA EXPRESSAO ACIMA
+        if ($j(this).val().match(expre))
+            $j(this).val($j(this).val().replace(expre,''));
+    });
 	
 });
 
