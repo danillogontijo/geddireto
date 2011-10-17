@@ -6,10 +6,10 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/usuarioValidatorJS.js"></script>
 
 <script language="JavaScript">
-
+$j(function(){
 <c:if test="${primeiroAcesso}">
 
-$j(function(){
+
 	
 	var alertaInicial = "Devido a falta ou informações incompletas "+
 		"de alguns dados que nos foram enviados pelas Seç, não foi possível "+ 
@@ -25,18 +25,20 @@ $j(function(){
 		
 	alertMessage('ATENÇÃO',alertaInicial,false);
 	
-	$j("#usuIdt").bind("keyup blur focus", function(e) {
-        e.preventDefault();
-        var expre = /[A-Za-z\.\§\£\@\`\Ž\^\~\'\"\!\?\#\$\%\š\¬\_\+\=\.\,\:\;\<\>\|\°\ª\º\]\[\{\}\\ \)\(\*\&\-\/\\]/g;
-
-        // REMOVE OS CARACTERES DA EXPRESSAO ACIMA
-        if ($j(this).val().match(expre))
-            $j(this).val($j(this).val().replace(expre,''));
-    });
 	
-});
 
 </c:if>
+
+$j("#usuIdt").bind("keyup blur focus", function(e) {
+    e.preventDefault();
+    var expre = /[A-Za-z\.\@\^\~\'\"\!\?\#\$\%\š\¬\_\+\=\.\,\:\;\<\>\|\°\ª\º\]\[\{\}\\ \)\(\*\&\-\/\\]/g;
+
+    // REMOVE OS CARACTERES DA EXPRESSAO ACIMA
+    if ($j(this).val().match(expre))
+        $j(this).val($j(this).val().replace(expre,''));
+});
+
+});
 
 function validateField(element)
 {
