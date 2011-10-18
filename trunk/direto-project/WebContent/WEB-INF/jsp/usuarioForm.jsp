@@ -11,19 +11,19 @@ $j(function(){
 
 
 	
-	var alertaInicial = "Devido a falta ou informa√ß√µes incompletas "+
-		"de alguns dados que nos foram enviados pelas Se√ß, n√£o foi poss√≠vel "+ 
-		"cadastrar todas as carteiras e vincul√°-las a seus usu√°rios. Portanto, pe√ßo que, caso haja "+
-		"alguma inconsist√™ncia ou que todas as PASTAS (caixa entrada, arquivados, etc) "+
-		"estejam VAZIAS, contate o ramal 4440 ou 4470, tendo em m√£os a descri√ß√£o completa e "+
-		"abreviatura da carteira de como deseja que apare√ßa para os outros usu√°rios, al√©m de "+ 
-		"todos os grupos a qual fazia parte na vers√£o anterior do GED. "+
+	var alertaInicial = "Devido a falta ou informaÁıes incompletas "+
+		"de alguns dados que nos foram enviados pelas SeÁ, n„o foi possÌvel "+ 
+		"cadastrar todas as carteiras e vincul·-las a seus usu·rios. Portanto, peÁo que, caso haja "+
+		"alguma inconsistÍncia ou todas as PASTAS (caixa entrada, arquivados, etc) "+
+		"estejam VAZIAS, contate o ramal 4440 ou 4470, tendo em m„os a descriÁ„o completa e "+
+		"abreviatura da carteira de como deseja que apareÁa para os outros usu·rios, alÈm de "+ 
+		"todos os grupos a qual fazia parte na vers„o anterior do GED. "+
 		"Confira seus dados cadastrais completando o campo IDENTIDADE. "+
-		"D√∫vidas, cr√≠ticas e/ou sugest√µes utilize o link localizado "+
-		"na parte superior ao lado de SAIR, n√£o se esquecendo de "+
-		"nos informar o nr ramal para que possamos, posteriormente, entrar em contato.<br>Att. Eqp Des Se√ß Infor.";
+		"D˙vidas, crÌticas e/ou sugestıes utilize o link localizado "+
+		"na parte superior ao lado de SAIR, n„o se esquecendo de "+
+		"nos informar o nr ramal para que possamos, posteriormente, entrarmos em contato.<br>Att. Eqp Des SeÁ Infor.";
 		
-	alertMessage('ATEN√á√ÉO',alertaInicial,false);
+	alertMessage('ATEN«√O',alertaInicial,false);
 	
 	
 
@@ -160,6 +160,7 @@ input[type=text] {width: 330px;}
 					  		 id="<c:out value="${status.expression}"/>" 
 					  		 value="<c:out value="${status.value}"/>" 
 					  		 onChange="validateField(this);"
+					  		 maxlength="10"
 					  		/>
 				  		</spring:bind>
 						</td>

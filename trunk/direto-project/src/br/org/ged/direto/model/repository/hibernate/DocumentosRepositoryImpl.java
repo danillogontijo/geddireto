@@ -341,7 +341,7 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 		sql += baseSearch;
 		sql += " group by details.idDocumentoDetalhes order by " + form.getColName() + " " + form.getDir();
 		
-		System.out.println(sql);
+		//System.out.println(sql);
 		int total = returnTotalSearch(sql);
 		
 		Query query = getSession().createQuery(sql);

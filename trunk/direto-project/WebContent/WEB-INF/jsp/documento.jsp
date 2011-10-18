@@ -876,7 +876,18 @@ height: 15px;
 				<font color="#666666">Data de entrada no sistema: </font><b><fmt:formatDate pattern="EEEE, d MMMM yyyy HH:mm" value="${documento.dataEntSistema}" /></b><br>
 				<font color="#666666">Referência: </font><b>${documento.referencia}</b><br>
 			
-				<font color="#666666">Documento: </font><b>${documento_principal}</b> 
+				<font color="#666666">Documento: </font>
+				<span title="${documento_principal}"><b>
+				<c:choose>
+					<c:when test="${documento_principal != 'Sem documento'}">
+						${documento_principal.abreviatura}
+					</c:when>
+					<c:otherwise>
+						${documento_principal}
+					</c:otherwise>
+				</c:choose>
+				</b>
+				</span> 
 				
 		   <c:if test="${documento_principal != 'Sem documento'}">			
 				
