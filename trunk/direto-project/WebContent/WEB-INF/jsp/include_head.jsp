@@ -200,7 +200,7 @@ jQuery(document).ready(function($) {
 	});*/
 	
 	ChatDiretoAPI = new ChatDiretoAPI('${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}',${usuario.idUsuario});
-	ChatDiretoAPI.start(null);
+	//ChatDiretoAPI.start(null);
 	
 	$( "#data" ).datepicker();
 	$( "#data" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
@@ -744,6 +744,7 @@ position: relative;
 				 
 				Notifications.checkForPermission();
 				 
+				$j('#chat').hide();
 				
 				  $j('#stayOn').click(function(e) {
 						e.preventDefault();

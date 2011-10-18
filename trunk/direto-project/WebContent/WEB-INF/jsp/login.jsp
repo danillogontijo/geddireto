@@ -250,7 +250,7 @@ background-color: #fff;
 				</div>
 				
 				<div id="line" style="height: 20px; text-align: center; margin-top: 0px;">
-					<input type="checkbox" value="true" name="_spring_security_remember_me" id="_spring_security_remember_me">Lembrar-me
+					<input type="checkbox" value="true" name="_spring_security_remember_me" id="_spring_security_remember_me">Manter-me conectado
 				</div>
 				
 			</div>

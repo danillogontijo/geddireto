@@ -2,15 +2,19 @@
     pageEncoding="ISO-8859-1"%>
 <%@ include file="include_taglibs.jsp" %>
 
-<html>
-<body onload="sistema()">
+
 
 <c:set var="p" value="file:\\\\\\\\10.133.108.108\\\\temp\\\\${path}"></c:set>
 <c:set var="pFirefox" value="file://///10.133.108.108/temp/${path}"></c:set>
 <c:set var="pFirefoxLinux" value="file:///home/direto/${path}"></c:set>
 
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>G.E.D. - Direto ver. 3.0</title>
+
 
 <script type="text/javascript">
 
@@ -51,7 +55,7 @@ function fechar(){
 
 function init(so){
 	redirect(so);
-	//setTimeout("fechar();",3000);
+	setTimeout("fechar();",3000);
 }
 
 
@@ -97,6 +101,7 @@ if (so == 1){
 }
 </script>
 
+</head>
 
 <body onload="sistema();">
 
@@ -107,7 +112,3 @@ if (so == 1){
 </html>
 
 
-
-
-</body>
-</html>
