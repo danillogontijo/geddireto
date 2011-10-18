@@ -27,6 +27,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/secaoJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/gruposJS.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/documentosJS.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/comentarioJS.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/direto.js" charset="utf-8""></script>
 
@@ -161,7 +162,12 @@ $j(function() {
 		var id = $j(this).attr('href');
 		editUser(id);
 	});
-	
+
+	$j('a[name=showComments]').live('click',function(e){
+		e.preventDefault();
+		showComments();
+	});
+
 	function showLogUsers(){
 
 		removeTable();
@@ -183,6 +189,34 @@ $j(function() {
 		$j('#table_users').append('<tr class="table_titulo"><td>Total de sessões abertas: ${fn:length(allUsersLogged)}</td></tr>');
 		$j("#table_users tr:last td").css("border-bottom", "1px solid #000");
 		$j("#table_users tr:last td").css("border-top", "1px solid #000");
+		
+	}
+
+	function showComments(){
+
+		removeTable();
+		
+		table = '<table id="table_users" width="100%" class="table_users">'+
+		'<tr><td colspan="10">'+
+		'</td></tr>';
+
+		$j('#conteudo').append(table);
+		$j("#table_users tr:first").addClass('table_titulo');
+				
+		$j("#table_users tr:first").first().html('Dúvidas/Sugestões/Críticas');
+
+		comentarioJS.showAllComments({
+			callback:function(dataFromServer) {
+			for(var i=0; i<dataFromServer.length; i++)
+				$j('#table_users').append('<tr><td>'+dataFromServer[i].texto+'</td></tr>');
+			}
+	  	});
+		
+
+		setTimeout(function(){
+			$j("#table_users tr:odd").css("background-color", "#E2E4FF");
+		},3000);
+
 		
 	}
 	
@@ -1193,6 +1227,7 @@ function saveCarteira(isSave){
 						<li>Seção</li>
 						<li>OM</li>
 						<li>Função</li>
+						<li><a href="index.html" name="showComments" target="palco">Sugestões/dúvidas</a></li>
 					</ul>
 				</div>
 			</div>
