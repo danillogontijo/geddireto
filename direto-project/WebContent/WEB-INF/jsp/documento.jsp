@@ -901,7 +901,9 @@ height: 15px;
 						</c:if>
 					</c:when>
 					<c:otherwise>
-						<span style="color: blue;">(Doc bloqueado por ${documento.assinadoPor}
+						<c:if test="${documento.assinadoPor != usuario.usuLogin}">
+							<span style="color: blue;">(Doc bloqueado por ${documento.assinadoPor}
+						</c:if>
 						<c:if test="${documento.assinadoPor == usuario.usuLogin}">
 							| <a href="#" name="desbloquear" documento="${documento.idDocumentoDetalhes}" class="l_edicao_vis">Desbloquear</a>
 						</c:if>

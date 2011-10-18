@@ -30,6 +30,7 @@ import br.org.ged.direto.model.service.AnexoService;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.HistoricoService;
+import br.org.ged.direto.model.service.UsuarioService;
 
 @Service("anexoService")
 @RemoteProxy(name = "anexoJS")
@@ -47,6 +48,9 @@ public class AnexoServiceImpl implements AnexoService {
 	
 	@Autowired
 	private HistoricoService historicoService;
+	
+	@Autowired
+	private UsuarioService usuarioService;
 	
 	@Autowired
 	private Config config;
@@ -172,7 +176,8 @@ public class AnexoServiceImpl implements AnexoService {
 		try {
 			Anexo anexo = selectById(idAnexo);
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			Usuario usuario = (Usuario) auth.getPrincipal();
+			Usuario usuario = (Usuario)auth.getPrincipal();
+			//Usuario usuario = usuarioService.selectByLogin(auth.getName());
 			
 			if(anexo.getAssinado() == 1 && anexo.getIdAssinadoPor() != usuario.getIdUsuario()){
 				deleteAnexoFromTemp(anexo);
@@ -188,13 +193,14 @@ public class AnexoServiceImpl implements AnexoService {
 			for(Documento documento : documentos){
 				Carteira carteiraDocumento = documento.getCarteira(); 
 				
-				if(carteiraDocumento == null)
-					continue;
+				if(carteiraDocumento != null){
+					
+					if ( carteiraDocumento.getIdCarteira() == carteiraUsuario.getIdCarteira()){
+						havePermission = true;
+						System.out.println("tem permisssao: "+havePermission);
+						break;
+					}
 				
-				if ( carteiraDocumento.getIdCarteira() == carteiraUsuario.getIdCarteira()){
-					havePermission = true;
-					System.out.println("tem permisssao: "+havePermission);
-					break;
 				}
 			}
 			
@@ -224,12 +230,15 @@ public class AnexoServiceImpl implements AnexoService {
 			
 		
 		} catch (FileNotFoundException e) {
+			System.out.println("FileNotFoundException");
 			e.printStackTrace();
 			return false;
 		} catch (IOException e) {
+			System.out.println("IOException");
 			e.printStackTrace();
 			return false;
 		} catch (Exception e){
+			System.out.println("AnexoServiceImpl.copy ERRO DESCONHECIDO");
 			e.printStackTrace();
 			return false;
 		}
