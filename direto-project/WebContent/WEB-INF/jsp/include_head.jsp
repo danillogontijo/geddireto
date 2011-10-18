@@ -198,6 +198,24 @@ jQuery(document).ready(function($) {
 		format: 'dd/mm/yyyy',
 		//offset: [30, 0]
 	});*/
+
+
+	<%
+		if(request.getParameter("aviso") != null){
+	%>
+	
+	var alertaInicial = "Devido a grande quantidade de solicitações/dúvidas "+
+	"com relação a nova versão do GED, solicito-vos que utilizem APENAS "+ 
+	"o link SUGESTÕES localizado "+
+	"na parte superior ao lado de SAIR com todas as informações da carteira (OM, seção, grupos o qual faz parte e abreviatura "+
+	"de como queira que apareça aos outro usuário. Não se esquecendo também de "+
+	"nos informar o nr ramal para que possamos, posteriormente, entrarmos em contato.<br>Att. Eqp Des Seç Infor.";
+	
+	alertMessage('ATENÇÃO',alertaInicial,false);
+
+	<%
+		}
+	%>
 	
 	ChatDiretoAPI = new ChatDiretoAPI('${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}',${usuario.idUsuario});
 	//ChatDiretoAPI.start(null);
@@ -833,7 +851,19 @@ position: relative;
 							var resposta = "";
 							dialogMessage('Aguarde...','<p style="text-align: center"><img src="imagens/ajax-loader.gif" /></p>',true);
 							$j( "#dialog-message" ).dialog( "option", "buttons", { "Ok": function() { 
-								setTimeout("document.location.reload(true)",100); 
+
+								<c:choose> 
+				  					<c:when test="${pageName == 'principal'}" > 
+					  					setTimeout("document.location.reload(true)",100);
+									</c:when> 
+				  					<c:otherwise> 
+					  					setTimeout(function(){
+											document.location = 'principal.html?box=1&pr=0&filtro=todas';
+										},100); 
+				  					</c:otherwise> 
+								</c:choose>
+
+								 
 						    	} 
 							});
 						

@@ -1,6 +1,8 @@
 package br.org.ged.direto.model.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.org.direto.util.DataUtils;
 import br.org.ged.direto.model.entity.Comentario;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.ComentarioRepository;
@@ -40,6 +43,29 @@ public class ComentarioServiceImpl implements ComentarioService {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	@RemoteMethod
+	public List<DataUtils> showAllComments() {
+		List<DataUtils> dados = new ArrayList<DataUtils>(); 
+		try{
+			List<Comentario> comentarios = comentarioRepository.getAllComments();
+			for(Comentario c : comentarios){
+				DataUtils data = new DataUtils();
+				data.setId(""+c.getIdComentario());
+				String texto = "<b>"+c.getUsuario().getUsuLogin()+" ["+c.getDataHoraComentario()+"]</b> - "+
+				""+c.getComentario();
+				data.setTexto(texto);
+				
+				dados.add(data);
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return dados;
 	}
 
 }
