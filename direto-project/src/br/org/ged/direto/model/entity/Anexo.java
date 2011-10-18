@@ -48,6 +48,17 @@ public class Anexo {
 	@Transient
 	private String hash;
 	
+	@Transient
+	private String abreviatura = "";
+	
+	public String getAbreviatura() {
+		return abreviatura;
+	}
+
+	public void setAbreviatura(String abreviatura) {
+		this.abreviatura = abreviatura;
+	}
+
 	public int getIdAssinadoPor() {
 		return idAssinadoPor;
 	}

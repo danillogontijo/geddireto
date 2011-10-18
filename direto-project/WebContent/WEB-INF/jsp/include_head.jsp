@@ -8,6 +8,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title><spring:message code="title"/></title>
 
+<link rel="shortcut icon" href="<%=request.getContextPath() %>/favicon.ico" type="image/ico" />
+<link rel="icon" href="favicon.ico" type="image/ico" />
+
+
 <!-- Inicio Folha de Estilos -->
 <link href="css/estilos.css" rel="stylesheet" type="text/css" />
 <link href="css/modals.css" rel="stylesheet" type="text/css" />

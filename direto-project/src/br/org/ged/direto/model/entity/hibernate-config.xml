@@ -41,9 +41,9 @@
 				
 			
 				<prop key="hibernate.c3p0.min_size">1</prop>
-				<prop key="hibernate.c3p0.max_size">20</prop>
+				<prop key="hibernate.c3p0.max_size">10000</prop>
 				<prop key="hibernate.c3p0.timeout">30</prop>
-				<prop key="hibernate.c3p0.idle_test_period">100</prop>
+				<prop key="hibernate.c3p0.idle_test_period">10</prop>
 				
 			</props>
 		</property>

@@ -61,13 +61,14 @@ public class DocumentoController extends BaseController {
 		
 		Documento doc_conta = this.documentosService.selectById(pk);
 		try{
-		String encaminhadoPor = "";
-		if(doc_conta.getEncaminhadoPor() != 0 && doc_conta.getEncaminhadoPor() != null)
-			encaminhadoPor = doc_conta.getObservacao();
-		model.addAttribute("encaminhadoPor",encaminhadoPor);
+			String encaminhadoPor = "";
+			
+			if(doc_conta.getEncaminhadoPor() != 0 && doc_conta.getEncaminhadoPor() != null)
+				encaminhadoPor = doc_conta.getObservacao();
+			model.addAttribute("encaminhadoPor",encaminhadoPor);
 		}catch (Exception e) {
 			model.addAttribute("encaminhadoPor","");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		DocumentoDetalhes documentoDetalhes = doc_conta.getDocumentoDetalhes();
@@ -89,24 +90,30 @@ public class DocumentoController extends BaseController {
 		Anexo principal = null;
 		String sha1 = "";
 		
+		String nomeDocumentoPrincipal = "";
+		
 		for(Anexo anexo : listAnexos){
 			String[] nome = anexo.getAnexoCaminho().split("_");
 			String nomeCompleto = anexo.getAnexoNome();
-			if (nomeCompleto.length() > 60){
-				nomeCompleto = nomeCompleto.substring(0, 50)+"..."+nomeCompleto.substring(nomeCompleto.length()-10, nomeCompleto.length());
-				anexo.setAnexoNome(nomeCompleto);
-			}
+			if (nomeCompleto.length() > 37)
+				nomeCompleto = nomeCompleto.substring(0, 20)+"..."+nomeCompleto.substring(nomeCompleto.length()-17, nomeCompleto.length());
+			
+			anexo.setAbreviatura(nomeCompleto);
 			
 			if (nome[0].equals("1"))
 				principal = anexo;
 			
-			File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
-			try {
-				sha1 = segurancaService.sh1withRSA(file);
-				anexo.setHash(sha1);
-			}catch(Exception e){
-				anexo.setHash("Não foi possível ler o arquivo.");
-				e.printStackTrace();
+			if(anexo.getAssinado() == 0 || (anexo.getAssinado() == 0 && anexo.getAssinaturaHash()==null) ){
+				
+				File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
+				try {
+					sha1 = segurancaService.sh1withRSA(file);
+					anexo.setHash(sha1);
+				}catch(Exception e){
+					anexo.setHash("Não foi possível ler o arquivo.");
+					e.printStackTrace();
+				}
+				//anexo.setHash("Leitura de hash destivada.");
 			}
 
 		}
@@ -156,21 +163,27 @@ public class DocumentoController extends BaseController {
 		for(Anexo anexo : listAnexos){
 			String[] nome = anexo.getAnexoCaminho().split("_");
 			String nomeCompleto = anexo.getAnexoNome();
-			if (nomeCompleto.length() > 60){
-				nomeCompleto = nomeCompleto.substring(0, 50)+"..."+nomeCompleto.substring(nomeCompleto.length()-10, nomeCompleto.length());
-				anexo.setAnexoNome(nomeCompleto);
-			}
+			
+			if (nomeCompleto.length() > 37)
+				nomeCompleto = nomeCompleto.substring(0, 20)+"..."+nomeCompleto.substring(nomeCompleto.length()-17, nomeCompleto.length());
+			
+			anexo.setAbreviatura(nomeCompleto);
+			
 			
 			if (nome[0].equals("1"))
 				principal = anexo;
 			
-			File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
-			try {
-				sha1 = segurancaService.sh1withRSA(file);
-				anexo.setHash(sha1);
-			}catch(Exception e){
-				anexo.setHash("Não foi possível ler o arquivo.");
-				e.printStackTrace();
+			if(anexo.getAssinado() == 0){
+			
+				File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
+				try {
+					sha1 = segurancaService.sh1withRSA(file);
+					anexo.setHash(sha1);
+				}catch(Exception e){
+					anexo.setHash("Não foi possível ler o arquivo.");
+					e.printStackTrace();
+				}
+				//anexo.setHash("Leitura de hash destivada.");
 			}
 
 		}
