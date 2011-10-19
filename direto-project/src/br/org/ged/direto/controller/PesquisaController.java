@@ -214,7 +214,7 @@ public class PesquisaController extends BaseController {
 		if (searchTerm != "" || form.getIndividualSearch()!="")
 			totalAfterFilter = docs.size() > 0 ? docs.get(0).getTotal() : 0;
 		
-		for( int i=0; i<docs.size(); i++ ){
+		/*for( int i=0; i<docs.size(); i++ ){
 			DocumentoCompleto dc = docs.remove(i);
 			
 			JSONArray ja = new JSONArray();
@@ -225,11 +225,9 @@ public class PesquisaController extends BaseController {
 			ja.put(dc.getDocumentoDetalhes().getAssunto());
 			ja.put(DataTimeUtil.getBrazilFormatDataHora(dc.getDocumentoDetalhes().getDataEntSistema()));
 			array.put(ja);
-		}
+		}*/
 		
-		docs = null;
-		
-		/*Iterator<DocumentoCompleto> ite = docs.iterator();
+		Iterator<DocumentoCompleto> ite = docs.iterator();
 		
 		while (ite.hasNext()) {
 			DocumentoCompleto dc = ite.next();
@@ -242,7 +240,9 @@ public class PesquisaController extends BaseController {
 			ja.put(dc.getDocumentoDetalhes().getAssunto());
 			ja.put(DataTimeUtil.getBrazilFormatDataHora(dc.getDocumentoDetalhes().getDataEntSistema()));
 			array.put(ja);
-		}*/
+		}
+		
+		docs = null;
 		
 		response.setHeader("Content-Type", "application/json; charset=ISO-8859-1");
 			

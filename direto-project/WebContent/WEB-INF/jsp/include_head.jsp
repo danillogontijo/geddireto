@@ -153,7 +153,7 @@ var Notifications = {
 
 var $j = jQuery.noConflict();
 var DESTINATARIOS = new Array();
-var PAGE = '';
+var PAGE = '${pageName}';
 
 function init(page){
 	PAGE = page;
@@ -207,8 +207,8 @@ jQuery(document).ready(function($) {
 	var alertaInicial = "Devido a grande quantidade de solicitações/dúvidas "+
 	"com relação a nova versão do GED, solicito-vos que utilizem APENAS "+ 
 	"o link SUGESTÕES localizado "+
-	"na parte superior ao lado de SAIR com todas as informações da carteira (OM, seção, grupos o qual faz parte e abreviatura "+
-	"de como queira que apareça aos outro usuário. Não se esquecendo também de "+
+	"na parte superior ao lado de SAIR, com todas as informações da carteira, tais como: OM, seção, grupos o qual faz parte e abreviatura "+
+	"de como queira que apareça aos outros usuários. Não se esquecendo também de "+
 	"nos informar o nr ramal para que possamos, posteriormente, entrarmos em contato.<br>Att. Eqp Des Seç Infor.";
 	
 	alertMessage('ATENÇÃO',alertaInicial,false);
@@ -218,7 +218,7 @@ jQuery(document).ready(function($) {
 	%>
 	
 	ChatDiretoAPI = new ChatDiretoAPI('${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}',${usuario.idUsuario});
-	//ChatDiretoAPI.start(null);
+	ChatDiretoAPI.start(null);
 	
 	$( "#data" ).datepicker();
 	$( "#data" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
@@ -762,7 +762,7 @@ position: relative;
 				 
 				Notifications.checkForPermission();
 				 
-				$j('#chat').hide();
+				//$j('#chat').hide();
 				
 				  $j('#stayOn').click(function(e) {
 						e.preventDefault();

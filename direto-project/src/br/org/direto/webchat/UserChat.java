@@ -12,7 +12,7 @@ public class UserChat implements Serializable{
 	private int idUser;
 	private String nameUser;
 	private List<Message> messages;
-	private int statusUser = 1;
+	private int statusUser = 1; //1=online, 0=offline, 2=inativo
 	
 	public int getStatusUser() {
 		return statusUser;
