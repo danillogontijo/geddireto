@@ -63,7 +63,16 @@ js.direto.atualiza = function(page){
 		
 		dialogMessage('Documento encaminhado','Documento encaminhado com sucesso!',false);
 		
-		setTimeout("document.location.reload(true)",1000);
+		//setTimeout("document.location.reload(true)",1000);
+		
+		if(page=="documento"){
+			setTimeout(function(){
+				document.location = 'principal.html?box=1&pr=0&filtro=todas';
+			},1000);
+	 	}else{
+	 		setTimeout("document.location.reload(true)",1000);
+	 	}
+		
  		
  	}else{
  		$j('#destinatarios').val(list);

@@ -165,7 +165,7 @@ function ChatDiretoAPI (userName, userID) {
 			startTimer();
 		}*/
 		
-		var logoff = ' (<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)';
+		var logoff = ' <span style="display:none;">(<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)</span>';
 		var status = 'Você está <span>'+(USER_IS_ACTIVE ? 'ON' : 'INATIVO')
 						+'</span>'+logoff;
 		$j('#div_status').html(status);
@@ -372,7 +372,8 @@ function ChatDiretoAPI (userName, userID) {
 					iteratorMessages(listMsgCallback,false);			
 					setTimeout(function(){checkNewMessage();},300);
 				}else{
-					alert("\t\tVocê ficou offline!\nAs mensagens que os usuários lhe enviarem\nserão mostradas da próxima vez que entrar.");
+					//alert("\t\tVocê ficou offline!\nAs mensagens que os usuários lhe enviarem\nserão mostradas da próxima vez que entrar.");
+					setTimeout(function(){checkNewMessage();},300);
 				}	
 			}
 		});	

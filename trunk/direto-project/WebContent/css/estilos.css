@@ -225,8 +225,8 @@ input.field_inputs_active:active { background-color:red; }
 }
 
 #console_chat {
-	min-height: 180px; 
-	max-height: 180px;
+	min-height: 220px; 
+	max-height: 220px;
 	max-width: 146px;
 	overflow: auto;  
 	top: 2px;
