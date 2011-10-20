@@ -72,7 +72,7 @@ public class PesquisaController extends BaseController {
 		
 		
 		
-		boolean bServerSide = (total > 2000 ? true : false);
+		boolean bServerSide = (total > 4000 ? true : false);
 		model.addAttribute("bServerSide",bServerSide);
 		model.addAttribute("total",total);
 		
