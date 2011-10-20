@@ -45,6 +45,9 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 		
 		String textoOrdenacao = "";
 		
+		if(!box.equals("1"))
+			ordenacao = 1;
+		
 		if (ordenacao == 0){
 			textoOrdenacao = " prioridade DESC,dataHora ASC ";
 		}else{
