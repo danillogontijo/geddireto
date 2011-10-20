@@ -155,21 +155,24 @@ function ChatDiretoAPI (userName, userID) {
 		
 		(status == 2 ? clearTimer(false,false) : startTimer(false,true));
 			
+		var logoff = ' <span style="display:none;">(<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)</span>';
+		var statusText = 'Você está <span>'+(USER_IS_ACTIVE ? 'ON' : 'INATIVO')
+						+'</span>'+logoff;
+		$j('#div_status').html(statusText);
+		$j('#div_status').find('span').addClass((USER_IS_ACTIVE ? 'online' : 'inactive'));
+		
 		//função para colocar o usuario offline após o dobro de tempo de inatividade
-		/*if(status == 2){
-			startTimer();
-			USER_IS_ACTIVE = false;
+		if(status == 2){
 			STATUS = 0;
+			startTimer();
+			TIME_TO_INACTIVE = 30;
 		}else if(status == 1) {
 			STATUS = 2;
 			startTimer();
-		}*/
-		
-		var logoff = ' <span style="display:none;">(<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)</span>';
-		var status = 'Você está <span>'+(USER_IS_ACTIVE ? 'ON' : 'INATIVO')
-						+'</span>'+logoff;
-		$j('#div_status').html(status);
-		$j('#div_status').find('span').addClass((USER_IS_ACTIVE ? 'online' : 'inactive'));
+		}else if(status == 0){
+			STATUS = 2;
+			clearTimer(false,false);
+		}
 		
 		
 	};
@@ -320,6 +323,8 @@ function ChatDiretoAPI (userName, userID) {
 			
 			if (fromIdUser == ID_USER)
 				from = 'Eu para ('+to+')';
+			else
+				from = '<a href="#seluser" onclick="ChatDiretoAPI.seluser(event,'+fromIdUser+')">'+from+'</a>';
 				
 			if (isOffline){
 				from += ' disse: (Offline)';
@@ -456,6 +461,18 @@ function ChatDiretoAPI (userName, userID) {
 	this.mudaTo = function (obj){
 		PARA = $j(obj).val();
 	};
+	
+	this.seluser = function(e,idUser){
+		e.preventDefault();
+		PARA = idUser;
+		$j('#usuariosON option').each(function(){
+			
+			if($j(this).val() == idUser)
+				$j(this).attr('selected','selected');
+			
+		});
+		
+	}
 	
 	this.checkToUser = function (){
 		if (PARA != 0){

@@ -719,6 +719,14 @@ position: relative;
 					  <c:param name="pr" value="0" />
 					  <c:param name="filtro" value="todas" />
 					  <c:param name="idCarteira" value="${contaAtual}" />
+					  <c:choose>
+					      <c:when test="${p.idPasta == 1}">
+					     	<c:param name="ordenacao" value="0" /> 
+					      </c:when>
+					      <c:otherwise>
+					      	<c:param name="ordenacao" value="1" />
+					      </c:otherwise>
+				    </c:choose>
 				</c:url>
 	      		<div id="divMenuLateral" style="left: 5px; position: relative;">
 					<a href="<c:out value="${pastaURL}" />" class="<c:out value="${divStyle}"/><c:if test="${box == p.idPasta}">Sel</c:if>">
