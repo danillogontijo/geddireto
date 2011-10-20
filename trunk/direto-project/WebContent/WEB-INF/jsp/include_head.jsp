@@ -769,7 +769,7 @@ position: relative;
 						ChatDiretoAPI.start(e);
 				  });
 				  
-				  //setTimeout(function(){ChatDiretoAPI.changeStatusInChat(null,1);},2900);
+				  setTimeout(function(){ChatDiretoAPI.changeStatusInChat(null,1);},2900);
 					
 				 
 					$j('#topo div[name=minimize]').toggle(function(){
