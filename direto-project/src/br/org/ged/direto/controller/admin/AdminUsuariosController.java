@@ -69,7 +69,7 @@ public class AdminUsuariosController {
 			
 			obj.put("idConta", conta.getIdConta());
 			obj.put("idCarteira", conta.getCarteira().getIdCarteira());
-			obj.put("cartAbr",conta.getCarteira().getCartAbr());
+			obj.put("cartAbr",conta.getCarteira().getCartAbr()+"["+conta.getCarteira().getOm().getOmAbr()+"]");
 			obj.put("isPrincipal", conta.isPrincipal());
 			
 			/*obj.append("idConta", conta.getIdConta());
