@@ -4,8 +4,8 @@
 
 
 
-<c:set var="p" value="file:\\\\\\\\10.133.108.108\\\\temp\\\\${path}"></c:set>
-<c:set var="pFirefox" value="file://///10.133.108.108/temp/${path}"></c:set>
+<c:set var="p" value="file:\\\\\\\\10.133.108.133\\\\temp\\\\${path}"></c:set>
+<c:set var="pFirefox" value="file://///10.133.108.133/temp/${path}"></c:set>
 <c:set var="pFirefoxLinux" value="file:///home/direto/${path}"></c:set>
 
 
