@@ -107,7 +107,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 			try {
 				synchronized (this.user) {
 					
-					this.user.wait(20000);
+					this.user.wait(10000);
 				}
 			} catch (InterruptedException e) {
 				System.out.println("Deu pau!");
@@ -139,7 +139,7 @@ public class ChatServiceImpl implements ChatService, Serializable{
 	public List<UserChat> checkUsers(){
 			try {
 				synchronized (users) {
-					users.wait(20000);
+					users.wait(10000);
 				}
 			} catch (InterruptedException e) {
 				System.out.println("Check Users deu pau!");
