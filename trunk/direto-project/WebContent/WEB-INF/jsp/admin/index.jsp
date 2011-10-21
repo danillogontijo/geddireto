@@ -416,30 +416,33 @@ $j(function() {
 				var count = 0;
 				
 				$j('#contas_atuais').find('input:checkbox').each(function(i){
-					
+
 					var pkConta = parseInt($j(this).val());
 					
-					if ( (i == 0) && ($j(this).attr('checked') == '') ){
-						var idCarteira = parseInt($j('#novas_contas').find('input:checkbox').first().val());
-						if (isNaN(idCarteira)){
+					if(i != 0){ //A conta principal deve ser gerenciada a parte, pois nao pode existir dois usuarios com a mesma conta principal
+						if ( (i == 0) && ($j(this).attr('checked') == '') ){
+							var idCarteira = parseInt($j('#novas_contas').find('input:checkbox').first().val());
+							if (isNaN(idCarteira)){
+								contasJS.deleteAccount(pkConta);
+							}else{
+								contasJS.updateAccount(pkConta, idCarteira, true);
+							}
+						}else if ($j(this).attr('checked') == ''){
 							contasJS.deleteAccount(pkConta);
-						}else{
-							contasJS.updateAccount(pkConta, idCarteira, true);
 						}
-							
 						
+						count++;
 					}else if ($j(this).attr('checked') == ''){
-						contasJS.deleteAccount(pkConta);
-					}
-
-					count++;
+						//contasJS.deleteAccount(pkConta);
+					}					
 				});
 
 				$j('#novas_contas').find('input:checkbox').each(function(i){
+					
 					var idCarteira = parseInt($j(this).val());
 					var isPrincipal = $j(this).attr('principal');
 					
-					if ( (count == 0) && (isPrincipal == 'true') ){
+					if ( (isPrincipal == 'true') ){
 						contasJS.add(idUsuario, 1, idCarteira,1);
 					}else if (isPrincipal != 'true'){
 						contasJS.add(idUsuario, 1, idCarteira,0);
