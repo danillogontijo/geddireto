@@ -797,9 +797,16 @@ position: relative;
 							},
 
 							function(){
-									$j('#new').show();
-									$j('#search').remove();
-									ChatDiretoAPI.activeTimer();
+									if($j('#search').val() != null){
+										$j('#new').show();
+										$j('#search').remove();
+										ChatDiretoAPI.activeTimer();
+										document.getElementById("new").focus();
+									}else{
+										$j('#search').remove();
+										ChatDiretoAPI.searchUser();
+										$j('#search').focus(function(){$j(this).val('');$j(this).css('font-style', 'normal');});
+									}
 							}
 					);
 

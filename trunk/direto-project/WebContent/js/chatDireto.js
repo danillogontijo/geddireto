@@ -27,24 +27,34 @@ function ChatDiretoAPI (userName, userID) {
 		doTimer();
 	};
 	
-	this.search = function(){
+	this.search = function(e){
+		
+		var evento = (window.event ? e.keyCode : e.which);
+
+		if(evento == 13) {
+			PARA = $j('#usuariosON option:selected').val();
+			$j('#new').show();
+			$j('#search').remove();
+			this.activeTimer;
+			document.getElementById("new").focus();
+			return true;
+		}
 		
 		chatJS.getAllUsersOn({
 			callback:function(allUsers) {
 				montaListaUsuarios(allUsers);
 				
+				/*
+				 * Inicio da função que exclui os usuarios não filtrados
+				 */
 				var search = $j('#search').val();
 				search = search.replace(/^\s+/,'').replace(/\s+$/,''); // trim 
 				var newList = new Array();
 				
 				$j('#usuariosON option').each(function(i){
 					
-					
-					
 					var id = $j(this).val();
 					var name = ($j(this).text()).toLowerCase();
-					
-					
 					
 					if (name.indexOf(' - inativo') != -1){
 						name = name.replace(' - inativo','');
@@ -61,6 +71,8 @@ function ChatDiretoAPI (userName, userID) {
 					}
 					
 				});
+				
+				
 			}
 		});
 		
@@ -69,7 +81,7 @@ function ChatDiretoAPI (userName, userID) {
 	this.searchUser = function(){
 		clearTimer(USER_IS_TYPING,USER_IS_ACTIVE);
 		$j('#new').hide();
-		$j('#div_new').append('<input type="text" id="search" value="Pesquisar" onkeypress="ChatDiretoAPI.search()" />');
+		$j('#div_new').append('<input type="text" id="search" value="Pesquisar" onkeypress="ChatDiretoAPI.search(event)" />');
 		$j('#search').live('focus',function(){$j(this).val('');$j(this).css('font-style', 'normal');});
 		$j('#search').blur(function(){
 			PARA = $j('#usuariosON option:selected').val();
@@ -116,10 +128,12 @@ function ChatDiretoAPI (userName, userID) {
 			showInactive();
 			setTimeout(function(){messagesSession();},2800);
 		}else if (status == 1){
-			setTimeout(function(){checkNewMessage();},2900); //Ativa checador de msgs somente se o user != 0
+			//setTimeout(function(){checkNewMessage();},2900); //Ativa checador de msgs somente se o user != 0
+																//desativado porque como o usu deve estar sempre on, estava chamando a funcao 2x
 			startTimer(); // So inicia o timer se user == 1
 		}else{
-			setTimeout(function(){checkNewMessage();},2900); //Ativa checador de msgs somente se o user != 0
+			//setTimeout(function(){checkNewMessage();},2900); //Ativa checador de msgs somente se o user != 0
+															//desativado porque como o usu deve estar sempre on, estava chamando a funcao 2x
 		}
 	};
 	
@@ -155,7 +169,7 @@ function ChatDiretoAPI (userName, userID) {
 		
 		(status == 2 ? clearTimer(false,false) : startTimer(false,true));
 			
-		var logoff = ' <span style="display:none;">(<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)</span>';
+		var logoff = ' <span style="display:block;">(<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)</span>';
 		var statusText = 'Você está <span>'+(USER_IS_ACTIVE ? 'ON' : 'INATIVO')
 						+'</span>'+logoff;
 		$j('#div_status').html(statusText);
@@ -163,11 +177,11 @@ function ChatDiretoAPI (userName, userID) {
 		
 		//função para colocar o usuario offline após o dobro de tempo de inatividade
 		if(status == 2){
-			STATUS = 0;
+			STATUS = 0; //usuario encontra-se inativo, proxima mudança de estado eh para offline
 			startTimer();
-			TIME_TO_INACTIVE = 30;
+			TIME_TO_INACTIVE = 30; //tempo para ficar offline
 		}else if(status == 1) {
-			STATUS = 2;
+			STATUS = 2; //usuario encontra-se online, proxima mudança de estado eh para inativa
 			startTimer();
 		}else if(status == 0){
 			STATUS = 2;
@@ -214,7 +228,7 @@ function ChatDiretoAPI (userName, userID) {
 	};
 	
 	var showOnline = function (){
-		$j('#console_chat').show('blind',500);
+		//$j('#console_chat').show('blind',500);
 		$j('#console_chat').css('background-color', '#fff');
 		$j('#div_usuarios').fadeIn('slow');
 		$j('#div_new').fadeIn('slow');
@@ -278,7 +292,7 @@ function ChatDiretoAPI (userName, userID) {
 				//dwr.util.addOptions('usuariosON', allUsers, 'idUser', 'nameUser');
 				if (allUsers != null){
 					montaListaUsuarios(allUsers);
-					setTimeout(function(){checkUsers();},300);
+					setTimeout(function(){checkUsers();},25000);
 				}else{
 					sessionExpired();	
 				}	
@@ -323,8 +337,6 @@ function ChatDiretoAPI (userName, userID) {
 			
 			if (fromIdUser == ID_USER)
 				from = 'Eu para ('+to+')';
-			else
-				from = '<a href="#seluser" onclick="ChatDiretoAPI.seluser(event,'+fromIdUser+')">'+from+'</a>';
 				
 			if (isOffline){
 				from += ' disse: (Offline)';
@@ -335,7 +347,7 @@ function ChatDiretoAPI (userName, userID) {
 			}
 			
 			var msgHTML = '<p id="'+SIZE_MESSAGES+'" class="'+pClass+'">'
-					+from+'<br>'+msgRec+'</p>';
+					+'<a href="#seluser" onclick="ChatDiretoAPI.seluser(event,'+fromIdUser+')">'+from+'</a>'+'<br>'+msgRec+'</p>';
 			
 			showMessage(msgHTML);
 			
@@ -446,7 +458,7 @@ function ChatDiretoAPI (userName, userID) {
 	};
 	
 	this.teclaEnter = function (e){
-		if(!USER_IS_ACTIVE)
+		if(!USER_IS_ACTIVE || STATUS==0)
 			changeStatus(1);
 		
 		isTyping(true);
@@ -497,7 +509,9 @@ dwr.engine.setErrorHandler(errh);
 //dwr.engine.setWarningHandler(null);
 
 function errh(msg, exc) {
-	 alert("O erro é: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));
+	 //alert("O erro é: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));
+	//alert('Sua session expirou ou você se conectou a partir de outro local');
+	alertMessage('Você desconectou!','Sua session expirou ou você se conectou a partir de outro local.',false);
 	
 	/*
 	 * Tratamento de execção quando DWR request é enviado deopois que deu timeout na sessao
