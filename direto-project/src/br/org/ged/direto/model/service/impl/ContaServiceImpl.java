@@ -2,6 +2,7 @@ package br.org.ged.direto.model.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
@@ -66,22 +67,53 @@ public class ContaServiceImpl implements ContaService {
 			Conta conta = new Conta();
 			Usuario usuario = usuarioService.selectById(idUsuario);
 			Carteira carteira = carteiraService.selectById(idCarteira);
-			conta.setAtivado(ativado);
-			conta.setCarteira(carteira);
-			conta.setContaPrincipal(contaPrincipal);
-			conta.setDataContaRec(new Date());
-			conta.setDataContaTransf(new Date());
-			conta.setUsuario(usuario);
+			 
+			boolean contaDuplicada = false;
+			Conta principal = null;
+			//Verifica se conta que está add eh principal, verifica se ja existe
+			//um usuario com essa conta, apagando-a para este usuario
+			if(contaPrincipal == 1){
+				
+				//apaga conta principal existente para cadastro de uma nova
+				for (Conta c : usuario.getContas() )
+					if( c.isPrincipal() )
+						principal = c;
+				
+				Set<Conta> contasDaCarteira = carteira.getContas();
+				for(Conta c : contasDaCarteira){
+					//System.out.println(c.getCarteira().getCartAbr()+"-"+c.getUsuario().getUsuLogin()+"-"+c.isPrincipal());
+					if(c.isPrincipal() && !contaDuplicada){
+						principal.setIdUsuarioProprietario(usuario.getIdUsuario());
+						principal.setUsuario(usuario);
+						principal.setDataContaRec(new Date());
+						principal.setDataContaTransf(new Date());
+						contaDuplicada = true;
+						deleteAccount(c.getIdConta());
+					}else if (c.isPrincipal()){
+						deleteAccount(c.getIdConta());
+					}
+				}
+			}
 			
-			boolean alreadyExists = checkIfExistsAccount(idUsuario,idCarteira);
+			if (!contaDuplicada && principal==null){
+				conta.setAtivado(ativado);
+				conta.setCarteira(carteira);
+				conta.setContaPrincipal(contaPrincipal);
+				conta.setDataContaRec(new Date());
+				conta.setDataContaTransf(new Date());
+				conta.setUsuario(usuario);
+				
+				boolean alreadyExists = checkIfExistsAccount(idUsuario,idCarteira);
+				
+				if (!alreadyExists)
+					contaRepository.saveOrUpdate(conta);
+			}
 			
-			if (!alreadyExists)
-				contaRepository.saveOrUpdate(conta);
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	@Override
 	@RemoteMethod
 	@Transactional(propagation=Propagation.REQUIRED,readOnly = false)
