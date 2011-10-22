@@ -1,5 +1,6 @@
 package br.org.ged.direto.model.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -59,6 +60,7 @@ public class ContaServiceImpl implements ContaService {
 
 	@Override
 	@RemoteMethod
+	@Transactional(readOnly = false)
 	public void add(int idUsuario, int ativado, int idCarteira,
 			int contaPrincipal) {
 		
@@ -68,34 +70,36 @@ public class ContaServiceImpl implements ContaService {
 			Usuario usuario = usuarioService.selectById(idUsuario);
 			Carteira carteira = carteiraService.selectById(idCarteira);
 			 
-			boolean contaDuplicada = false;
-			Conta principal = null;
 			//Verifica se conta que está add eh principal, verifica se ja existe
 			//um usuario com essa conta, apagando-a para este usuario
 			if(contaPrincipal == 1){
 				
-				//apaga conta principal existente para cadastro de uma nova
+				contaRepository.deleteAllPrincipalAccounts(idCarteira);
+				
+				Conta principal = null;
+				
+				//Busca pela conta principal do usuario
 				for (Conta c : usuario.getContas() )
 					if( c.isPrincipal() )
 						principal = c;
 				
-				Set<Conta> contasDaCarteira = carteira.getContas();
-				for(Conta c : contasDaCarteira){
-					//System.out.println(c.getCarteira().getCartAbr()+"-"+c.getUsuario().getUsuLogin()+"-"+c.isPrincipal());
-					if(c.isPrincipal() && !contaDuplicada){
-						principal.setIdUsuarioProprietario(usuario.getIdUsuario());
-						principal.setUsuario(usuario);
-						principal.setDataContaRec(new Date());
-						principal.setDataContaTransf(new Date());
-						contaDuplicada = true;
-						deleteAccount(c.getIdConta());
-					}else if (c.isPrincipal()){
-						deleteAccount(c.getIdConta());
-					}
+				if (principal==null){ //Cadastro de conta principal caso ainda nao exista
+					conta.setAtivado(ativado);
+					conta.setCarteira(carteira);
+					conta.setContaPrincipal(contaPrincipal);
+					conta.setDataContaRec(new Date());
+					conta.setDataContaTransf(new Date());
+					conta.setUsuario(usuario);
+					contaRepository.saveOrUpdate(conta);
+				}else{ //Update da conta principal
+					principal.setIdUsuarioProprietario(usuario.getIdUsuario());
+					principal.setUsuario(usuario);
+					principal.setDataContaRec(new Date());
+					principal.setDataContaTransf(new Date());
+					principal.setCarteira(carteira);
 				}
-			}
-			
-			if (!contaDuplicada && principal==null){
+				
+			}else{ //Cadastro de contas secundarias
 				conta.setAtivado(ativado);
 				conta.setCarteira(carteira);
 				conta.setContaPrincipal(contaPrincipal);
