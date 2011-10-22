@@ -29,7 +29,13 @@ public class ContaRepositoryImpl extends BaseRepositoryImpl implements ContaRepo
 
 	@Override
 	public void deleteAccount(int idConta) {
-		hibernateTemplate.delete(getAccount(idConta));
+		Conta conta = hibernateTemplate.load(Conta.class, idConta);
+		hibernateTemplate.delete(conta);
+	}
+	
+	@Override
+	public void deleteAllPrincipalAccounts(int idCarteira) {
+		getSession().createSQLQuery("DELETE FROM usuomsec WHERE idCarteira="+idCarteira+" and contaPrincipal=1").executeUpdate();  
 	}
 
 	@Override

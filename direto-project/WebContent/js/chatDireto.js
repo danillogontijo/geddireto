@@ -179,12 +179,12 @@ function ChatDiretoAPI (userName, userID) {
 		if(status == 2){
 			STATUS = 0; //usuario encontra-se inativo, proxima mudança de estado eh para offline
 			startTimer();
-			TIME_TO_INACTIVE = 30; //tempo para ficar offline
+			TIME_TO_INACTIVE = 25; //tempo para ficar offline
 		}else if(status == 1) {
 			STATUS = 2; //usuario encontra-se online, proxima mudança de estado eh para inativa
 			startTimer();
 		}else if(status == 0){
-			STATUS = 2;
+			STATUS = 1;
 			clearTimer(false,false);
 		}
 		
@@ -334,20 +334,23 @@ function ChatDiretoAPI (userName, userID) {
 			var from = newMsgCallback.from.nameUser;
 			var to = newMsgCallback.to.nameUser;
 			var fromIdUser = newMsgCallback.from.idUser;
+			var idUserFastSel = fromIdUser;
 			
-			if (fromIdUser == ID_USER)
+			if (fromIdUser == ID_USER){
 				from = 'Eu para ('+to+')';
+				idUserFastSel = newMsgCallback.to.idUser;
+			}	
 				
 			if (isOffline){
 				from += ' disse: (Offline)';
 			}else if (isSession){
-				from += ' disse:';	
+				from += ' disse:';
 			}else{
 				from += ' diz:';
 			}
 			
 			var msgHTML = '<p id="'+SIZE_MESSAGES+'" class="'+pClass+'">'
-					+'<a href="#seluser" onclick="ChatDiretoAPI.seluser(event,'+fromIdUser+')">'+from+'</a>'+'<br>'+msgRec+'</p>';
+					+'<a href="#seluser" onclick="ChatDiretoAPI.seluser(event,'+idUserFastSel+')">'+from+'</a>'+'<br>'+msgRec+'</p>';
 			
 			showMessage(msgHTML);
 			

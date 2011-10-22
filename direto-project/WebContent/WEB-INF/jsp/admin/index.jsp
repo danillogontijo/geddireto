@@ -420,21 +420,11 @@ $j(function() {
 					var pkConta = parseInt($j(this).val());
 					
 					if(i != 0){ //A conta principal deve ser gerenciada a parte, pois nao pode existir dois usuarios com a mesma conta principal
-						if ( (i == 0) && ($j(this).attr('checked') == '') ){
-							var idCarteira = parseInt($j('#novas_contas').find('input:checkbox').first().val());
-							if (isNaN(idCarteira)){
+						if ( ($j(this).attr('checked') == '') ){
 								contasJS.deleteAccount(pkConta);
-							}else{
-								contasJS.updateAccount(pkConta, idCarteira, true);
-							}
-						}else if ($j(this).attr('checked') == ''){
-							contasJS.deleteAccount(pkConta);
+								//	contasJS.updateAccount(pkConta, idCarteira, true);
 						}
-						
-						count++;
-					}else if ($j(this).attr('checked') == ''){
-						//contasJS.deleteAccount(pkConta);
-					}					
+					}				
 				});
 
 				$j('#novas_contas').find('input:checkbox').each(function(i){

@@ -14,5 +14,6 @@ public interface ContaRepository {
 	public Conta getAccount(int idConta);
 	public Conta getAccount(int idUsuario, int idCarteira);
 	public List<Conta> getContasPrincipais(int idUsuarioProprietario);
+	public void deleteAllPrincipalAccounts(int idCarteira);
 
 }
