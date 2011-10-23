@@ -90,8 +90,6 @@ public class DocumentoController extends BaseController {
 		Anexo principal = null;
 		String sha1 = "";
 		
-		String nomeDocumentoPrincipal = "";
-		
 		for(Anexo anexo : listAnexos){
 			String[] nome = anexo.getAnexoCaminho().split("_");
 			String nomeCompleto = anexo.getAnexoNome();
@@ -103,7 +101,7 @@ public class DocumentoController extends BaseController {
 			if (nome[0].equals("1"))
 				principal = anexo;
 			
-			if(anexo.getAssinado() == 0 || (anexo.getAssinado() == 0 && anexo.getAssinaturaHash()==null) ){
+			if(anexo.getAssinado() == 0 || (anexo.getAssinaturaHash()==null || anexo.getAssinaturaHash() == "" ) ){
 				
 				File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
 				try {
