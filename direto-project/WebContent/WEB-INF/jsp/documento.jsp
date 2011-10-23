@@ -858,10 +858,10 @@ height: 15px;
 					    <c:if test="${conta.carteira.idCarteira != 1}">			    			
 					    	<c:choose> 
 			  					<c:when test="${doc_cart.status == '0'}" > 
-			  						<span style="background-color: #fff;"><font color="black" style="font-size: 9px;" title="${conta.carteira.cartAbr}"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font></span> 
+			  						<span style="background-color: #fff;"><font color="black" style="font-size: 9px;" title="${conta.carteira.cartAbr}<c:if test="${conta.contaPrincipal == 0}"> [Resp]</c:if>"><b>${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</b></font></span> 
 			  					</c:when> 
 			  					<c:otherwise> 
-			  						<span style="background-color: #fff;"><font title="${conta.carteira.cartAbr}" color="blue" style="font-size: 9px;">${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</font></span> 
+			  						<span style="background-color: #fff;"><font title="${conta.carteira.cartAbr}<c:if test="${conta.contaPrincipal == 0}"> [Resp]</c:if>" color="blue" style="font-size: 9px;">${conta.usuario.pstGrad.pstgradNome} ${conta.usuario.usuNGuerra};</font></span> 
 			  					</c:otherwise> 
 							</c:choose>
 						</c:if>	
