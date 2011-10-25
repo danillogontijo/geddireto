@@ -515,7 +515,7 @@ function errh(msg, exc) {
 	 //alert("O erro é: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));
 	//alert('Sua session expirou ou você se conectou a partir de outro local');
 	alertMessage('Você desconectou!','Sua sessão expirou ou você se conectou a partir de outro local.',false);
-	
+	 
 	/*
 	 * Tratamento de execção quando DWR request é enviado deopois que deu timeout na sessao
 	 */
