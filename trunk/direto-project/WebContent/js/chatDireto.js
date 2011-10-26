@@ -235,6 +235,7 @@ function ChatDiretoAPI (userName, userID) {
 	
 	var showOnline = function (){
 		//$j('#console_chat').show('blind',500);
+		$j('#console_chat').show();
 		$j('#console_chat').css('background-color', '#fff');
 		$j('#div_usuarios').fadeIn('slow');
 		$j('#div_new').fadeIn('slow');
@@ -358,7 +359,7 @@ function ChatDiretoAPI (userName, userID) {
 			var isCallAttention = false;
 			
 			if(msgRec.indexOf('GED0001') != -1){
-				msgRec = msgRec.replace('GED0001','Chamou sua atenção!');
+				msgRec = msgRec.replace('GED0001','Solicitou que visualize o chat!');
 				if(!isSession)
 					isCallAttention = true;
 			}
