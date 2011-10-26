@@ -16,7 +16,7 @@
 }*/
 
 var users = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="conta" items="${doc_cart.carteira.contas}">"[${conta.usuario.idUsuario}_${conta.carteira.idCarteira}@${conta.usuario.pstGrad.pstgradNome}-${conta.usuario.usuNGuerra}-(${conta.carteira.cartAbr})]",</c:forEach></c:forEach>"[0@GED]"];
-    		
+
     		function initURLTextarea(){
     			$j("#texto_acao").autocomplete({
     						wordCount:1,
@@ -39,6 +39,27 @@ var users = [<c:forEach var="doc_cart" items="${allDocuments}"><c:forEach var="c
 		    								for( var i=0; i<users.length-1; i++ ){
 		    									if( users[i].toLowerCase().indexOf(text.toLowerCase()) != -1 ) words.push(users[i].replace(/\s/g, "-")+" ");
 		    									
+		    								}
+		    								cb(words);
+										}		
+    							}
+							}
+				});
+			}
+
+			function initDespachoRapido(){
+				$j("#despacho_rapido").autocomplete({
+    						wordCount:1,
+    						mode: "outter",
+    						on: {
+    							query: function(text,cb){
+    									var auto = true;
+										if(text.charCodeAt(0) < 64 || text.charCodeAt(0) > 96)
+											auto = false;
+										if(auto){
+											var words = [];
+		    								for( var i=0; i<users.length; i++ ){
+		    									if( users[i].toLowerCase().indexOf(text.toLowerCase()) != -1 ) words.push(users[i].replace(/\s/g, "-")+" ");
 		    								}
 		    								cb(words);
 										}		
@@ -188,7 +209,7 @@ white-space: pre-wrap;
 							
 							<div id="textArea" style="position:relative;">
 								<div style="width: 352px; vertical-align: baseline; display: block;">
-									<textarea onkeypress="return js.direto.charProibido(event)" id="texto_acao"></textarea>
+									<textarea name="texto_acao" onkeypress="return js.direto.charProibido(event)" id="texto_acao"></textarea>
 								</div>
 							</div>
 						</div>

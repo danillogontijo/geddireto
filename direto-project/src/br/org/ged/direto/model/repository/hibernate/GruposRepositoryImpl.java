@@ -66,7 +66,7 @@ public class GruposRepositoryImpl extends BaseRepositoryImpl implements GruposRe
 		query.setInteger(0, idNomeGrupo);
 		
 		List results = query.list();
-		System.out.println("RESULTS"+results.size());
+		//System.out.println("RESULTS"+results.size());
 		
 		List<DataUtils> usersDwr = new LinkedList<DataUtils>();
 		
@@ -85,6 +85,7 @@ public class GruposRepositoryImpl extends BaseRepositoryImpl implements GruposRe
 			}
 			
 			data.setTitulo(conta.getCarteira().getCartDesc());
+			data.setIdUsuario(conta.getUsuario().getIdUsuario());
 			
 			usersDwr.add(data);
 		}

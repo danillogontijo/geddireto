@@ -5,7 +5,14 @@ public class DataUtils {
 	private String id = "";
 	private String texto;
 	private String titulo;
+	private int idUsuario = 0;
 	
+	public int getIdUsuario() {
+		return idUsuario;
+	}
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
+	}
 	public String getId() {
 		return id;
 	}

@@ -35,7 +35,21 @@ var BACK = false; //Variavel para checar se esta tudo ok com a edicao.
  **** Eventos MouseOver de atualização histórico,anotaçoes e despachos **** 
  */
 $j(function(){
+	
+	var despacho_rapido = '<tr>'+
+				'<td>'+
+					'<div id="textArea" style="position:relative; margin-top:-13px;">Despachar'+
+						'<div style="width: 100%; vertical-align: baseline; display: block;">'+
+							'<textarea style="width: 755px; border: 1px solid #000;" onkeypress="return js.direto.charProibido(event)" id="despacho_rapido" maxlength="500"></textarea>'+
+						'</div>'+
+					'</div>'+
+				'</td>'+
+			'</tr>';
+
+	$j("#wgrupos_corpo").append(despacho_rapido);
+	
 	initURLTextarea();
+	initDespachoRapido();
 	
 	$j('#texto_acao').elastic();
 	//$j('#tar').trigger('update');
@@ -46,7 +60,7 @@ $j(function(){
 		var hiText = v.replace(/\[/g,"<b>[").replace(/]/g,"]</b>");
 		$j("#hiText").html(hiText);
 	});
-	
+
 	var password = $j( "#password" ),
 	    usulogin = $j("#usulogin");
 		allFields = $j( [] ).add( password,usulogin ),
@@ -554,12 +568,18 @@ function checkComplete(evt) {
     
 }
 
-function salvarAcao(acao,id,ele){
+function salvarAcao(acao,id,ele,isDespachoRapido){
 	IS_UPDATES_ACTIONS = true;
 
-	$j(ele).unbind('click');
+	var texto = "";
 	
-	var texto = $j('#texto_acao').val();
+	if(isDespachoRapido)
+		texto = $j('#despacho_rapido').val();
+	else{
+		texto = $j('#texto_acao').val();
+		$j(ele).unbind('click');
+	}	
+	
 	acao = acao.toLowerCase();
 
 	if (texto == ""){

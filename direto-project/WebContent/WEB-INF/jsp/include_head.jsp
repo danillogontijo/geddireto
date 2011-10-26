@@ -12,16 +12,14 @@
 <link rel="icon" href="/favicon.ico" />
 <link rel="shortcut icon" href="http://direto.bdaopesp.eb.mil.br/favicon.ico" />
 
-
-
 <!-- Inicio Folha de Estilos -->
 <link href="css/estilos.css" rel="stylesheet" type="text/css" />
 <link href="css/modals.css" rel="stylesheet" type="text/css" />
-
 <link href="css/custom-theme-jquery/jquery-ui-1.8.10.custom.css" rel="stylesheet" type="text/css" />
 <link href="css/custom-theme-jquery/jquery.alerts.css" rel="stylesheet" type="text/css" media="screen" />
 <!-- Fim Folha de Estilos -->
 
+<!-- DWR, JS -->
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/engine.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/dwr/util.js"></script>
     
@@ -38,7 +36,7 @@
 
 <script src="<%=request.getContextPath() %>/js/custom/jquery-1.4.4.min.js"></script>
 
- <script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> 
+<script src="<%=request.getContextPath() %>/js/custom/jquery-ui-1.8.10.custom.min.js"></script> 
 
 <script src="<%=request.getContextPath() %>/js/flowplayer/jquery.tools.min.js"></script>
 <script src="<%=request.getContextPath() %>/js/custom/external/validator.js"></script>
@@ -91,8 +89,7 @@
  * HTML5 Notifications
  * - dependencies: jQuery only if you want to use callForPermission() and checkForPermission() methods.
  *
- * @djalmaaraujo
- * @wilkerlucio
+ * MOSTRA NOTIFICACAO DE NOVA MENSAGEM DO CHAT NO DESKTOP DO USUARIO 
  */
 var Notifications = {
     apiAvailable: function() {
@@ -152,11 +149,16 @@ var Notifications = {
     }
 };
 
-
+/**
+ * VARIVEIS GLOBAIS E JQUERY NOCONFLICT POR CAUSA DO DWR
+ */
 var $j = jQuery.noConflict();
 var DESTINATARIOS = new Array();
 var PAGE = '${pageName}';
 
+/**
+ * INICIANDO O EFEITO DE EXPLOSÃO NA PAGINA PRINCIPAL
+ */
 function init(page){
 	PAGE = page;
 
@@ -185,6 +187,9 @@ function init(page){
 	$j('.tela_apresentacao').hide();
 }
 
+/**
+ * ESTARTANDO AS FUNÇÕES JQUERY
+ */
 jQuery(document).ready(function($) {	
 
 	/*$.tools.dateinput.localize("pt-br",  {
@@ -213,15 +218,21 @@ jQuery(document).ready(function($) {
 	"de como queira que apareça aos outros usuários. Não se esquecendo também de "+
 	"nos informar o nr ramal para que possamos, posteriormente, entrarmos em contato.<br>Att. Eqp Des Seç Infor.";
 	
-	alertMessage('ATENÇÃO',alertaInicial,false);
+	//alertMessage('ATENÇÃO',alertaInicial,false);
 
 	<%
 		}
 	%>
-	
+
+	/**
+	* INICIANDO API DO CHAT
+	**/
 	ChatDiretoAPI = new ChatDiretoAPI('${usuario.pstGrad.pstgradNome} ${usuario.usuNGuerra}',${usuario.idUsuario});
 	ChatDiretoAPI.start(null);
-	
+
+	/**
+	* INICIANDO CALENDARIO
+	**/
 	$( "#data" ).datepicker();
 	$( "#data" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
 	
@@ -272,8 +283,9 @@ jQuery(document).ready(function($) {
 	});
 	
 	/**
-	*MODAL
-	*Seleciona todos os <a href> com name=modal
+	* MODAL
+	* Seleciona todos os <a href> com name=modal
+	* TODOS OS MODALS PROPRIOS, ENCAMINHAR, EDITAR, ANEXAR, ETC
 	**/
 	$('a[name=modal]').click(function(e) {
 
@@ -287,9 +299,12 @@ jQuery(document).ready(function($) {
 		//alert(id);
 
 		if (id == '#wgrupos'){
+			if(PAGE == 'documento')
+				$("#hiText").html("");
 			getGrupos();
 		}else if(id == '#wacao'){
 			//var winH = $(id).position();
+			$("#hiText").html("");
 			$('#div_criptografar').css('display','none');
 			var acao = $(this).attr('id').split('_');
 			
@@ -301,7 +316,7 @@ jQuery(document).ready(function($) {
 			$('#chk_criptografar').attr('checked', false);
 			$(id+' .titulo_confirmacao').html(acao[1]);
 			$(id+' #bt_acao_salvar').bind('click', function() {
-				salvarAcao(acao[1],parseInt(acao[0]),$(this));
+				salvarAcao(acao[1],parseInt(acao[0]),$(this),false);
 			});
 			
 			
@@ -354,16 +369,15 @@ jQuery(document).ready(function($) {
 		}	
 		
 		
-		//transition effect
+		//efeito de transicao
 		$(id).fadeIn(100); 
 	
 	});
 
-	//if close button is clicked
+	//Botao fechar dos MODALS
 	$('.window .close').click(function (e) {
 		//Cancel the link behavior
 		e.preventDefault();
-
 		js.direto.close_mask();
 	});
 
@@ -372,6 +386,8 @@ jQuery(document).ready(function($) {
 		js.direto.enviarPara();
 		js.direto.atualiza(PAGE); //grava destinarios no array
 		js.direto.close_mask();
+		if(PAGE == 'documento' && $j('#despacho_rapido').val() != '')
+			salvarAcao('Despachar',1,null,true);
 	});		
 	
 	//Se mask for clicado, desaparece o  modal
@@ -462,7 +478,9 @@ jQuery(document).ready(function($) {
 </script>
 
 <script type="text/javascript">
-
+/**
+ * VARIVEIS GLOBAIS PARA AS NOTIFICAOES DO DOCUMENTO
+ */
 var first_click_notification = true;
 var no_notifications;
 var id_notificacao_elemento = 0;
@@ -541,11 +559,11 @@ function getNotificacoes(id,ele){
 			
 	        } // fim do callback
 		); // fim do .getJSON()
-	
 }
 
-
-	
+/**
+ * FUNÇOES PARA ESCOLHER GRUPOS DE USUARIOS PARA ENVIO DE DOCUMENTOS
+ */
 function getGrupos()
 {
 	var idCarteira = $('idCarteira').value;
@@ -578,12 +596,31 @@ function montaUsersByGrupos(listBeans){
 		dwr.util.addOptions("ListaDE", listBeans, "id", "texto");
 	}
 	
-	var total = $j('#ListaDE option').length;
+	var total = listBeans.length;
 	var cur;
 	for ( var i = 0; i < total; i++ )
 	{
 		cur = $j('#ListaDE option:eq(' + i + ')');
 		cur.attr( 'title', listBeans[i].titulo );
+		cur.attr( 'idUsuario', listBeans[i].idUsuario );
+
+		var arUsuNome = (listBeans[i].texto).split('[')
+		var usuNome = arUsuNome[0].replace(/\s/g, "-");
+
+		if(PAGE == 'documento'){
+			var userMention = '['+listBeans[i].idUsuario+'_'+listBeans[i].id+'@'+usuNome+']';
+			
+			var have = false;
+			var c = 0;
+			while(!have && c < users.length){
+				if( users[c] == userMention ) 
+					have = true;
+				c++;
+			}
+
+			if(!have)
+				users.push(userMention);
+		}
 	}
 	
 	/*var pos = $j("#wgrupos").offset();
