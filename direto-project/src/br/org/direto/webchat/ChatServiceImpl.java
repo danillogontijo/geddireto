@@ -180,6 +180,8 @@ public class ChatServiceImpl implements ChatService, Serializable{
 			msg.setFrom(users.get(idFromUser));
 			msg.setHTMLCode(msgHTML);
 			
+			System.out.println("[CHAT][De:"+msg.getFrom().getNameUser()+"][Para:"+msg.getTo().getNameUser()+"]"+msgHTML);
+			
 				if (!messages.containsKey(idToUser)){
 					listMsgUser = new ArrayList<Message>();
 					listMsgUser.add(msg);

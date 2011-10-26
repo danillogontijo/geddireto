@@ -9,7 +9,7 @@ function ChatDiretoAPI (userName, userID) {
 		USER_IS_ACTIVE = false,
 		TIMER = null,
 		SIZE_MESSAGES = 0,
-		TIME_TO_INACTIVE = 0.5, //em minutos
+		TIME_TO_INACTIVE = 5, //em minutos
 		STATUS = 2, //status de mudança - 2 = inativo
 		MY_ACTUAL_STATUS = 1,
 		DISABLE_SOUND = true;
@@ -151,6 +151,12 @@ function ChatDiretoAPI (userName, userID) {
 	};
 	
 	var changeStatus = function (status){
+		
+		if (MY_ACTUAL_STATUS == status)
+			return;
+		else
+			MY_ACTUAL_STATUS = status;
+		
 		chatJS.changeUserStatus(status);
 		messageStatus(status);
 		welcomeMessage(status);
@@ -158,11 +164,6 @@ function ChatDiretoAPI (userName, userID) {
 	};
 	
 	var messageStatus = function (status){
-		
-		if (MY_ACTUAL_STATUS == status)
-			return;
-		else
-			MY_ACTUAL_STATUS = status;
 		
 		if (status == 0){
 			$j('#div_status').html('<span>OFF-LINE</></span> (<a href="#" id="stayOn" onclick="ChatDiretoAPI.changeStatusInChat(event,1)">Online</a>)');
@@ -174,7 +175,6 @@ function ChatDiretoAPI (userName, userID) {
 		}
 		
 		//clearTimer(USER_IS_TYPING, USER_IS_ATIVE)
-		//(status == 2 ? clearTimer(false,false) : startTimer(false,true));
 		(status == 1 ? clearTimer(false,true) : clearTimer(false,false)); //so esta ativo se o user == 1
 		
 		var logoff = ' <span style="display:none;">(<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)</span>';
@@ -192,8 +192,6 @@ function ChatDiretoAPI (userName, userID) {
 			STATUS = 2; //usuario encontra-se online, proxima mudança de estado eh para inativa
 			startTimer(false,true);
 		}
-		
-		
 	};
 
 	this.start = function start(e){
