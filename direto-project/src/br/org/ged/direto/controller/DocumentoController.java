@@ -101,7 +101,7 @@ public class DocumentoController extends BaseController {
 			if (nome[0].equals("1"))
 				principal = anexo;
 			
-			if(anexo.getAssinado() == 0 || (anexo.getAssinaturaHash()==null || anexo.getAssinaturaHash() == "" ) ){
+			if(anexo.getAssinado() == 0 || ( anexo.getAssinado() == 1 && (anexo.getAssinaturaHash()==null || anexo.getAssinaturaHash() == "" )) ){
 				
 				File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
 				try {
@@ -112,6 +112,8 @@ public class DocumentoController extends BaseController {
 					e.printStackTrace();
 				}
 				//anexo.setHash("Leitura de hash destivada.");
+			}else{
+				anexo.setHash(anexo.getAssinaturaHash());
 			}
 
 		}
@@ -171,7 +173,7 @@ public class DocumentoController extends BaseController {
 			if (nome[0].equals("1"))
 				principal = anexo;
 			
-			if(anexo.getAssinado() == 0){
+			if( anexo.getAssinado() == 0 || ( anexo.getAssinado() == 1 && (anexo.getAssinaturaHash()==null || anexo.getAssinaturaHash() == "" )) ){
 			
 				File file = new File(config.baseDir+"/arquivos_upload_direto/"+anexo.getAnexoCaminho());
 				try {
@@ -182,6 +184,8 @@ public class DocumentoController extends BaseController {
 					e.printStackTrace();
 				}
 				//anexo.setHash("Leitura de hash destivada.");
+			}else{
+				anexo.setHash(anexo.getAssinaturaHash());
 			}
 
 		}

@@ -892,7 +892,7 @@ height: 15px;
 				<br>
 				
 				<font color="#666666">Remetente: </font><b>${documento.remetente}</b><br>	
-				<font color="#666666">Destinatario: </font><b>${documento.destinatario}</b><br>
+				<font color="#666666">Destinatário: </font><b>${documento.destinatario}</b><br>
 				<font color="#666666">Data de entrada no sistema: </font><b><fmt:formatDate pattern="EEEE, d MMMM yyyy HH:mm" value="${documento.dataEntSistema}" /></b><br>
 				<font color="#666666">Referência: </font><b>${documento.referencia}</b><br>
 			
