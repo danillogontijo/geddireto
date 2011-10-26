@@ -66,7 +66,7 @@ public class GruposServiceImpl implements GruposService {
 			DataUtils data = new DataUtils();
 			
 			data.setId(String.valueOf(grupo.getIdGrupo()));
-			data.setTexto(grupo.getCarteira().getCartAbr()+"["+grupo.getCarteira().getOm().getOmAbr()+"]");
+			data.setTexto(grupo.getCarteira().getIdCarteira()+"-"+grupo.getCarteira().getCartAbr()+"["+grupo.getCarteira().getOm().getOmAbr()+"]");
 			
 			dados.add(data);
 		}
