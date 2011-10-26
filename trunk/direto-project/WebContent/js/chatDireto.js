@@ -178,7 +178,7 @@ function ChatDiretoAPI (userName, userID) {
 		(status == 1 ? clearTimer(false,true) : clearTimer(false,false)); //so esta ativo se o user == 1
 		
 		//var logoff = ' <span style="display:none;">(<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)</span>';
-		var logoff = ' (<a href="#" id="callAttention" onclick="ChatDiretoAPI.callAttention(event)">Chamar</a>)</span>';
+		var logoff = ' (<a href="#" id="callAttention" onclick="ChatDiretoAPI.callAttention(event)" title="Clique aqui para enviar um alerta ao usuário">Chamar</a>)</span>';
 		var statusText = 'Você está <span>'+(USER_IS_ACTIVE ? 'ON' : 'INATIVO')
 						+'</span>'+logoff;
 		$j('#div_status').html(statusText);
