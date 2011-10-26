@@ -9,8 +9,9 @@ function ChatDiretoAPI (userName, userID) {
 		USER_IS_ACTIVE = false,
 		TIMER = null,
 		SIZE_MESSAGES = 0,
-		TIME_TO_INACTIVE = 5, //em minutos
-		STATUS = 2,
+		TIME_TO_INACTIVE = 0.5, //em minutos
+		STATUS = 2, //status de mudança - 2 = inativo
+		MY_ACTUAL_STATUS = 1,
 		DISABLE_SOUND = true;
 	
 	var listUserSearch = new Array();
@@ -158,6 +159,11 @@ function ChatDiretoAPI (userName, userID) {
 	
 	var messageStatus = function (status){
 		
+		if (MY_ACTUAL_STATUS == status)
+			return;
+		else
+			MY_ACTUAL_STATUS = status;
+		
 		if (status == 0){
 			$j('#div_status').html('<span>OFF-LINE</></span> (<a href="#" id="stayOn" onclick="ChatDiretoAPI.changeStatusInChat(event,1)">Online</a>)');
 			$j('#div_status').find('span').addClass('offline');
@@ -167,25 +173,24 @@ function ChatDiretoAPI (userName, userID) {
 			return;
 		}
 		
-		(status == 2 ? clearTimer(false,false) : startTimer(false,true));
-			
+		//clearTimer(USER_IS_TYPING, USER_IS_ATIVE)
+		//(status == 2 ? clearTimer(false,false) : startTimer(false,true));
+		(status == 1 ? clearTimer(false,true) : clearTimer(false,false)); //so esta ativo se o user == 1
+		
 		var logoff = ' <span style="display:none;">(<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)</span>';
 		var statusText = 'Você está <span>'+(USER_IS_ACTIVE ? 'ON' : 'INATIVO')
 						+'</span>'+logoff;
 		$j('#div_status').html(statusText);
 		$j('#div_status').find('span').addClass((USER_IS_ACTIVE ? 'online' : 'inactive'));
 		
-		//função para colocar o usuario offline após o dobro de tempo de inatividade
+		//função para colocar o usuario offline após o certo tempo de inatividade
 		if(status == 2){
 			STATUS = 0; //usuario encontra-se inativo, proxima mudança de estado eh para offline
-			startTimer();
 			TIME_TO_INACTIVE = 25; //tempo para ficar offline
+			startTimer(false,true);
 		}else if(status == 1) {
 			STATUS = 2; //usuario encontra-se online, proxima mudança de estado eh para inativa
-			startTimer();
-		}else if(status == 0){
-			STATUS = 1;
-			clearTimer(false,false);
+			startTimer(false,true);
 		}
 		
 		
@@ -198,7 +203,9 @@ function ChatDiretoAPI (userName, userID) {
 		
 		chatJS.start(ID_USER,USER,{
 			callback:function(initialStatus) {
-			
+				
+				MY_ACTUAL_STATUS = initialStatus;
+				
 				if(initialStatus == -1){
 					hideOffline(); //mostra minimizado se usuario nao existia na lista
 					$j('#topo').hide(); 
