@@ -78,12 +78,13 @@ public class FeedController extends BaseController {
 	
 	@RequestMapping(value="/feed.html", method = RequestMethod.GET)
 	public String showFeedPrincipal(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
-		GregorianCalendar cal = new java.util.GregorianCalendar();
+		
+		/*GregorianCalendar cal = new java.util.GregorianCalendar();
 		cal.add(Calendar.DATE, -1); //Formata a data com um dia antes
 		Date ontem = new Date(cal.getTimeInMillis()); 
 		
 		if( getUserLogon(request).getUsuUltimoLogin().before(ontem) )
-			return "redirect:usuario.html?login=primeiro";
+			return "redirect:usuario.html?login=primeiro";*/
 			
 		model.addAttribute("box",7);
 		return "feed";
