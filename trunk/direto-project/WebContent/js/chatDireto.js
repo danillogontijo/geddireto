@@ -177,7 +177,8 @@ function ChatDiretoAPI (userName, userID) {
 		//clearTimer(USER_IS_TYPING, USER_IS_ATIVE)
 		(status == 1 ? clearTimer(false,true) : clearTimer(false,false)); //so esta ativo se o user == 1
 		
-		var logoff = ' <span style="display:none;">(<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)</span>';
+		//var logoff = ' <span style="display:none;">(<a href="#" id="stayOff" onclick="ChatDiretoAPI.changeStatusInChat(event,0)">Offline</a>)</span>';
+		var logoff = ' (<a href="#" id="callAttention" onclick="ChatDiretoAPI.callAttention(event)">Chamar</a>)</span>';
 		var statusText = 'Você está <span>'+(USER_IS_ACTIVE ? 'ON' : 'INATIVO')
 						+'</span>'+logoff;
 		$j('#div_status').html(statusText);
@@ -354,6 +355,14 @@ function ChatDiretoAPI (userName, userID) {
 				from += ' diz:';
 			}
 			
+			var isCallAttention = false;
+			
+			if(msgRec.indexOf('GED0001') != -1){
+				msgRec = msgRec.replace('GED0001','Chamou sua atenção!');
+				if(!isSession)
+					isCallAttention = true;
+			}
+			
 			var msgHTML = '<p id="'+SIZE_MESSAGES+'" class="'+pClass+'">'
 					+'<a href="#seluser" onclick="ChatDiretoAPI.seluser(event,'+idUserFastSel+')">'+from+'</a>'+'<br>'+msgRec+'</p>';
 			
@@ -363,10 +372,14 @@ function ChatDiretoAPI (userName, userID) {
 			
 			if(!isSession)
 				if(Notifications.isAuthorized())
-					Notifications.show('favicon.ico',from,m.text());
+					Notifications.show('/favicon.ico',from,m.text());
 			
 			if(!DISABLE_SOUND)
 				alertBeepMessage('beepchat');
+			
+			if(isCallAttention)
+				alertMessage('CHAT ('+newMsgCallback.from.nameUser+')',newMsgCallback.from.nameUser+'<br>'+m.text(),false);
+				
 		}
 	};
 	
@@ -425,7 +438,11 @@ function ChatDiretoAPI (userName, userID) {
 					nameTo = nameTo.replace(' - ON','');
 				} 
 				
-				var msgHTML = '<p id="'+SIZE_MESSAGES+'" style="display:none;"><b>Eu para ('+nameTo+')<b><br>'
+				if(msgTxt.indexOf('GED0001') != -1)
+					msgTxt = msgTxt.replace('GED0001','Chamei sua atenção!');
+				
+				var msgHTML = '<p id="'+SIZE_MESSAGES+'" style="display:none;">'+
+					'<b>Eu para (<a href="#seluser" onclick="ChatDiretoAPI.seluser(event,'+PARA+')">'+nameTo+'</a>)<b><br>'
 					+msgTxt+'</p>';
 				
 				showMessage(msgHTML);
@@ -463,6 +480,16 @@ function ChatDiretoAPI (userName, userID) {
 		if (b)
 			clearTimer(b,true);
 		startTimer();
+	};
+	
+	/**
+	 * Função que gera código para chamar a atenção
+	 */
+	this.callAttention = function (e){
+		e.preventDefault();
+		$j('#new').val('GED0001');
+		sendNewMessage();
+		$j('#new').val('');
 	};
 	
 	this.teclaEnter = function (e){
