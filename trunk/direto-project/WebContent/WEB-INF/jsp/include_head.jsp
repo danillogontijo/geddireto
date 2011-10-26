@@ -8,8 +8,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title><spring:message code="title"/></title>
 
-<link rel="shortcut icon" href="<%=request.getContextPath() %>/favicon.ico" type="image/ico" />
-<link rel="icon" href="favicon.ico" type="image/ico" />
+<!-- <link rel="shortcut icon" href="/favicon.ico" type="image/ico" /> -->
+<link rel="icon" href="/favicon.ico" />
+<link rel="shortcut icon" href="http://direto.bdaopesp.eb.mil.br/favicon.ico" />
+
 
 
 <!-- Inicio Folha de Estilos -->

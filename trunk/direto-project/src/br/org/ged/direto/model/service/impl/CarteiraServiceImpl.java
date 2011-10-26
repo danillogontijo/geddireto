@@ -95,7 +95,7 @@ public class CarteiraServiceImpl implements CarteiraService {
 		for(Carteira carteira : carteiras){
 			DataUtils dado = new DataUtils();
 			dado.setId(String.valueOf(carteira.getIdCarteira()));
-			dado.setTexto(carteira.getCartAbr()+"["+carteira.getOm().getOmAbr()+"]");
+			dado.setTexto(carteira.getIdCarteira()+"-"+carteira.getCartAbr()+"["+carteira.getOm().getOmAbr()+"]");
 			carteirasDWR.add(dado);
 		}
 
