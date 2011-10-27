@@ -175,9 +175,15 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 			}
 		}
 		
-		return (Long) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery("SELECT count(distinct doc.documentoDetalhes.idDocumentoDetalhes) FROM Documento as doc " +
-				"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")" + filtro +
-		"").setInteger(0, idCarteira).uniqueResult();
+		String sql = "SELECT count(distinct doc.documentoDetalhes.idDocumentoDetalhes) FROM Documento as doc " +
+				"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")" + filtro;
+		
+		if(box.equals("6")){
+			sql = "SELECT count(distinct doc.documentoDetalhes.idDocumentoDetalhes) FROM Documento as doc " +
+			"WHERE doc.carteira.idCarteira = ? AND notificar=1"+filtro;
+		}
+		
+		return (Long) hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql).setInteger(0, idCarteira).uniqueResult();
 	}
 
 	@Override
