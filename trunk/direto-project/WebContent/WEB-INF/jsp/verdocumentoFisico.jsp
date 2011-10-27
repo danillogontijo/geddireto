@@ -35,7 +35,7 @@ else
  		firefox.innerHTML = "<a href='${pFirefoxLinux}'>${pFirefoxLinux}</a><br><b>No Firefox ou Chrome clique ou copie este link e coloque-o na barra de endere&ccedil;o de seu browser.</b>";
  		document.location = "${pFirefoxLinux}";
  	}else{	 
- 		firefox.innerHTML = "<a href='file://///10.133.108.108/temp/${path}'>file://///10.133.108.108/temp/${path}</a><br><b>No Firefox ou Chrome clique ou copie este link e coloque-o na barra de endere&ccedil;o de seu browser.</b>";
+ 		firefox.innerHTML = "<a href='file://///10.133.108.133/temp/${path}'>file://///10.133.108.133/temp/${path}</a><br><b>No Firefox ou Chrome clique ou copie este link e coloque-o na barra de endere&ccedil;o de seu browser.</b>";
  		document.location = "${pFirefox}";
  	}
  	

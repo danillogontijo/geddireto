@@ -186,7 +186,7 @@ $j(function() {
 		</c:forEach>
 		
 		$j("#table_users tr:odd").css("background-color", "#E2E4FF");
-		$j('#table_users').append('<tr class="table_titulo"><td>Total de sessões abertas: ${fn:length(allUsersLogged)}</td></tr>');
+		$j('#table_users').append('<tr class="table_titulo"><td>Total de sessões abertas: ${fn:length(activeUsers)}</td></tr>');
 		$j("#table_users tr:last td").css("border-bottom", "1px solid #000");
 		$j("#table_users tr:last td").css("border-top", "1px solid #000");
 		
