@@ -74,6 +74,12 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 		"WHERE doc.carteira.idCarteira = ? AND doc.status in ("+box+")"+filtro+
 		"GROUP BY details.idDocumentoDetalhes ORDER BY "+textoOrdenacao;
 		
+		if(box.equals("6")){
+			sql = "from Documento as doc inner join doc.documentoDetalhes details " +
+			"WHERE doc.carteira.idCarteira = ? AND notificar=1"+
+			"GROUP BY details.idDocumentoDetalhes ORDER BY "+textoOrdenacao;
+		}
+		
 		Query query = hibernateTemplate.getSessionFactory().getCurrentSession().createQuery(sql);
 		query.setInteger(0, idCarteira);
 		query.setFirstResult(inicio);
