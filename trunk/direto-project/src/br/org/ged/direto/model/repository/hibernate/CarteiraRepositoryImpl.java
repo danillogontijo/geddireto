@@ -13,8 +13,8 @@ public class CarteiraRepositoryImpl extends BaseRepositoryImpl implements Cartei
 	@Override
 	public List<Carteira> getAll() {
 		return (List<Carteira>) hibernateTemplate.find("from "
-				+ Carteira.class.getName()+" order by cartAbr asc");
-				//+ Carteira.class.getName()+" order by idOM asc, cartAbr asc");
+				//+ Carteira.class.getName()+" order by cartAbr asc");
+				+ Carteira.class.getName()+" order by idOM asc, cartAbr asc");
 	}
 
 	@Override

@@ -359,7 +359,7 @@ function ChatDiretoAPI (userName, userID) {
 			var isCallAttention = false;
 			
 			if(msgRec.indexOf('GED0001') != -1){
-				msgRec = msgRec.replace('GED0001','Solicitou que visualize o chat!');
+				msgRec = msgRec.replace('GED0001','Solicitou sua atenção no chat!');
 				if(!isSession)
 					isCallAttention = true;
 			}
@@ -440,7 +440,7 @@ function ChatDiretoAPI (userName, userID) {
 				} 
 				
 				if(msgTxt.indexOf('GED0001') != -1)
-					msgTxt = msgTxt.replace('GED0001','Chamei sua atenção!');
+					msgTxt = msgTxt.replace('GED0001','Solicitei sua atenção no chat!');
 				
 				var msgHTML = '<p id="'+SIZE_MESSAGES+'" style="display:none;">'+
 					'<b>Eu para (<a href="#seluser" onclick="ChatDiretoAPI.seluser(event,'+PARA+')">'+nameTo+'</a>)<b><br>'

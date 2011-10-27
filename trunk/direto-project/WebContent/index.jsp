@@ -2,6 +2,6 @@
 
 
 <% 
-response.sendRedirect("http://direto.bdaopesp.eb.mil.br/feed.html?aviso=1");
+response.sendRedirect("/feed.html?aviso=1");
 %>
 
