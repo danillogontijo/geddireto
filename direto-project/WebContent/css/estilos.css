@@ -294,6 +294,16 @@ input.field_inputs_active:active { background-color:red; }
 	color: #000;
 }
 
+.ui_feed_remove{
+	width: 20px; 
+	float: right;
+	background-color: #fff;
+	padding: 2px 2px 2px 2px;
+}
+.ui_feed_remove:hover{
+	background-color: #D8DFEA;
+}
+
 /**
  * UI
 */
@@ -329,16 +339,3 @@ input.field_inputs_active:active { background-color:red; }
 	text-decoration: none;
 }
 
-
-/**
- * UI feed.html
- */
-.ui_feed_remove{
-	position: absolute;
-	right: 2px; 
-	background-color: #fff;
-	padding: 2px 2px 2px 2px;
-}
-.ui_feed_remove:hover{
-	background-color: #D8DFEA;
-}
