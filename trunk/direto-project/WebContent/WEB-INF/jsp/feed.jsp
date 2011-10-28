@@ -58,10 +58,8 @@ function removeFeed(e,idDocumento){
 					
 					<c:forEach var="feedsByDocs" items="${feeds}" >
 					 
-					<div style="width: 100%; border-bottom: 1px solid #ccc; float: left; margin-top: 5px; padding-bottom: 5px;" id="feed_${feedsByDocs.key.idDocumentoDetalhes}">
-						<c:if test="${filter == 1 || filter == ''}">
-							<div class="ui_feed_remove"><a href="#" title="Remover citações no documento" onclick="javascript:removeFeed(event,${feedsByDocs.key.idDocumentoDetalhes})" style="_font_black_bold">X</a></div>
-						</c:if>
+					<div style="width: 820px; border-bottom: 1px solid #ccc; float: left; margin-top: 5px; padding-bottom: 5px;" id="feed_${feedsByDocs.key.idDocumentoDetalhes}">
+						
 						<div style="width: 132px; float: left; margin-top: 10px;">
 							
 							<c:choose> 
@@ -79,7 +77,7 @@ function removeFeed(e,idDocumento){
 							</div>
 						</div>
 						
-						<div style="width: 684px; float: left; margin: 0 auto;">
+						<div style="width: 664px; float: left; margin: 0 auto;">
 						
 							<div style="width: 100%; float: left; padding-bottom: 10px;">
 								<p style="margin: 0;" class="_font_feed_titulo"><b>Você foi citado em:</b><br> [${feedsByDocs.key.tipoDocumento.tipoDocumentoAbr}] ${feedsByDocs.key.assunto}</p> 
@@ -93,9 +91,11 @@ function removeFeed(e,idDocumento){
 							 </div>
 							</c:forEach>
 							
-							
-							
 						</div>
+						
+						<c:if test="${filter == 1 || filter == ''}">
+							<div class="ui_feed_remove"><a href="#" title="Remover" onclick="javascript:removeFeed(event,${feedsByDocs.key.idDocumentoDetalhes})" style="_font_black_bold">X</a></div>
+						</c:if>
 					</div>
 					
 					</c:forEach>
