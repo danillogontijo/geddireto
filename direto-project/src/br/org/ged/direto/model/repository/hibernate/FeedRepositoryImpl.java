@@ -47,4 +47,14 @@ public class FeedRepositoryImpl extends BaseRepositoryImpl implements FeedReposi
 	public Integer save(Feed feed) {
 		return (Integer) hibernateTemplate.save(feed);
 	}
+
+	@Override
+	public void deleteAllFeedsFromDocument(int idDocumentoDetalhes) {
+		int idUsuario = getAutenticatedUser().getIdUsuario();
+		String sQuery = "DELETE from Feed as f WHERE f.documentoDetalhes.idDocumentoDetalhes="+idDocumentoDetalhes+
+					" AND (f.usuario.idUsuario="+idUsuario+" OR f.usuarioRem.idUsuario="+idUsuario+")";
+		
+		Query query = getSession().createQuery(sQuery);
+		query.executeUpdate();
+	}
 }

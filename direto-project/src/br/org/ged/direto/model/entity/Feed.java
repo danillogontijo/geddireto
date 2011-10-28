@@ -29,23 +29,23 @@ public class Feed implements Serializable{
 	@Column(name = "IdFeed")
 	private Integer idFeed;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdCarteira", nullable = false)
 	private Carteira carteira;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdUsuario", nullable = false)
 	private Usuario usuario;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdCarteiraRem", nullable = false)
 	private Carteira carteiraRem;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdUsuarioRem", nullable = false)
 	private Usuario usuarioRem;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdDocumento", nullable = false)
 	private DocumentoDetalhes documentoDetalhes;
 	

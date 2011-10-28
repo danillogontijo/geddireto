@@ -3,6 +3,8 @@
 
 <%@ include file="include_head.jsp" %>
 
+<script type="text/javascript" src="<%=request.getContextPath() %>/dwr/interface/feedJS.js"></script>
+
 <script type="text/javascript">
 function filtro(){
 	var listaFilter = $("slFilter");
@@ -11,6 +13,22 @@ function filtro(){
 			window.location.href = "feed.html?filter="+listaFilter.options[i].value;
 		}
 	}
+}
+
+function removeFeed(e,idDocumento){
+	e.preventDefault();
+
+	$j("#feed_"+idDocumento).fadeOut("slow");
+	
+	feedJS.deleteAllFeedsFromDocument(idDocumento,{
+		callback:function(ok) {
+			if(ok)
+				$j("#feed_"+idDocumento).fadeOut("slow");
+		}
+  	});
+
+	
+	
 }
 </script>
 			
@@ -39,9 +57,11 @@ function filtro(){
 					</c:if>
 					
 					<c:forEach var="feedsByDocs" items="${feeds}" >
-					
-					<div style="width: 100%; border-bottom: 1px solid #ccc; float: left; margin-top: 5px; padding-bottom: 5px;">
-						
+					 
+					<div style="width: 100%; border-bottom: 1px solid #ccc; float: left; margin-top: 5px; padding-bottom: 5px;" id="feed_${feedsByDocs.key.idDocumentoDetalhes}">
+						<c:if test="${filter == 1 || filter == ''}">
+							<div class="ui_feed_remove"><a href="#" title="Remover citações no documento" onclick="javascript:removeFeed(event,${feedsByDocs.key.idDocumentoDetalhes})" style="_font_black_bold">X</a></div>
+						</c:if>
 						<div style="width: 132px; float: left; margin-top: 10px;">
 							
 							<c:choose> 

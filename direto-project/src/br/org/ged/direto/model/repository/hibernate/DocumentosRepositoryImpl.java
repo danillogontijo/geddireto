@@ -396,8 +396,7 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 	@Override
 	public int returnTotalSearch(PesquisaForm form) {
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Usuario obj = (Usuario)auth.getPrincipal();
+		Usuario obj = getAutenticatedUser();
 		
 		int idSecao = form.getCarteira().getSecao().getIdSecao();
 		int idOM = form.getCarteira().getOm().getIdOM();

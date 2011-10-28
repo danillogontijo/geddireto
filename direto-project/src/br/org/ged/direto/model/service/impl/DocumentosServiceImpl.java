@@ -31,6 +31,7 @@ import br.org.ged.direto.model.entity.exceptions.DocumentNotFoundException;
 import br.org.ged.direto.model.repository.DocumentosRepository;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DocumentosService;
+import br.org.ged.direto.model.service.NotificacaoService;
 import br.org.ged.direto.model.service.TipoDocumentoService;
 import br.org.ged.direto.model.service.UsuarioService;
 
@@ -50,6 +51,9 @@ public class DocumentosServiceImpl implements DocumentosService {
 	
 	@Autowired
 	private TipoDocumentoService tipoDocumentoService;
+	
+	@Autowired
+	private NotificacaoService notificacaoService;
 	
 	@Override
 	@RemoteMethod
@@ -147,7 +151,10 @@ public class DocumentosServiceImpl implements DocumentosService {
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
 	public void acompanhar(Integer id, boolean yesOrNo) {
 		Documento doc = documentosRepository.getByIdPKey(id);
-		if (yesOrNo) { doc.setNotificar(1); } else { doc.setNotificar(0);}
+		if (yesOrNo) { doc.setNotificar(1); } else { 
+			notificacaoService.deleteAllFromDocument(id);
+			doc.setNotificar(0);
+			}
 	}
 
 	@Override

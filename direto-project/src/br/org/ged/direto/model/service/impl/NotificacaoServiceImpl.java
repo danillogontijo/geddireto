@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.org.direto.util.DataTimeUtil;
 import br.org.ged.direto.model.entity.Documento;
 import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Notificacao;
@@ -49,6 +48,18 @@ public class NotificacaoServiceImpl implements NotificacaoService {
 			}
 		}
 		
+	}
+
+	@Override
+	@Transactional(readOnly=false)
+	public boolean deleteAllFromDocument(int idDocumento) {
+		try{
+			notificacaoRepository.deleteAllFromDocument(idDocumento);
+			return true;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }
