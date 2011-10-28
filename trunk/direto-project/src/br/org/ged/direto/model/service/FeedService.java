@@ -13,4 +13,5 @@ public interface FeedService {
 	public String formatarMencionados(String acao);
 	public List<Feed> selectFeeds(int filter);
 	public Integer save(Feed feed);
+	public boolean deleteAllFeedsFromDocument(int idDocumentoDetalhes);
 }

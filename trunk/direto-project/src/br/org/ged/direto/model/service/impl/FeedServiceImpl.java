@@ -4,8 +4,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.directwebremoting.annotations.RemoteMethod;
+import org.directwebremoting.annotations.RemoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Feed;
@@ -16,6 +20,7 @@ import br.org.ged.direto.model.service.FeedService;
 import br.org.ged.direto.model.service.UsuarioService;
 
 @Service("feedService")
+@RemoteProxy(name = "feedJS")
 public class FeedServiceImpl implements FeedService {
 
 	@Autowired
@@ -85,6 +90,19 @@ public class FeedServiceImpl implements FeedService {
 	@Override
 	public Integer save(Feed feed) {
 		return feedRepository.save(feed);
+	}
+
+	@Override
+	@RemoteMethod
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	public boolean deleteAllFeedsFromDocument(int idDocumentoDetalhes) {
+		try{
+			feedRepository.deleteAllFeedsFromDocument(idDocumentoDetalhes);
+			return true;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

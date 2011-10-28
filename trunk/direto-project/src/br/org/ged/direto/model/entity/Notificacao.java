@@ -3,7 +3,6 @@ package br.org.ged.direto.model.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +29,7 @@ public class Notificacao implements Serializable {
 	@Column(name = "IdNotificacoes")
 	private Integer idNotificacao;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IdMensausu", nullable = false, insertable = true, updatable = false)
 	private Documento documento;
 	
@@ -69,8 +68,4 @@ public class Notificacao implements Serializable {
 		return idNotificacao;
 	}
 	
-	
-	
-	
-
 }

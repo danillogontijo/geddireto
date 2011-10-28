@@ -27,7 +27,7 @@
 </div>
 
 <div id="wgrupos" class="window">
-	<div style="position: absolute; right: 2px; background-color: red; padding: 2px 2px 2px 2px;"><a href="#" class="close" style="font-weight: bold; color: #fff;">X</a></div>
+	<div style="position: absolute; right: 2px; background-color: #000; padding: 2px 2px 2px 2px;"><a href="#" class="close" style="font-weight: bold; color: #fff;">X</a></div>
     <table align=center cellPadding=10 cellSpacing=10 width=80% id="wgrupos_corpo">
 		<tr>
 			<td>

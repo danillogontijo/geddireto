@@ -7,8 +7,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.SpringSecurityMessageSource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import br.org.ged.direto.model.entity.Usuario;
 
 @Component
 public class BaseRepositoryImpl implements MessageSourceAware {
@@ -45,4 +49,12 @@ public class BaseRepositoryImpl implements MessageSourceAware {
 		return hibernateTemplate.load(clazz, id);
 	}
 	
+	/**
+	 * Este método retorna o objeto do usuario atualmente logado 
+	 * @return Usuario
+	 */
+	protected Usuario getAutenticatedUser(){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return (Usuario)auth.getPrincipal();
+	}
 }
