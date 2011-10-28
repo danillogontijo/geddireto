@@ -18,8 +18,6 @@ function filtro(){
 function removeFeed(e,idDocumento){
 	e.preventDefault();
 
-	$j("#feed_"+idDocumento).fadeOut("slow");
-	
 	feedJS.deleteAllFeedsFromDocument(idDocumento,{
 		callback:function(ok) {
 			if(ok)
