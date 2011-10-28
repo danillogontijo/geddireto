@@ -10,6 +10,7 @@ function ChatDiretoAPI (userName, userID) {
 		TIMER = null,
 		SIZE_MESSAGES = 0,
 		TIME_TO_INACTIVE = 5, //em minutos
+		DYNAMIC_TIME = 40, //em segundos
 		STATUS = 2, //status de mudança - 2 = inativo
 		MY_ACTUAL_STATUS = 1,
 		DISABLE_SOUND = true;
@@ -187,9 +188,11 @@ function ChatDiretoAPI (userName, userID) {
 		//função para colocar o usuario offline após o certo tempo de inatividade
 		if(status == 2){
 			STATUS = 0; //usuario encontra-se inativo, proxima mudança de estado eh para offline
+			DYNAMIC_TIME = 75; //aumenta o tempo para checkUsers
 			TIME_TO_INACTIVE = 25; //tempo para ficar offline
 			startTimer(false,true);
 		}else if(status == 1) {
+			DYNAMIC_TIME = 40; //diminui o tempo para checkUsers, pois esta online
 			STATUS = 2; //usuario encontra-se online, proxima mudança de estado eh para inativa
 			startTimer(false,true);
 		}
@@ -299,7 +302,7 @@ function ChatDiretoAPI (userName, userID) {
 				//dwr.util.addOptions('usuariosON', allUsers, 'idUser', 'nameUser');
 				if (allUsers != null){
 					montaListaUsuarios(allUsers);
-					setTimeout(function(){checkUsers();},25000);
+					setTimeout(function(){checkUsers();},DYNAMIC_TIME*1000);
 				}else{
 					sessionExpired();	
 				}	
@@ -412,7 +415,8 @@ function ChatDiretoAPI (userName, userID) {
 					setTimeout(function(){checkNewMessage();},300);
 				}else{
 					//alert("\t\tVocê ficou offline!\nAs mensagens que os usuários lhe enviarem\nserão mostradas da próxima vez que entrar.");
-					setTimeout(function(){checkNewMessage();},300);
+					if(MY_ACTUAL_STATUS != 0)
+						setTimeout(function(){checkNewMessage();},300);
 				}	
 			}
 		});	
@@ -494,7 +498,8 @@ function ChatDiretoAPI (userName, userID) {
 	};
 	
 	this.teclaEnter = function (e){
-		if(!USER_IS_ACTIVE || STATUS==0)
+		
+		if(!USER_IS_ACTIVE || MY_ACTUAL_STATUS != 1)
 			changeStatus(1);
 		
 		isTyping(true);
