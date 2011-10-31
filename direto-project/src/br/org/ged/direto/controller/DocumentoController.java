@@ -71,11 +71,11 @@ public class DocumentoController extends BaseController {
 			//e.printStackTrace();
 		}
 		
-		DocumentoDetalhes documentoDetalhes = doc_conta.getDocumentoDetalhes();
-		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));
-		
 		if (doc_conta.getStatus() == '0')
 			documentosService.setDocumentoStatus(doc_conta.getIdDocumento(), '1');
+		
+		DocumentoDetalhes documentoDetalhes = doc_conta.getDocumentoDetalhes();
+		documentoDetalhes.setNrProtocolo(Utils.formatNUD(documentoDetalhes.getNrProtocolo()));
 		
 		model.addAttribute("idDocumento",documentoDetalhes.getIdDocumentoDetalhes());
 		model.addAttribute("pkDocumento",pk);
