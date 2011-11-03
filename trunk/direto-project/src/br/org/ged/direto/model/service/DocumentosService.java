@@ -66,4 +66,6 @@ public interface DocumentosService {
 	public String changeStatus(int idDocumento, char status);
 	
 	public String tranferirDocumentos(int idUsuario, int idCarteira);
+	
+	public List<DataUtils> fastSearch(int box, String protocolo, String assunto, String dataDe, String dataAte);
 }

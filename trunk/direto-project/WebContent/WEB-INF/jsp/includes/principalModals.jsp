@@ -26,6 +26,66 @@
 	</table>
 </div>
 
+<div id="wpesquisar_resultado" style="display: none;" title="Resultado da pesquisa rápida">
+	<table width="100%" border="1" cellpadding="0" cellspacing="0" id="fast_resultado">
+
+	</table>
+</div>
+
+<!-- Pesquisa Rapida -->
+<div id="wpesquisar" class="window">
+	<table width="100%" border="1" cellpadding="0" cellspacing="0">
+		<tr>
+			<td align="center" bgcolor="#1E90FF" class="titulo_confirmacao" height="20" valign="middle" colspan="4">Pesquisa rápida</td>
+			<td width="10"><a href="#" class="close" style="font-weight: bold">X</a></td>
+		</tr>
+		<tr class="_size_pesquisa">
+			<td>
+				Escolha a caixa de pesquisa:
+			</td>
+			<td colspan="3">
+				<select id="fast_sl_caixas" style="width: 70%;">
+					<option value="0">Todas as caixas</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="_size_pesquisa">
+			<td>
+				Protocolo:
+			</td>
+			<td colspan="3">
+				<input type="text" style="width: 70%;" id="fast_protocolo"></input>
+			</td>
+		</tr>
+		<tr class="_size_pesquisa">
+			<td>
+				Assunto:
+			</td>
+			<td colspan="3"">
+				<input type="text" style="width: 70%;" id="fast_assunto"></input>
+			</td>
+		</tr>
+		<tr class="_size_pesquisa">
+			<td>
+				Data de:
+			</td>
+			<td>
+				<input type="text" id="dataDe" style="margin: 0 10px 0 10px;"></input>
+			</td>
+			<td width="100px;">
+				Data até:
+			</td>
+			<td>
+				<input type="text" id="dataAte" style="margin: 0 10px 0 10px;"></input>
+			</td>
+		</tr>
+		<tr class="_size_pesquisa">
+			<td valign="bottom" colspan="5"><input type="button" id="bt_fast_search" value="Pesquisar"></td>
+		</tr>
+		
+	</table>
+</div>
+
 <div id="wgrupos" class="window">
 	<div style="position: absolute; right: 2px; background-color: #000; padding: 2px 2px 2px 2px;"><a href="#" class="close" style="font-weight: bold; color: #fff;">X</a></div>
     <table align=center cellPadding=10 cellSpacing=10 width=80% id="wgrupos_corpo">

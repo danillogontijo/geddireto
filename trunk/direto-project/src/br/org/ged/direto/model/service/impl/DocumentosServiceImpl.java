@@ -84,6 +84,7 @@ public class DocumentosServiceImpl implements DocumentosService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public Documento selectById(int primaryKey) {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -528,6 +529,14 @@ public class DocumentosServiceImpl implements DocumentosService {
 		}
 		
 		return "Docs transferidos com sucesso!";
+	}
+
+	@Override
+	@RemoteMethod
+	public List<DataUtils> fastSearch(int box, String protocolo,
+			String assunto, String dataDe, String dataAte) {
+		
+		return documentosRepository.fastSearch(box, protocolo, assunto, dataDe, dataAte);
 	}
 
 }
