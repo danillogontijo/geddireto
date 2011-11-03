@@ -235,6 +235,10 @@ jQuery(document).ready(function($) {
 	**/
 	$( "#data" ).datepicker();
 	$( "#data" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
+	$( "#dataDe" ).datepicker();
+	$( "#dataDe" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
+	$( "#dataAte" ).datepicker();
+	$( "#dataAte" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
 	
 	/**
 	*DRAGGABLES
@@ -434,6 +438,43 @@ jQuery(document).ready(function($) {
 		delay: 0
 	});*/
 
+
+		
+	$("#bt_fast_search").click(function(e) {
+
+		var box = $("#fast_sl_caixas").val();
+		var protocolo = $("#fast_protocolo").val();
+		var assunto = $("#fast_assunto").val();
+		var dataDe = $("#dataDe").val();
+		var dataAte = $("#dataAte").val();
+
+		
+		$("#fast_resultado tbody").remove();
+		$("#fast_resultado").append('<tbody></tbody>');
+		
+		documentosJS.fastSearch(box, protocolo,
+				assunto, dataDe, dataAte,{
+					callback:function(dados) {
+		
+						var texto = "";	
+						for(var i=0; i<dados.length; i++){
+							//texto += dados[i].texto+"<br>";
+							texto = dados[i].texto;
+							$("#fast_resultado tbody").append('<tr><td align="center">'+texto+'</td></tr>');
+						}
+
+							//dialogMessage('ATENÇÃO',texto,false);
+
+						$( "#wpesquisar_resultado" ).dialog({
+							width: 350,
+							modal: true
+						});
+					
+					}
+				}
+			);
+		});
+	
 	$('a[name=notificacoes]').click(function(e) {
 		e.preventDefault();
 		var id = $(this).attr('id');
@@ -979,5 +1020,6 @@ position: relative;
 		    		</c:choose>
 	    		</c:if>	
 				<a href="pesquisar.html" class="menu1">Pesquisar</a> |
+				<a href="#wpesquisar" class="menu1" name="modal">Pesquisa rápida</a> |
 				<a href="javascript: history.go(-1);" class="menu1">Voltar</a>
 			</div>

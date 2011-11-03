@@ -446,5 +446,59 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 		getSession().createSQLQuery("UPDATE idmensausu set idCarteira="+idCarteira+" WHERE idUsuario="+idUsuario).executeUpdate();  
 	}
 
+	@Override
+	public List<DataUtils> fastSearch(int box, String protocolo,
+			String assunto, String dataDe, String dataAte) {
+		
+		Usuario obj = getAutenticatedUser();
+		
+		String sql = "Select m.id,m.nrProtocolo,m.assunto FROM mensagens as m, idmensausu as c "+
+			"WHERE c.idMensagem=m.id and c.idcarteira="+obj.getIdCarteira();
+		
+		if (protocolo.length()>0)
+			sql += " AND (m.nrProtocolo='"+protocolo+"' OR m.id="+protocolo+")";
+		else{
+		
+			if(box != 0)
+				sql += " AND c.status in("+(box == 1 ? "0,1" : box)+")";
+			
+			if(assunto.length()>0)
+				sql += " AND m.assunto like '%"+assunto+"%'";
+			
+			if(dataDe.length()>0 || dataAte.length()>0){
+				sql += " AND m.data";
+				
+				if (dataDe.length()>0 && dataAte.length()==0)
+					sql += " > '" + dataDe
+					+ " 00:00:00'";
+				if (dataDe.length()==0 && dataAte.length()>0)
+					sql += " < '" + dataAte
+					+ " 23:59:59'";
+				if (dataDe.length()>0 && dataAte.length()>0)
+					sql += " BETWEEN '" + dataDe
+					+ " 00:00:00' AND '"+dataAte+" 23:59:59'";
+			}
+		}	
+		
+		sql += " GROUP BY m.id ORDER BY m.data DESC LIMIT 0,20";
+		
+		Query query = getSession().createSQLQuery(sql);
+		
+		List results = query.list();
+		
+		List<DataUtils> dados = new ArrayList<DataUtils>();
+		
+		for(int i=0; i<results.size(); i++){
+			DataUtils du = new DataUtils();
+			Object[] objs = (Object[]) results.get(i);
+			du.setId(objs[0].toString());
+			String texto = "<a href='view.html?id="+objs[0].toString()+"' title='"+objs[1].toString()+"'>"+objs[2].toString()+"</a>";
+			du.setTexto(texto);
+			dados.add(du);
+		}
+		
+		return dados;
+	}
+
 
 }

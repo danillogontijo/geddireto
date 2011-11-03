@@ -29,5 +29,6 @@ public interface DocumentosRepository {
 	public DocumentoDetalhes getDocumentoDetalhes(int primaryKey);
 	public int getAmountDocumentoByYear(String year);
 	public void tranferirDocumentos(int idUsuario, int idCarteira);
+	public List<DataUtils> fastSearch(int box, String protocolo, String assunto, String dataDe, String dataAte);
 		
 }

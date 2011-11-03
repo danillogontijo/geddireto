@@ -47,6 +47,18 @@
 	-webkit-box-shadow:0 0 10px #fff;
 }
 
+#boxes #wpesquisar{
+	width:550px; 
+  height:auto;
+  /* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #fff;
+	-webkit-box-shadow:0 0 10px #fff;
+}
+
+._size_pesquisa{
+  height: 40px;;
+}
+
 
 #boxes #wnovo_documento {
   width:300px; 
