@@ -55,7 +55,7 @@ function ChatDiretoAPI (userName, userID) {
 			$j('#search').remove();
 			
 			//ativa novamente os timers
-			this.activeTimer;
+			this.activeTimer();
 			
 			return true;
 		}
