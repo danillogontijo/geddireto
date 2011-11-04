@@ -477,9 +477,10 @@ function dialogMessage(title,message,isOwnFormat){
 				message+'</p>');
 	}
 	
-	ele.dialog({
+	/*ele.dialog({
 		modal: true
-	});
+	});*/
+	ele.dialog();
 	
 	ele.dialog( "option", "title", title );
 }

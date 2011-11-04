@@ -452,8 +452,8 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 		
 		Usuario obj = getAutenticatedUser();
 		
-		String sql = "Select m.id,m.nrProtocolo,m.assunto FROM mensagens as m, idmensausu as c "+
-			"WHERE c.idMensagem=m.id and c.idcarteira="+obj.getIdCarteira();
+		String sql = "SELECT m.id,m.nrProtocolo,m.assunto,m.nrDoc,t.TipoAbr FROM mensagens as m, idmensausu as c, tiposdocumentos as t "+
+			"WHERE t.id=m.IdTipoDocumento AND c.idMensagem=m.id AND c.idcarteira="+obj.getIdCarteira();
 		
 		if (protocolo.length()>0)
 			sql += " AND (m.nrProtocolo='"+protocolo+"' OR m.id="+protocolo+")";
@@ -492,7 +492,7 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 			DataUtils du = new DataUtils();
 			Object[] objs = (Object[]) results.get(i);
 			du.setId(objs[0].toString());
-			String texto = "<a href='view.html?id="+objs[0].toString()+"' title='"+objs[1].toString()+"'>"+objs[2].toString()+"</a>";
+			String texto = "<a href='view.html?id="+objs[0].toString()+"' title='"+objs[1].toString()+"'>["+objs[4].toString()+"]["+objs[3].toString()+"]"+objs[2].toString()+"</a>";
 			du.setTexto(texto);
 			dados.add(du);
 		}

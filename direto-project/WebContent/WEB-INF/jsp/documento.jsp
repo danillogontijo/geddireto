@@ -221,6 +221,7 @@ $j(function(){
 			}
 		},
 		close: function() {
+			$j('#mask').show();
 			allFields.val( "" ).removeClass( "ui-state-error" );
 		}
 	});
