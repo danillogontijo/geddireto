@@ -40,6 +40,10 @@
 			<td colspan="3">
 				<select id="fast_sl_caixas" style="width: 70%;">
 					<option value="0">Todas as caixas</option>
+					<option value="1">Caixa de Entrada</option>
+					<option value="2">Arquivados</option>
+					<option value="3">Enviados</option>
+					<option value="4">Pendentes</option>
 				</select>
 			</td>
 		</tr>

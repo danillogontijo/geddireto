@@ -463,7 +463,7 @@ jQuery(document).ready(function($) {
 
 					table += "</tbody></table>";
 
-					dialogMessage('Resultado',table,true);
+					dialogMessage('Resultado da busca',table,true);
 
 					$( "#dialog-message" ).dialog( "option", "width", 480 );
 					$( "#dialog-message" ).dialog( "option", "modal", false );
