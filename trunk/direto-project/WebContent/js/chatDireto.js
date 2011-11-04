@@ -7,7 +7,8 @@ function ChatDiretoAPI (userName, userID) {
 	
 	var USER_IS_TYPING = false,
 		USER_IS_ACTIVE = false,
-		TIMER = null,
+		TIMER = null, //Timer para mudança de status
+		CHECK_USERS_TIMER = null,
 		SIZE_MESSAGES = 0,
 		TIME_TO_INACTIVE = 5, //em minutos
 		DYNAMIC_TIME = 40, //em segundos
@@ -25,23 +26,43 @@ function ChatDiretoAPI (userName, userID) {
 		showInactive();
 	};
 	
+	/**
+	 * FUNÇÃO GLOBAL PARA ATIVAR OS TIMER DE MUDANÇA DE STATUS e CHECK_USERS
+	 */
 	this.activeTimer = function(){
+		startTimerCheckUsers();
 		doTimer();
 	};
 	
+	/**
+	 * FUNÇÃO GLOBAL QUE AUXILIA A FUNCAO SEARCHUSER PARA PESQUISA DE USUARIOS
+	 */
 	this.search = function(e){
 		
+		/**
+		 * Verifica se o evento eh a tecla enter
+		 */
 		var evento = (window.event ? e.keyCode : e.which);
 
 		if(evento == 13) {
 			PARA = $j('#usuariosON option:selected').val();
+			
+			if(PARA == undefined)
+				return false;
+			
 			$j('#new').show();
-			$j('#search').remove();
-			this.activeTimer;
 			document.getElementById("new").focus();
+			$j('#search').remove();
+			
+			//ativa novamente os timers
+			this.activeTimer;
+			
 			return true;
 		}
 		
+		/**
+		 * Filtra usuarios de acordo com a tecla digitada
+		 */
 		chatJS.getAllUsersOn({
 			callback:function(allUsers) {
 				montaListaUsuarios(allUsers);
@@ -49,7 +70,7 @@ function ChatDiretoAPI (userName, userID) {
 				/*
 				 * Inicio da função que exclui os usuarios não filtrados
 				 */
-				var search = $j('#search').val();
+				var search = ($j('#search').val()).toLowerCase();
 				search = search.replace(/^\s+/,'').replace(/\s+$/,''); // trim 
 				var newList = new Array();
 				
@@ -74,21 +95,36 @@ function ChatDiretoAPI (userName, userID) {
 					
 				});
 				
-				
 			}
 		});
 		
 	};	
 	
+	/**
+	 * FUNÇÃO GLOBAL QUE ATIVA A PESQUISA DE USUARIOS
+	 */
 	this.searchUser = function(){
 		clearTimer(USER_IS_TYPING,USER_IS_ACTIVE);
+		clearTimerCheckUsers();
 		$j('#new').hide();
-		$j('#div_new').append('<input type="text" id="search" value="Pesquisar" onkeypress="ChatDiretoAPI.search(event)" />');
+		
+		//ativa o filtro com a funcao search();
+		$j('#div_new').append('<input type="text" id="search" value="Pesquisar" title="Digite aqui para pesquisar por um usuário" onkeypress="ChatDiretoAPI.search(event)" />');
+		
 		$j('#search').live('focus',function(){$j(this).val('');$j(this).css('font-style', 'normal');});
 		$j('#search').blur(function(){
 			PARA = $j('#usuariosON option:selected').val();
-			//alert(PARA+' - blur');
-			});
+		});
+		 
+		//ativa o tooltip para mostrar que o campo mudou para pesquisa
+		$j("#search").tooltip({
+			position: "center right",
+			offset: [-2, 10],
+			effect: "fade",
+			opacity: 1
+		});
+		
+		document.getElementById("search").focus();
 	};
 	
 	var welcomeMessage = function(status){
@@ -121,7 +157,7 @@ function ChatDiretoAPI (userName, userID) {
 		$j('#div_status').html('Aguarde...');
 		setTimeout(function(){messagesSession();},2800); //Mensagens da sessao 
 		messageStatus(status); //Mostra em qual estado o user se encontra no status
-		setTimeout(function(){checkUsers();},3100); //Ativar o checador de users
+		startTimerCheckUsers(3100); //CHECK_USERS_TIMER = setTimeout(function(){checkUsers();},3100); //Ativar o checador de users
 		
 		welcomeMessage(status);
 		setTimeout(function(){DISABLE_SOUND=false;},5000);
@@ -263,7 +299,7 @@ function ChatDiretoAPI (userName, userID) {
 	var montaListaUsuarios = function(allUsers){
 		
 		dwr.util.removeAllOptions('usuariosON');
-		$j('#usuariosON').append('<option>Selecione um usuário</option>');
+		$j('#usuariosON').append('<option value="0">Selecione um usuário</option>');
 		
 		for (var i in allUsers){
 			//alert(allUsers.length);
@@ -302,7 +338,7 @@ function ChatDiretoAPI (userName, userID) {
 				//dwr.util.addOptions('usuariosON', allUsers, 'idUser', 'nameUser');
 				if (allUsers != null){
 					montaListaUsuarios(allUsers);
-					setTimeout(function(){checkUsers();},DYNAMIC_TIME*1000);
+					startTimerCheckUsers(DYNAMIC_TIME*1000); //setTimeout(function(){checkUsers();},DYNAMIC_TIME*1000);
 				}else{
 					sessionExpired();	
 				}	
@@ -465,22 +501,34 @@ function ChatDiretoAPI (userName, userID) {
 		divConsole.scrollTop(divConsole.scrollTop()+pMsg.offset().top);
 	};
 	
+	/**
+	 * Funções timer
+	 */
 	var doTimer = function (){
 		TIMER = setTimeout(function(){changeStatus(STATUS);},(TIME_TO_INACTIVE*60*1000));
 	};
-	
+	var startTimer = function(){
+		USER_IS_TYPING = false;
+		USER_IS_ACTIVE = true;
+		doTimer();
+	};
 	var clearTimer = function (isTyping,isUserActive){
 		USER_IS_TYPING = isTyping;
 		USER_IS_ACTIVE = isUserActive;
 		clearTimeout(TIMER);
 	};
 	
-	var startTimer = function(){
-		USER_IS_TYPING = false;
-		USER_IS_ACTIVE = true;
-		doTimer();
+	//CHECK USERS
+	var startTimerCheckUsers = function(time){
+		CHECK_USERS_TIMER = setTimeout(function(){checkUsers();},time); //Ativar o checador de users
+	};
+	var clearTimerCheckUsers = function(){
+		clearTimeout(CHECK_USERS_TIMER);
 	};
 	
+	/**
+	 * Se usuario esta digitando limpa o timer de mudança de status
+	 */
 	var isTyping = function (b){
 		if (b)
 			clearTimer(b,true);
@@ -552,7 +600,8 @@ dwr.engine.setErrorHandler(errh);
 function errh(msg, exc) {
 	 //alert("O erro é: " + msg + " - Error Details: " + dwr.util.toDescriptiveString(exc, 2));
 	//alert('Sua session expirou ou você se conectou a partir de outro local');
-	alertMessage('Você desconectou!','Sua sessão expirou ou você se conectou a partir de outro local.',false);
+	alertMessage('Você desconectou!','Sua sessão expirou ou você se conectou a partir de outro local.'+
+			'<br><br>O erro é: ' + msg + ' - Error Details: ' + dwr.util.toDescriptiveString(exc, 2),false);
 	 
 	/*
 	 * Tratamento de execção quando DWR request é enviado deopois que deu timeout na sessao
@@ -560,7 +609,7 @@ function errh(msg, exc) {
 	try {
 	    if (dwr && dwr.engine) {
 	        dwr.engine.setTextHtmlHandler(function() {
-					alert('session expirou');
+					alert('Sessão expirou!');
 		           // document.location = '/direto-project/login.html';
 	        });
 	    }   

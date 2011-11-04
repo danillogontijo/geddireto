@@ -158,6 +158,8 @@ var PAGE = '${pageName}';
 
 /**
  * INICIANDO O EFEITO DE EXPLOSÃO NA PAGINA PRINCIPAL
+ * EFEITO DE CLIP AO ABRIR documento.html
+ * ADICIONA DESPACHO RAPIDO NA documento.html
  */
 function init(page){
 	PAGE = page;
@@ -169,6 +171,7 @@ function init(page){
 
 	if(page=="documento"){
 		$j('.tela_apresentacao').hide();
+		$j("#wgrupos_corpo").append(despacho_rapido);
  	}
 
 	if(page=="pesquisar"){
@@ -181,7 +184,6 @@ function init(page){
 
 	if(page=="principal"){
 	    setTimeout("$j('.tela_apresentacao').hide('explode')",100);
-	    //errorAlert("Sistema em teste. Qualquer problema encontrado utilize o link sugestões ou ligue para o ramal 4470.<br><br>O G.E.D. voltará ao normal a partir das 10:30 hs.");
   	}
 
 	$j('.tela_apresentacao').hide();
@@ -300,9 +302,8 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		
 		var id = $(this).attr('href');
-		//alert(id);
-
-		if (id == '#wgrupos'){
+		
+		if (id == '#wgrupos'){ //Modal para encaminhar documentos
 			if(PAGE == 'documento')
 				$("#hiText").html("");
 			getGrupos();
@@ -380,7 +381,6 @@ jQuery(document).ready(function($) {
 
 	//Botao fechar dos MODALS
 	$('.window .close').click(function (e) {
-		//Cancel the link behavior
 		e.preventDefault();
 		js.direto.close_mask();
 	});
@@ -419,25 +419,6 @@ jQuery(document).ready(function($) {
 			}
 	).dynamic({ bottom: { direction: 'top', bounce: true } });
 		
-	//$('a[name=tooltip]').live('click', function(clickEvent){clickEvent.preventDefault();});
-	/*$('#testeTooltip').tooltip({
-			 
-		//events: {def: "click,blur"},
-		// each trashcan image works as a trigger
-		tip: '#notificacoes',
-
-		effect: "fade",
-		predelay: 40,
-		// custom positioning
-		position: 'bottom center',
-
-		// move tooltip a little bit to the right
-		offset: [10, 0],
-
-		// there is no delay when the mouse is moved away from the trigger
-		delay: 0
-	});*/
-
 	/**
 	* MODAL DE PESQUISA RÁPIDA
 	**/
@@ -472,7 +453,10 @@ jQuery(document).ready(function($) {
 				}
 			);
 		});
-	
+
+	/**
+	* TOGGLE DE NOTIFICACOES DO DOCUMENTO
+	**/
 	$('a[name=notificacoes]').click(function(e) {
 		e.preventDefault();
 		var id = $(this).attr('id');
@@ -483,6 +467,9 @@ jQuery(document).ready(function($) {
 	  	$("#notificacoes").toggle("fast");
 	  });	
 
+	/**
+	* MODAL DE ENVIO DE SUGESTÕES
+	**/
 	$('#bt_conf_comentario').click(function (e) {
 		e.preventDefault();
 		comentarioJS.save($('#comentario').val(),{
@@ -870,18 +857,25 @@ position: relative;
 
 					$j('#topo div[name=search]').toggle(
 							function(){
-								ChatDiretoAPI.searchUser();
-								$j('#search').focus(function(){$j(this).val('');$j(this).css('font-style', 'normal');});
+								if($j('#search').val() != null){
+									$j('#search').remove();
+									$j('#new').show();
+									ChatDiretoAPI.activeTimer();
+									document.getElementById("new").focus();
+								}else{ //Caso o input search nao exista, ja foi excluido
+									ChatDiretoAPI.searchUser();
+									$j('#search').focus(function(){$j(this).val('');$j(this).css('font-style', 'normal');});
+								}
 							},
 
 							function(){
+									
 									if($j('#search').val() != null){
-										$j('#new').show();
 										$j('#search').remove();
+										$j('#new').show();
 										ChatDiretoAPI.activeTimer();
 										document.getElementById("new").focus();
-									}else{
-										$j('#search').remove();
+									}else{ //Caso o input search nao exista, ja foi excluido
 										ChatDiretoAPI.searchUser();
 										$j('#search').focus(function(){$j(this).val('');$j(this).css('font-style', 'normal');});
 									}
@@ -915,12 +909,12 @@ position: relative;
 </script>
 
 		<div id="chat" class="ui_border_shadow border_radius">
-			<div id="topo"><div class="left border_radius" name="minimize" title="Minimizar"> - </div><div id="welcome"></div><div class="right border_radius" name="search" title="Clique aqui para pesquisar por usuários"> p </div></div>
+			<div id="topo"><div class="left border_radius" name="minimize" title="Minimizar"> - </div><div id="welcome"></div><div class="right border_radius" name="search" title="Alternar para campo de pesquisa por usuários"> p </div></div>
 			<div id="console_chat" class="border_radius">
 			
 			</div>
 			<div id="div_new">
-				<input type="text" id="new" value='Digite aqui' onkeypress="ChatDiretoAPI.teclaEnter(event)" onfocus="ChatDiretoAPI.checkToUser()"></input>
+				<input type="text" id="new" value='Digite aqui' title="Digite sua mensagem" onkeypress="ChatDiretoAPI.teclaEnter(event)" onfocus="ChatDiretoAPI.checkToUser()"></input>
 			</div>
 			<div id="div_usuarios">
 				<select id="usuariosON" name="usuariosON" onchange="ChatDiretoAPI.mudaTo(this)"></select>

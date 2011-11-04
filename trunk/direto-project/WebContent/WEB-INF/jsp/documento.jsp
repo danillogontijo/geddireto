@@ -28,27 +28,26 @@ var CRIPTOGRAFAR = false;
 var USER_LOGIN_CRIPTO_DEST;
 var ID_DESPACHO = 0;
 var BACK = false; //Variavel para checar se esta tudo ok com a edicao.
-
-//errorAlert("ATENÇÃO!<br>O link EDITAR não funcionará nessa versão teste do Direto para usuários do LINUX");
+var despacho_rapido = '<tr id="despacho_rapido_body">'+
+'<td>'+
+	'<div id="textArea" style="position:relative; margin-top:-13px;">Despachar'+
+		'<div style="width: 100%; vertical-align: baseline; display: block;">'+
+			'<textarea style="width: 755px; border: 1px solid #000;" onkeypress="return js.direto.charProibido(event)" id="despacho_rapido" maxlength="500"></textarea>'+
+		'</div>'+
+	'</div>'+
+'</td>'+
+'</tr>';
 
 /*
  **** Eventos MouseOver de atualização histórico,anotaçoes e despachos **** 
  */
 $j(function(){
-	
-	var despacho_rapido = '<tr>'+
-				'<td>'+
-					'<div id="textArea" style="position:relative; margin-top:-13px;">Despachar'+
-						'<div style="width: 100%; vertical-align: baseline; display: block;">'+
-							'<textarea style="width: 755px; border: 1px solid #000;" onkeypress="return js.direto.charProibido(event)" id="despacho_rapido" maxlength="500"></textarea>'+
-						'</div>'+
-					'</div>'+
-				'</td>'+
-			'</tr>';
 
-	$j("#wgrupos_corpo").append(despacho_rapido);
-	
-	initURLTextarea();
+	/*
+	* INIT'S DO AUTOCOMPLETE DOS FEEDS
+	* ver documentoModals.jsp
+	*/
+	initURLTextarea(); 
 	initDespachoRapido();
 	
 	$j('#texto_acao').elastic();
