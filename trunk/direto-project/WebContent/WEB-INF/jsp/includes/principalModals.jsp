@@ -26,12 +26,6 @@
 	</table>
 </div>
 
-<div id="wpesquisar_resultado" style="display: none;" title="Resultado da pesquisa rápida">
-	<table width="100%" border="1" cellpadding="0" cellspacing="0" id="fast_resultado">
-
-	</table>
-</div>
-
 <!-- Pesquisa Rapida -->
 <div id="wpesquisar" class="window">
 	<table width="100%" border="1" cellpadding="0" cellspacing="0">

@@ -438,8 +438,9 @@ jQuery(document).ready(function($) {
 		delay: 0
 	});*/
 
-
-		
+	/**
+	* MODAL DE PESQUISA RÁPIDA
+	**/
 	$("#bt_fast_search").click(function(e) {
 
 		var box = $("#fast_sl_caixas").val();
@@ -447,28 +448,25 @@ jQuery(document).ready(function($) {
 		var assunto = $("#fast_assunto").val();
 		var dataDe = $("#dataDe").val();
 		var dataAte = $("#dataAte").val();
-
-		
-		$("#fast_resultado tbody").remove();
-		$("#fast_resultado").append('<tbody></tbody>');
 		
 		documentosJS.fastSearch(box, protocolo,
 				assunto, dataDe, dataAte,{
 					callback:function(dados) {
-		
-						var texto = "";	
-						for(var i=0; i<dados.length; i++){
-							//texto += dados[i].texto+"<br>";
-							texto = dados[i].texto;
-							$("#fast_resultado tbody").append('<tr><td align="center">'+texto+'</td></tr>');
-						}
 
-							//dialogMessage('ATENÇÃO',texto,false);
+					var table = '<table width="100%" border="1" cellpadding="0" cellspacing="0"><tbody>';
+					
+					if(dados.length > 0)	
+						for(var i=0; i<dados.length; i++)
+							table += '<tr bgcolor="'+(i%2==0?'#E2E4FF':'#fff')+'"><td align="center">'+dados[i].texto+'</td></tr>';
+					else
+						table += '<tr><td align="center">Nenhum resultado encontrado</td></tr>';
 
-						$( "#wpesquisar_resultado" ).dialog({
-							width: 350,
-							modal: true
-						});
+					table += "</tbody></table>";
+
+					dialogMessage('Resultado',table,true);
+
+					$( "#dialog-message" ).dialog( "option", "width", 480 );
+					$( "#dialog-message" ).dialog( "option", "modal", false );
 					
 					}
 				}
