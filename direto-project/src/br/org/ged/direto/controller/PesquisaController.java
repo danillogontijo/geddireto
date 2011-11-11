@@ -32,8 +32,6 @@ import br.org.ged.direto.model.service.TipoDocumentoService;
 @Controller
 public class PesquisaController extends BaseController {
 	
-	private static final String NAME_OBJ_COMMAND = "pesquisaForm";
-	
 	@Autowired
 	private DocumentosService documentoService;
 	
@@ -75,8 +73,6 @@ public class PesquisaController extends BaseController {
 		boolean bServerSide = (total > 4000 ? true : false);
 		model.addAttribute("bServerSide",bServerSide);
 		model.addAttribute("total",total);
-		
-		System.out.println("TOTAL RESULTS ====== "+total);
 		
 		return "pesquisar";
 	}

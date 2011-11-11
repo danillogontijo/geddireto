@@ -113,7 +113,11 @@ public class DocumentoController extends BaseController {
 				}
 				//anexo.setHash("Leitura de hash destivada.");
 			}else{
-				anexo.setHash(anexo.getAssinaturaHash());
+				sha1 = anexo.getAssinaturaHash();
+				if(sha1.length()>50)
+					anexo.setHash(Utils.formatHexa(sha1));
+				else
+					anexo.setHash(sha1);
 			}
 
 		}
@@ -185,7 +189,11 @@ public class DocumentoController extends BaseController {
 				}
 				//anexo.setHash("Leitura de hash destivada.");
 			}else{
-				anexo.setHash(anexo.getAssinaturaHash());
+				sha1 = anexo.getAssinaturaHash();
+				if(sha1.length()>50)
+					anexo.setHash(Utils.formatHexa(sha1));
+				else
+					anexo.setHash(sha1);
 			}
 
 		}

@@ -1,27 +1,17 @@
 package br.org.ged.direto.model.service.security;
 
-import java.io.IOException;
-
-
-import javax.servlet.ServletException;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.util.TextEscapeUtils;
 import org.springframework.util.Assert;
-
-import br.org.ged.direto.model.entity.Usuario;
-
 
 public class RequestHeaderProcessingFilter extends AbstractAuthenticationProcessingFilter {
 	
@@ -65,6 +55,7 @@ public class RequestHeaderProcessingFilter extends AbstractAuthenticationProcess
 
 	        username = username.trim();
 	        
+	        System.out.println(new Date());
 	        System.out.println("Autenticando RequestHeaderProcessingFilter:" + usuarioConta);
 
 	        UsuarioContaAuthenticationToken authRequest = new UsuarioContaAuthenticationToken(username, password, usuarioConta);
@@ -80,7 +71,7 @@ public class RequestHeaderProcessingFilter extends AbstractAuthenticationProcess
 	        }
 	        
 	        System.out.println(session.getAttribute(SPRING_SECURITY_LAST_USERNAME_KEY));
-
+	        
 	        // Allow subclasses to set the "details" property
 	        setDetails(request, authRequest);
 	        

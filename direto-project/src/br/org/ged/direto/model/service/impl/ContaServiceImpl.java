@@ -1,9 +1,7 @@
 package br.org.ged.direto.model.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
@@ -16,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.org.ged.direto.model.entity.Carteira;
 import br.org.ged.direto.model.entity.Conta;
-import br.org.ged.direto.model.entity.DocumentoDetalhes;
 import br.org.ged.direto.model.entity.Usuario;
 import br.org.ged.direto.model.repository.ContaRepository;
 import br.org.ged.direto.model.service.CarteiraService;

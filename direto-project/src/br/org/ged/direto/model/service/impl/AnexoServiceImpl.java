@@ -30,7 +30,7 @@ import br.org.ged.direto.model.service.AnexoService;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.HistoricoService;
-import br.org.ged.direto.model.service.UsuarioService;
+//import br.org.ged.direto.model.service.UsuarioService;
 
 @Service("anexoService")
 @RemoteProxy(name = "anexoJS")
@@ -49,8 +49,8 @@ public class AnexoServiceImpl implements AnexoService {
 	@Autowired
 	private HistoricoService historicoService;
 	
-	@Autowired
-	private UsuarioService usuarioService;
+	/*@Autowired
+	private UsuarioService usuarioService;*/
 	
 	@Autowired
 	private Config config;
