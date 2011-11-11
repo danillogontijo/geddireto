@@ -1,10 +1,7 @@
 package br.org.ged.direto.model.service.menus;
 
 import java.util.Collection;
-
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
-
 import br.org.ged.direto.model.entity.menus.MenuTopo;
 
 public interface IMenuTopo {

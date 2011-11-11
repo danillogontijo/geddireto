@@ -20,7 +20,7 @@ import br.org.ged.direto.model.repository.HistoricoRepository;
 import br.org.ged.direto.model.service.CarteiraService;
 import br.org.ged.direto.model.service.DocumentosService;
 import br.org.ged.direto.model.service.HistoricoService;
-import br.org.ged.direto.model.service.UsuarioService;
+//import br.org.ged.direto.model.service.UsuarioService;
 
 @Service("historicoService")
 @RemoteProxy(name = "historicoJS")
@@ -36,8 +36,8 @@ public class HistoricoServiceImpl implements HistoricoService {
 	@Autowired
 	private CarteiraService carteiraService;
 	
-	@Autowired
-	private UsuarioService usuarioService;
+	/*@Autowired
+	private UsuarioService usuarioService;*/
 	
 	@Override
 	public List<Historico> getHistoricoByCarteira(Integer idCarteira) {

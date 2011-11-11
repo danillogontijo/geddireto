@@ -3,10 +3,8 @@ package br.org.ged.direto.model.service;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import br.org.direto.util.DataUtils;
 import br.org.ged.direto.controller.forms.DocumentoForm;

@@ -346,7 +346,7 @@ public class SegurancaServiceImpl implements SegurancaService {
 			byte[] md5sum = sha1.digest();
 			BigInteger bigInt = new BigInteger(1, md5sum);
 			output = bigInt.toString(16);
-			System.out.println("Sha-1: " + output);
+			//System.out.println("Sha-1: " + output);
 		}
 		catch(IOException e) {
 			throw new RuntimeException("Unable to process file for MD5", e);
