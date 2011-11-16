@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.org.direto.util.DataUtils;
 import br.org.ged.direto.model.entity.Carteira;
+import br.org.ged.direto.model.entity.Conta;
 import br.org.ged.direto.model.entity.Funcao;
 import br.org.ged.direto.model.entity.OM;
 import br.org.ged.direto.model.entity.Secao;
@@ -114,6 +115,26 @@ public class CarteiraServiceImpl implements CarteiraService {
 		dwr.setIdOM(carteira.getOm().getIdOM());
 		dwr.setIdSecao(carteira.getSecao().getIdSecao());
 		return dwr;
+	}
+
+	@Override
+	@RemoteMethod
+	public List<DataUtils> getAllUsers(int idCarteira) {
+		
+		Carteira carteira = selectById(idCarteira);
+		List<DataUtils> dados = new ArrayList<DataUtils>();
+		
+		for(Conta c : carteira.getContas()){
+			DataUtils du = new DataUtils();
+			du.setId(""+c.getUsuario().getIdUsuario());
+			String texto = c.getUsuario().getUsuLogin();
+			if(c.isPrincipal())
+				texto += "(Principal)";
+			du.setTexto(texto);
+			dados.add(du);
+		}
+		
+		return dados;
 	}
 
 }
