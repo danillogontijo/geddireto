@@ -14,5 +14,6 @@ public interface CarteiraService {
 	public List<DataUtils> getAllDwr();
 	public Carteira selectById(Integer primaryKey);
 	public CarteiraDWR select(int id);
+	public List<DataUtils> getAllUsers(int idCarteira);
 
 }

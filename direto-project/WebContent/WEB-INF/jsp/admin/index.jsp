@@ -108,6 +108,8 @@ var IDUSUARIO;
 
 $j(function() {
 
+	showAllUsers(); //Inicia listando todos os usuarios
+
 	/**
 	*DRAGGABLES
 	*/
@@ -120,15 +122,16 @@ $j(function() {
 			
 	});
 
+	/**
+	* VINCULANDO FUNÇÃO AO BOTAO DE FECHAR 'X' DAS JANELAS MODAIS
+	*/
 	$j('.window .close').click(function (e) {
 		e.preventDefault();
 		js.direto.close_mask();
 	});
- 
-	
-	showAllUsers();
-	
+ 	
 	$j( "#accordion" ).accordion({ active: 0 });
+
 	$j('a[name=users]').click(function(e){
 		e.preventDefault();
 		if(S_USERS != ""){
@@ -161,6 +164,16 @@ $j(function() {
 		e.preventDefault();
 		var id = $j(this).attr('href');
 		editUser(id);
+	});
+
+	/**
+	* ATALHO RAPIDO PARA SELECIONAR O USUARIO A PARTIR DO GERENCIADOR DE CARTEIRAS
+	*/
+	$j('#btVerUsuario').click('click',function(e){
+		e.preventDefault();
+		var id = $j("#UsuariosCarteira").val();
+		editUser(id);
+		js.direto.close_mask();
 	});
 
 	$j('a[name=showComments]').live('click',function(e){
@@ -729,7 +742,10 @@ function carregaCarteiras(id){
 				dwr.util.removeAllOptions('slCarteira');
 				dwr.util.addOptions('slCarteira', ['-- ESCOLHA UMA CARTEIRA --']);
 				dwr.util.addOptions('slCarteira', carteirasList, "id", "texto");
-			}else{
+			}else if(id=="CarteirasListaAll"){
+				dwr.util.removeAllOptions('CarteirasListaAll');
+				dwr.util.addOptions('CarteirasListaAll', carteirasList, "id", "texto");
+			}else if(id=="wcontas"){
 				dwr.util.removeAllOptions('slContas');
 				dwr.util.removeAllOptions('ListaDE');
 				dwr.util.removeAllOptions('ListaPARA');
@@ -927,6 +943,33 @@ function saveCarteira(isSave){
 	
 };
 
+function selectUsers(id){
+
+	carteiraJS.getAllUsers(id,{
+		callback:function(dados) {
+		dwr.util.removeAllOptions('UsuariosCarteira');
+		dwr.util.addOptions('UsuariosCarteira', dados, "id", "texto");
+
+		var tam = dados.length;
+		for(var i=0;i<dados.length;i++){
+			var texto = dados[i].texto;
+			if( texto.indexOf("Principal") == -1  ){
+				dados.splice(i, 1);
+				texto = "p";
+				tam = dados.length;
+				i = 0;
+			}
+			
+		}
+
+		dwr.util.removeAllOptions('usuarioPrincipal');
+		dwr.util.addOptions('usuarioPrincipal', dados, "id", "texto");
+		
+		}
+	});
+	
+};
+
 
 
 </script>
@@ -1013,7 +1056,8 @@ function saveCarteira(isSave){
 		<p><button onclick="atualizaContas()">Salvar</button></p>
 		</div>
 		
-		
+		<!-- GERENCIADOR DE GRUPOS
+			ADICIONA GRUPOS A CARTEIRA -->
 		<div id="wgrupos" class="window">
 		<table width="100%">
 			<tr>
@@ -1053,6 +1097,48 @@ function saveCarteira(isSave){
 		</table>
 		
 		<p><button onclick="atualizaGrupo()">Atualizar Grupo</button></p>
+		</div>
+		
+		<!-- GERENCIADOR DE CARTEIRAS
+			MOSTRA TODOS OS USUÁRIOS DA CARTEIRA SELECIONADA -->
+		<div id="wgercarteira" class="window">
+		<table width="100%">
+			<tr>
+				<td colspan="3" style="width: 720px; text-align: center;" align="center" bgcolor="red" class="titulo_notificacoes" height="20" valign="middle">Gerenciar Carteiras</td>
+				<td style="width: 30px;"><a href="#" class="close" style="font-weight: bold">X</a></td>
+			</tr>
+			
+			<tr>
+				<td colspan="3" align="center">
+					<b>Usuário Principal:</b> <select
+						name="usuarioPrincipal" id="usuarioPrincipal" style="width: 200px; margin: 20px 0 20px 0;">
+						<option value="0">--Selecione um Grupo--</option>
+					</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td style="width: 260px;">
+					<fieldset><legend>&nbsp;<b>Todas as carteiras</b>&nbsp;</legend>
+					 <select name=CarteirasListaAll id=CarteirasListaAll multiple size=11 style="width: 250px;" onclick="selectUsers(this.value)">
+					 </select></fieldset>
+				</td>
+				
+				<td style="text-align: center; width:50px;">
+					<input type="button" value="Ver usuário" style="width: 90pt" id=btVerUsuario>
+					
+				</td>
+	
+				<td style="width: 260px; text-align: center;">
+						<fieldset><legend>&nbsp;<b>Usuários da Carteira</b>&nbsp;</legend>
+						<select name=UsuariosCarteira id=UsuariosCarteira size=11 style="width: 250px;"
+							multiple>
+					</select></fieldset>
+				</td>
+			</tr>
+		</table>
+		
+		<p><button onclick="" style="display:none;">Atualizar Carteira</button></p>
 		</div>
 		
 		
@@ -1204,6 +1290,7 @@ function saveCarteira(isSave){
 					<ul>
 						<li><a href="#waddcarteira" name="modal">Cadastro</a></li>
 						<li><a href="#weditcarteira" name="modal">Edição</a></li>
+						<li><a href="#wgercarteira" name="modal">Gerenciar</a></li>
 					</ul>
 				</div>
 				<h3><a href="#">Grupos</a></h3>

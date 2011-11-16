@@ -137,6 +137,11 @@
   background-color: #fff;
 }
 
+#boxes #wgercarteira{
+  width:840px; 
+  height:auto;
+}
+
 
 #bt_conf_edicao {
 	border: 1px solid #006;

@@ -342,7 +342,7 @@ js.direto.modal = function(obj){
 	}
 	
 	if (id == "#wcontas"){
-		carregaCarteiras();
+		carregaCarteiras("wcontas");
 		var principal = 0;
 		var contas = '';
 		setTimeout(function(){
@@ -400,6 +400,10 @@ js.direto.modal = function(obj){
 	
 	if (id == "#weditcarteira"){
 		carregaCarteiras("slCarteira");
+	}
+	
+	if (id == "#wgercarteira"){
+		carregaCarteiras("CarteirasListaAll");
 	}
 
 	var maskHeight = $j(document).height();
