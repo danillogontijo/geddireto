@@ -187,5 +187,33 @@ public class Documento implements Serializable
 	}
 	
 	
+	@Override
+	public int hashCode() {
+		if ( this.status != '2')
+			return this.idDocumento;
+		else
+			return this.idDocumento+this.status;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (obj == null)
+			return false;
+		
+		if(obj instanceof Documento){
+			
+			Documento compare = (Documento)obj;
+		
+			if ( compare.getStatus() != '2' )
+				return ( idDocumento == compare.getIdDocumento() ); 
+			else
+				return ( idDocumento+status == compare.getIdDocumento()+compare.getStatus() );
+			
+		}
+			
+		return false;
+	}
+	
 	
 }
