@@ -80,12 +80,13 @@ public class DocumentoDetalhes implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdMensagem", nullable = true)
 	private Set<Documento> documentosByCarteira = new HashSet<Documento>(0);
-	
+		 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdMensagem", nullable = true)
 	@OrderBy("idAnexo asc") 
 	private Set<Anexo> anexos = new HashSet<Anexo>(0);
 	
+	/*
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IdMensagem", nullable = true)
 	@OrderBy("dataHoraAnotacao asc") 
@@ -100,17 +101,27 @@ public class DocumentoDetalhes implements Serializable {
 	public void setAnotacoes(Set<Anotacao> anotacoes) {
 		this.anotacoes = anotacoes;
 	}
+	
+	*/
 
-	public Integer getIdDocumentoDetalhes() {
-		return idDocumentoDetalhes;
+	public Set<Anexo> getAnexos() {
+		return anexos;
 	}
 
+	public void setAnexos(Set<Anexo> anexos) {
+		this.anexos = anexos;
+	}
+		
 	public Set<Documento> getDocumentosByCarteira() {
 		return documentosByCarteira;
 	}
 
 	public void setDocumentosByCarteira(Set<Documento> documentosByCarteira) {
 		this.documentosByCarteira = documentosByCarteira;
+	}
+	
+	public Integer getIdDocumentoDetalhes() {
+		return idDocumentoDetalhes;
 	}
 
 	public Usuario getUsuarioElaborador() {
@@ -225,14 +236,6 @@ public class DocumentoDetalhes implements Serializable {
 		this.referencia = referencia;
 	}
 
-	public Set<Anexo> getAnexos() {
-		return anexos;
-	}
-
-	public void setAnexos(Set<Anexo> anexos) {
-		this.anexos = anexos;
-	}
-	
 	public TipoDocumento getTipoDocumento() {
 		return tipoDocumento;
 	}

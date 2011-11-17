@@ -303,12 +303,27 @@ public class DocumentosServiceImpl implements DocumentosService {
 
 		try {
 			documentoToSaveOrUpdate = documentosRepository.selectById(idDocumentoDetalhes, idCarteira);
-			documentoToSaveOrUpdate.setStatus(status);
-			documentoToSaveOrUpdate.setEncaminhadoPor(usuario.getIdUsuario());
-			documentoToSaveOrUpdate.setObservacao(carteiraUsuarioLogado.getCartAbr());
-			documentoToSaveOrUpdate.setDataHora(data);
 			
-			documentosRepository.saveOrUpdateDocumento(documentoToSaveOrUpdate);
+			if(documentoToSaveOrUpdate.getStatus() == '3'){ //O doc nao pode sair da caixa de enviados
+				System.out.println("Documento na caixa de enviados, gravando um novo para caixa de entrada...");
+				documentoToSaveOrUpdate = new Documento();
+				documentoToSaveOrUpdate.setCarteira(to);
+				documentoToSaveOrUpdate.setDataHora(data);
+				documentoToSaveOrUpdate.setDataHoraNotificacao(data);
+				documentoToSaveOrUpdate.setDocumentoDetalhes(documentoDetalhes);
+				documentoToSaveOrUpdate.setNotificar(new Integer(0));
+				documentoToSaveOrUpdate.setStatus(status);
+				documentoToSaveOrUpdate.setEncaminhadoPor(usuario.getIdUsuario());
+				documentoToSaveOrUpdate.setObservacao(carteiraUsuarioLogado.getCartAbr());
+				documentosRepository.saveOrUpdateDocumento(documentoToSaveOrUpdate);
+			}else{
+				System.out.println("Documento existente, apenas mudando status...");
+				documentoToSaveOrUpdate.setStatus(status);
+				documentoToSaveOrUpdate.setEncaminhadoPor(usuario.getIdUsuario());
+				documentoToSaveOrUpdate.setObservacao(carteiraUsuarioLogado.getCartAbr());
+				documentoToSaveOrUpdate.setDataHora(data);
+				documentosRepository.saveOrUpdateDocumento(documentoToSaveOrUpdate);
+			}
 			
 			/*txtHistorico = "(Encaminhado) - Do: ";
 			txtHistorico += usuario.getPstGrad().getPstgradNome()+" "+usuario.getUsuNGuerra();
