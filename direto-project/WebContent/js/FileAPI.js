@@ -402,12 +402,14 @@ function FileAPI (t, d, f) {
                 "upload/upload.html"
             );
             
+            //Formatando o caminho do arquivo ID+Extensao
             var extensaoArquivo = file.name.split(".");
             var extensao = '.'; 
-            extensao += extensaoArquivo[extensaoArquivo.length-1];
             
-            if (extensaoArquivo.length == 1)
+            if (extensaoArquivo.length <= 1)
             	extensao = '';
+            else
+            	extensao += extensaoArquivo[extensaoArquivo.length-1];
             
             var caminhoNome = count+'_'+ID_DOCUMENTO+extensao;
                    

@@ -1112,7 +1112,7 @@ function selectUsers(id){
 				<td colspan="3" align="center">
 					<b>Usuário Principal:</b> <select
 						name="usuarioPrincipal" id="usuarioPrincipal" style="width: 200px; margin: 20px 0 20px 0;">
-						<option value="0">--Selecione um Grupo--</option>
+						<option value="0">--Usuário Principal--</option>
 					</select>
 				</td>
 			</tr>
