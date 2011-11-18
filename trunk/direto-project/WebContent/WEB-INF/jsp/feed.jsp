@@ -84,7 +84,16 @@ function removeFeed(e,idDocumento){
 							
 							<c:forEach var="feed" items="${feedsByDocs.value}">
 							 <div class="ui_feed _font_feed">
-							 	<div style="float: left; width: 515px; text-align: left; margin-left: 5px;"><b>[${feed.usuarioRem.pstGrad.pstgradNome} ${feed.usuarioRem.usuNGuerra} - ${feed.carteiraRem.cartAbr}]</b> ${feed.acao}</div>
+							 	<div style="float: left; width: 515px; text-align: left; margin-left: 5px;"><b>
+								 	<c:choose> 
+					  					<c:when test="${usuario.idUsuario == feed.usuarioRem.idUsuario}" > 
+					  						[Eu - ${feed.carteiraRem.cartAbr}] 
+					  					</c:when>
+					  					<c:otherwise> 
+					  						[${feed.usuarioRem.pstGrad.pstgradNome} ${feed.usuarioRem.usuNGuerra} - ${feed.carteiraRem.cartAbr}]
+					  					</c:otherwise> 
+									</c:choose>
+							 	</b> ${feed.acao}</div>
 							 	<div style="float: left; width: 110px; color: #708090;"><fmt:formatDate pattern="dd-MM-yyyy HH:mm:ss" value="${feed.dataHora}" /></div>
 							 </div>
 							</c:forEach>
