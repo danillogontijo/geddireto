@@ -225,6 +225,11 @@ public class DocumentosServiceImpl implements DocumentosService {
 		return (n*c) + multiplica(s.substring(0, s.length()-1),++c);
 	}
 	
+	/**
+	 * Funcao que gera o nr protocolo NUP/NUD 
+	 * @param String year (ano para contagem de doc)
+	 * @return String nr protocolo ja gerado
+	 */
 	private synchronized String createProtocolNumber(String year){
 				
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -232,8 +237,6 @@ public class DocumentosServiceImpl implements DocumentosService {
 		int omCode = carteiraService.selectById(usuario.getIdCarteira()).getOm().getOmCode();
 		
 		StringBuffer sb = new StringBuffer(String.valueOf(documentosRepository.getAmountDocumentoByYear(year)+1));
-		
-		System.out.println(sb.toString()+" QUANTIDADE ANO: "+year);
 		
 		while(sb.length() != 6)
 			sb.insert(0, 0);
@@ -269,17 +272,22 @@ public class DocumentosServiceImpl implements DocumentosService {
 		DocumentoDetalhes documentoDetalhes = getDocumentoDetalhes(idDocumentoDetalhes);
 		String arDestinatarios[] = destinatarios.split("\\,");
 		
+		boolean enviandoParaSi = false;
+		int idCarteiraUsuarioLogado = user.getIdCarteira();
+		
 		for (int i = 0; i < arDestinatarios.length; i++){
 			int idCarteira = Integer.parseInt(arDestinatarios[i]);
 			sendDocument(documentoDetalhes,idCarteira,'0');
+			if (idCarteira == idCarteiraUsuarioLogado)
+				enviandoParaSi = true;
 		}
 		
 		try{
-			Documento ownDocument = documentosRepository.selectById(idDocumentoDetalhes, user.getIdCarteira());
-			if(ownDocument.getStatus() != '3')
+			Documento ownDocument = documentosRepository.selectById(idDocumentoDetalhes, idCarteiraUsuarioLogado);
+			if(ownDocument.getStatus() != '3' && !enviandoParaSi)
 				ownDocument.setStatus('2'); //Envia documento para caixa de arquivado caso tenha o dco na cart
 			
-		}catch (DocumentNotFoundException e) {
+		}catch (DocumentNotFoundException e) { //Usuario tentando enviar um doc que não eh dele
 			System.out.println("Documento pertencente a seção/om, " +
 					"não existe este documento nesta carteira. "+documentoDetalhes.getNrProtocolo());	
 		}
