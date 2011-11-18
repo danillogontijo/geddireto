@@ -93,19 +93,37 @@ public class DespachoServiceImpl implements DespachoService {
 			
 			despacho.setIdDespacho(despachoRepository.save(despacho));
 			
-			for(Conta c : contasMencionadas){
+			if(contasMencionadas.size()>0){
+				
+				for(Conta c : contasMencionadas){
+					Feed feed = new Feed();
+					feed.setAcao("<b>[Despacho]</b> "+txtDespachoTemp);
+					feed.setCarteira(c.getCarteira());
+					feed.setCarteiraRem(carteira);
+					feed.setDataHora(data);
+					feed.setDocumentoDetalhes(documento);
+					feed.setIdAnotacao(0);
+					feed.setIdDespacho(despacho.getIdDespacho());
+					feed.setUsuario(c.getUsuario());
+					feed.setUsuarioRem(usuario);
+					
+					feedService.save(feed);
+				}
+				
+				//Feed do usuário que esta enviando
 				Feed feed = new Feed();
 				feed.setAcao("<b>[Despacho]</b> "+txtDespachoTemp);
-				feed.setCarteira(c.getCarteira());
+				feed.setCarteira(carteira);
 				feed.setCarteiraRem(carteira);
 				feed.setDataHora(data);
 				feed.setDocumentoDetalhes(documento);
 				feed.setIdAnotacao(0);
 				feed.setIdDespacho(despacho.getIdDespacho());
-				feed.setUsuario(c.getUsuario());
+				feed.setUsuario(usuario);
 				feed.setUsuarioRem(usuario);
 				
 				feedService.save(feed);
+				
 			}
 			
 			String txtHistorico = "(Despacho) - ";
