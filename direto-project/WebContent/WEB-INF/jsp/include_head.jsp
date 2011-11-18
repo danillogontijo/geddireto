@@ -985,7 +985,7 @@ position: relative;
 				      <c:when test="${box == 1}">
 				      	<a href="javascript:changeStatus(2,${isPagePrincipal});" class="menu1">Arquivar</a> |
 						<a href="javascript:changeStatus(4,${isPagePrincipal});" class="menu1" id="testeTooltip" title="Teste">Pender</a> |
-						<a href="javascript:changeStatus(0,${isPagePrincipal});" class="menu1" id="testeTooltip" title="Teste">Marcar como doc não lido</a> |
+						<a href="javascript:changeStatus(0,${isPagePrincipal});" class="menu1" id="testeTooltip" title="Teste">Marcar como Doc não lido</a> |
 				      </c:when>
 				
 				      <c:when test="${box == 2}">
