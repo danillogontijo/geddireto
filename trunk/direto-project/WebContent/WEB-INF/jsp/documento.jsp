@@ -690,10 +690,11 @@ function uploadFile() {
 
 		var arExtensaoArquivo = NAME.split(".");
 	    var extensao = '.'; 
-	    extensao += arExtensaoArquivo[arExtensaoArquivo.length-1];
-			
-	    if (arExtensaoArquivo.length == 1)
+	    			
+	    if (arExtensaoArquivo.length <= 1)
         	extensao = '';
+        else
+        	extensao += arExtensaoArquivo[arExtensaoArquivo.length-1];
         
 
 	    CAMINHO_NOME = PROXIMO_ANEXO+'_'+ID_DOCUMENTO+extensao;

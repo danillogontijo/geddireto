@@ -89,7 +89,7 @@ public class AnexoServiceImpl implements AnexoService {
 			
 			Anexo anexoToSave = new Anexo();
 			anexoToSave.setAnexoNome(anexoNome);
-			anexoToSave.setAnexoCaminho(anexoCaminho);
+			anexoToSave.setAnexoCaminho(anexoCaminho.trim());
 			anexoToSave.setDocumentoDetalhes(documento);
 			anexoToSave.setAssinado(assinado);
 			anexoToSave.setAssinadoPor(auth.getName());
