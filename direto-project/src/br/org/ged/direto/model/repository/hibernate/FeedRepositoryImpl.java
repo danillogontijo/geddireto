@@ -23,7 +23,8 @@ public class FeedRepositoryImpl extends BaseRepositoryImpl implements FeedReposi
 			
 			String filtro = "";
 			if(filter==1)
-				filtro = "f.usuario.idUsuario="+usuario.getIdUsuario()+" or f.usuarioRem.idUsuario="+usuario.getIdUsuario();
+				//filtro = "f.usuario.idUsuario="+usuario.getIdUsuario()+" or f.usuarioRem.idUsuario="+usuario.getIdUsuario();
+				filtro = "f.usuario.idUsuario="+usuario.getIdUsuario();
 			else if(filter==2)
 				filtro = "f.carteira.idCarteira="+usuario.getIdCarteira()+" or f.carteiraRem.idCarteira="+usuario.getIdCarteira();
 			else
@@ -52,7 +53,8 @@ public class FeedRepositoryImpl extends BaseRepositoryImpl implements FeedReposi
 	public void deleteAllFeedsFromDocument(int idDocumentoDetalhes) {
 		int idUsuario = getAutenticatedUser().getIdUsuario();
 		String sQuery = "DELETE from Feed as f WHERE f.documentoDetalhes.idDocumentoDetalhes="+idDocumentoDetalhes+
-					" AND (f.usuario.idUsuario="+idUsuario+" OR f.usuarioRem.idUsuario="+idUsuario+")";
+					//" AND (f.usuario.idUsuario="+idUsuario+" OR f.usuarioRem.idUsuario="+idUsuario+")";
+					  " AND f.usuario.idUsuario="+idUsuario;
 		
 		Query query = getSession().createQuery(sQuery);
 		query.executeUpdate();

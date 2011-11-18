@@ -97,20 +97,38 @@ public class AnotacaoServiceImpl implements AnotacaoService {
 			
 			anotacao.setIdAnotacao(anotacaoRepository.save(anotacao));
 			
-			for(Conta c : contasMencionadas){
+			if(contasMencionadas.size()>0){
+			
+				for(Conta c : contasMencionadas){
+					Feed feed = new Feed();
+					//feed.setAcao("1_"+anotacao.getIdAnotacao());
+					feed.setAcao("<b>[Anotação]</b> "+txtAnotacaoTemp);
+					feed.setCarteira(c.getCarteira());
+					feed.setCarteiraRem(carteira);
+					feed.setDataHora(data);
+					feed.setDocumentoDetalhes(documento);
+					feed.setIdAnotacao(anotacao.getIdAnotacao());
+					feed.setIdDespacho(0);
+					feed.setUsuario(c.getUsuario());
+					feed.setUsuarioRem(usuario);
+					
+					feedService.save(feed);
+				}
+				
+				//Feed do usuário que esta enviando
 				Feed feed = new Feed();
-				//feed.setAcao("1_"+anotacao.getIdAnotacao());
 				feed.setAcao("<b>[Anotação]</b> "+txtAnotacaoTemp);
-				feed.setCarteira(c.getCarteira());
+				feed.setCarteira(carteira);
 				feed.setCarteiraRem(carteira);
 				feed.setDataHora(data);
 				feed.setDocumentoDetalhes(documento);
 				feed.setIdAnotacao(anotacao.getIdAnotacao());
 				feed.setIdDespacho(0);
-				feed.setUsuario(c.getUsuario());
+				feed.setUsuario(usuario);
 				feed.setUsuarioRem(usuario);
 				
 				feedService.save(feed);
+			
 			}
 			
 			String txtHistorico = "(Anotação) - ";
