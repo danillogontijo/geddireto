@@ -706,10 +706,11 @@ function fEnviar(e){
 	</td>
 	<td>
 		<p class="align_right">
-		Origem *
+		Tramitação *
 		<form:select path="origem" id="origem" cssClass="field_width field_input_select" required="required" data-message="Selecione a prioridade do documento">
-			<option selected="" value="I">Interno</option>
-			<option value="E">Externo</option>
+			<option selected="" value="I">Origem Interna - Trâmite interno à Bda</option>
+			<option value="F">Origem Interna - Trâmite externo à Bda</option>
+			<option value="E">Origem Externa - Trâmite interno à Bda</option>
 		</form:select>
 		</p>
 	</td>
