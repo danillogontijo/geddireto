@@ -143,7 +143,7 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 			texto = texto + "<input type='checkbox' class='chkbox' pk='"+doc_cart.getIdDocumento()+"' value='"+idDocumentoDetalhes+"' id='chk"+i+"' "+
 						"onClick='js.direto.sel_chkbox_doc("+(i)+");' />";
 			texto = texto + (doc_cart.getStatus() == '0' ? "<img src='imagens/outras/cartaFec.gif' class='img_docs' id='doc_status' />" : "<img src='imagens/outras/cartaAbr.gif' class='img_docs' id='doc_status' />");
-			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>");
+			texto = texto + (doc.getTipo() == 'I' ? "<img src='imagens/outras/computer.gif' title='Documento interno' class='img_docs' id='doc_tipo'/> " : ( doc.getTipo() == 'F' ? "<img src='imagens/outras/computer2.gif' title='Trâmite externo' class='img_docs' id='doc_tipo'/> " : "<img src='imagens/outras/scanner.gif' title='Documento externo' class='img_docs' id='doc_tipo'/>" ) );
 			texto = texto + (pri.equals(" N") ? "<span class='prio_n_docs'>"+pri+"</span>" : (pri.equals(" U") ? "<span class='prio_u_docs'>"+pri+"</span>" : "<span class='prio_uu_docs'>"+pri+"</span>"));
 			texto = texto + (notificar+"<a href='"+url+"' title='Rem: "+doc.getRemetente().replace('-',' ')+"<br>Nr. Doc: "+doc.getNrDocumento()+"' id='rem_docs' class='ahref_docs'>["+doc.getTipoDocumento().getTipoDocumentoNome()+"][Nr: "+doc.getNrDocumento()+"]</a>");
 			texto = texto + (" - <a href='"+url+"' title='Protocolo: "+doc.getNrProtocolo()+"<br>Assunto: "+doc.getAssunto()+"' id='ass_docs' class='ahref_docs'>"+assunto+"</a>");
