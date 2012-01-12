@@ -30,5 +30,5 @@ public interface DocumentosRepository {
 	public int getAmountDocumentoByYear(String year);
 	public void tranferirDocumentos(int idUsuario, int idCarteira);
 	public List<DataUtils> fastSearch(int box, String protocolo, String assunto, String dataDe, String dataAte);
-		
+	public int returnTotalNUDExterno(int year);
 }

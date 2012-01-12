@@ -166,6 +166,16 @@ $j(function() {
 		editUser(id);
 	});
 
+	$j('a[name=qtdeNUDExterno]').live('click',function(e){
+		e.preventDefault();
+		documentosJS.returnTotalNUDExterno(0,{
+			callback:function(totalNUD) {
+			 var message = "O total de NUD tramitando externamente é: "+totalNUD;
+			 dialogMessage('Quantidade de NUD Externo',message,false);
+			}
+	  	});
+	});
+	
 	/**
 	* ATALHO RAPIDO PARA SELECIONAR O USUARIO A PARTIR DO GERENCIADOR DE CARTEIRAS
 	*/
@@ -1283,6 +1293,7 @@ function selectUsers(id){
 				<div>
 					<ul>
 						<li><a href="#" name="showDocument">Editar doc</a></li>
+						<li><a href="#" name="qtdeNUDExterno">Qtde de NUD Externo</a></li>
 					</ul>
 				</div>
 				<h3><a href="#">Carteiras</a></h3>
