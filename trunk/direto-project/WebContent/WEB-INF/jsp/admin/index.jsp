@@ -533,7 +533,7 @@ $j(function() {
 		  	});
 		} else if ((isSelect)) {
 			dwr.util.addOptions(field_name, valor);	
-			dwr.util.addOptions(field_name, ['ADMIN', 'USER', 'PROTOCOLO']);
+			dwr.util.addOptions(field_name, ['USER', 'ADMIN', 'PROTOCOLO']);
 		} 
 	}
 
