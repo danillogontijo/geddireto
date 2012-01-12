@@ -562,4 +562,10 @@ public class DocumentosServiceImpl implements DocumentosService {
 		return documentosRepository.fastSearch(box, protocolo, assunto, dataDe, dataAte);
 	}
 
+	@Override
+	@RemoteMethod
+	public int returnTotalNUDExterno(int year) {
+		return documentosRepository.returnTotalNUDExterno(year);
+	}
+
 }

@@ -500,5 +500,18 @@ public class DocumentosRepositoryImpl extends BaseRepositoryImpl implements Docu
 		return dados;
 	}
 
+	@Override
+	public int returnTotalNUDExterno(int year) {
+		String sqlCount = "select count(distinct doc.idDocumentoDetalhes) from DocumentoDetalhes as doc";
+			sqlCount += " where doc.tipo = 'F'";
+		
+		if(year != 0)
+			sqlCount += " and doc.dataEntSistema like '"+year+"%'";
+			
+		Integer total = ((Long)getSession().createQuery(sqlCount).uniqueResult()).intValue();
+		
+		return (total == null ? 0 : total.intValue()); 
+	}
+
 
 }
